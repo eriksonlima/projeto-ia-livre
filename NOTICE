@@ -1,0 +1,12 @@
+Projeto IA Livre
+Copyright 2026 Projeto IA Livre contributors
+
+This product is licensed under the Apache License, Version 2.0.
+See the file LICENSE in the project root.
+
+Third-party components (not relicensed by this project) include, among others:
+- llama.cpp / llama-cpp-2 (runtime inference binding) — see their upstream licenses
+- uefi-rs / uefi crate (kernel UEFI) — see their upstream licenses
+- Other Cargo dependencies — see each crate's license metadata
+
+A short index: docs/licencas-terceiros.md

@@ -2,6 +2,7 @@
 name = "ia-livre-node"
 version = "0.1.0"
 edition = "2021"
+license = "Apache-2.0"
 publish = false
 description = "Protótipo do nó Rede IA Livre (camada 4) — host, independente do SO"
 
