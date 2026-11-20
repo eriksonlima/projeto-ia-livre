@@ -57,3 +57,10 @@ Status: feita
 Issue: [#8](https://github.com/eriksonlima/projeto-ia-livre/issues/8)  
 Spec: specs/aceleracao-gpu/  
 Pronto quando: protótipo de aceleração GPU no host sobre o runtime existente (backend do llama.cpp), com escolha CUDA/Vulkan (ou equivalente suportado) documentada, fallback CPU preservado, métricas comparáveis às da Etapa 5 e gate verificável quando houver GPU — sem exigir o kernel UEFI / QEMU; multi-GPU e GPU manager completo fora de escopo.
+
+## Etapa 9 — Harness da hipótese Linha A vs Linha B
+
+Status: em_andamento  
+Issue: [#9](https://github.com/eriksonlima/projeto-ia-livre/issues/9)  
+Spec: specs/harness-linha-a-b/  
+Pronto quando: harness comparável (mesmo modelo/quantização/carga) documentado para Linha A (Linux otimizado) vs Linha B (IA Livre), sem confundir com métricas dos protótipos CPU/GPU das Etapas 5/8.

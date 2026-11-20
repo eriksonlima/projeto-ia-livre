@@ -8,13 +8,15 @@ Promoção para `ROADMAP.md` exige **confirmação explícita** (ver `.cursor/ru
 
 ## Abertas
 
-### B3 — Harness da hipótese Linha A vs Linha B
-
-- Notas: benchmark comparável (mesmo modelo/quantização/carga): Linux otimizado vs IA Livre; não confundir com métricas do protótipo CPU.
-- Origem: `docs/architecture.md` / `docs/product-context.md` (hipótese de pesquisa)
-- Issue: [#9](https://github.com/eriksonlima/projeto-ia-livre/issues/9)
+_(vazio — sem demandas abertas)_
 
 ## Promovidas / arquivadas
+
+### B3 — Harness da hipótese Linha A vs Linha B
+
+- Promovido para Etapa 9 do roadmap com confirmação explícita.
+- Issue: [#9](https://github.com/eriksonlima/projeto-ia-livre/issues/9)
+- Etapa: [Etapa 9 — Harness da hipótese Linha A vs Linha B](ROADMAP.md)
 
 ### B2 — Aceleração além de CPU (GPU)
 

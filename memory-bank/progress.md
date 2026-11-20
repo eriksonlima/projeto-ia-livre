@@ -9,6 +9,7 @@
 - Nó Rede IA Livre: `make verify-node`
 - Ambiente de autonomia: `make verify-agent`
 - Etapas 1–8 feitas
+- Etapa 9 em andamento: metodologia harness A vs B documentada (`docs/harness-linha-a-b.md`)
 - Processo de backlog: `BACKLOG.md` + rule/command/skill
 - Processo README por fatia: `.cursor/rules/readme-por-fatia.mdc`
 
@@ -16,8 +17,10 @@
 
 - Nenhum no produto; espelho `gh` do backlog é best-effort
 - Host de referência: CUDA Toolkit (`nvcc`) ausente → prova Vulkan (ADR 0002)
+- Linha B do harness: stub até runtime nativo no IA Livre
 
 ## Por etapa
 
 - Etapas 1–8: feitas
-- Backlog aberto: B3 (harness Linha A vs B); B2 promovido/arquivado → Etapa 8
+- Etapa 9: Task 1 feita; Tasks 2–3 abertas (`specs/harness-linha-a-b/`)
+- Backlog Abertas: vazio (B3 → Etapa 9)

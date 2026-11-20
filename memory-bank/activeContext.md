@@ -2,23 +2,22 @@
 
 ## Foco atual
 
-- Processo: backlog → roadmap (mínima interrupção)
-- Etapa do roadmap: nenhuma `em_andamento` (Etapas 1–8 **feitas**)
-- Spec ativa: nenhuma (última: `specs/aceleracao-gpu/`, Tasks 1–3 feitas)
+- Etapa 9 — Harness da hipótese Linha A vs Linha B (`em_andamento`, Issue #9)
+- Spec: `specs/harness-linha-a-b/`
+- Task 1 feita; próxima: Task 2 (scripts harness A + stub B)
 
 ## Mudanças recentes
 
-- Etapa 8: aceleração GPU no host (`runtime/` features cuda/vulkan, `--n-gpu-layers`, ADR 0002)
-- Prova efetiva: **Vulkan** (CUDA sem toolkit no host); `IA_LIVRE_ACCEL=vulkan`
-- Gate: `make verify-runtime-gpu` (+ skip `IA_LIVRE_GPU_SKIP`)
-- B2 arquivado; Abertas: B3 (harness Linha A vs B)
-- README Tasks 1–3: considerado; não atualizado (capa aponta AGENTS)
+- B3 promovido → Etapa 9; BACKLOG arquivado; GitHub #9 roadmap/status:em_andamento + Project
+- Spec `specs/harness-linha-a-b/` (metodologia + A + stub B + gate)
+- Task 1: `docs/harness-linha-a-b.md`, ponte architecture/product-context/E5/E8, AGENTS parcial
+- README Task 1: considerado; não atualizado (ainda sem scripts/gate)
 
 ## Próximo passo
 
-- Sob pedido “continuar” / confirmação: promover o topo do `BACKLOG.md` (B3 — harness Linha A vs B) para o roadmap + issue; depois especificar.
+- Task 2: `scripts/run-harness-line-a.sh` + stub B; baseline A na doc; AGENTS Como rodar
 
 ## Notas
 
-- Promoção exige confirmação explícita; não inventar Etapa 9 sozinho
-- Vulkan SDK user-space (`~/.local/opt/1.3.296.0`) não versionado no git
+- Hipótese não é “provada” nesta etapa
+- Linha B = stub `IA_LIVRE_HARNESS_B_SKIP` até runtime nativo

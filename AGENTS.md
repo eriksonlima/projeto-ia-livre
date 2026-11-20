@@ -170,6 +170,12 @@ Saída esperada: `IA_LIVRE_RUNTIME_USED=1`, `IA_LIVRE_TOOL_OK`, `IA_LIVRE_MEMORY
 
 Gate automatizado: `make verify-agent` (não exige QEMU/UEFI nem o nó P2P; requer GGUF).
 
+### Harness Linha A vs Linha B (Etapa 9)
+
+Metodologia e contrato do slot B: [`docs/harness-linha-a-b.md`](docs/harness-linha-a-b.md).  
+**Não** confundir com métricas dos protótipos CPU/GPU (`docs/runtime-inferencia-*-metricas.md`).  
+Scripts `run-harness-line-*.sh` e `make verify-harness` entram nas Tasks 2–3 desta etapa.
+
 ## Como verificar
 
 ### Gate do kernel (Etapa 4)

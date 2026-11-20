@@ -52,7 +52,7 @@ As camadas formam um ecossistema, não quatro produtos desconectados. A ordem de
 - Licenças definitivas por componente (preferência a confirmar no manifesto).
 - ~~Estratégia de aceleração além de CPU~~ — **protótipo host:** CUDA canônico / Vulkan alternativa via llama.cpp (ADR 0002); GPU manager no kernel e multi-GPU continuam abertos.
 - Forma e escopo do ambiente de autonomia na primeira versão utilizável.
-- Critérios exatos e harness do benchmark Linha A vs Linha B.
+- ~~Critérios exatos e harness do benchmark Linha A vs Linha B~~ — **harness v1 (Etapa 9):** metodologia + Linha A no host + stub Linha B em [`harness-linha-a-b.md`](harness-linha-a-b.md); prova da hipótese e runtime nativo em B continuam abertos.
 
 ## Referências próximas
 

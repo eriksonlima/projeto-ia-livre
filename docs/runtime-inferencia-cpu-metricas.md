@@ -2,7 +2,8 @@
 
 Protótipo da **Etapa 5** (camada 2). Valores obtidos no **host de referência** do autor.
 
-> **Não** é o benchmark da hipótese de pesquisa (Linha A Linux otimizado vs Linha B IA Livre). Só registra o caminho mínimo load + geração em CPU.
+> **Não** é o benchmark da hipótese de pesquisa (Linha A Linux otimizado vs Linha B IA Livre). Só registra o caminho mínimo load + geração em CPU.  
+> Harness A vs B: [`harness-linha-a-b.md`](harness-linha-a-b.md).
 
 ## Ambiente
 

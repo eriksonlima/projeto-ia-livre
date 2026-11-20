@@ -2,7 +2,8 @@
 
 Protótipo da **Etapa 8** (camada 2 no host). Valores obtidos no **host de referência** do autor.
 
-> **Não** é o benchmark da hipótese de pesquisa (Linha A vs Linha B). Só registra o caminho load + geração com offload GPU via llama.cpp, comparável às métricas CPU da Etapa 5.
+> **Não** é o benchmark da hipótese de pesquisa (Linha A vs Linha B). Só registra o caminho load + geração com offload GPU via llama.cpp, comparável às métricas CPU da Etapa 5.  
+> Harness A vs B: [`harness-linha-a-b.md`](harness-linha-a-b.md).
 
 ## Ambiente
 

@@ -45,7 +45,7 @@ Queremos **comprovar ou refutar**, com método justo:
 
 > O IA Livre, com mecanismos nativos de gerenciamento para inferência, aproveita melhor o hardware do que um Linux otimizado rodando carga equivalente.
 
-- **Comparar:** mesmo hardware, modelo, quantização e carga; Linha A (Linux + runtime otimizado) vs Linha B (IA Livre + runtime nativo). Ver architecture.
+- **Comparar:** mesmo hardware, modelo, quantização e carga; Linha A (Linux + runtime otimizado) vs Linha B (IA Livre + runtime nativo). Ver architecture e o harness em [`harness-linha-a-b.md`](harness-linha-a-b.md).
 - **Não conta como prova:** só empilhar o mesmo runtime em um kernel vazio; números anedóticos sem baseline equivalente; assumir ganho multi-GPU antes de existir o mecanismo.
 
 ## Métricas de sucesso
