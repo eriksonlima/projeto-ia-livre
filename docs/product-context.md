@@ -20,15 +20,40 @@ Fonte canônica: [`docs/manifesto.md`](manifesto.md).
 - Acesso comunitário básico à inteligência compartilhada sem cobrança por token
 - Nenhuma decisão só por curiosidade técnica: deve servir liberdade, autonomia, eficiência ou descentralização
 
+## Camadas do ponto de vista do produto
+
+Detalhe técnico: [`docs/architecture.md`](architecture.md). Em resumo, o que cada camada entrega a quem usa ou contribui:
+
+| Camada | Valor para o usuário / contribuidor |
+|--------|-------------------------------------|
+| **IA Livre (kernel)** | Base controlável e auditável; hardware e isolamento pensados para IA, sem desktop genérico |
+| **Runtime nativo de IA** | Executar e servir modelos com eficiência; evolui sem reescrever o núcleo |
+| **Ambiente de autonomia** | Agentes, memória e ferramentas para aprender e experimentar no próprio ambiente |
+| **Rede IA Livre** | Colaborar e compartilhar recursos/conhecimento **sem** precisar trocar de SO |
+
 ## Não objetivos
 
 - Desktop genérico ou compatibilidade com apps de escritório
 - Substituir Linux em todos os cenários
 - Cobrar tokens no acesso comunitário básico
 - Exigir o SO para entrar na rede P2P
+- Declarar vitória da hipótese de pesquisa sem benchmark comparável
+
+## Hipótese de pesquisa (métrica central)
+
+Queremos **comprovar ou refutar**, com método justo:
+
+> O IA Livre, com mecanismos nativos de gerenciamento para inferência, aproveita melhor o hardware do que um Linux otimizado rodando carga equivalente.
+
+- **Comparar:** mesmo hardware, modelo, quantização e carga; Linha A (Linux + runtime otimizado) vs Linha B (IA Livre + runtime nativo). Ver architecture.
+- **Não conta como prova:** só empilhar o mesmo runtime em um kernel vazio; números anedóticos sem baseline equivalente; assumir ganho multi-GPU antes de existir o mecanismo.
 
 ## Métricas de sucesso
 
-- Hipótese de pesquisa documentada e comparável (IA Livre vs Linux otimizado, mesmo hardware/modelo)
+- Hipótese documentada e, nas etapas de runtime/benchmark, **comparável** (IA Livre vs Linux otimizado)
 - Comunidade capaz de contribuir e participar sem barreira de troca de SO
-- Entregas progressivas: boot QEMU → inferência → nó P2P
+- Entregas progressivas: boot QEMU → inferência CPU → nó P2P
+
+## Fronteira desta etapa
+
+A Etapa 3 é **só documentação** de produto e arquitetura (e ADR estrutural). Bootstrap de código começa na **Etapa 4** (kernel em QEMU).

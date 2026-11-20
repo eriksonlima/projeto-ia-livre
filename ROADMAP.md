@@ -18,14 +18,14 @@ Pronto quando: manifesto com missão, princípios imutáveis, nomenclatura (Proj
 
 ## Etapa 3 — Contexto de produto e arquitetura inicial
 
-Status: em_andamento  
+Status: feita  
 Issue: [#3](https://github.com/eriksonlima/projeto-ia-livre/issues/3)  
 Spec: specs/arquitetura-inicial/  
 Pronto quando: `docs/product-context.md` e `docs/architecture.md` descrevem camadas (kernel, runtime, autonomia, P2P), hipóteses de pesquisa e decisões abertas; ADR inicial se houver escolha estrutural.
 
 ## Etapa 4 — Bootstrap do kernel IA Livre
 
-Status: pendente  
+Status: em_andamento  
 Issue: [#4](https://github.com/eriksonlima/projeto-ia-livre/issues/4)  
 Spec: specs/bootstrap-kernel/  
 Pronto quando: boot UEFI em QEMU (x86-64), kernel mínimo em Rust com saída serial verificável; instruções em AGENTS.md.

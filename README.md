@@ -25,5 +25,6 @@ Veja `AGENTS.md` → **Como verificar**.
 - Specs: `specs/`
 - Produto: `docs/product-context.md`
 - Arquitetura: `docs/architecture.md`
+- ADRs: `docs/adr/`
 - Contexto ativo (Memory Bank): `memory-bank/activeContext.md`
 - Contribuição: `CONTRIBUTING.md`

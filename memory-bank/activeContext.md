@@ -2,21 +2,21 @@
 
 ## Foco atual
 
-- Etapa do roadmap: Etapa 3 — Contexto de produto e arquitetura inicial
-- Spec ativa: specs/arquitetura-inicial/ _(ainda a criar)_
-- Fatia / task: especificar e aprofundar product-context + architecture
+- Etapa do roadmap: Etapa 4 — Bootstrap do kernel IA Livre
+- Spec ativa: specs/bootstrap-kernel/ _(ainda a criar)_
+- Fatia / task: especificar bootstrap UEFI/QEMU + kernel Rust mínimo
 
 ## Mudanças recentes
 
-- Manifesto publicado em `docs/manifesto.md`; link no README
-- Etapa 2 marcada como feita; Etapa 3 em andamento
+- product-context e architecture aprofundados; ADR 0001 aceita
+- Etapa 3 feita; Etapa 4 em andamento
 
 ## Próximo passo
 
-- Especificar Etapa 3 (`/especificar` → arquitetura-inicial)
-- Expandir product-context e architecture conforme Pronto quando
+- Especificar Etapa 4 (`/especificar` → bootstrap-kernel)
+- Depois: boot serial verificável em QEMU
 
 ## Notas
 
-- Manifesto é fonte canônica de princípios e governança
-- Licenças ainda a confirmar por componente
+- ADR 0001: kernel × runtime separados; P2P independente do SO
+- Primeiro alvo: x86-64 + UEFI + QEMU, CPU

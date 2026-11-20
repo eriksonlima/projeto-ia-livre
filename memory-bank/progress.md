@@ -2,9 +2,8 @@
 
 ## O que funciona
 
-- Scaffold + remote + Project V2
-- Manifesto Fundador em `docs/manifesto.md`
-- Etapas 1 e 2 feitas
+- Scaffold, manifesto, product-context, architecture, ADR 0001
+- Etapas 1–3 feitas
 
 ## Bloqueios
 
@@ -12,7 +11,6 @@
 
 ## Por etapa
 
-- Etapa 1: feita
-- Etapa 2: feita (manifesto-fundador)
-- Etapa 3 (em_andamento): product-context e architecture
-- Etapas 4–6: pendentes
+- Etapas 1–3: feitas
+- Etapa 4 (em_andamento): bootstrap kernel — spec ainda não criada
+- Etapas 5–6: pendentes
