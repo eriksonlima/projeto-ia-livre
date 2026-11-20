@@ -11,5 +11,5 @@ alwaysApply: true
 - Pare (relato curto, sem pedir permissão) somente quando:
   - não há mais task aberta na etapa atual **e** o backlog Abertas está vazio (nada a promover), ou
   - bloqueio real (credencial, escolha de produto ambígua, destrutivo, regra de início/GitHub).
-- Quando a etapa do roadmap fechar (ou o roadmap não tiver `em_andamento`/`pendente`) e houver item em `BACKLOG.md` **Abertas**: **promova o topo** para o roadmap **sem perguntar**, espelhe GitHub, chame `especificador` (e `fatiador` se couber) e continue. Não invente etapa fora do backlog.
-- Não peça confirmação para promoção backlog → roadmap. Relato curto do que promoveu basta.
+- Quando a etapa do roadmap fechar (ou o roadmap não tiver `em_andamento`/`pendente`) e houver item em `BACKLOG.md` **Abertas**: sync + claim check (`agentes-em-paralelo`), depois **promova o topo** **sem perguntar**, espelhe GitHub, chame `especificador` (e `fatiador` se couber) e continue. Não invente etapa fora do backlog. Se o topo já foi promovido por outro agente, siga a etapa/`pendente` existente ou o próximo item ainda em Abertas.
+- Não peça confirmação para promoção backlog → roadmap. Relato curto do que promoveu (ou “já promovido por paralelo”) basta.

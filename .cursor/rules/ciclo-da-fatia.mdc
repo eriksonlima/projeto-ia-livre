@@ -5,13 +5,13 @@ alwaysApply: true
 
 # Ciclo da fatia
 
-- Pedido que não é um ajuste óbvio: leia `ROADMAP.md`, `memory-bank/activeContext.md` e a spec ativa; escreva a fatia antes de editar (objetivo, fora de escopo, pronto quando). Uma fatia = uma task.
+- Pedido que não é um ajuste óbvio: **sync** (`git fetch` / `pull --ff-only` se atrás), depois leia `ROADMAP.md`, `memory-bank/activeContext.md` e a spec ativa; escreva a fatia antes de editar (objetivo, fora de escopo, pronto quando). Uma fatia = uma task. Ver `agentes-em-paralelo`.
 - Uma fatia por vez. A menor mudança que cumpre o critério.
 - Pedido amplo ou nova etapa: chame `especificador` e/ou `fatiador` antes de implementar.
 - Verifique com o gate (`AGENTS.md` / regra de verificação) antes de declarar pronto. Diga o que foi e o que não foi verificado.
 - Depois do gate, chame o `revisor-de-fatia` passando o critério de pronto. Corrija bloqueio real.
 - Atualize `tasks.md`, Memory Bank e, se a etapa fechou, `ROADMAP.md` + GitHub. Depois skills/ferramentas se couber. Considere `README.md` (rule `readme-por-fatia`); se não precisar, registre que foi considerado.
-- Depois do gate e do revisor (sem bloqueio real), e após atualizar `tasks.md` / Memory Bank / roadmap quando couber: o **agente principal** faz `git commit` da fatia e `git push` para o remote da branch atual. Não perguntar.
+- Depois do gate e do revisor (sem bloqueio real), e após atualizar `tasks.md` / Memory Bank / roadmap quando couber: o **agente principal** faz `git commit` da fatia e `git push` para o remote da branch atual. Não perguntar. Antes do push: `git fetch`; se atrás, `pull --ff-only`.
 - Continua proibido no commit/push automático: segredos/`.env`, `--no-verify`, force push, alterar config do git, abrir PR sem pedido. Em dúvida de escopo do commit, risco de segredo ou push não-fast-forward: pare e informe.
 - Se ainda existir task aberta na mesma etapa: declare a nova fatia e implemente na sequência, sem perguntar.
 - Ao delegar: objetivo, arquivos permitidos, fora de escopo e pronto quando. Um escritor por conjunto de arquivos.

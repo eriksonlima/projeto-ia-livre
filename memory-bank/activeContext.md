@@ -18,3 +18,4 @@
 ## Notas
 
 - Hipótese A vs B não comprovada
+- Agentes em paralelo: rule `agentes-em-paralelo` (fetch + claim check; não re-promover B8/E14)

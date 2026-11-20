@@ -28,7 +28,8 @@ Este comando sozinho **não** promove; a promoção autônoma ocorre quando o ro
 
 Gatilhos: roadmap sem `em_andamento`/`pendente` + “continuar”/próximo; etapa acabou de fechar; “promova B…”.
 
+0. `git fetch` (+ `pull --ff-only` se atrás); claim check (Abertas / label `backlog` / etapa já no ROADMAP). Se já promovido por outro agente: não duplique — ver rule `agentes-em-paralelo`.
 1. Se o item já tem `Issue: #N` de backlog: `gh issue edit N` — remover label `backlog`, adicionar `roadmap` + `status:*`, atualizar body com `Pronto quando`; vincular ao Project se ainda não estiver.
 2. Se não tem issue: criar via `/atualizar-roadmap` como etapa nova.
-3. Grave a etapa em `ROADMAP.md` e mova o item para **Promovidas / arquivadas** com `Issue: #N`.
+3. Grave a etapa em `ROADMAP.md` (`em_andamento` se livre; senão `pendente`) e mova o item para **Promovidas / arquivadas** com `Issue: #N`.
 4. Relato curto: id + etapa + `#N`. Em seguida `especificador` / seguir a etapa.

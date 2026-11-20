@@ -39,15 +39,17 @@ disable-model-invocation: true
 
 ## Roadmap vazio (“continuar”) / etapa fechou
 
-1. Leia `ROADMAP.md` e `BACKLOG.md`.
-2. Se não houver etapa `em_andamento`/`pendente` e houver item em **Abertas**: **promova o topo imediatamente** (sem perguntar) — ver Promover.
-3. Depois da promoção: chame `especificador` (e `fatiador` se couber) e siga a etapa.
-4. Se Abertas estiver vazia: pare e diga. Não invente etapa.
+1. `git fetch` (+ `pull --ff-only` se atrás). Releia `ROADMAP.md` e `BACKLOG.md`. Ver `.cursor/rules/agentes-em-paralelo.mdc`.
+2. Se já existir `em_andamento` (outro agente): **não** promova outra como `em_andamento` — trabalhe essa etapa, ou promova só como `pendente` se couber.
+3. Se não houver etapa `em_andamento`/`pendente` e houver item em **Abertas**: claim check, depois **promova o topo imediatamente** (sem perguntar) — ver Promover.
+4. Depois da promoção: chame `especificador` (e `fatiador` se couber) e siga a etapa.
+5. Se Abertas estiver vazia: pare e diga. Não invente etapa.
 
 ## Promover (autônomo — não peça confirmação)
 
 Gatilhos: “continuar” / “próximo” com roadmap vazio; etapa acabou de fechar; pedido explícito “promova B…”.
 
+0. Sync + claim check: item ainda em Abertas? Issue ainda `backlog`? Etapa já no ROADMAP? Se já promovido → relato curto e siga a etapa existente (sem duplicar).
 1. Grave a etapa em `ROADMAP.md` (`em_andamento` se não houver outra; senão `pendente`).
 2. Se já existir issue de backlog: remova label `backlog`, adicione `roadmap` + `status:*`, atualize `Pronto quando`, vincule ao Project. Senão, crie via `/atualizar-roadmap`.
 3. Mova o item para **Promovidas / arquivadas** com `Issue: #N`.
