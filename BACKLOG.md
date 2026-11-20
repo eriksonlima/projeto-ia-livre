@@ -8,12 +8,6 @@ Promoção para `ROADMAP.md` exige **confirmação explícita** (ver `.cursor/ru
 
 ## Abertas
 
-### B5 — Runtime nativo / Linha B real (mínimo)
-
-- Origem: seed pós Etapas 1–9 (confirmação do usuário); harness Etapa 9 deixa Linha B como stub.
-- Pronto quando sugerido: caminho documentado e verificável para a carga canônica do harness emitir `IA_LIVRE_HARNESS_*` com `LINE=B` no ambiente IA Livre (ou stub honestamente substituído por execução real mínima); sem fingir hipótese comprovada.
-- Issue: [#11](https://github.com/eriksonlima/projeto-ia-livre/issues/11)
-
 ### B6 — Lacunas de arquitetura (scheduler / memória model-aware)
 
 - Origem: seed pós Etapas 1–9; lacunas abertas em `docs/architecture.md`.
@@ -51,6 +45,12 @@ Promoção para `ROADMAP.md` exige **confirmação explícita** (ver `.cursor/ru
 - Issue: [#18](https://github.com/eriksonlima/projeto-ia-livre/issues/18)
 
 ## Promovidas / arquivadas
+
+### B5 — Runtime nativo / Linha B real (mínimo)
+
+- Promovido para Etapa 12 do roadmap com confirmação explícita.
+- Issue: [#11](https://github.com/eriksonlima/projeto-ia-livre/issues/11)
+- Etapa: [Etapa 12 — Runtime nativo / Linha B real (mínimo)](ROADMAP.md)
 
 ### B7 — Kernel pós-Boot Services (ExitBootServices + base mínima)
 

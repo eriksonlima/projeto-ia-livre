@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# Gate Etapa 9: harness Linha A ok + Linha B skip canônico.
-# Não exige QEMU/UEFI nem GPU. Não prova a hipótese A vs B.
+# Gate harness: Linha A (GGUF host) + Linha B (proxy QEMU). Não prova a hipótese A vs B.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 export PATH="${HOME}/.cargo/bin:${HOME}/.local/bin:${PATH}"
@@ -23,7 +22,8 @@ cargo build -p ia-livre-runtime
 
 LOG_A="$(mktemp)"
 LOG_B="$(mktemp)"
-trap 'rm -f "$LOG_A" "$LOG_B"' EXIT
+COMBINED_A="$(mktemp)"
+trap 'rm -f "$LOG_A" "$LOG_A.err" "$LOG_B" "$LOG_B.err" "$COMBINED_A"' EXIT
 
 echo "Harness Linha A (timeout ${TIMEOUT_SEC}s)…"
 set +e
@@ -43,8 +43,6 @@ if (( rc_a != 0 )); then
   exit 1
 fi
 
-COMBINED_A="$(mktemp)"
-trap 'rm -f "$LOG_A" "$LOG_A.err" "$LOG_B" "$COMBINED_A"' EXIT
 cat "$LOG_A" "$LOG_A.err" >"$COMBINED_A"
 
 fail=0
@@ -60,34 +58,62 @@ for marker in \
     fail=1
   fi
 done
-
 if (( fail )); then
-  echo "---- saída Linha A (últimas 60 linhas) ----"
   tail -n 60 "$COMBINED_A" || true
   exit 1
 fi
 
-echo "Harness Linha B (stub)…"
-./scripts/run-harness-line-b.sh >"$LOG_B" 2>&1
-if ! grep -q 'IA_LIVRE_HARNESS_B_SKIP' "$LOG_B"; then
-  echo "GATE_FAIL: stub B sem IA_LIVRE_HARNESS_B_SKIP"
+echo "Harness Linha B (QEMU proxy)…"
+set +e
+timeout "${TIMEOUT_SEC}s" ./scripts/run-harness-line-b.sh >"$LOG_B" 2>"$LOG_B.err"
+rc_b=$?
+set -e
+cat "$LOG_B.err" >>"$LOG_B" 2>/dev/null || true
+
+if (( rc_b == 124 )); then
+  echo "GATE_FAIL: timeout Linha B após ${TIMEOUT_SEC}s"
+  exit 1
+fi
+if (( rc_b != 0 )); then
+  echo "GATE_FAIL: Linha B exit $rc_b"
   cat "$LOG_B" || true
-  exit 1
-fi
-if ! grep -q 'IA_LIVRE_HARNESS_LINE=B' "$LOG_B"; then
-  echo "GATE_FAIL: stub B sem IA_LIVRE_HARNESS_LINE=B"
-  cat "$LOG_B" || true
-  exit 1
-fi
-# Não aceitar números inventados de B (HARNESS_OK / LOAD / TOKENS na linha B)
-if grep -q 'IA_LIVRE_HARNESS_OK' "$LOG_B"; then
-  echo "GATE_FAIL: stub B não deve emitir IA_LIVRE_HARNESS_OK"
-  exit 1
-fi
-if grep -qE 'IA_LIVRE_HARNESS_(LOAD_S|TOKENS_PER_S)=' "$LOG_B"; then
-  echo "GATE_FAIL: stub B não deve emitir métricas numéricas"
   exit 1
 fi
 
-echo "GATE_OK: harness — A ok + B skip — $(grep -E 'IA_LIVRE_HARNESS_(LINE=A|OK|LOAD_S=|TOKENS_PER_S=)' "$COMBINED_A" | tr '\n' ' ')"
+fail=0
+for marker in \
+  'IA_LIVRE_HARNESS_LINE=B' \
+  'IA_LIVRE_HARNESS_OK' \
+  'IA_LIVRE_HARNESS_PROXY=post_exit_microbench' \
+  'IA_LIVRE_HARNESS_LOAD_KIND=proxy' \
+  'IA_LIVRE_HARNESS_PROXY_MS=' \
+  'IA_LIVRE_HARNESS_PROXY_OPS=' \
+  'IA_LIVRE_HARNESS_MODEL=proxy-post-exit-v1' \
+  'IA_LIVRE_HARNESS_N_PREDICT=0'; do
+  if ! grep -q "$marker" "$LOG_B"; then
+    echo "GATE_FAIL: marcador ausente na Linha B: $marker"
+    fail=1
+  fi
+done
+
+# Fraudes / legado
+if grep -q 'IA_LIVRE_HARNESS_B_SKIP' "$LOG_B"; then
+  echo "GATE_FAIL: B não deve emitir HARNESS_B_SKIP no sucesso"
+  fail=1
+fi
+if grep -qE 'IA_LIVRE_HARNESS_TOKENS_PER_S=' "$LOG_B"; then
+  echo "GATE_FAIL: B não deve emitir TOKENS_PER_S (fraude / não-proxy)"
+  fail=1
+fi
+if grep -qiE 'IA_LIVRE_HARNESS_MODEL=.*tinyllama|IA_LIVRE_HARNESS_MODEL=.*\.gguf' "$LOG_B"; then
+  echo "GATE_FAIL: B não deve fingir modelo GGUF TinyLlama"
+  fail=1
+fi
+
+if (( fail )); then
+  cat "$LOG_B" || true
+  exit 1
+fi
+
+echo "GATE_OK: harness — A (GGUF) ok + B (proxy QEMU) ok — hipótese NÃO comprovada"
 exit 0

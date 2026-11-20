@@ -171,13 +171,12 @@ Saída esperada: `IA_LIVRE_RUNTIME_USED=1`, `IA_LIVRE_TOOL_OK`, `IA_LIVRE_MEMORY
 
 Gate automatizado: `make verify-agent` (não exige QEMU/UEFI nem o nó P2P; requer GGUF).
 
-### Harness Linha A vs Linha B (Etapa 9)
+### Harness Linha A vs Linha B (Etapas 9 / 12)
 
-Metodologia e contrato do slot B: [`docs/harness-linha-a-b.md`](docs/harness-linha-a-b.md).  
-**Não** confundir com métricas dos protótipos CPU/GPU (`docs/runtime-inferencia-*-metricas.md`).  
-Participar / medir a hipótese **não** exige o SO IA Livre para a Linha A; a Linha B permanece stub até o runtime nativo.
+Metodologia: [`docs/harness-linha-a-b.md`](docs/harness-linha-a-b.md); caminho B mínimo: [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md).  
+**Não** confundir com métricas dos protótipos CPU/GPU. Linha A = host + GGUF; Linha B = proxy pós-ExitBoot no QEMU (**não** TinyLlama). Hipótese **não** comprovada.
 
-Pré-requisitos: os do runtime CPU (GGUF + cmake/libclang). **Sem** QEMU/UEFI nem GPU para o harness v1.
+Pré-requisitos: runtime CPU (GGUF) para A; QEMU/OVMF para B. Sem GPU no harness v1.
 
 ```bash
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
@@ -189,11 +188,13 @@ cargo build -p ia-livre-runtime
 # Linha A — emite IA_LIVRE_HARNESS_LINE=A + IA_LIVRE_HARNESS_OK + load/tokens
 ./scripts/run-harness-line-a.sh
 
-# Linha B — stub: IA_LIVRE_HARNESS_B_SKIP (sem números inventados)
+# Linha B — QEMU proxy pós-ExitBoot (não TinyLlama; hipótese não comprovada)
 ./scripts/run-harness-line-b.sh
 ```
 
-Gate automatizado: `make verify-harness` (não exige QEMU/UEFI nem GPU; requer GGUF).
+Linha B (Etapa 12): proxy pós-ExitBoot no QEMU — **não** é TinyLlama; ver [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md). Hipótese **não** comprovada.
+
+Gate automatizado: `make verify-harness` (A = GGUF no host; B = QEMU/kernel proxy; requer GGUF para A).
 
 ## Como verificar
 
@@ -213,9 +214,10 @@ grep -q 'IA_LIVRE_BOOT_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_MEM_MAP_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_ALLOC_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_EXIT_BOOT_OK' kernel/src/main.rs
+grep -q 'IA_LIVRE_NATIVE_BENCH_OK' kernel/src/main.rs
 ```
 
-`make verify` falha se faltarem `BOOT_OK`, `MEM_MAP_OK`, `ALLOC_OK`, `EXIT_BOOT_BEGIN`, `EXIT_MAP_OK`, `EXIT_MEM_OK` ou `EXIT_BOOT_OK` (também linhas `MEM_CONVENTIONAL_PAGES=` / `ALLOC_BYTES=` / `EXIT_MAP_PAGES=`). Timeout padrão 45s; `VERIFY_TIMEOUT`. Contratos: [`docs/kernel-alem-do-boot.md`](docs/kernel-alem-do-boot.md), [`docs/kernel-pos-boot-services.md`](docs/kernel-pos-boot-services.md).
+`make verify` falha se faltarem BOOT/MEM/ALLOC/EXIT_* ou `NATIVE_BENCH_OK` (proxy Linha B). Timeout padrão 45s; `VERIFY_TIMEOUT`. Contratos: kernel-alem-do-boot, kernel-pos-boot-services, runtime-nativo-linha-b.
 
 ### Gate do runtime (Etapa 5 — adicional)
 
@@ -289,9 +291,9 @@ grep -q 'IA_LIVRE_AGENT_OK' agent/src/main.rs
 
 `make verify-agent` falha se o modelo estiver ausente ou se faltarem `IA_LIVRE_TOOL_OK` / `IA_LIVRE_MEMORY_OK` / `IA_LIVRE_AGENT_OK` (timeout padrão 300s; `VERIFY_AGENT_TIMEOUT`). Gates do kernel, runtime e nó permanecem.
 
-### Gate do harness Linha A vs Linha B (Etapa 9 — adicional)
+### Gate do harness Linha A vs Linha B (Etapas 9 / 12 — adicional)
 
-Requer o GGUF local (`./scripts/fetch-model.sh` na primeira vez). **Não** usa QEMU/UEFI nem GPU. **Não** prova a hipótese — só o instrumento (A ok + B skip).
+Requer GGUF local para A e QEMU/UEFI para B. **Não** prova a hipótese — A = carga canônica; B = proxy pós-ExitBoot.
 
 ```bash
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
@@ -300,13 +302,14 @@ test -f scripts/verify-harness.sh
 test -f scripts/run-harness-line-a.sh
 test -f scripts/run-harness-line-b.sh
 test -f docs/harness-linha-a-b.md
+test -f docs/runtime-nativo-linha-b.md
 ./scripts/fetch-model.sh
 make verify-harness
 grep -q 'IA_LIVRE_HARNESS_OK' scripts/run-harness-line-a.sh
-grep -q 'IA_LIVRE_HARNESS_B_SKIP' scripts/run-harness-line-b.sh
+grep -q 'post_exit_microbench' scripts/run-harness-line-b.sh
 ```
 
-`make verify-harness` exige marcadores `IA_LIVRE_HARNESS_*` da Linha A (`LINE=A`, `OK`, load/tokens/model/`n-predict`) e `IA_LIVRE_HARNESS_B_SKIP` no stub B (timeout padrão 300s; `VERIFY_HARNESS_TIMEOUT`). Gates existentes permanecem.
+`make verify-harness` exige A (`LINE=A`, `OK`, load/tokens) **e** B (`LINE=B`, `OK`, `PROXY=*`, sem `TOKENS_PER_S` / sem `B_SKIP`). Timeout padrão 300s; `VERIFY_HARNESS_TIMEOUT`. Gates existentes permanecem.
 
 ## PATH
 
@@ -345,10 +348,11 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `scripts/verify-agent.sh` — gate do ambiente de autonomia (`IA_LIVRE_TOOL_OK` + `IA_LIVRE_MEMORY_OK` + `IA_LIVRE_AGENT_OK`)
 - `scripts/fetch-model.sh` — download do GGUF canônico da Etapa 5
 - `docs/runtime-inferencia-cpu-metricas.md` — métricas do protótipo no host
-- `docs/harness-linha-a-b.md` — metodologia do harness Linha A vs Linha B (Etapa 9)
+- `docs/harness-linha-a-b.md` — metodologia do harness Linha A vs Linha B
+- `docs/runtime-nativo-linha-b.md` — contrato Linha B mínima (proxy pós-ExitBoot)
 - `scripts/run-harness-line-a.sh` — corrida Linha A (wrapper do runtime, marcadores `HARNESS_`)
-- `scripts/run-harness-line-b.sh` — stub Linha B (`IA_LIVRE_HARNESS_B_SKIP`)
-- `scripts/verify-harness.sh` — gate do harness (`IA_LIVRE_HARNESS_OK` + `IA_LIVRE_HARNESS_B_SKIP`)
+- `scripts/run-harness-line-b.sh` — Linha B via QEMU (proxy; `HARNESS_OK` + `PROXY_*`)
+- `scripts/verify-harness.sh` — gate A (GGUF) + B (proxy QEMU)
 - `build/esp/` — ESP gerada (gitignored via `build/`)
 
 ## Fora de escopo do agente

@@ -78,3 +78,10 @@ Status: feita
 Issue: [#13](https://github.com/eriksonlima/projeto-ia-livre/issues/13)  
 Spec: specs/kernel-pos-boot-services/  
 Pronto quando: caminho documentado e verificável no UEFI/QEMU para sair de Boot Services (ou equivalente mínimo) com base estável (mapa preservado / memória utilizável), gate serial — ainda sem inferência no kernel.
+
+## Etapa 12 — Runtime nativo / Linha B real (mínimo)
+
+Status: feita  
+Issue: [#11](https://github.com/eriksonlima/projeto-ia-livre/issues/11)  
+Spec: specs/runtime-nativo-linha-b/  
+Pronto quando: caminho documentado e verificável para a carga canônica do harness emitir `IA_LIVRE_HARNESS_*` com `LINE=B` no ambiente IA Livre (ou stub honestamente substituído por execução real mínima); sem fingir hipótese comprovada.

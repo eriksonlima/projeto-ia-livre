@@ -1,0 +1,38 @@
+# Runtime nativo / Linha B (mínimo) — Etapa 12
+
+Caminho **honesto** para a Linha B no IA Livre (QEMU), sem TinyLlama no kernel e **sem** comprovar a hipótese A vs B.
+
+Ponte harness: [`harness-linha-a-b.md`](harness-linha-a-b.md).  
+Pré-requisito kernel: [`kernel-pos-boot-services.md`](kernel-pos-boot-services.md) (`EXIT_BOOT_OK`).
+
+## Decisão
+
+| Peça | Escolha |
+|------|---------|
+| Ambiente | QEMU/UEFI — **não** host `ia-livre-runtime` (isso é Linha A) |
+| Carga | Proxy: microbenchmark CPU/memória **pós-ExitBoot** |
+| GGUF TinyLlama | **Ausente** nesta etapa |
+| Hipótese | **Não** comprovada; métricas B **não** comparáveis a A |
+
+## Marcadores kernel (COM1, após `EXIT_BOOT_OK`)
+
+| Marcador | Significado |
+|----------|-------------|
+| `IA_LIVRE_NATIVE_BENCH_BEGIN` | Início do proxy |
+| `IA_LIVRE_NATIVE_BENCH_OPS=<n>` | Operações medidas |
+| `IA_LIVRE_NATIVE_BENCH_MS=<n>` | Duração aproximada (ms; TSC ÷ 2e9 documentado) |
+| `IA_LIVRE_NATIVE_BENCH_OK` | Proxy concluído |
+
+## O que o harness B reemite
+
+`LINE=B`, `HARNESS_OK`, `PROXY=post_exit_microbench`, `LOAD_KIND=proxy`, `PROXY_MS=`, `PROXY_OPS=`, `MODEL=proxy-post-exit-v1`, `N_PREDICT=0`.
+
+**Proibido:** `TOKENS_PER_S`, `LOAD_S` como load GGUF, nome do modelo TinyLlama, inventar números.
+
+## Como observar
+
+```bash
+make verify          # kernel até NATIVE_BENCH_OK (Task 2+)
+./scripts/run-harness-line-b.sh
+make verify-harness  # A (GGUF) + B (proxy)
+```

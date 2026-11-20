@@ -73,8 +73,12 @@ make run      # serial: Etapa 10 → EXIT_BOOT_BEGIN → marcadores EXIT_* via C
 make verify   # exige BOOT/MEM/ALLOC + EXIT_BOOT_OK (e EXIT_MAP/MEM); VERIFY_TIMEOUT default 45s
 ```
 
+## Depois do EXIT (Etapa 12)
+
+Após `IA_LIVRE_EXIT_BOOT_OK`, o kernel pode emitir o proxy Linha B (`IA_LIVRE_NATIVE_BENCH_*`).  
+Ver [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md).
+
 ## Fora de escopo
 
 - Inferência / GGUF / llama.cpp no UEFI
-- Runtime Linha B (`HARNESS_B_SKIP`)
 - MMU completa, heap buddy/slab, filesystem, rede, GPU, scheduler

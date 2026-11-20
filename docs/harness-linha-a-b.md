@@ -3,15 +3,18 @@
 Instrumento de medição da **hipótese de pesquisa** do Projeto IA Livre (Etapa 9).  
 Ponte: [`architecture.md`](architecture.md) (seção Hipótese) e [`product-context.md`](product-context.md).
 
-> **Isto não prova a hipótese.** Só define carga comparável, roda a **Linha A** no host e reserva o slot da **Linha B** até existir runtime nativo no IA Livre.  
-> **Não** confundir com as métricas dos protótipos: [`runtime-inferencia-cpu-metricas.md`](runtime-inferencia-cpu-metricas.md) (Etapa 5) e [`runtime-inferencia-gpu-metricas.md`](runtime-inferencia-gpu-metricas.md) (Etapa 8). Aqueles docs registram o caminho do runtime; **este** é o harness A vs B.
+> **Isto não prova a hipótese.** Define carga canônica na Linha A e um **caminho nativo mínimo** na Linha B (Etapa 12 = proxy pós-ExitBoot — **não** TinyLlama no IA Livre).  
+> **A e B nesta etapa não são comparáveis** lado a lado para a hipótese (`TOKENS_PER_S` vs `PROXY_MS`).  
+> **Não** confundir com as métricas dos protótipos: [`runtime-inferencia-cpu-metricas.md`](runtime-inferencia-cpu-metricas.md) (Etapa 5) e [`runtime-inferencia-gpu-metricas.md`](runtime-inferencia-gpu-metricas.md) (Etapa 8).
+
+Contrato do caminho B mínimo: [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md).
 
 ## Definição nesta etapa
 
 | Linha | Significado nesta etapa | Estado |
 |-------|-------------------------|--------|
-| **A** | Host Linux + `ia-livre-runtime` (llama.cpp), CPU, mesma carga canônica | **Executável** (Task 2+) |
-| **B** | IA Livre (kernel + mecanismos) + **runtime nativo** emitindo os mesmos marcadores | **Stub / skip** até o runtime nativo existir |
+| **A** | Host Linux + `ia-livre-runtime` (llama.cpp), CPU, carga canônica GGUF | **Executável** |
+| **B** | IA Livre (QEMU) + **proxy** pós-ExitBoot (microbenchmark); emite `HARNESS_*` com `LINE=B` | **Execução real mínima** (Etapa 12) — **não** é carga TinyLlama |
 
 ### Limitação da referência A
 
@@ -45,20 +48,29 @@ Namespace distinto dos protótipos (`IA_LIVRE_INFER_OK`, `IA_LIVRE_LOAD_S`, etc.
 |----------|-------------|
 | `IA_LIVRE_HARNESS_LINE=A` \| `B` | Qual linha acabou de rodar |
 | `IA_LIVRE_HARNESS_OK` | Corrida da linha concluiu com sucesso (A obrigatório no gate) |
-| `IA_LIVRE_HARNESS_LOAD_S=` | Tempo de load (s) |
-| `IA_LIVRE_HARNESS_TOKENS_PER_S=` | Throughput de geração |
-| `IA_LIVRE_HARNESS_MODEL=` | Identificador do modelo/quant |
-| `IA_LIVRE_HARNESS_N_PREDICT=` | Tokens pedidos |
-| `IA_LIVRE_HARNESS_ACCEL=cpu` | Modo de aceleração da corrida (v1 = cpu) |
-| `IA_LIVRE_HARNESS_B_SKIP` | Linha B não executável ainda (stub); gate permanece 0 se política for skip |
+| `IA_LIVRE_HARNESS_LOAD_S=` | Tempo de load (s) — **só Linha A** (GGUF) |
+| `IA_LIVRE_HARNESS_TOKENS_PER_S=` | Throughput — **só Linha A**; **proibido** em B nesta etapa |
+| `IA_LIVRE_HARNESS_MODEL=` | A: GGUF; B: `proxy-post-exit-v1` (honesto) |
+| `IA_LIVRE_HARNESS_N_PREDICT=` | A: 32; B: `0` |
+| `IA_LIVRE_HARNESS_ACCEL=cpu` | Modo de aceleração |
+| `IA_LIVRE_HARNESS_PROXY=post_exit_microbench` | **Só B** — carga é proxy, não GGUF |
+| `IA_LIVRE_HARNESS_LOAD_KIND=proxy` | **Só B** |
+| `IA_LIVRE_HARNESS_PROXY_MS=` / `PROXY_OPS=` | **Só B** — métricas medidas do microbenchmark |
+| `IA_LIVRE_HARNESS_B_SKIP` | Legado do stub; **não** no caminho de sucesso da Etapa 12 |
 
 Fora do mínimo v1: joules, p95 multi-request, VRAM multi-tenant (candidatos da architecture).
 
 ## Contrato do slot Linha B
 
-1. **Pré-condição:** caminho bootável / runtime nativo no IA Livre que execute a **mesma** carga (GGUF, prompt, `n-predict`, CPU) e emita os mesmos `IA_LIVRE_HARNESS_*` com `LINE=B` + `HARNESS_OK`.
-2. **Entrypoint futuro:** `scripts/run-harness-line-b.sh` — hoje só stub (`IA_LIVRE_HARNESS_B_SKIP` + motivo). Alternativa futura (ESP/QEMU) só precisa respeitar o mesmo contrato de marcadores.
-3. **Quando B existir:** mesma tabela de carga; mesmo hardware; relatório lado a lado neste documento (baseline A + medição B). **Sem** declarar vitória automática da hipótese — só dados comparáveis.
+### Etapa 12 (atual) — proxy mínimo
+
+1. Kernel emite `EXIT_BOOT_OK` + `NATIVE_BENCH_*` (COM1).
+2. `scripts/run-harness-line-b.sh` sobe QEMU, captura serial e reemite `HARNESS_LINE=B` + `HARNESS_OK` + marcadores proxy.
+3. **Não** declara hipótese comprovada; A e B **não** são lado a lado comparáveis até B rodar a carga canônica GGUF.
+
+### Ainda falta (carga canônica em B)
+
+Runtime nativo de inferência no IA Livre com TinyLlama Q4_K_M, prompt e `n-predict=32` — fora desta etapa.
 
 ## Como rodar
 
@@ -71,7 +83,7 @@ cargo build -p ia-livre-runtime
 # Linha A (host Linux + runtime)
 ./scripts/run-harness-line-a.sh
 
-# Linha B (stub — skip canônico)
+# Linha B (QEMU — proxy pós-ExitBoot; não é TinyLlama)
 ./scripts/run-harness-line-b.sh
 
 # Gate

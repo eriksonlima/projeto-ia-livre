@@ -13,6 +13,10 @@ const EXIT_BOOT_BEGIN: &str = "IA_LIVRE_EXIT_BOOT_BEGIN\n";
 
 const PROOF_PAGES: usize = 2;
 const BUMP_PROOF_BYTES: usize = 64;
+/// Iterações do microbenchmark Linha B (proxy pós-ExitBoot).
+const NATIVE_BENCH_ITERS: u64 = 200_000;
+/// Frequência TSC assumida no QEMU para converter ciclos → ms (documentada).
+const TSC_HZ_ASSUMED: u64 = 2_000_000_000;
 
 const COM1: u16 = 0x3F8;
 
@@ -162,6 +166,39 @@ unsafe fn uart_emit_kv(key: &str, value: u64) {
     uart_write("\n");
 }
 
+unsafe fn rdtsc() -> u64 {
+    let lo: u32;
+    let hi: u32;
+    core::arch::asm!(
+        "rdtsc",
+        out("eax") lo,
+        out("edx") hi,
+        options(nostack, preserves_flags)
+    );
+    ((hi as u64) << 32) | (lo as u64)
+}
+
+/// Microbenchmark real: toca o bloco LOADER_DATA + trabalho CPU; métricas via RDTSC.
+unsafe fn run_native_bench(base: NonNull<u8>, capacity: usize) -> (u64, u64) {
+    let slice = core::slice::from_raw_parts_mut(base.as_ptr(), capacity);
+    let t0 = rdtsc();
+    let mut acc: u64 = 0;
+    let mut ops: u64 = 0;
+    for i in 0..NATIVE_BENCH_ITERS {
+        let idx = (i as usize) % capacity;
+        let v = slice[idx].wrapping_add((i as u8).wrapping_mul(17));
+        slice[idx] = v;
+        acc = acc.wrapping_add(v as u64).wrapping_mul(1315423911);
+        ops = ops.wrapping_add(1);
+    }
+    let t1 = rdtsc();
+    let cycles = t1.saturating_sub(t0);
+    // Evita otimização total do acc.
+    core::hint::black_box(acc);
+    let ms = cycles / (TSC_HZ_ASSUMED / 1000);
+    (ops, ms)
+}
+
 fn halt() -> ! {
     loop {
         unsafe {
@@ -241,6 +278,13 @@ fn main() -> Status {
         if prove_bump(proof_base, proof_cap).is_some() {
             uart_write("IA_LIVRE_EXIT_MEM_OK\n");
             uart_write("IA_LIVRE_EXIT_BOOT_OK\n");
+
+            // Etapa 12 — proxy Linha B (não é inferência / TinyLlama).
+            uart_write("IA_LIVRE_NATIVE_BENCH_BEGIN\n");
+            let (ops, ms) = run_native_bench(proof_base, proof_cap);
+            uart_emit_kv("IA_LIVRE_NATIVE_BENCH_OPS=", ops);
+            uart_emit_kv("IA_LIVRE_NATIVE_BENCH_MS=", ms);
+            uart_write("IA_LIVRE_NATIVE_BENCH_OK\n");
         }
     }
 

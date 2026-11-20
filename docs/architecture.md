@@ -46,6 +46,7 @@ As camadas formam um ecossistema, não quatro produtos desconectados. A ordem de
 - Nenhuma decisão só por curiosidade técnica (manifesto).
 - **Etapa 10:** primeiro mecanismo de memória no kernel UEFI — mapa + `AllocatePages`/bump sob Boot Services (sem inferência). Contrato: [`kernel-alem-do-boot.md`](kernel-alem-do-boot.md).
 - **Etapa 11:** `ExitBootServices` + base estável (mapa owned + memória); I/O pós-exit via UART COM1. Contrato: [`kernel-pos-boot-services.md`](kernel-pos-boot-services.md).
+- **Etapa 12:** Linha B mínima = proxy pós-ExitBoot (não TinyLlama); hipótese **não** comprovada. Contrato: [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md).
 
 ## Decisões abertas
 
@@ -54,7 +55,7 @@ As camadas formam um ecossistema, não quatro produtos desconectados. A ordem de
 - Licenças definitivas por componente (preferência a confirmar no manifesto).
 - ~~Estratégia de aceleração além de CPU~~ — **protótipo host:** CUDA canônico / Vulkan alternativa via llama.cpp (ADR 0002); GPU manager no kernel e multi-GPU continuam abertos.
 - Forma e escopo do ambiente de autonomia na primeira versão utilizável.
-- ~~Critérios exatos e harness do benchmark Linha A vs Linha B~~ — **harness v1 (Etapa 9):** metodologia + Linha A no host + stub Linha B em [`harness-linha-a-b.md`](harness-linha-a-b.md); prova da hipótese e runtime nativo em B continuam abertos.
+- ~~Critérios exatos e harness do benchmark Linha A vs Linha B~~ — **harness v1 (Etapa 9)** + **Linha B mínima (Etapa 12):** proxy pós-ExitBoot no IA Livre ([`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md)); prova da hipótese e carga GGUF canônica em B continuam abertos.
 
 ## Referências próximas
 

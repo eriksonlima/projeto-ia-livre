@@ -3,19 +3,19 @@
 ## Foco atual
 
 - Processo: backlog → roadmap (mínima interrupção)
-- Etapa do roadmap: nenhuma `em_andamento` (Etapas 1–11 **feitas**)
-- Spec ativa: nenhuma (última: `specs/kernel-pos-boot-services/`, Tasks 1–3 feitas)
+- Etapa do roadmap: nenhuma `em_andamento` (Etapas 1–12 **feitas**)
+- Spec ativa: nenhuma (última: `specs/runtime-nativo-linha-b/`)
 
 ## Mudanças recentes
 
-- Etapa 11: ExitBootServices + UART COM1; `make verify` exige `EXIT_BOOT_OK` (+ mapa/mem pós-exit)
-- Kernel: dual-phase (UEFI pré-exit → COM1 pós-exit)
+- Etapa 12: Linha B = proxy pós-ExitBoot (`NATIVE_BENCH_*` → `HARNESS_*` PROXY); hipótese **não** comprovada
+- `make verify-harness`: A GGUF + B QEMU proxy
 
 ## Próximo passo
 
-- Propor topo do backlog (**B5 — Runtime nativo / Linha B real**) e esperar confirmação
+- Propor topo do backlog (**B6 — Lacunas de arquitetura**) e esperar confirmação
 
 ## Notas
 
-- Hipótese A vs B ainda não comprovada; Linha B = stub até B5
-- README considerado nas fatias E11; sem mudança
+- Carga TinyLlama canônica em B continua aberta
+- README considerado; sem mudança

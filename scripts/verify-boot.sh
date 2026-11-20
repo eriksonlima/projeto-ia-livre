@@ -12,11 +12,14 @@ MARKERS=(
   "IA_LIVRE_EXIT_MAP_OK"
   "IA_LIVRE_EXIT_MEM_OK"
   "IA_LIVRE_EXIT_BOOT_OK"
+  "IA_LIVRE_NATIVE_BENCH_OK"
 )
 NUMERIC=(
   "IA_LIVRE_MEM_CONVENTIONAL_PAGES="
   "IA_LIVRE_ALLOC_BYTES="
   "IA_LIVRE_EXIT_MAP_PAGES="
+  "IA_LIVRE_NATIVE_BENCH_OPS="
+  "IA_LIVRE_NATIVE_BENCH_MS="
 )
 
 TIMEOUT_SEC="${VERIFY_TIMEOUT:-45}"
@@ -42,7 +45,7 @@ while (( SECONDS < deadline )); do
     kill -KILL "$QEMU_PID" 2>/dev/null || true
     wait "$QEMU_PID" 2>/dev/null || true
     QEMU_PID=
-    echo "GATE_OK: kernel — BOOT_OK MEM_MAP_OK ALLOC_OK EXIT_BOOT_OK (+ mapa/mem pós-exit)"
+    echo "GATE_OK: kernel — BOOT_OK … EXIT_BOOT_OK + NATIVE_BENCH_OK"
     exit 0
   fi
   if ! kill -0 "$QEMU_PID" 2>/dev/null; then
