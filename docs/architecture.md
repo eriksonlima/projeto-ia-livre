@@ -47,10 +47,11 @@ As camadas formam um ecossistema, não quatro produtos desconectados. A ordem de
 - **Etapa 10:** primeiro mecanismo de memória no kernel UEFI — mapa + `AllocatePages`/bump sob Boot Services (sem inferência). Contrato: [`kernel-alem-do-boot.md`](kernel-alem-do-boot.md).
 - **Etapa 11:** `ExitBootServices` + base estável (mapa owned + memória); I/O pós-exit via UART COM1. Contrato: [`kernel-pos-boot-services.md`](kernel-pos-boot-services.md).
 - **Etapa 12:** Linha B mínima = proxy pós-ExitBoot (não TinyLlama); hipótese **não** comprovada. Contrato: [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md).
+- **Etapa 13:** desenho candidato memória model-aware + scheduler por fases (ADR 0003) — **sem** implementação.
 
 ## Decisões abertas
 
-- Desenho fino de memória model-aware e do scheduler de inferência.
+- ~~Desenho fino de memória model-aware e do scheduler de inferência~~ — **decidido no nível desenho (Etapa 13):** classes `Weights`/`KvCache` + hints Prefill/Decode — ADR [`0003`](adr/0003-memoria-model-aware-e-scheduler-fases.md) + [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-scheduler-nativo.md). **Implementação e prova da hipótese continuam abertas.**
 - Stack concreta do protocolo P2P (bibliotecas, transporte, identidade).
 - Licenças definitivas por componente (preferência a confirmar no manifesto).
 - ~~Estratégia de aceleração além de CPU~~ — **protótipo host:** CUDA canônico / Vulkan alternativa via llama.cpp (ADR 0002); GPU manager no kernel e multi-GPU continuam abertos.

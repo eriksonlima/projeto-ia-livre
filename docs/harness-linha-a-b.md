@@ -70,7 +70,8 @@ Fora do mínimo v1: joules, p95 multi-request, VRAM multi-tenant (candidatos da 
 
 ### Ainda falta (carga canônica em B)
 
-Runtime nativo de inferência no IA Livre com TinyLlama Q4_K_M, prompt e `n-predict=32` — fora desta etapa.
+Runtime nativo de inferência no IA Livre com TinyLlama Q4_K_M, prompt e `n-predict=32` — fora desta etapa.  
+Desenho dos mecanismos nativos (memória/scheduler) que tornariam B diferencial: [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-scheduler-nativo.md) (ADR 0003) — **desenho ≠ implementação ≠ prova**.
 
 ## Como rodar
 

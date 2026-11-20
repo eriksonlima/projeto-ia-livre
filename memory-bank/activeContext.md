@@ -2,20 +2,19 @@
 
 ## Foco atual
 
-- Processo: backlog → roadmap (mínima interrupção)
-- Etapa do roadmap: nenhuma `em_andamento` (Etapas 1–12 **feitas**)
-- Spec ativa: nenhuma (última: `specs/runtime-nativo-linha-b/`)
+- Processo: promoção backlog → roadmap **autônoma** (sem pedir confirmação)
+- Etapa do roadmap: promover **B8** → próxima etapa (roadmap 1–13 feitas)
+- Spec ativa: a criar após promoção
 
 ## Mudanças recentes
 
-- Etapa 12: Linha B = proxy pós-ExitBoot (`NATIVE_BENCH_*` → `HARNESS_*` PROXY); hipótese **não** comprovada
-- `make verify-harness`: A GGUF + B QEMU proxy
+- Processo: rules/skill/command — promoção do topo sem “confirma?”
+- Etapa 13: ADR 0003 + desenho Weights/KvCache + Prefill/Decode (só docs)
 
 ## Próximo passo
 
-- Propor topo do backlog (**B6 — Lacunas de arquitetura**) e esperar confirmação
+- Promover B8 (#14), especificar e fatiar
 
 ## Notas
 
-- Carga TinyLlama canônica em B continua aberta
-- README considerado; sem mudança
+- Hipótese A vs B não comprovada; GGUF canônico em B ainda aberto

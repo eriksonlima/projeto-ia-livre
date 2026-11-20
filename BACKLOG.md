@@ -4,21 +4,9 @@ Fila de demandas **ainda não** comprometidas no roadmap. Ordem = prioridade (to
 
 Fonte: ideias do usuário, lacunas de `docs/architecture.md` / `docs/product-context.md`, ou pedidos fora da etapa atual.
 Este arquivo é **canônico**. Espelho GitHub é **best-effort** (label `backlog`); se `gh` falhar, o item permanece só aqui e a fatia não trava.
-Promoção para `ROADMAP.md` exige **confirmação explícita** (ver `.cursor/rules/backlog-do-projeto.mdc` / skill `atualizar-backlog`).
+Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap esvazia / etapa fecha / “continuar”) — ver `.cursor/rules/backlog-do-projeto.mdc` / skill `atualizar-backlog`. Não inventar etapa fora deste arquivo.
 
 ## Abertas
-
-### B6 — Lacunas de arquitetura (scheduler / memória model-aware)
-
-- Origem: seed pós Etapas 1–9; lacunas abertas em `docs/architecture.md`.
-- Pronto quando sugerido: desenho (doc/ADR) do mecanismo nativo candidato que diferencia Linha B da A — escopo de desenho, não implementação completa.
-- Issue: [#12](https://github.com/eriksonlima/projeto-ia-livre/issues/12)
-
-### B8 — Protocolo P2P além do protótipo (stack / identidade)
-
-- Origem: análise 2026-11-20; decisão aberta em `docs/architecture.md`; fora de escopo de `docs/rede-ia-livre-prototipo.md`.
-- Pronto quando sugerido: escolha documentada (ADR/doc) da stack candidata (transporte, identidade, descoberta além de HELLO/MSG/ACK) e fronteira do próximo protótipo — sem marketplace nem integração runtime/kernel.
-- Issue: [#14](https://github.com/eriksonlima/projeto-ia-livre/issues/14)
 
 ### B9 — Ambiente de autonomia além do protótipo (v1 utilizável)
 
@@ -45,6 +33,18 @@ Promoção para `ROADMAP.md` exige **confirmação explícita** (ver `.cursor/ru
 - Issue: [#18](https://github.com/eriksonlima/projeto-ia-livre/issues/18)
 
 ## Promovidas / arquivadas
+
+### B8 — Protocolo P2P além do protótipo (stack / identidade)
+
+- Promovido para Etapa 14 do roadmap (promoção autônoma).
+- Issue: [#14](https://github.com/eriksonlima/projeto-ia-livre/issues/14)
+- Etapa: [Etapa 14 — Protocolo P2P além do protótipo (stack / identidade)](ROADMAP.md)
+
+### B6 — Lacunas de arquitetura (scheduler / memória model-aware)
+
+- Promovido para Etapa 13 do roadmap com confirmação explícita.
+- Issue: [#12](https://github.com/eriksonlima/projeto-ia-livre/issues/12)
+- Etapa: [Etapa 13 — Lacunas de arquitetura (scheduler / memória model-aware)](ROADMAP.md)
 
 ### B5 — Runtime nativo / Linha B real (mínimo)
 

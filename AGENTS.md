@@ -322,7 +322,7 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 ## Estrutura
 
 - `ROADMAP.md` — etapas e status (fonte do próximo passo comprometido)
-- `BACKLOG.md` — demandas ainda não promovidas (canônico; espelho GitHub best-effort, label `backlog`)
+- `BACKLOG.md` — demandas ainda não promovidas (canônico; espelho GitHub best-effort, label `backlog`; promoção do topo **autônoma** quando o roadmap esvazia)
 - `specs/` — Spec-Driven Development (spec → plan → tasks)
 - `docs/` — produto, arquitetura e ADRs
 - `memory-bank/` — contexto volátil entre chats (`activeContext.md`, `progress.md`)
@@ -350,6 +350,8 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `docs/runtime-inferencia-cpu-metricas.md` — métricas do protótipo no host
 - `docs/harness-linha-a-b.md` — metodologia do harness Linha A vs Linha B
 - `docs/runtime-nativo-linha-b.md` — contrato Linha B mínima (proxy pós-ExitBoot)
+- `docs/desenho-memoria-scheduler-nativo.md` — desenho candidato Weights/KvCache + Prefill/Decode (ADR 0003)
+- `docs/adr/0003-memoria-model-aware-e-scheduler-fases.md` — ADR do desenho (sem implementação)
 - `scripts/run-harness-line-a.sh` — corrida Linha A (wrapper do runtime, marcadores `HARNESS_`)
 - `scripts/run-harness-line-b.sh` — Linha B via QEMU (proxy; `HARNESS_OK` + `PROXY_*`)
 - `scripts/verify-harness.sh` — gate A (GGUF) + B (proxy QEMU)

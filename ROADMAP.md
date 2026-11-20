@@ -85,3 +85,17 @@ Status: feita
 Issue: [#11](https://github.com/eriksonlima/projeto-ia-livre/issues/11)  
 Spec: specs/runtime-nativo-linha-b/  
 Pronto quando: caminho documentado e verificável para a carga canônica do harness emitir `IA_LIVRE_HARNESS_*` com `LINE=B` no ambiente IA Livre (ou stub honestamente substituído por execução real mínima); sem fingir hipótese comprovada.
+
+## Etapa 13 — Lacunas de arquitetura (scheduler / memória model-aware)
+
+Status: feita  
+Issue: [#12](https://github.com/eriksonlima/projeto-ia-livre/issues/12)  
+Spec: specs/lacunas-arquitetura-scheduler-memoria/  
+Pronto quando: desenho (doc/ADR) do mecanismo nativo candidato que diferencia Linha B da A — escopo de desenho, não implementação completa.
+
+## Etapa 14 — Protocolo P2P além do protótipo (stack / identidade)
+
+Status: em_andamento  
+Issue: [#14](https://github.com/eriksonlima/projeto-ia-livre/issues/14)  
+Spec: specs/protocolo-p2p-alem-prototipo/  
+Pronto quando: escolha documentada (ADR/doc) da stack candidata (transporte, identidade, descoberta além de HELLO/MSG/ACK) e fronteira do próximo protótipo — sem marketplace nem integração runtime/kernel.

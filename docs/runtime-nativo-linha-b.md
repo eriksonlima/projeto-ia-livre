@@ -14,6 +14,8 @@ Pré-requisito kernel: [`kernel-pos-boot-services.md`](kernel-pos-boot-services.
 | GGUF TinyLlama | **Ausente** nesta etapa |
 | Hipótese | **Não** comprovada; métricas B **não** comparáveis a A |
 
+> O desenho candidato que *diferenciaria* B de A de forma model-aware (classes `Weights`/`KvCache` + fases Prefill/Decode) está em [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-scheduler-nativo.md) / ADR 0003 — **ainda não implementado**; este proxy **não** o realiza.
+
 ## Marcadores kernel (COM1, após `EXIT_BOOT_OK`)
 
 | Marcador | Significado |
