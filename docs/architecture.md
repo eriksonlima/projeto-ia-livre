@@ -49,6 +49,7 @@ As camadas formam um ecossistema, não quatro produtos desconectados. A ordem de
 - **Etapa 12:** Linha B mínima = proxy pós-ExitBoot (não TinyLlama); hipótese **não** comprovada. Contrato: [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md).
 - **Etapa 13:** desenho candidato memória model-aware + scheduler por fases (ADR 0003) — **sem** implementação.
 - **Etapa 14:** desenho stack Rede IA Livre v1 (ADR 0004) — **sem** implementação no `node/`.
+- **Etapa 15:** escopo autonomia v1 (ADR 0005) — **sem** implementação no `agent/`.
 
 ## Decisões abertas
 
@@ -56,7 +57,7 @@ As camadas formam um ecossistema, não quatro produtos desconectados. A ordem de
 - ~~Stack concreta do protocolo P2P (bibliotecas, transporte, identidade)~~ — **decidida no nível desenho (Etapa 14):** TCP+UDP, ed25519/`PeerId`, HELLO assinado + IDENT — ADR [`0004`](adr/0004-stack-protocolo-rede-ia-livre.md) + [`desenho-protocolo-rede-ia-livre.md`](desenho-protocolo-rede-ia-livre.md). **Implementação continua aberta.**
 - Licenças definitivas por componente (preferência a confirmar no manifesto).
 - ~~Estratégia de aceleração além de CPU~~ — **protótipo host:** CUDA canônico / Vulkan alternativa via llama.cpp (ADR 0002); GPU manager no kernel e multi-GPU continuam abertos.
-- Forma e escopo do ambiente de autonomia na primeira versão utilizável.
+- ~~Forma e escopo do ambiente de autonomia na primeira versão utilizável~~ — **decidido no nível desenho (Etapa 15):** host, `--goal`+turnos, `note`+recall, critério `GOAL_OK`/`RECALL_OK` — ADR [`0005`](adr/0005-ambiente-autonomia-v1.md) + [`desenho-ambiente-autonomia-v1.md`](desenho-ambiente-autonomia-v1.md). **Implementação continua aberta.**
 - ~~Critérios exatos e harness do benchmark Linha A vs Linha B~~ — **harness v1 (Etapa 9)** + **Linha B mínima (Etapa 12):** proxy pós-ExitBoot no IA Livre ([`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md)); prova da hipótese e carga GGUF canônica em B continuam abertos.
 
 ## Referências próximas

@@ -99,3 +99,10 @@ Status: feita
 Issue: [#14](https://github.com/eriksonlima/projeto-ia-livre/issues/14)  
 Spec: specs/protocolo-p2p-alem-prototipo/  
 Pronto quando: escolha documentada (ADR/doc) da stack candidata (transporte, identidade, descoberta além de HELLO/MSG/ACK) e fronteira do próximo protótipo — sem marketplace nem integração runtime/kernel.
+
+## Etapa 15 — Ambiente de autonomia além do protótipo (v1 utilizável)
+
+Status: em_andamento  
+Issue: [#15](https://github.com/eriksonlima/projeto-ia-livre/issues/15)  
+Spec: specs/autonomia-v1-utilizavel/  
+Pronto quando: escopo documentado da primeira versão utilizável da camada 3 e critério verificável mínimo — ainda no host, sem exigir o SO IA Livre.

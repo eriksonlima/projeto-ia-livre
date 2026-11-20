@@ -2,18 +2,20 @@
 
 ## Foco atual
 
-- Etapa do roadmap: nenhuma `em_andamento` (Etapas 1–14 **feitas** até o commit desta fatia; próximo = promover B9)
-- Última spec: `specs/protocolo-p2p-alem-prototipo/` (Tasks 1–3 feitas)
+- Etapa 15 — Ambiente de autonomia além do protótipo (`em_andamento`, Issue #15)
+- Spec: `specs/autonomia-v1-utilizavel/` (a gerar / em geração)
+- Etapa 14 **feita** (ADR 0004 + desenho P2P v1)
 
 ## Mudanças recentes
 
-- Etapa 14: ADR 0004 + desenho Rede IA Livre v1 (TCP+UDP, ed25519/PeerId)
-- Rule `agentes-em-paralelo` ativa
+- Etapa 14 fechada; B9 → Etapa 15 (outro agente / claim check)
+- Processo: promoção autônoma + agentes-em-paralelo
 
 ## Próximo passo
 
-- Promover B9 (autonomia v1) → próxima etapa; especificar
+- Spec + tasks da Etapa 15; implementar fatias documentais
 
 ## Notas
 
-- Implementação P2P v1 e hipótese A vs B continuam abertas
+- Hipótese A vs B não comprovada
+- Não re-promover B9; Abertas topo = B10

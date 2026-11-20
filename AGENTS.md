@@ -338,7 +338,9 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `docs/rede-ia-livre-prototipo.md` — framing/descoberta/mensagem do protótipo P2P (Etapa 6)
 - `docs/desenho-protocolo-rede-ia-livre.md` — desenho Rede IA Livre v1 (ADR 0004; não implementado)
 - `docs/adr/0004-stack-protocolo-rede-ia-livre.md` — ADR da stack candidata P2P
-- `docs/ambiente-autonomia-prototipo.md` — loop/memória/ferramenta do protótipo de autonomia
+- `docs/ambiente-autonomia-prototipo.md` — loop/memória/ferramenta do protótipo de autonomia (Etapa 7)
+- `docs/desenho-ambiente-autonomia-v1.md` — escopo autonomia v1 (ADR 0005; não implementado)
+- `docs/adr/0005-ambiente-autonomia-v1.md` — ADR do escopo v1
 - `Makefile` — `build` / `esp` / `run` / `verify` / `verify-runtime` / `verify-runtime-gpu` / `verify-node` / `verify-agent` / `verify-harness` / `clean`
 - `scripts/run-qemu.sh` — atalho para `make run`
 - `scripts/verify-boot.sh` — gate serial do kernel (`BOOT_OK` + mem/alloc + `EXIT_BOOT_OK`)

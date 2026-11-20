@@ -8,12 +8,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-### B9 — Ambiente de autonomia além do protótipo (v1 utilizável)
-
-- Origem: análise 2026-11-20; decisão aberta em `docs/architecture.md`; protótipo E7 = loop + `note` + JSONL.
-- Pronto quando sugerido: escopo documentado da primeira versão utilizável da camada 3 e critério verificável mínimo — ainda no host, sem exigir o SO IA Livre.
-- Issue: [#15](https://github.com/eriksonlima/projeto-ia-livre/issues/15)
-
 ### B10 — GPU manager no kernel / multi-GPU (desenho)
 
 - Origem: análise 2026-11-20; `docs/architecture.md` + ADR 0002 (host fechado; manager/multi-GPU abertos).
@@ -33,6 +27,12 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Issue: [#18](https://github.com/eriksonlima/projeto-ia-livre/issues/18)
 
 ## Promovidas / arquivadas
+
+### B9 — Ambiente de autonomia além do protótipo (v1 utilizável)
+
+- Promovido para Etapa 15 do roadmap (promoção autônoma após Etapa 14).
+- Issue: [#15](https://github.com/eriksonlima/projeto-ia-livre/issues/15)
+- Etapa: [Etapa 15 — Ambiente de autonomia além do protótipo (v1 utilizável)](ROADMAP.md)
 
 ### B8 — Protocolo P2P além do protótipo (stack / identidade)
 
