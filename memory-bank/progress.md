@@ -2,18 +2,15 @@
 
 ## O que funciona
 
-- Kernel / harness / runtime / node / agent (gates existentes)
-- Desenho nativo: ADR 0003 + `docs/desenho-memoria-scheduler-nativo.md` (sem implementação)
-- Etapas 1–13 feitas
+- Gates de produto (kernel, runtime, node, agent, harness)
+- Desenhos: ADR 0003 (memória/scheduler), ADR 0004 (P2P v1) — sem implementação
+- Etapas 1–14 feitas
 
 ## Bloqueios
 
-- Implementação allocator tipado / hints de fase
-- Carga GGUF canônica em Linha B
-- Hipótese A vs B não comprovada
+- Implementação contrato memória/scheduler; GGUF em Linha B; P2P v1 no `node/`
 
 ## Por etapa
 
-- Etapas 1–13: feitas; Etapa 14 em_andamento (B8/#14)
+- Etapas 1–14: feitas
 - Backlog Abertas (topo): B9 (#15), B10–B12 (#16–#18)
-- Processo: promoção backlog → roadmap autônoma

@@ -2,20 +2,18 @@
 
 ## Foco atual
 
-- Etapa 14 — Protocolo P2P além do protótipo (`em_andamento`, Issue #14)
-- Spec: `specs/protocolo-p2p-alem-prototipo/` (Tasks 1–3 abertas)
-- Processo: promoção backlog → roadmap **autônoma** (sem pedir confirmação)
+- Etapa do roadmap: nenhuma `em_andamento` (Etapas 1–14 **feitas** até o commit desta fatia; próximo = promover B9)
+- Última spec: `specs/protocolo-p2p-alem-prototipo/` (Tasks 1–3 feitas)
 
 ## Mudanças recentes
 
-- Processo: rules/skill/command — promoção do topo sem “confirma?”
-- B8 promovido a Etapa 14; spec gerada
+- Etapa 14: ADR 0004 + desenho Rede IA Livre v1 (TCP+UDP, ed25519/PeerId)
+- Rule `agentes-em-paralelo` ativa
 
 ## Próximo passo
 
-- Task 1: ADR 0004 da stack candidata Rede IA Livre v1
+- Promover B9 (autonomia v1) → próxima etapa; especificar
 
 ## Notas
 
-- Hipótese A vs B não comprovada
-- Agentes em paralelo: rule `agentes-em-paralelo` (fetch + claim check; não re-promover B8/E14)
+- Implementação P2P v1 e hipótese A vs B continuam abertas

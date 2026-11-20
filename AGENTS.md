@@ -335,7 +335,9 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `agent/` — protótipo do ambiente de autonomia (host; consome runtime; independente do SO)
 - `models/` — pesos GGUF locais (gitignored); obter com `./scripts/fetch-model.sh`
 - `Cargo.toml` — workspace Cargo (membros `kernel`, `runtime`, `node`, `agent`)
-- `docs/rede-ia-livre-prototipo.md` — framing/descoberta/mensagem do protótipo P2P
+- `docs/rede-ia-livre-prototipo.md` — framing/descoberta/mensagem do protótipo P2P (Etapa 6)
+- `docs/desenho-protocolo-rede-ia-livre.md` — desenho Rede IA Livre v1 (ADR 0004; não implementado)
+- `docs/adr/0004-stack-protocolo-rede-ia-livre.md` — ADR da stack candidata P2P
 - `docs/ambiente-autonomia-prototipo.md` — loop/memória/ferramenta do protótipo de autonomia
 - `Makefile` — `build` / `esp` / `run` / `verify` / `verify-runtime` / `verify-runtime-gpu` / `verify-node` / `verify-agent` / `verify-harness` / `clean`
 - `scripts/run-qemu.sh` — atalho para `make run`

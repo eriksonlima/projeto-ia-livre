@@ -95,7 +95,7 @@ Pronto quando: desenho (doc/ADR) do mecanismo nativo candidato que diferencia Li
 
 ## Etapa 14 — Protocolo P2P além do protótipo (stack / identidade)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#14](https://github.com/eriksonlima/projeto-ia-livre/issues/14)  
 Spec: specs/protocolo-p2p-alem-prototipo/  
 Pronto quando: escolha documentada (ADR/doc) da stack candidata (transporte, identidade, descoberta além de HELLO/MSG/ACK) e fronteira do próximo protótipo — sem marketplace nem integração runtime/kernel.

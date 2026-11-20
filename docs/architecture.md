@@ -48,11 +48,12 @@ As camadas formam um ecossistema, não quatro produtos desconectados. A ordem de
 - **Etapa 11:** `ExitBootServices` + base estável (mapa owned + memória); I/O pós-exit via UART COM1. Contrato: [`kernel-pos-boot-services.md`](kernel-pos-boot-services.md).
 - **Etapa 12:** Linha B mínima = proxy pós-ExitBoot (não TinyLlama); hipótese **não** comprovada. Contrato: [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md).
 - **Etapa 13:** desenho candidato memória model-aware + scheduler por fases (ADR 0003) — **sem** implementação.
+- **Etapa 14:** desenho stack Rede IA Livre v1 (ADR 0004) — **sem** implementação no `node/`.
 
 ## Decisões abertas
 
 - ~~Desenho fino de memória model-aware e do scheduler de inferência~~ — **decidido no nível desenho (Etapa 13):** classes `Weights`/`KvCache` + hints Prefill/Decode — ADR [`0003`](adr/0003-memoria-model-aware-e-scheduler-fases.md) + [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-scheduler-nativo.md). **Implementação e prova da hipótese continuam abertas.**
-- Stack concreta do protocolo P2P (bibliotecas, transporte, identidade).
+- ~~Stack concreta do protocolo P2P (bibliotecas, transporte, identidade)~~ — **decidida no nível desenho (Etapa 14):** TCP+UDP, ed25519/`PeerId`, HELLO assinado + IDENT — ADR [`0004`](adr/0004-stack-protocolo-rede-ia-livre.md) + [`desenho-protocolo-rede-ia-livre.md`](desenho-protocolo-rede-ia-livre.md). **Implementação continua aberta.**
 - Licenças definitivas por componente (preferência a confirmar no manifesto).
 - ~~Estratégia de aceleração além de CPU~~ — **protótipo host:** CUDA canônico / Vulkan alternativa via llama.cpp (ADR 0002); GPU manager no kernel e multi-GPU continuam abertos.
 - Forma e escopo do ambiente de autonomia na primeira versão utilizável.
