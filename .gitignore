@@ -37,3 +37,8 @@ Thumbs.db
 tmp/
 temp/
 .cache/
+
+# Modelos GGUF / pesos (Etapa 5 — runtime)
+models/
+*.gguf
+*.gguf.partial

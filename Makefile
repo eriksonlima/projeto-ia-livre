@@ -1,5 +1,5 @@
 # Projeto IA Livre — bootstrap do kernel (UEFI + QEMU)
-.PHONY: build esp run verify clean help
+.PHONY: build esp run verify verify-runtime verify-node clean help
 
 export PATH := $(HOME)/.cargo/bin:$(PATH)
 # Evita CARGO_TARGET_DIR herdado (ex.: cache de sandbox) fora do repo
@@ -28,7 +28,7 @@ OVMF_VARS := $(CURDIR)/build/OVMF_VARS.fd
 QEMU ?= qemu-system-x86_64
 
 help:
-	@echo "Alvos: build | esp | run | verify | clean"
+	@echo "Alvos: build | esp | run | verify | verify-runtime | verify-node | clean"
 	@echo "Pré-requisitos: ver AGENTS.md → Como rodar"
 
 build:
@@ -69,6 +69,12 @@ run: esp
 
 verify:
 	./scripts/verify-boot.sh
+
+verify-runtime:
+	./scripts/verify-runtime.sh
+
+verify-node:
+	./scripts/verify-node.sh
 
 clean:
 	cargo clean

@@ -1,0 +1,10 @@
+[package]
+name = "ia-livre-node"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "Protótipo do nó Rede IA Livre (camada 4) — host, independente do SO"
+
+[dependencies]
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "net", "time", "io-util", "sync"] }
+socket2 = { version = "0.5", features = ["all"] }

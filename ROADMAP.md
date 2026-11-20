@@ -32,14 +32,14 @@ Pronto quando: boot UEFI em QEMU (x86-64), kernel mínimo em Rust com saída ser
 
 ## Etapa 5 — Runtime mínimo de inferência (CPU)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#5](https://github.com/eriksonlima/projeto-ia-livre/issues/5)  
 Spec: specs/runtime-inferencia-cpu/  
 Pronto quando: carregar e executar um modelo pequeno em CPU no ambiente do projeto (ou protótipo no host de referência), com métricas básicas documentadas.
 
 ## Etapa 6 — Protótipo do nó Rede IA Livre
 
-Status: pendente  
+Status: feita  
 Issue: [#6](https://github.com/eriksonlima/projeto-ia-livre/issues/6)  
 Spec: specs/no-rede-ia-livre/  
 Pronto quando: cliente/nó em SO convencional comunica-se entre dois hosts (ou processos) com descoberta mínima e troca de mensagem documentada; participação sem exigir o SO IA Livre.

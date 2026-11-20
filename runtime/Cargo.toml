@@ -1,0 +1,11 @@
+[package]
+name = "ia-livre-runtime"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "Protótipo de runtime de inferência CPU (camada 2) do Projeto IA Livre"
+
+[dependencies]
+# Binding llama.cpp — CPU only (sem features cuda/metal/vulkan/rocm).
+# Requer cmake + libclang no host; ver AGENTS.md.
+llama-cpp-2 = { version = "0.1.161", default-features = true }
