@@ -6,7 +6,7 @@ Brief do repositório para agentes. Em conflito com outros arquivos de ferrament
 
 - Nome: `Projeto IA Livre`
 - Resumo: Ecossistema open source brasileiro com SO próprio (IA Livre) especializado em IA nativa e rede P2P (Rede IA Livre) para colaboração computacional e de conhecimento. Participar da rede não exige o SO.
-- Stack: Kernel mínimo em Rust (`uefi-rs`, target `x86_64-unknown-uefi`) + QEMU/OVMF; runtime de inferência CPU no host (`runtime/` + llama.cpp); protótipo do nó Rede IA Livre no host (`node/`, TCP/UDP — **sem** exigir o SO IA Livre); protótipo do ambiente de autonomia no host (`agent/`, consome o runtime — **sem** exigir o SO IA Livre).
+- Stack: Kernel mínimo em Rust (`uefi-rs`, target `x86_64-unknown-uefi`) + QEMU/OVMF; runtime de inferência no host (`runtime/` + llama.cpp; CPU default, GPU opcional via CUDA/Vulkan); protótipo do nó Rede IA Livre no host (`node/`, TCP/UDP — **sem** exigir o SO IA Livre); protótipo do ambiente de autonomia no host (`agent/`, consome o runtime — **sem** exigir o SO IA Livre).
 
 ## Como rodar
 
@@ -110,7 +110,7 @@ cargo run -p ia-livre-runtime --features vulkan -- \
 
 Esperado: `IA_LIVRE_INFER_OK`, `IA_LIVRE_ACCEL=vulkan` (ou `cuda`), `IA_LIVRE_N_GPU_LAYERS=99`.  
 Com `--n-gpu-layers 0` (ou build sem feature) permanece CPU (`IA_LIVRE_ACCEL=cpu`).  
-Métricas GPU: `docs/runtime-inferencia-gpu-metricas.md`. Gate automatizado: Task 3 (`make verify-runtime-gpu`).
+Métricas GPU: `docs/runtime-inferencia-gpu-metricas.md`. Gate automatizado: `make verify-runtime-gpu`.
 
 ### Nó Rede IA Livre (host — Etapa 6)
 
@@ -205,6 +205,27 @@ grep -q 'IA_LIVRE_TOKENS_PER_S' runtime/src/main.rs
 
 `make verify-runtime` falha se o modelo estiver ausente ou se faltarem `IA_LIVRE_INFER_OK` / `IA_LIVRE_LOAD_S=` / `IA_LIVRE_TOKENS_PER_S=` (timeout padrão 300s; `VERIFY_RUNTIME_TIMEOUT`).
 
+### Gate do runtime GPU (Etapa 8 — adicional)
+
+Requer GGUF + GPU utilizável (ou skip explícito). **Não** usa QEMU/UEFI. Aceleração no **host** (ADR 0002).
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+export LIBCLANG_PATH="${LIBCLANG_PATH:-/usr/lib/llvm-18/lib}"
+# Se Vulkan: export VULKAN_SDK=… (glslc); SDK user-space ok
+test -f scripts/verify-runtime-gpu.sh
+test -f docs/runtime-inferencia-gpu-metricas.md
+test -f docs/adr/0002-aceleracao-gpu-host-llama-cpp.md
+./scripts/fetch-model.sh
+make verify-runtime-gpu
+grep -q 'IA_LIVRE_ACCEL' runtime/src/main.rs
+grep -q 'n-gpu-layers' runtime/src/main.rs
+```
+
+Com GPU: build com feature (`cuda` se `nvcc` existir, senão `vulkan`; override `IA_LIVRE_GPU_FEATURE`), `--n-gpu-layers` > 0, exige `IA_LIVRE_INFER_OK` + métricas + `IA_LIVRE_ACCEL=` ≠ `cpu` (timeout `VERIFY_RUNTIME_GPU_TIMEOUT`, default 300s).
+
+**Skip (CI / sem GPU):** `VERIFY_RUNTIME_GPU_SKIP=1` **ou** `nvidia-smi` indetectável → imprime `IA_LIVRE_GPU_SKIP` e exit **0** (não finge aceleração). Force Vulkan-only sem nvidia-smi: `VERIFY_RUNTIME_GPU_FORCE=1`. Gates CPU/kernel/node/agent permanecem.
+
 ### Gate do nó Rede IA Livre (Etapa 6 — adicional)
 
 Só Rust no host. **Não** usa QEMU, GGUF nem o runtime de inferência. Participar da Rede **não exige** o SO IA Livre.
@@ -255,17 +276,20 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `memory-bank/` — contexto volátil entre chats (`activeContext.md`, `progress.md`)
 - `.cursor/` — rules, agents, skills, commands, hooks
 - `kernel/` — crate do kernel IA Livre (`Cargo.toml`, `src/main.rs`), target UEFI
-- `runtime/` — protótipo de runtime de inferência CPU (host, llama-cpp-2)
+- `runtime/` — protótipo de runtime de inferência (host, llama-cpp-2; CPU default + features `cuda`/`vulkan`)
 - `node/` — protótipo do nó Rede IA Livre (host; independente do SO)
 - `agent/` — protótipo do ambiente de autonomia (host; consome runtime; independente do SO)
 - `models/` — pesos GGUF locais (gitignored); obter com `./scripts/fetch-model.sh`
 - `Cargo.toml` — workspace Cargo (membros `kernel`, `runtime`, `node`, `agent`)
 - `docs/rede-ia-livre-prototipo.md` — framing/descoberta/mensagem do protótipo P2P
 - `docs/ambiente-autonomia-prototipo.md` — loop/memória/ferramenta do protótipo de autonomia
-- `Makefile` — `build` / `esp` / `run` / `verify` / `verify-runtime` / `verify-node` / `verify-agent` / `clean`
+- `Makefile` — `build` / `esp` / `run` / `verify` / `verify-runtime` / `verify-runtime-gpu` / `verify-node` / `verify-agent` / `clean`
 - `scripts/run-qemu.sh` — atalho para `make run`
 - `scripts/verify-boot.sh` — gate serial `IA_LIVRE_BOOT_OK`
 - `scripts/verify-runtime.sh` — gate do runtime CPU (`IA_LIVRE_INFER_OK` + métricas)
+- `scripts/verify-runtime-gpu.sh` — gate GPU (`IA_LIVRE_ACCEL` ≠ `cpu`; skip `IA_LIVRE_GPU_SKIP`)
+- `docs/runtime-inferencia-gpu-metricas.md` — métricas do protótipo GPU no host
+- `docs/adr/0002-aceleracao-gpu-host-llama-cpp.md` — CUDA canônico / Vulkan alternativa
 - `scripts/verify-node.sh` — gate do nó Rede IA Livre (`IA_LIVRE_PEER_OK` + `IA_LIVRE_MSG_OK`)
 - `scripts/verify-agent.sh` — gate do ambiente de autonomia (`IA_LIVRE_TOOL_OK` + `IA_LIVRE_MEMORY_OK` + `IA_LIVRE_AGENT_OK`)
 - `scripts/fetch-model.sh` — download do GGUF canônico da Etapa 5

@@ -53,7 +53,7 @@ Pronto quando: protótipo da camada 3 no host Linux (`std`) com agente mínimo, 
 
 ## Etapa 8 — Aceleração além de CPU (GPU)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#8](https://github.com/eriksonlima/projeto-ia-livre/issues/8)  
 Spec: specs/aceleracao-gpu/  
 Pronto quando: protótipo de aceleração GPU no host sobre o runtime existente (backend do llama.cpp), com escolha CUDA/Vulkan (ou equivalente suportado) documentada, fallback CPU preservado, métricas comparáveis às da Etapa 5 e gate verificável quando houver GPU — sem exigir o kernel UEFI / QEMU; multi-GPU e GPU manager completo fora de escopo.

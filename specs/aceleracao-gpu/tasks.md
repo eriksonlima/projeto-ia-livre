@@ -10,5 +10,6 @@ Uma task = uma fatia.
   - **Pronto quando:** comando documentado com `--n-gpu-layers` > 0 emite `IA_LIVRE_INFER_OK` + métricas + `IA_LIVRE_ACCEL=` ≠ `cpu` no host com GPU; doc de métricas GPU preenchida; Como rodar GPU em `AGENTS.md`; CPU default intacto.
   - **Feito:** feature `vulkan` (CUDA sem toolkit); `--n-gpu-layers 99` → `IA_LIVRE_ACCEL=vulkan` ~54.7 tok/s; `docs/runtime-inferencia-gpu-metricas.md`; AGENTS Como rodar GPU; `make verify-runtime` ok; README considerado (não atualizado).
 
-- [ ] Task 3 — Gate `make verify-runtime-gpu` / script com política de skip sem GPU (CI) + `AGENTS.md` → Como verificar completo
+- [x] Task 3 — Gate `make verify-runtime-gpu` / script com política de skip sem GPU (CI) + `AGENTS.md` → Como verificar completo
   - **Pronto quando:** gate GPU passa com GPU; skip canônico (`IA_LIVRE_GPU_SKIP` ou equivalente) documentado sem GPU; gates CPU/existentes não regridem; README reavaliado; etapa pronta para revisão (não marcar `feita` aqui).
+  - **Feito:** `scripts/verify-runtime-gpu.sh` + Makefile; GATE_OK Vulkan; skip `IA_LIVRE_GPU_SKIP` exit 0; `make verify-runtime` ok; AGENTS Como verificar; README considerado (não atualizado — ponte AGENTS).

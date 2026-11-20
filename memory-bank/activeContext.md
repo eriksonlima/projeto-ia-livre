@@ -2,22 +2,23 @@
 
 ## Foco atual
 
-- Etapa 8 — Aceleração além de CPU (GPU) (`em_andamento`, Issue #8)
-- Spec: `specs/aceleracao-gpu/`
-- Tasks 1–2 feitas; próxima: Task 3 (gate `verify-runtime-gpu` + skip)
+- Processo: backlog → roadmap (mínima interrupção)
+- Etapa do roadmap: nenhuma `em_andamento` (Etapas 1–8 **feitas**)
+- Spec ativa: nenhuma (última: `specs/aceleracao-gpu/`, Tasks 1–3 feitas)
 
 ## Mudanças recentes
 
-- Task 2: caminho GPU real via **Vulkan** (CUDA inviável sem `nvcc` no host)
-- Prova: `IA_LIVRE_ACCEL=vulkan`, ~54.7 tok/s, offload 23/23 (GTX 1050)
-- Docs: `docs/runtime-inferencia-gpu-metricas.md`; AGENTS Como rodar GPU; nota ADR 0002
-- README Task 2: considerado; não atualizado
+- Etapa 8: aceleração GPU no host (`runtime/` features cuda/vulkan, `--n-gpu-layers`, ADR 0002)
+- Prova efetiva: **Vulkan** (CUDA sem toolkit no host); `IA_LIVRE_ACCEL=vulkan`
+- Gate: `make verify-runtime-gpu` (+ skip `IA_LIVRE_GPU_SKIP`)
+- B2 arquivado; Abertas: B3 (harness Linha A vs B)
+- README Tasks 1–3: considerado; não atualizado (capa aponta AGENTS)
 
 ## Próximo passo
 
-- Task 3: `scripts/verify-runtime-gpu.sh` + `make verify-runtime-gpu` + política skip + AGENTS Como verificar
+- Sob pedido “continuar” / confirmação: promover o topo do `BACKLOG.md` (B3 — harness Linha A vs B) para o roadmap + issue; depois especificar.
 
 ## Notas
 
-- Vulkan SDK user-space: `~/.local/opt/1.3.296.0` (não versionado)
-- Não promover B3 sem confirmação
+- Promoção exige confirmação explícita; não inventar Etapa 9 sozinho
+- Vulkan SDK user-space (`~/.local/opt/1.3.296.0`) não versionado no git

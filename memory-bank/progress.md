@@ -4,20 +4,20 @@
 
 - Docs + ADR 0001 + ADR 0002 (GPU host via llama.cpp)
 - Kernel: `make verify`
-- Runtime CPU: `make verify-runtime` (com `--n-gpu-layers` default 0 + marcadores ACCEL)
+- Runtime CPU: `make verify-runtime`
+- Runtime GPU: `make verify-runtime-gpu` (`IA_LIVRE_ACCEL` ≠ `cpu`; skip `IA_LIVRE_GPU_SKIP`)
 - Nó Rede IA Livre: `make verify-node`
 - Ambiente de autonomia: `make verify-agent`
-- Etapas 1–7 feitas; Etapa 8 em andamento (Task 1 feita)
+- Etapas 1–8 feitas
 - Processo de backlog: `BACKLOG.md` + rule/command/skill
 - Processo README por fatia: `.cursor/rules/readme-por-fatia.mdc`
 
 ## Bloqueios
 
 - Nenhum no produto; espelho `gh` do backlog é best-effort
-- Host tem GTX 1050; `nvcc` pode faltar para feature `cuda` — Vulkan como alternativa (ADR 0002)
+- Host de referência: CUDA Toolkit (`nvcc`) ausente → prova Vulkan (ADR 0002)
 
 ## Por etapa
 
-- Etapas 1–7: feitas
-- Etapa 8: `em_andamento` (Issue #8); Tasks 1–2 feitas; Task 3 aberta
-- Backlog aberto: B3 (harness Linha A vs B); B2 promovido/arquivado
+- Etapas 1–8: feitas
+- Backlog aberto: B3 (harness Linha A vs B); B2 promovido/arquivado → Etapa 8
