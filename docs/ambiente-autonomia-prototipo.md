@@ -68,7 +68,7 @@ Complete em uma frase: O Projeto IA Livre é
 | `IA_LIVRE_TOOL_OK` | Ferramenta `note` executou com sucesso |
 | `IA_LIVRE_MEMORY_OK` | Memória escrita e re-lida / confirmada |
 
-Scaffold (Task 1): `IA_LIVRE_AGENT_SCAFFOLD_OK` — só build/CLI; sem loop completo.
+(Task 2 já emite `IA_LIVRE_TOOL_OK` + `IA_LIVRE_RUNTIME_USED=1`; Task 3 fecha memória + `IA_LIVRE_AGENT_OK` + gate.)
 
 ## Defaults canônicos
 

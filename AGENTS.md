@@ -122,16 +122,18 @@ export LIBCLANG_PATH="${LIBCLANG_PATH:-/usr/lib/llvm-18/lib}"
 # Modelo (se ainda não baixado)
 ./scripts/fetch-model.sh
 
-# Build do agente (target host)
-cargo build -p ia-livre-agent
+# Build do runtime (consumido via subprocesso) + agente
+cargo build -p ia-livre-runtime -p ia-livre-agent
 
-# Scaffold (Task 1): parse de flags + IA_LIVRE_AGENT_SCAFFOLD_OK
+# Cenário de prova: chama runtime → ferramenta note → IA_LIVRE_TOOL_OK
 cargo run -p ia-livre-agent -- \
   --model models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf \
   --memory build/agent-memory/memory.jsonl
 ```
 
-Flags: `--model` (default GGUF canônico), `--memory` (default `build/agent-memory/memory.jsonl`), `--n-predict` (default `16`). Loop completo (runtime + ferramenta + memória + gate) nas Tasks 2–3.
+Flags: `--model` (default GGUF canônico), `--memory` (default `build/agent-memory/memory.jsonl`), `--n-predict` (default `16`), `--runtime-bin` (opcional; senão usa `target/debug/ia-livre-runtime`).
+
+Saída esperada (Task 2): `IA_LIVRE_RUNTIME_USED=1` e `IA_LIVRE_TOOL_OK` (ferramenta `note` appenda ao JSONL). Memória re-lida + `IA_LIVRE_AGENT_OK` + gate `make verify-agent` na Task 3.
 
 ## Como verificar
 
