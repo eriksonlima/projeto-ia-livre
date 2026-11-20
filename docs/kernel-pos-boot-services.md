@@ -70,7 +70,7 @@ Linhas pós-`EXIT_BOOT_BEGIN` vêm da UART COM1 (podem incluir `\r` antes de `\n
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 make build
 make run      # serial: Etapa 10 → EXIT_BOOT_BEGIN → marcadores EXIT_* via COM1
-make verify   # exige também IA_LIVRE_EXIT_BOOT_OK (Task 3)
+make verify   # exige BOOT/MEM/ALLOC + EXIT_BOOT_OK (e EXIT_MAP/MEM); VERIFY_TIMEOUT default 45s
 ```
 
 ## Fora de escopo

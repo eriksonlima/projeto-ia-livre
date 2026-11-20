@@ -45,7 +45,7 @@ As camadas formam um ecossistema, não quatro produtos desconectados. A ordem de
 - Aceleração NVIDIA multi-GPU como alvo **posterior** (após base CPU e runtime mínimo).
 - Nenhuma decisão só por curiosidade técnica (manifesto).
 - **Etapa 10:** primeiro mecanismo de memória no kernel UEFI — mapa + `AllocatePages`/bump sob Boot Services (sem inferência). Contrato: [`kernel-alem-do-boot.md`](kernel-alem-do-boot.md).
-- **Etapa 11 (em andamento):** `ExitBootServices` + base estável (mapa owned + memória); I/O pós-exit via UART COM1. Contrato: [`kernel-pos-boot-services.md`](kernel-pos-boot-services.md).
+- **Etapa 11:** `ExitBootServices` + base estável (mapa owned + memória); I/O pós-exit via UART COM1. Contrato: [`kernel-pos-boot-services.md`](kernel-pos-boot-services.md).
 
 ## Decisões abertas
 

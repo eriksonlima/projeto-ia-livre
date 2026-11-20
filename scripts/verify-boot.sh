@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Gate do kernel (Etapas 4 / 10): serial QEMU deve emitir BOOT_OK + MEM_MAP_OK + ALLOC_OK.
+# Gate do kernel (Etapas 4 / 10 / 11): serial QEMU com BOOT_OK + MEM/ALLOC + EXIT_BOOT_OK.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 export PATH="${HOME}/.cargo/bin:${HOME}/.local/bin:${PATH}"
@@ -8,11 +8,15 @@ MARKERS=(
   "IA_LIVRE_BOOT_OK"
   "IA_LIVRE_MEM_MAP_OK"
   "IA_LIVRE_ALLOC_OK"
+  "IA_LIVRE_EXIT_BOOT_BEGIN"
+  "IA_LIVRE_EXIT_MAP_OK"
+  "IA_LIVRE_EXIT_MEM_OK"
+  "IA_LIVRE_EXIT_BOOT_OK"
 )
-# Evidência numérica (Task 10) — presença da linha, não valor fixo.
 NUMERIC=(
   "IA_LIVRE_MEM_CONVENTIONAL_PAGES="
   "IA_LIVRE_ALLOC_BYTES="
+  "IA_LIVRE_EXIT_MAP_PAGES="
 )
 
 TIMEOUT_SEC="${VERIFY_TIMEOUT:-45}"
@@ -38,7 +42,7 @@ while (( SECONDS < deadline )); do
     kill -KILL "$QEMU_PID" 2>/dev/null || true
     wait "$QEMU_PID" 2>/dev/null || true
     QEMU_PID=
-    echo "GATE_OK: kernel — IA_LIVRE_BOOT_OK IA_LIVRE_MEM_MAP_OK IA_LIVRE_ALLOC_OK (+ páginas/bytes)"
+    echo "GATE_OK: kernel — BOOT_OK MEM_MAP_OK ALLOC_OK EXIT_BOOT_OK (+ mapa/mem pós-exit)"
     exit 0
   fi
   if ! kill -0 "$QEMU_PID" 2>/dev/null; then

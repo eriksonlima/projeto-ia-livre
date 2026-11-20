@@ -197,7 +197,7 @@ Gate automatizado: `make verify-harness` (não exige QEMU/UEFI nem GPU; requer G
 
 ## Como verificar
 
-### Gate do kernel (Etapas 4 / 10)
+### Gate do kernel (Etapas 4 / 10 / 11)
 
 ```bash
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
@@ -205,15 +205,17 @@ test -f README.md && test -f AGENTS.md && test -f ROADMAP.md
 test -d kernel && test -f kernel/Cargo.toml && test -f kernel/src/main.rs
 test -f Makefile && test -f Cargo.toml
 test -f docs/kernel-alem-do-boot.md
+test -f docs/kernel-pos-boot-services.md
 make build
 test -f target/x86_64-unknown-uefi/debug/ia-livre-kernel.efi
 make verify
 grep -q 'IA_LIVRE_BOOT_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_MEM_MAP_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_ALLOC_OK' kernel/src/main.rs
+grep -q 'IA_LIVRE_EXIT_BOOT_OK' kernel/src/main.rs
 ```
 
-`make verify` falha se faltarem `IA_LIVRE_BOOT_OK`, `IA_LIVRE_MEM_MAP_OK` ou `IA_LIVRE_ALLOC_OK` na serial do QEMU (também exige linhas `MEM_CONVENTIONAL_PAGES=` / `ALLOC_BYTES=`). Timeout padrão 45s; override com `VERIFY_TIMEOUT`. Contrato: [`docs/kernel-alem-do-boot.md`](docs/kernel-alem-do-boot.md).
+`make verify` falha se faltarem `BOOT_OK`, `MEM_MAP_OK`, `ALLOC_OK`, `EXIT_BOOT_BEGIN`, `EXIT_MAP_OK`, `EXIT_MEM_OK` ou `EXIT_BOOT_OK` (também linhas `MEM_CONVENTIONAL_PAGES=` / `ALLOC_BYTES=` / `EXIT_MAP_PAGES=`). Timeout padrão 45s; `VERIFY_TIMEOUT`. Contratos: [`docs/kernel-alem-do-boot.md`](docs/kernel-alem-do-boot.md), [`docs/kernel-pos-boot-services.md`](docs/kernel-pos-boot-services.md).
 
 ### Gate do runtime (Etapa 5 — adicional)
 
@@ -334,7 +336,7 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `docs/ambiente-autonomia-prototipo.md` — loop/memória/ferramenta do protótipo de autonomia
 - `Makefile` — `build` / `esp` / `run` / `verify` / `verify-runtime` / `verify-runtime-gpu` / `verify-node` / `verify-agent` / `verify-harness` / `clean`
 - `scripts/run-qemu.sh` — atalho para `make run`
-- `scripts/verify-boot.sh` — gate serial do kernel (`BOOT_OK` + `MEM_MAP_OK` + `ALLOC_OK`)
+- `scripts/verify-boot.sh` — gate serial do kernel (`BOOT_OK` + mem/alloc + `EXIT_BOOT_OK`)
 - `scripts/verify-runtime.sh` — gate do runtime CPU (`IA_LIVRE_INFER_OK` + métricas)
 - `scripts/verify-runtime-gpu.sh` — gate GPU (`IA_LIVRE_ACCEL` ≠ `cpu`; skip `IA_LIVRE_GPU_SKIP`)
 - `docs/runtime-inferencia-gpu-metricas.md` — métricas do protótipo GPU no host

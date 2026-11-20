@@ -74,7 +74,7 @@ Pronto quando: no UEFI/QEMU, mecanismos mínimos além de `IA_LIVRE_BOOT_OK` (ex
 
 ## Etapa 11 — Kernel pós-Boot Services
 
-Status: em_andamento  
+Status: feita  
 Issue: [#13](https://github.com/eriksonlima/projeto-ia-livre/issues/13)  
 Spec: specs/kernel-pos-boot-services/  
 Pronto quando: caminho documentado e verificável no UEFI/QEMU para sair de Boot Services (ou equivalente mínimo) com base estável (mapa preservado / memória utilizável), gate serial — ainda sem inferência no kernel.

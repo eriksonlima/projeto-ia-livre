@@ -10,5 +10,6 @@ Uma task = uma fatia.
   - **Pronto quando:** `make run` em QEMU UEFI emite marcadores Etapa 10, `IA_LIVRE_EXIT_BOOT_BEGIN`, e pós-exit (via COM1) `IA_LIVRE_EXIT_MAP_PAGES=` / `IA_LIVRE_EXIT_MAP_OK`, `IA_LIVRE_EXIT_MEM_OK` e `IA_LIVRE_EXIT_BOOT_OK`; bump reprovado **após** o exit no bloco pré-alocado; doc com exemplo de serial; Como rodar em `AGENTS.md` reflete os marcadores; README reavaliado.
   - **Feito:** serial QEMU completa; README considerado (sem mudança).
 
-- [ ] Task 3 — Gate do kernel estendido (`make verify`) + `AGENTS.md` → Como verificar
+- [x] Task 3 — Gate do kernel estendido (`make verify`) + `AGENTS.md` → Como verificar
   - **Pronto quando:** `scripts/verify-boot.sh` exige marcadores Etapa 4/10 **e** `IA_LIVRE_EXIT_BOOT_OK` (e, se barato, `EXIT_MAP_OK` + `EXIT_MEM_OK`) e falha se faltar algum; `make verify` passa no ambiente de referência; timeout documentado; outros gates não regridem; README reavaliado; etapa pronta para revisão (não marcar `feita` aqui).
+  - **Feito:** `GATE_OK` no host; README considerado (sem mudança).
