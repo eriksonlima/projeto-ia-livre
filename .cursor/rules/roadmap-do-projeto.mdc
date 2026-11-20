@@ -12,3 +12,4 @@ alwaysApply: true
 - Espelhe no GitHub: uma Issue por etapa + Project V2 (labels `roadmap` e `status:*`). Guarde número da issue e URL do project no `ROADMAP.md`.
 - Se `gh` falhar depois do repo criado, atualize o arquivo local, registre o bloqueio e informe. Não invente outro board.
 - Projeto termina quando todas as etapas estiverem `feita` (ou `bloqueada` com motivo). Não invente etapas sem gravá-las no roadmap e criar a issue.
+- Etapas novas vêm de `BACKLOG.md` (promoção com confirmação) ou de pedido explícito de etapa — ver `backlog-do-projeto`. Demandas ainda não comprometidas ficam no backlog (espelho GitHub best-effort, label `backlog`).

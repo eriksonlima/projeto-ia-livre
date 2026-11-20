@@ -1,0 +1,16 @@
+---
+description: Backlog local canônico com espelho GitHub best-effort e promoção sob confirmação
+alwaysApply: true
+---
+
+# Backlog do projeto
+
+- Demandas futuras (ideia, lacuna de docs, pedido fora da etapa) entram em `BACKLOG.md` na seção **Abertas**, antes de qualquer espelho.
+- Ordem no arquivo = prioridade (topo = próxima candidata).
+- Espelho GitHub é **best-effort**: label `backlog`; `gh issue create`; anotar `Issue: #N` no item. Se `gh` falhar, o item fica só no arquivo — avise em uma linha; **não** bloqueie a fatia nem invente outro board.
+- **Não** exija Project V2 para itens só de backlog. Project continua espelhando etapas do `ROADMAP.md`.
+- Durante uma fatia em andamento: **não** interromper para perguntar sobre backlog. Só capture se o usuário pedir (“anota no backlog…”) ou se o pedido for claramente fora do escopo — anote e siga a fatia.
+- Etapas novas no roadmap vêm do backlog **ou** de pedido explícito de etapa. Não inventar etapa sem um dos dois.
+- Promoção backlog → roadmap: só com **confirmação explícita**. Reutilize a issue de backlog se existir (trocar label `backlog` → `roadmap` + `status:*`, `Pronto quando`, vincular ao Project); senão criar via `/atualizar-roadmap`. Grave a etapa em `ROADMAP.md` e mova o item para **Promovidas / arquivadas**.
+- Se o roadmap não tiver etapa `em_andamento` nem `pendente` e o usuário pedir continuar / próximo passo: proponha o **topo** de `BACKLOG.md` (título + `Pronto quando` sugerido) e espere confirmação.
+- Comando: `/atualizar-backlog`. Skill: `.cursor/skills/atualizar-backlog/SKILL.md`.

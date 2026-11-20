@@ -17,3 +17,4 @@ alwaysApply: true
 - Ao delegar: objetivo, arquivos permitidos, fora de escopo e pronto quando. Um escritor por conjunto de arquivos.
 - Subagente não commita, não faz push, não cria repositório e não abre etapa nova do roadmap.
 - Pare só no fim da etapa, sem tasks, ou com bloqueio real.
+- Se o roadmap não tiver `em_andamento` nem `pendente` e o usuário pedir continuar / próximo passo: proponha o topo de `BACKLOG.md` (título + `Pronto quando` sugerido) e espere confirmação — não invente etapa nem comece implementação só por estar no backlog.

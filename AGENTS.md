@@ -167,7 +167,8 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 
 ## Estrutura
 
-- `ROADMAP.md` — etapas e status (fonte do próximo passo)
+- `ROADMAP.md` — etapas e status (fonte do próximo passo comprometido)
+- `BACKLOG.md` — demandas ainda não promovidas (canônico; espelho GitHub best-effort, label `backlog`)
 - `specs/` — Spec-Driven Development (spec → plan → tasks)
 - `docs/` — produto, arquitetura e ADRs
 - `memory-bank/` — contexto volátil entre chats (`activeContext.md`, `progress.md`)
@@ -198,6 +199,7 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 
 - Rules: `.cursor/rules/`
 - Roadmap: `ROADMAP.md`
+- Backlog: `BACKLOG.md` (comando `/atualizar-backlog`; skill `atualizar-backlog`)
 - Specs: `specs/`
 - Product context: `docs/product-context.md`
 - Memory Bank: `memory-bank/activeContext.md`
