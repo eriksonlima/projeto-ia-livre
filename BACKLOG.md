@@ -8,12 +8,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-### B10 — GPU manager no kernel / multi-GPU (desenho)
-
-- Origem: análise 2026-11-20; `docs/architecture.md` + ADR 0002 (host fechado; manager/multi-GPU abertos).
-- Pronto quando sugerido: desenho (doc/ADR) do escopo candidato — fronteira vs aceleração host; desenho, não implementação completa.
-- Issue: [#16](https://github.com/eriksonlima/projeto-ia-livre/issues/16)
-
 ### B11 — Licenças definitivas por componente
 
 - Origem: análise 2026-11-20; `docs/manifesto.md` (preferência a confirmar) + decisão aberta em `docs/architecture.md`.
@@ -27,6 +21,12 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Issue: [#18](https://github.com/eriksonlima/projeto-ia-livre/issues/18)
 
 ## Promovidas / arquivadas
+
+### B10 — GPU manager no kernel / multi-GPU (desenho)
+
+- Promovido para Etapa 16 do roadmap (promoção autônoma após “continuar”).
+- Issue: [#16](https://github.com/eriksonlima/projeto-ia-livre/issues/16)
+- Etapa: [Etapa 16 — GPU manager no kernel / multi-GPU (desenho)](ROADMAP.md)
 
 ### B9 — Ambiente de autonomia além do protótipo (v1 utilizável)
 

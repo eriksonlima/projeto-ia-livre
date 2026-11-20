@@ -2,19 +2,18 @@
 
 ## Foco atual
 
-- **Pausa de coordenação** multi-agente (conflito Etapa 15 resolvido)
-- Etapas 1–15: tratar 15 como **feita** (canônico: `specs/autonomia-v1-utilizavel/` + ADR `0005-autonomia-v1-utilizavel`)
-- Lease: `memory-bank/AGENT_CLAIM.md` (holder vazio)
+- Etapa 16 — GPU manager no kernel / multi-GPU (desenho) — `em_andamento`
+- Lease: `cursor-agent-df93a573` em `AGENT_CLAIM.md` (#16)
 
 ## Mudanças recentes
 
-- Protocolo paralelo endurecido: lease push-first + um escritor na `em_andamento`
-- Consolidação E15: removida duplicata `ambiente-autonomia-v1` / ADR divergente
+- Promovido B10 → Etapa 16
+- Skill `claim-agente-paralelo` no repo
 
 ## Próximo passo
 
-- Usuário retoma com **um** agente claimando a próxima etapa (topo Abertas = B10) via lease
+- Spec `specs/` da Etapa 16 (especificador) → tasks → implementar desenho/ADR
 
 ## Notas
 
-- Preferência: um agente ativo por vez no `main`
+- Um escritor; desenho ≠ implementação de GPU manager/multi-GPU

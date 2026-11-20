@@ -106,3 +106,10 @@ Status: feita
 Issue: [#15](https://github.com/eriksonlima/projeto-ia-livre/issues/15)  
 Spec: specs/autonomia-v1-utilizavel/  
 Pronto quando: escopo documentado da primeira versão utilizável da camada 3 e critério verificável mínimo — ainda no host, sem exigir o SO IA Livre.
+
+## Etapa 16 — GPU manager no kernel / multi-GPU (desenho)
+
+Status: em_andamento  
+Issue: [#16](https://github.com/eriksonlima/projeto-ia-livre/issues/16)  
+Spec: _(a definir na spec)_  
+Pronto quando: desenho (ADR/doc) do escopo candidato de GPU manager no kernel e multi-GPU — fronteira vs aceleração host (ADR 0002); desenho, não implementação completa.
