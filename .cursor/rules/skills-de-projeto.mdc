@@ -1,0 +1,13 @@
+---
+description: Criar skills de projeto automaticamente no fim da fatia
+alwaysApply: true
+---
+
+# Skills de projeto
+
+- Skill fica em `.cursor/skills/<nome>/SKILL.md`. Nunca em `~/.cursor/skills-cursor/`.
+- No fim da fatia, se o trabalho deixou um procedimento repetível e ainda não existe skill equivalente, o agente principal cria a skill **sem perguntar** e avisa em uma linha.
+- Se já existir skill cobrindo o mesmo procedimento, atualize a existente. Não duplique.
+- Nome em minúsculas com hífens. A `description` diz o quê e quando. Preferir `disable-model-invocation: true` até estabilizar.
+- Não criar skill para subagente. Não criar skill global em `~/.cursor/skills/` neste fluxo. Não duplicar regra ou subagente.
+- Não criar skill genérica (“escrever código”, “testar bem”).

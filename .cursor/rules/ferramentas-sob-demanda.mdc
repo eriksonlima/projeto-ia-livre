@@ -1,0 +1,13 @@
+---
+description: MCP e plugins sob demanda; commands e ADR no padrão do projeto
+alwaysApply: true
+---
+
+# Ferramentas sob demanda
+
+- Commands `/` do scaffold (`especificar`, `implementar`, `verificar`, `pr`, `atualizar-roadmap`, `atualizar-memory-bank`) são fixos; no início do projeto copie-os de `~/.cursor/commands`.
+- MCP e plugin não são pré-instalados. Se a fatia precisar de ferramenta externa, configure MCP em `.cursor/mcp.json` na mesma fatia.
+- Segredos só por variável de ambiente (`${env:NOME}`). Documente no README o nome da variável, não o valor.
+- Remova servidor MCP que parou de ser usado. Não instale MCP por precaução.
+- Plugin só se o padrão já estiver estável e for para compartilhar o pacote.
+- Mudança de arquitetura na fatia exige ADR em `docs/adr/` antes de declarar a etapa feita.

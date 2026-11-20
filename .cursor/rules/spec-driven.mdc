@@ -1,0 +1,12 @@
+---
+description: Spec-Driven Development antes de implementar trabalho não trivial
+alwaysApply: true
+---
+
+# Spec-Driven Development
+
+- Trabalho que não é ajuste óbvio exige `specs/<slug>/` com `spec.md`, `plan.md` e `tasks.md` antes de implementar.
+- Use os templates em `specs/_templates/` ou o subagente `especificador` / comando `/especificar`.
+- Uma fatia = uma task de `tasks.md`. Não implemente várias tasks de uma vez.
+- Não mude escopo, critérios ou arquitetura sem atualizar a spec (e ADR se a arquitetura mudar).
+- Ajuste óbvio (typo, lint trivial) não exige spec nova.

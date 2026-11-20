@@ -1,0 +1,16 @@
+---
+description: Ciclo de fatia vertical com roadmap, spec, gate e um escritor por vez
+alwaysApply: true
+---
+
+# Ciclo da fatia
+
+- Pedido que não é um ajuste óbvio: leia `ROADMAP.md`, `memory-bank/activeContext.md` e a spec ativa; escreva a fatia antes de editar (objetivo, fora de escopo, pronto quando). Uma fatia = uma task.
+- Uma fatia por vez. A menor mudança que cumpre o critério.
+- Pedido amplo ou nova etapa: chame `especificador` e/ou `fatiador` antes de implementar.
+- Verifique com o gate (`AGENTS.md` / regra de verificação) antes de declarar pronto. Diga o que foi e o que não foi verificado.
+- Depois do gate, chame o `revisor-de-fatia` passando o critério de pronto. Corrija bloqueio real.
+- Atualize `ROADMAP.md`, o espelho GitHub e o Memory Bank (`activeContext.md`, `progress.md`) antes de skills/ferramentas.
+- Ao delegar: objetivo, arquivos permitidos, fora de escopo e pronto quando. Um escritor por conjunto de arquivos.
+- Subagente não commita, não faz push, não cria repositório e não puxa a próxima fatia.
+- Integre o resultado, aplique skills/ferramentas sob demanda e pare no fim da fatia.

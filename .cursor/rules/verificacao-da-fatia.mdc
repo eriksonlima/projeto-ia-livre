@@ -1,0 +1,11 @@
+---
+description: Gate de verificação obrigatório antes de declarar fatia pronta
+alwaysApply: true
+---
+
+# Verificação da fatia
+
+- Antes de declarar a fatia pronta, rode o que `AGENTS.md` definir em **Como verificar**.
+- Se ainda não houver comando: cumpra o checklist do `Pronto quando` e registre o que foi e o que não foi verificado.
+- Sem evidência do gate, a fatia **não** está pronta. Não diga “deve funcionar”.
+- Falha no gate: corrija ou declare bloqueio; não avance o roadmap como `feita`.

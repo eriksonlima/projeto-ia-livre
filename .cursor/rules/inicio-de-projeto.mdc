@@ -1,0 +1,24 @@
+---
+description: Ao iniciar um projeto, criar pasta própria, scaffold profissional e repositório no GitHub
+alwaysApply: true
+---
+
+# Início de projeto
+
+Começar um projeto é criar código que deve continuar existindo. Exploração, remote já existente ou experimento só local não disparam esta regra.
+
+- Crie uma pasta só do projeto. Nunca rode `git init` na pasta home nem numa pasta que misture outros projetos.
+- Se já existir remote, diga qual é e pare. Não crie outro nem altere remotes.
+- Use `gh` com `PATH` incluindo `$HOME/.local/bin`. Se o `gh` não estiver autenticado ou o nome já existir no GitHub, pare e informe. Não sobrescreva.
+- Nome: pasta do projeto, minúsculas e hífens. Privado por padrão. Público se o projeto for explicitamente aberto.
+- O primeiro commit inclui o scaffold:
+  - copiar `~/.cursor/templates/projeto/` (README, `.gitignore`, AGENTS, ROADMAP, docs, specs, memory-bank, `.github`, etc.)
+  - em `.cursor/`: copiar **sempre** de `~/.cursor/` as pastas `rules`, `agents`, `hooks`, `commands`; criar `skills/` (não use cópia antiga de commands no template)
+  - preencher `README.md`, `AGENTS.md` (nome, resumo, como rodar, como verificar) e `ROADMAP.md` (etapas do pedido; etapa 1 `em_andamento`)
+  - inicializar `memory-bank/activeContext.md` com a etapa atual
+  - criar labels `roadmap` e `status:*`; uma issue por etapa; Project V2 (Pendente / Em andamento / Feita / Bloqueada); gravar números e URL no `ROADMAP.md` (seguir `/atualizar-roadmap`)
+  - `.cursor/mcp.json` só se o projeto já nascer com servidor necessário
+- Sem `.env`, chaves ou credenciais no commit.
+- Esse primeiro commit e o push para `origin` são a exceção da regra de só commitar quando pedido. Commits seguintes continuam dependendo de um pedido explícito.
+- Não altere a configuração do git, não use `--no-verify`, não faça force push e não abra pull request por conta própria.
+- Repositório hospedado no Cursor não substitui o GitHub.

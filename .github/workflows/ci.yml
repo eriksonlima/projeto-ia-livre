@@ -1,0 +1,17 @@
+name: ci
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Placeholder do gate
+        run: |
+          echo "Preencha este workflow com os comandos de AGENTS.md → Como verificar."
+          echo "Enquanto não houver stack, o job passa para não bloquear o scaffold."
+          exit 0

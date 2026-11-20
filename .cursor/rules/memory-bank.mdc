@@ -1,0 +1,13 @@
+---
+description: Memory Bank enxuto — activeContext e progress entre chats
+alwaysApply: true
+---
+
+# Memory Bank
+
+- Pasta `memory-bank/`: só `activeContext.md` e `progress.md` (mais README). Não duplique `docs/`, `AGENTS.md` ou `ROADMAP.md`.
+- No início da fatia: leia `memory-bank/activeContext.md` e `ROADMAP.md`.
+- No fim da fatia (depois do gate): atualize `activeContext.md` e `progress.md` **sem perguntar**.
+- `activeContext.md` guarda foco atual, mudanças recentes e próximo passo.
+- `progress.md` guarda o que funciona e bloqueios, apontando para etapas do roadmap.
+- `/atualizar-memory-bank` faz revisão completa quando o usuário pedir ou após mudança grande de direção.

@@ -1,0 +1,14 @@
+---
+description: Roadmap obrigatório com status e espelho no GitHub
+alwaysApply: true
+---
+
+# Roadmap do projeto
+
+- Todo projeto em andamento tem `ROADMAP.md` com etapas, cada uma com `Status` e `Pronto quando`.
+- Status válidos: `pendente`, `em_andamento`, `feita`, `bloqueada`. Só uma etapa `em_andamento`.
+- Antes de fatiar ou implementar: leia `ROADMAP.md` e trabalhe só a etapa atual.
+- No fim da fatia (depois do gate): atualize o `ROADMAP.md`. Se a etapa cumpriu o critério, marque `feita` e passe a próxima para `em_andamento`.
+- Espelhe no GitHub: uma Issue por etapa + Project V2 (labels `roadmap` e `status:*`). Guarde número da issue e URL do project no `ROADMAP.md`.
+- Se `gh` falhar depois do repo criado, atualize o arquivo local, registre o bloqueio e informe. Não invente outro board.
+- Projeto termina quando todas as etapas estiverem `feita` (ou `bloqueada` com motivo). Não invente etapas sem gravá-las no roadmap e criar a issue.
