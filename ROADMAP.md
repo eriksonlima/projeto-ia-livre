@@ -118,5 +118,5 @@ Pronto quando: desenho (ADR/doc) do escopo candidato de GPU manager no kernel e 
 
 Status: em_andamento  
 Issue: [#17](https://github.com/eriksonlima/projeto-ia-livre/issues/17)  
-Spec: _(a definir na spec)_  
+Spec: specs/licencas-por-componente/  
 Pronto quando: licença por componente (kernel, runtime, node, agent, docs) registrada no repositório, alinhada ao manifesto.
