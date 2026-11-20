@@ -1,31 +1,43 @@
 ---
-description: Coordenação quando vários agentes trabalham no mesmo repo (fetch, claim, um escritor)
+description: Coordenação multi-agente — lease AGENT_CLAIM, sync, sem duas mãos na mesma etapa
 alwaysApply: true
 ---
 
 # Agentes em paralelo
 
-Vários agentes (ou chats) podem promover backlog e implementar ao mesmo tempo. Trate o remote e os arquivos canônicos como fonte de verdade fresca — **não** assuma o estado do início da conversa.
+Dois chats/agentes no mesmo `main` **vão colidir** se ambos promoverem ou editarem a mesma etapa. O protocolo abaixo é obrigatório.
 
-## Antes de promover, fatiar ou implementar
+## Regra de ouro
 
-1. `git fetch` (e `git pull --ff-only` se o branch estiver atrás de `@{u}`). Se não for fast-forward: **pare** e informe — sem rebase interativo, sem force push.
-2. Releia do disco (pós-sync): `ROADMAP.md`, `BACKLOG.md`, `memory-bank/activeContext.md` e a spec da etapa alvo.
-3. **Claim check** (promoção): o item ainda está em **Abertas**? A issue ainda tem label `backlog` (não `roadmap`)? Já existe etapa no `ROADMAP.md` com o mesmo título/issue? Se já foi promovido por outro agente → **não** re-promova; siga a etapa existente ou o próximo item livre.
+**Só um agente edita a etapa `em_andamento` por vez.**  
+O lease canônico é [`memory-bank/AGENT_CLAIM.md`](../../memory-bank/AGENT_CLAIM.md).
 
-## Quem trabalha o quê
+Preferência operacional: **um agente ativo no projeto**; o segundo só observa ou trabalha item **distinto** (ex.: backlog Abertas → `pendente` em branch), nunca a mesma issue/`em_andamento`.
 
-- Só **uma** etapa `em_andamento`. Se já houver uma (ex.: outro agente promoveu B8 → Etapa 14): trabalhe **essa** etapa, ou a próxima `pendente`, ou o próximo item ainda em Abertas — **não** abra segunda `em_andamento`.
-- Ao promover com `em_andamento` já ocupada: nova etapa entra como `pendente` (já em `backlog-do-projeto`).
-- **Um escritor por conjunto de arquivos.** Se a spec/`tasks.md`/código da etapa `em_andamento` claramente pertence a outro agente em curso: não edite esses paths; pegue outra fatia/etapa ou pare com relato curto.
-- Subagente não promove etapa nem disputa claim com o principal de outro chat.
+## Antes de qualquer promoção ou fatia
+
+1. `git fetch` + `git pull --ff-only` (se atrás). Divergência → **pare** (sem force, sem rebase `-i`).
+2. Leia do disco: `AGENT_CLAIM.md`, `ROADMAP.md`, `BACKLOG.md`, `memory-bank/activeContext.md`, spec alvo.
+3. **Lease:** se `holder` preenchido, `expires` no futuro e não for você → **pare** e relate. Não “ajude” a mesma task.
+4. **Claim check** (promoção): item ainda em Abertas? Issue ainda `backlog`? Etapa/issue já no ROADMAP? Se já promovido → não duplique.
+5. Para claimar a `em_andamento`: escreva o lease em `AGENT_CLAIM.md` → **commit + push só do claim** → `fetch` de novo → confirme que o tip ainda é o seu holder → só então edite produto/docs da etapa.
+
+## Durante o trabalho
+
+- Um escritor por conjunto de arquivos (spec + docs + código da etapa).
+- Não abra segunda `em_andamento`. Com `em_andamento` ocupada: só `pendente` (outro item) ou pare.
+- Subagente não promove etapa e não sobrescreve lease de outro chat.
+- Não feche issue / marque `feita` se o lease não for seu.
 
 ## Commit / push
 
-- Antes do push: `git fetch` de novo; se atrás, `pull --ff-only` e resolva só conflitos óbvios da sua fatia; senão pare.
-- Não `--force`, não `--no-verify`, não altere config do git.
-- Se o push for rejected (non-fast-forward): pull --ff-only / informe; não force.
+- Antes do push de produto: `fetch`; se atrás, `pull --ff-only`.
+- Se rejeitado non-ff: pare / informe — sem force.
+- Ao concluir ou abortar: **release** do lease (limpar `AGENT_CLAIM.md` + push).
 
-## Relato
+## Se já houve conflito (duplicata ADR/spec)
 
-Se detectar que outro agente já promoveu ou está na etapa: diga em uma linha (ex.: “B8 já é Etapa 14 `em_andamento`; sigo Task N / ou B9”). Não peça confirmação só por isso — a menos que haja bloqueio real de conflito de arquivos.
+1. Pare o segundo agente.
+2. Sync; escolha **um** canônico (o que o `ROADMAP.md` aponta em `Spec:`).
+3. Remova duplicatas; alinhe pontes; um commit de consolidação.
+4. Só então volte a claimar e seguir.

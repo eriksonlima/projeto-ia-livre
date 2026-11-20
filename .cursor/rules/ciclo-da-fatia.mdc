@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Ciclo da fatia
 
-- Pedido que não é um ajuste óbvio: **sync** (`git fetch` / `pull --ff-only` se atrás), depois leia `ROADMAP.md`, `memory-bank/activeContext.md` e a spec ativa; escreva a fatia antes de editar (objetivo, fora de escopo, pronto quando). Uma fatia = uma task. Ver `agentes-em-paralelo`.
+- Pedido que não é um ajuste óbvio: **sync** + lease (`memory-bank/AGENT_CLAIM.md`), depois leia `ROADMAP.md`, `activeContext.md` e a spec ativa; escreva a fatia antes de editar. Uma fatia = uma task. Ver `agentes-em-paralelo`.
 - Uma fatia por vez. A menor mudança que cumpre o critério.
 - Pedido amplo ou nova etapa: chame `especificador` e/ou `fatiador` antes de implementar.
 - Verifique com o gate (`AGENTS.md` / regra de verificação) antes de declarar pronto. Diga o que foi e o que não foi verificado.

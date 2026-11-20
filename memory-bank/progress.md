@@ -2,15 +2,15 @@
 
 ## O que funciona
 
-- Gates de produto (kernel, runtime, node, agent, harness)
-- Desenhos: ADR 0003 (memória/scheduler), ADR 0004 (P2P v1) — sem implementação
-- Etapas 1–14 feitas
+- Gates de produto; ADRs 0001–0005 (desenho)
+- Etapas 1–15 (E15 canônica: `autonomia-v1-utilizavel`)
+- Lease multi-agente: `AGENT_CLAIM.md`
 
 ## Bloqueios
 
-- Implementação contrato memória/scheduler; GGUF em Linha B; P2P v1 no `node/`
+- Implementações futuras (P2P v1, autonomia v1 código, memória/scheduler, GGUF em B)
 
 ## Por etapa
 
-- Etapas 1–14: feitas
-- Backlog Abertas (topo): B9 (#15), B10–B12 (#16–#18)
+- 1–15: feitas (E15 consolidada após conflito paralelo)
+- Backlog Abertas: B10–B12

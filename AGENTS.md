@@ -339,8 +339,8 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `docs/desenho-protocolo-rede-ia-livre.md` — desenho Rede IA Livre v1 (ADR 0004; não implementado)
 - `docs/adr/0004-stack-protocolo-rede-ia-livre.md` — ADR da stack candidata P2P
 - `docs/ambiente-autonomia-prototipo.md` — loop/memória/ferramenta do protótipo de autonomia (Etapa 7)
-- `docs/desenho-ambiente-autonomia-v1.md` — escopo autonomia v1 (ADR 0005; não implementado)
-- `docs/adr/0005-ambiente-autonomia-v1.md` — ADR do escopo v1
+- `docs/desenho-autonomia-v1.md` — escopo autonomia v1 (ADR 0005; não implementado)
+- `docs/adr/0005-autonomia-v1-utilizavel.md` — ADR do escopo v1
 - `Makefile` — `build` / `esp` / `run` / `verify` / `verify-runtime` / `verify-runtime-gpu` / `verify-node` / `verify-agent` / `verify-harness` / `clean`
 - `scripts/run-qemu.sh` — atalho para `make run`
 - `scripts/verify-boot.sh` — gate serial do kernel (`BOOT_OK` + mem/alloc + `EXIT_BOOT_OK`)
@@ -371,6 +371,7 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 ## Ponte
 
 - Rules: `.cursor/rules/` (README por fatia: `readme-por-fatia`; paralelo: `agentes-em-paralelo`)
+- Lease multi-agente: `memory-bank/AGENT_CLAIM.md` (obrigatório antes de editar `em_andamento`)
 - Roadmap: `ROADMAP.md`
 - Backlog: `BACKLOG.md` (comando `/atualizar-backlog`; skill `atualizar-backlog`)
 - Specs: `specs/`

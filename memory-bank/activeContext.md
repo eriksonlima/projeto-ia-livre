@@ -2,20 +2,19 @@
 
 ## Foco atual
 
-- Etapa 15 — Ambiente de autonomia além do protótipo (`em_andamento`, Issue #15)
-- Spec: `specs/autonomia-v1-utilizavel/` (a gerar / em geração)
-- Etapa 14 **feita** (ADR 0004 + desenho P2P v1)
+- **Pausa de coordenação** multi-agente (conflito Etapa 15 resolvido)
+- Etapas 1–15: tratar 15 como **feita** (canônico: `specs/autonomia-v1-utilizavel/` + ADR `0005-autonomia-v1-utilizavel`)
+- Lease: `memory-bank/AGENT_CLAIM.md` (holder vazio)
 
 ## Mudanças recentes
 
-- Etapa 14 fechada; B9 → Etapa 15 (outro agente / claim check)
-- Processo: promoção autônoma + agentes-em-paralelo
+- Protocolo paralelo endurecido: lease push-first + um escritor na `em_andamento`
+- Consolidação E15: removida duplicata `ambiente-autonomia-v1` / ADR divergente
 
 ## Próximo passo
 
-- Spec + tasks da Etapa 15; implementar fatias documentais
+- Usuário retoma com **um** agente claimando a próxima etapa (topo Abertas = B10) via lease
 
 ## Notas
 
-- Hipótese A vs B não comprovada
-- Não re-promover B9; Abertas topo = B10
+- Preferência: um agente ativo por vez no `main`

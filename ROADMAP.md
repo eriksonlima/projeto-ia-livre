@@ -102,7 +102,7 @@ Pronto quando: escolha documentada (ADR/doc) da stack candidata (transporte, ide
 
 ## Etapa 15 — Ambiente de autonomia além do protótipo (v1 utilizável)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#15](https://github.com/eriksonlima/projeto-ia-livre/issues/15)  
 Spec: specs/autonomia-v1-utilizavel/  
 Pronto quando: escopo documentado da primeira versão utilizável da camada 3 e critério verificável mínimo — ainda no host, sem exigir o SO IA Livre.

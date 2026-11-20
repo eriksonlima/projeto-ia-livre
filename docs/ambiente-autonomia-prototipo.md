@@ -83,7 +83,7 @@ Complete em uma frase: O Projeto IA Livre é
 
 Multi-agente, ReAct robusto, RAG/vetores, sandbox OS-level, integração P2P/kernel, GPU, UI.
 
-> **Etapa 15 (escopo ≠ código):** autonomia v1 (`--goal`, turnos, `note`+recall, `GOAL_OK`/`RECALL_OK`) está em [`desenho-ambiente-autonomia-v1.md`](desenho-ambiente-autonomia-v1.md) / ADR 0005. Este doc e o `agent/` atual continuam sendo o **protótipo Etapa 7** até uma etapa de implementação.
+> **Etapa 15 (desenho ≠ código):** autonomia v1 (`--prompt`, `note`/`recall`/`help`, política N) está em [`desenho-autonomia-v1.md`](desenho-autonomia-v1.md) / ADR [`0005`](adr/0005-autonomia-v1-utilizavel.md). Este doc e o `agent/` atual continuam sendo o **protótipo Etapa 7** até uma etapa de implementação.
 
 ## Fluxo canônico
 
