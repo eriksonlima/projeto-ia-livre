@@ -4,17 +4,17 @@
 
 - Processo: backlog → roadmap (mínima interrupção)
 - Etapa do roadmap: **Etapa 10 — Kernel além do boot** (`em_andamento`, Issue #10)
-- Spec ativa: `specs/kernel-alem-do-boot/` (Task 1 feita; Task 2–3 abertas)
+- Spec ativa: `specs/kernel-alem-do-boot/` (Tasks 1–2 feitas; Task 3 aberta)
 
 ## Mudanças recentes
 
 - Seed backlog B4–B6 (#10–#12); B4 promovido a Etapa 10
-- Spec `specs/kernel-alem-do-boot/` (mapa UEFI + AllocatePages/bump sob Boot Services)
-- Task 1: `docs/kernel-alem-do-boot.md` + pontes architecture/AGENTS; README considerado
+- Task 1: contrato `docs/kernel-alem-do-boot.md`
+- Task 2: mapa + AllocatePages(2) + bump 64 B → marcadores na serial QEMU
 
 ## Próximo passo
 
-- Task 2: implementar mapa + alloc/bump no `kernel/` com marcadores serial
+- Task 3: estender `make verify` / `verify-boot.sh` para MEM_MAP_OK + ALLOC_OK
 
 ## Notas
 

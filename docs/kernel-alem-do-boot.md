@@ -30,10 +30,26 @@ Ordem sugerida (ajuda o gate):
 
 Em falha de mapa ou alloc: **não** emitir o `*_OK` correspondente (gate vermelho).
 
-## Valores de prova (orientação)
+## Valores de prova (fixados)
 
-- Páginas alocadas para o bump: **1–4** × 4 KiB (fixado na implementação).
-- Sem `#[global_allocator]` completo se o bump local bastar.
+| Item | Valor |
+|------|--------|
+| Páginas `AllocatePages` | **2** × 4 KiB (`PROOF_PAGES` em `kernel/src/main.rs`) |
+| Bytes do bump (write/read) | **64** (`BUMP_PROOF_BYTES`) |
+| Tipo UEFI do bloco | `LOADER_DATA` |
+| Allocator global | Não — bump local sobre o bloco |
+
+### Exemplo de serial (host de referência)
+
+```
+IA_LIVRE_BOOT_OK
+IA_LIVRE_MEM_CONVENTIONAL_PAGES=53292
+IA_LIVRE_MEM_MAP_OK
+IA_LIVRE_ALLOC_BYTES=64
+IA_LIVRE_ALLOC_OK
+```
+
+`MEM_CONVENTIONAL_PAGES` varia com a RAM do QEMU; o gate exige a presença da linha e dos `*_OK`.
 
 ## Como observar
 

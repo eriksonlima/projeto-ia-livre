@@ -42,8 +42,8 @@ make verify   # gate automatizado do kernel (marcadores: ver docs/kernel-alem-do
 
 Equivalente interativo: `./scripts/run-qemu.sh`.
 
-Na serial deve aparecer pelo menos `IA_LIVRE_BOOT_OK`.  
-Etapa 10 (em andamento): além do boot, mapa de memória UEFI + alocação/bump sob Boot Services — marcadores `IA_LIVRE_MEM_MAP_OK` / `IA_LIVRE_ALLOC_OK` (contrato: [`docs/kernel-alem-do-boot.md`](docs/kernel-alem-do-boot.md)). Ainda **sem** inferência no kernel.
+Na serial (Etapa 10): `IA_LIVRE_BOOT_OK`, `IA_LIVRE_MEM_CONVENTIONAL_PAGES=<n>`, `IA_LIVRE_MEM_MAP_OK`, `IA_LIVRE_ALLOC_BYTES=<n>`, `IA_LIVRE_ALLOC_OK`.  
+Contrato: [`docs/kernel-alem-do-boot.md`](docs/kernel-alem-do-boot.md). Ainda **sem** inferência no kernel. Gate estendido na Task 3.
 
 ### Runtime de inferência (host — Etapas 5 / 8)
 
