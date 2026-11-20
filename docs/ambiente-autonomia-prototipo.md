@@ -68,8 +68,6 @@ Complete em uma frase: O Projeto IA Livre é
 | `IA_LIVRE_TOOL_OK` | Ferramenta `note` executou com sucesso |
 | `IA_LIVRE_MEMORY_OK` | Memória escrita e re-lida / confirmada |
 
-(Task 2 já emite `IA_LIVRE_TOOL_OK` + `IA_LIVRE_RUNTIME_USED=1`; Task 3 fecha memória + `IA_LIVRE_AGENT_OK` + gate.)
-
 ## Defaults canônicos
 
 | Item | Valor |
@@ -77,6 +75,7 @@ Complete em uma frase: O Projeto IA Livre é
 | Crate / binário | `agent/` / `ia-livre-agent` |
 | Memória | `build/agent-memory/memory.jsonl` |
 | Ferramenta | `note` |
+| Nota de prova | `prova-autonomia-ia-livre` |
 | `--n-predict` | `16` |
 | Timeout do gate | 300s (`VERIFY_AGENT_TIMEOUT`) |
 
@@ -84,7 +83,7 @@ Complete em uma frase: O Projeto IA Livre é
 
 Multi-agente, ReAct robusto, RAG/vetores, sandbox OS-level, integração P2P/kernel, GPU, UI.
 
-## Fluxo canônico (após Tasks 2–3)
+## Fluxo canônico
 
 ```bash
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
@@ -97,4 +96,4 @@ cargo run -p ia-livre-agent -- \
 # Esperado: IA_LIVRE_TOOL_OK, IA_LIVRE_MEMORY_OK, IA_LIVRE_AGENT_OK
 ```
 
-Gate: `make verify-agent` (Task 3).
+Gate: `make verify-agent` (não exige QEMU/UEFI).

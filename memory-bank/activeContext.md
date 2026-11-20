@@ -2,19 +2,21 @@
 
 ## Foco atual
 
-- Etapa do roadmap: **Etapa 7 — Ambiente de autonomia (camada 3)** (`em_andamento`, Issue #7)
-- Spec: `specs/ambiente-autonomia/`
-- Task em curso: Task 3 (memória + gate) — Tasks 1–2 feitas
+- Processo: backlog → roadmap (mínima interrupção)
+- Etapa do roadmap: nenhuma `em_andamento` (Etapas 1–7 **feitas**)
+- Spec ativa: nenhuma (última: `specs/ambiente-autonomia/`, Tasks 1–3 feitas)
 
 ## Mudanças recentes
 
-- Task 1: scaffold `agent/` + doc
-- Task 2: loop consome `ia-livre-runtime` via subprocesso; ferramenta `note`; `IA_LIVRE_TOOL_OK` + `IA_LIVRE_RUNTIME_USED=1`
+- Etapa 7: protótipo autonomia (`agent/`, ferramenta `note`, memória JSONL, consome runtime)
+- Gate: `make verify-agent` (`IA_LIVRE_TOOL_OK` + `IA_LIVRE_MEMORY_OK` + `IA_LIVRE_AGENT_OK`)
+- B1 arquivado; Abertas: B2 (GPU), B3 (harness)
 
 ## Próximo passo
 
-- Task 3: `IA_LIVRE_MEMORY_OK` + `IA_LIVRE_AGENT_OK` + `make verify-agent` + Como verificar em AGENTS
+- Sob pedido “continuar” / confirmação: promover o topo do `BACKLOG.md` (B2 — GPU) para o roadmap + issue; depois especificar.
 
 ## Notas
 
-- Autonomia neste protótipo **não** exige SO IA Livre / QEMU
+- Promoção exige confirmação explícita; não inventar Etapa 8 sozinho
+- Project V2 continua só para etapas do roadmap

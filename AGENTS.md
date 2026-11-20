@@ -133,7 +133,9 @@ cargo run -p ia-livre-agent -- \
 
 Flags: `--model` (default GGUF canônico), `--memory` (default `build/agent-memory/memory.jsonl`), `--n-predict` (default `16`), `--runtime-bin` (opcional; senão usa `target/debug/ia-livre-runtime`).
 
-Saída esperada (Task 2): `IA_LIVRE_RUNTIME_USED=1` e `IA_LIVRE_TOOL_OK` (ferramenta `note` appenda ao JSONL). Memória re-lida + `IA_LIVRE_AGENT_OK` + gate `make verify-agent` na Task 3.
+Saída esperada: `IA_LIVRE_RUNTIME_USED=1`, `IA_LIVRE_TOOL_OK`, `IA_LIVRE_MEMORY_OK`, `IA_LIVRE_AGENT_OK`.
+
+Gate automatizado: `make verify-agent` (não exige QEMU/UEFI nem o nó P2P; requer GGUF).
 
 ## Como verificar
 
@@ -185,6 +187,24 @@ grep -q 'IA_LIVRE_MSG_OK' node/src/main.rs
 
 `make verify-node` sobe dois processos (`--peer` no segundo), espera `IA_LIVRE_PEER_OK` e `IA_LIVRE_MSG_OK`, e falha no timeout (padrão 45s; `VERIFY_NODE_TIMEOUT`). Gates do kernel (`make verify`) e do runtime (`make verify-runtime`) permanecem.
 
+### Gate do ambiente de autonomia (Etapa 7 — adicional)
+
+Requer o GGUF local (`./scripts/fetch-model.sh` na primeira vez). **Não** usa QEMU/UEFI nem o nó P2P. O protótipo de autonomia **não exige** o SO IA Livre.
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+export LIBCLANG_PATH="${LIBCLANG_PATH:-/usr/lib/llvm-18/lib}"
+test -d agent && test -f agent/Cargo.toml && test -f agent/src/main.rs
+test -f scripts/verify-agent.sh && test -f docs/ambiente-autonomia-prototipo.md
+./scripts/fetch-model.sh
+make verify-agent
+grep -q 'IA_LIVRE_TOOL_OK' agent/src/main.rs
+grep -q 'IA_LIVRE_MEMORY_OK' agent/src/main.rs
+grep -q 'IA_LIVRE_AGENT_OK' agent/src/main.rs
+```
+
+`make verify-agent` falha se o modelo estiver ausente ou se faltarem `IA_LIVRE_TOOL_OK` / `IA_LIVRE_MEMORY_OK` / `IA_LIVRE_AGENT_OK` (timeout padrão 300s; `VERIFY_AGENT_TIMEOUT`). Gates do kernel, runtime e nó permanecem.
+
 ## PATH
 
 Sempre inclua o GitHub CLI e o Cargo locais:
@@ -209,11 +229,12 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `Cargo.toml` — workspace Cargo (membros `kernel`, `runtime`, `node`, `agent`)
 - `docs/rede-ia-livre-prototipo.md` — framing/descoberta/mensagem do protótipo P2P
 - `docs/ambiente-autonomia-prototipo.md` — loop/memória/ferramenta do protótipo de autonomia
-- `Makefile` — `build` / `esp` / `run` / `verify` / `verify-runtime` / `verify-node` / `clean`
+- `Makefile` — `build` / `esp` / `run` / `verify` / `verify-runtime` / `verify-node` / `verify-agent` / `clean`
 - `scripts/run-qemu.sh` — atalho para `make run`
 - `scripts/verify-boot.sh` — gate serial `IA_LIVRE_BOOT_OK`
 - `scripts/verify-runtime.sh` — gate do runtime CPU (`IA_LIVRE_INFER_OK` + métricas)
 - `scripts/verify-node.sh` — gate do nó Rede IA Livre (`IA_LIVRE_PEER_OK` + `IA_LIVRE_MSG_OK`)
+- `scripts/verify-agent.sh` — gate do ambiente de autonomia (`IA_LIVRE_TOOL_OK` + `IA_LIVRE_MEMORY_OK` + `IA_LIVRE_AGENT_OK`)
 - `scripts/fetch-model.sh` — download do GGUF canônico da Etapa 5
 - `docs/runtime-inferencia-cpu-metricas.md` — métricas do protótipo no host
 - `build/esp/` — ESP gerada (gitignored via `build/`)

@@ -1,6 +1,6 @@
 //! CLI do protótipo do ambiente de autonomia (Etapa 7).
-//! Loop: prompt → runtime (subprocesso) → ferramenta `note` → escrita na memória.
-//! Marcadores desta fatia: `IA_LIVRE_TOOL_OK` (+ `IA_LIVRE_RUNTIME_USED=1`).
+//! Loop: prompt → runtime (subprocesso) → ferramenta `note` → memória re-lida.
+//! Marcadores: `IA_LIVRE_TOOL_OK`, `IA_LIVRE_MEMORY_OK`, `IA_LIVRE_AGENT_OK`.
 //! Ver docs/ambiente-autonomia-prototipo.md.
 
 use std::env;
@@ -257,6 +257,19 @@ fn run(config: &Config) -> Result<(), String> {
     println!("IA_LIVRE_TOOL_OK");
     println!("IA_LIVRE_TOOL=note");
     println!("IA_LIVRE_MEMORY_PATH={}", config.memory.display());
+
+    // 6) Persistência verificável: re-ler o arquivo e confirmar a nota de prova
+    let stored = fs::read_to_string(&config.memory)
+        .map_err(|e| format!("re-ler memória {}: {e}", config.memory.display()))?;
+    if !stored.contains(PROOF_NOTE) {
+        return Err(format!(
+            "memória não contém a nota de prova `{PROOF_NOTE}` após escrita"
+        ));
+    }
+    println!("IA_LIVRE_MEMORY_OK");
+
+    // 7) Loop do cenário de prova concluído
+    println!("IA_LIVRE_AGENT_OK");
 
     Ok(())
 }
