@@ -19,5 +19,5 @@
 ## Por etapa
 
 - Etapas 1–7: feitas
-- Etapa 8: `em_andamento` (Issue #8); Task 1 feita; Tasks 2–3 abertas
+- Etapa 8: `em_andamento` (Issue #8); Tasks 1–2 feitas; Task 3 aberta
 - Backlog aberto: B3 (harness Linha A vs B); B2 promovido/arquivado

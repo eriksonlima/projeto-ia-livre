@@ -76,9 +76,41 @@ cargo run -p ia-livre-runtime -- --model models/tinyllama-1.1b-chat-v1.0.Q4_K_M.
 Prompt padrão (fixado): `Complete em uma frase: O Projeto IA Livre é`  
 `--n-gpu-layers` default `0` (CPU). Saída: texto gerado + `IA_LIVRE_INFER_OK` + métricas `IA_LIVRE_LOAD_S=` / `IA_LIVRE_TOKENS_PER_S=` + `IA_LIVRE_ACCEL=` / `IA_LIVRE_N_GPU_LAYERS=`.  
 Opcional: `--prompt "..."` / `--n-predict 32` / `--n-gpu-layers <N>`.  
-Features GPU (Etapa 8): `cargo build -p ia-livre-runtime --features cuda` (canônico) ou `--features vulkan` (alternativa); requer toolkit do backend no host — ver ADR 0002. Gate GPU e métricas GPU: Tasks seguintes / `docs/runtime-inferencia-gpu-metricas.md` quando existir.  
 Métricas CPU: `docs/runtime-inferencia-cpu-metricas.md`.  
 Fallback CLI do llama.cpp: só se a binding falhar no host — documentar a escolha aqui se for adotada.
+
+#### Aceleração GPU (host — Etapa 8)
+
+ADR: [`docs/adr/0002-aceleracao-gpu-host-llama-cpp.md`](docs/adr/0002-aceleracao-gpu-host-llama-cpp.md). **CUDA** = canônico; **Vulkan** = alternativa se CUDA Toolkit (`nvcc`) estiver ausente.
+
+Pré-requisitos (além de cmake/libclang):
+
+| Backend | Precisa |
+|---------|---------|
+| `cuda` | NVIDIA driver + **CUDA Toolkit** (`nvcc` no PATH / `CUDAToolkit_ROOT`) |
+| `vulkan` | Driver com ICD Vulkan + headers/`glslc` (ex.: LunarG Vulkan SDK em `~/.local/opt/<ver>/x86_64`) |
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+export LIBCLANG_PATH="${LIBCLANG_PATH:-/usr/lib/llvm-18/lib}"
+
+# Exemplo Vulkan (host de referência — SDK user-space):
+export VULKAN_SDK="${VULKAN_SDK:-$HOME/.local/opt/1.3.296.0/x86_64}"
+export PATH="$VULKAN_SDK/bin:$PATH"
+export LD_LIBRARY_PATH="$VULKAN_SDK/lib:${LD_LIBRARY_PATH:-}"
+
+cargo build -p ia-livre-runtime --features vulkan
+# ou: cargo build -p ia-livre-runtime --features cuda
+
+cargo run -p ia-livre-runtime --features vulkan -- \
+  --model models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf \
+  --n-predict 32 \
+  --n-gpu-layers 99
+```
+
+Esperado: `IA_LIVRE_INFER_OK`, `IA_LIVRE_ACCEL=vulkan` (ou `cuda`), `IA_LIVRE_N_GPU_LAYERS=99`.  
+Com `--n-gpu-layers 0` (ou build sem feature) permanece CPU (`IA_LIVRE_ACCEL=cpu`).  
+Métricas GPU: `docs/runtime-inferencia-gpu-metricas.md`. Gate automatizado: Task 3 (`make verify-runtime-gpu`).
 
 ### Nó Rede IA Livre (host — Etapa 6)
 

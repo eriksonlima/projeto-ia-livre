@@ -4,20 +4,20 @@
 
 - Etapa 8 — Aceleração além de CPU (GPU) (`em_andamento`, Issue #8)
 - Spec: `specs/aceleracao-gpu/`
-- Task 1 feita; próxima: Task 2 (caminho GPU real + métricas)
+- Tasks 1–2 feitas; próxima: Task 3 (gate `verify-runtime-gpu` + skip)
 
 ## Mudanças recentes
 
-- B2 promovido → Etapa 8; backlog atualizado; issue #8 em Project (Em andamento)
-- Spec `specs/aceleracao-gpu/` (ADR CUDA/Vulkan, `--n-gpu-layers`, gate GPU com skip)
-- Task 1: ADR 0002, features Cargo, flag CLI, marcadores; `make verify-runtime` ok
-- README Task 1: considerado; não atualizado (ponte AGENTS)
+- Task 2: caminho GPU real via **Vulkan** (CUDA inviável sem `nvcc` no host)
+- Prova: `IA_LIVRE_ACCEL=vulkan`, ~54.7 tok/s, offload 23/23 (GTX 1050)
+- Docs: `docs/runtime-inferencia-gpu-metricas.md`; AGENTS Como rodar GPU; nota ADR 0002
+- README Task 2: considerado; não atualizado
 
 ## Próximo passo
 
-- Task 2: build com feature GPU, inferência `--n-gpu-layers` > 0, métricas GPU, AGENTS Como rodar GPU
+- Task 3: `scripts/verify-runtime-gpu.sh` + `make verify-runtime-gpu` + política skip + AGENTS Como verificar
 
 ## Notas
 
-- Host: GTX 1050 + driver 535 (CUDA 12.2 no driver); `nvcc` pode estar ausente → tentar CUDA; se inviável, Vulkan (ADR 0002)
+- Vulkan SDK user-space: `~/.local/opt/1.3.296.0` (não versionado)
 - Não promover B3 sem confirmação

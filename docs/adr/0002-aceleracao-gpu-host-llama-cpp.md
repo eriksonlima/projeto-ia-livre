@@ -32,3 +32,7 @@ A Etapa 5 entregou inferência CPU no host (`ia-livre-runtime` / `llama-cpp-2`, 
 - Dependência de toolchain NVIDIA/CUDA (ou Vulkan) no host de prova
 - Binding/feature do llama.cpp pode exigir notas de host (`cuda-no-vmm`, paths, etc.)
 - Não resolve ainda aceleração nativa no kernel IA Livre nem multi-GPU
+
+## Nota do host de referência (2026-11-20)
+
+No Acer Nitro 5 (GTX 1050, driver 535), a feature **`cuda`** falhou no build (`nvcc` / CUDA Toolkit ausentes). A prova da Etapa 8 usou a alternativa **`vulkan`** (LunarG SDK em user-space + `--n-gpu-layers 99`), com `IA_LIVRE_ACCEL=vulkan`. CUDA permanece o backend **canônico** quando o toolkit estiver instalado.
