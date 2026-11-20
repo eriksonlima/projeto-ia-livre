@@ -8,14 +8,15 @@
 
 ## Mudanças recentes
 
-- Repositório `projeto-ia-livre` criado a partir do template
+- Repositório público em https://github.com/eriksonlima/projeto-ia-livre
 - Identidade: Projeto IA Livre / SO IA Livre / Rede IA Livre
-- Roadmap com 6 etapas iniciais
+- Issues #1–#6 e labels `roadmap` / `status:*` criadas
+- Project V2 bloqueado: faltam escopos `project` e `read:project` no token do `gh`
 
 ## Próximo passo
 
-- Concluir fundação (push + Project V2)
-- Em seguida: Etapa 2 — Manifesto Fundador e identidade
+- Usuário: `gh auth refresh -s project,read:project` e completar Project V2
+- Depois: fechar Etapa 1 e seguir para Manifesto Fundador (Etapa 2)
 
 ## Notas
 
