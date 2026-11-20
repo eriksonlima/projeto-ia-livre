@@ -4,20 +4,18 @@
 
 - Etapa 9 — Harness da hipótese Linha A vs Linha B (`em_andamento`, Issue #9)
 - Spec: `specs/harness-linha-a-b/`
-- Task 1 feita; próxima: Task 2 (scripts harness A + stub B)
+- Tasks 1–2 feitas; próxima: Task 3 (`make verify-harness`)
 
 ## Mudanças recentes
 
-- B3 promovido → Etapa 9; BACKLOG arquivado; GitHub #9 roadmap/status:em_andamento + Project
-- Spec `specs/harness-linha-a-b/` (metodologia + A + stub B + gate)
-- Task 1: `docs/harness-linha-a-b.md`, ponte architecture/product-context/E5/E8, AGENTS parcial
-- README Task 1: considerado; não atualizado (ainda sem scripts/gate)
+- Task 2: `scripts/run-harness-line-a.sh` + stub B; baseline A na doc (LOAD≈1.06s, ~14.8 tok/s)
+- AGENTS: Como rodar harness
+- README Tasks 1–2: considerado; não atualizado (ponte AGENTS)
 
 ## Próximo passo
 
-- Task 2: `scripts/run-harness-line-a.sh` + stub B; baseline A na doc; AGENTS Como rodar
+- Task 3: `scripts/verify-harness.sh` + Makefile + AGENTS Como verificar; fechar etapa
 
 ## Notas
 
-- Hipótese não é “provada” nesta etapa
-- Linha B = stub `IA_LIVRE_HARNESS_B_SKIP` até runtime nativo
+- Hipótese não comprovada; B = skip até runtime nativo

@@ -60,31 +60,42 @@ Fora do mínimo v1: joules, p95 multi-request, VRAM multi-tenant (candidatos da 
 2. **Entrypoint futuro:** `scripts/run-harness-line-b.sh` — hoje só stub (`IA_LIVRE_HARNESS_B_SKIP` + motivo). Alternativa futura (ESP/QEMU) só precisa respeitar o mesmo contrato de marcadores.
 3. **Quando B existir:** mesma tabela de carga; mesmo hardware; relatório lado a lado neste documento (baseline A + medição B). **Sem** declarar vitória automática da hipótese — só dados comparáveis.
 
-## Como rodar (visão; scripts na Task 2)
+## Como rodar
 
 ```bash
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+export LIBCLANG_PATH="${LIBCLANG_PATH:-/usr/lib/llvm-18/lib}"
 ./scripts/fetch-model.sh
-# Linha A (após Task 2):
+cargo build -p ia-livre-runtime
+
+# Linha A (host Linux + runtime)
 ./scripts/run-harness-line-a.sh
-# Linha B (stub):
+
+# Linha B (stub — skip canônico)
 ./scripts/run-harness-line-b.sh
-# Gate (após Task 3):
-make verify-harness
+
+# Gate (Task 3): make verify-harness
 ```
 
-Detalhes operacionais: `AGENTS.md` → Como rodar / Como verificar (Etapa 9).
+Overrides opcionais: `IA_LIVRE_MODEL`, `IA_LIVRE_HARNESS_PROMPT`, `IA_LIVRE_HARNESS_N_PREDICT`, `IA_LIVRE_RUNTIME_BIN`.  
+Detalhes: `AGENTS.md` → Como rodar / Como verificar (Etapa 9).
 
-## Baseline Linha A
+## Baseline Linha A (exemplo no host de referência)
 
-Tabela de exemplo preenchida após a primeira corrida reproduzível (Task 2). Até lá: **pendente** — não inventar números.
+Corrida única com a carga canônica (`n-predict=32`, CPU). **Baseline da referência**, não prova da hipótese.
 
 | Campo | Valor |
 |-------|--------|
-| Host | _(preencher na Task 2)_ |
-| `IA_LIVRE_HARNESS_LOAD_S` | _(pendente)_ |
-| `IA_LIVRE_HARNESS_TOKENS_PER_S` | _(pendente)_ |
-| Nota | Baseline da referência A; **não** prova A≻B nem B≻A |
+| Host | Acer Nitro 5 (`eriksonlima-Nitro-AN515-51`) |
+| OS | Ubuntu 24.04 (kernel 7.0.0-38-generic) |
+| CPU | Intel Core i5-7300HQ @ 2.50 GHz (4 threads) |
+| RAM | 16 GiB |
+| Backend | `ia-livre-runtime` / llama.cpp, CPU (`n_gpu_layers=0`) |
+| Modelo | `tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf` |
+| `IA_LIVRE_HARNESS_LOAD_S` | 1.056 |
+| `IA_LIVRE_HARNESS_TOKENS_PER_S` | 14.846 |
+| Data | 2026-11-20 |
+| Nota | Baseline A; **não** prova A≻B nem B≻A; números variam com carga do sistema |
 
 ## Relação com Etapas 5 e 8
 

@@ -174,7 +174,25 @@ Gate automatizado: `make verify-agent` (não exige QEMU/UEFI nem o nó P2P; requ
 
 Metodologia e contrato do slot B: [`docs/harness-linha-a-b.md`](docs/harness-linha-a-b.md).  
 **Não** confundir com métricas dos protótipos CPU/GPU (`docs/runtime-inferencia-*-metricas.md`).  
-Scripts `run-harness-line-*.sh` e `make verify-harness` entram nas Tasks 2–3 desta etapa.
+Participar / medir a hipótese **não** exige o SO IA Livre para a Linha A; a Linha B permanece stub até o runtime nativo.
+
+Pré-requisitos: os do runtime CPU (GGUF + cmake/libclang). **Sem** QEMU/UEFI nem GPU para o harness v1.
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+export LIBCLANG_PATH="${LIBCLANG_PATH:-/usr/lib/llvm-18/lib}"
+
+./scripts/fetch-model.sh
+cargo build -p ia-livre-runtime
+
+# Linha A — emite IA_LIVRE_HARNESS_LINE=A + IA_LIVRE_HARNESS_OK + load/tokens
+./scripts/run-harness-line-a.sh
+
+# Linha B — stub: IA_LIVRE_HARNESS_B_SKIP (sem números inventados)
+./scripts/run-harness-line-b.sh
+```
+
+Gate automatizado: `make verify-harness` (Task 3).
 
 ## Como verificar
 
@@ -300,6 +318,9 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `scripts/verify-agent.sh` — gate do ambiente de autonomia (`IA_LIVRE_TOOL_OK` + `IA_LIVRE_MEMORY_OK` + `IA_LIVRE_AGENT_OK`)
 - `scripts/fetch-model.sh` — download do GGUF canônico da Etapa 5
 - `docs/runtime-inferencia-cpu-metricas.md` — métricas do protótipo no host
+- `docs/harness-linha-a-b.md` — metodologia do harness Linha A vs Linha B (Etapa 9)
+- `scripts/run-harness-line-a.sh` — corrida Linha A (wrapper do runtime, marcadores `HARNESS_`)
+- `scripts/run-harness-line-b.sh` — stub Linha B (`IA_LIVRE_HARNESS_B_SKIP`)
 - `build/esp/` — ESP gerada (gitignored via `build/`)
 
 ## Fora de escopo do agente
