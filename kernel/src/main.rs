@@ -8,13 +8,13 @@ use uefi::mem::memory_map::MemoryMap;
 use uefi::prelude::*;
 use uefi::proto::console::serial::Serial;
 
-/// Mensagem canônica do gate (Etapa 4). Não alterar o texto sem atualizar AGENTS.md.
 const BOOT_OK: &str = "IA_LIVRE_BOOT_OK\n";
+const EXIT_BOOT_BEGIN: &str = "IA_LIVRE_EXIT_BOOT_BEGIN\n";
 
-/// Páginas de 4 KiB alocadas para a prova do bump (Etapa 10).
 const PROOF_PAGES: usize = 2;
-/// Bytes pedidos ao bump dentro do bloco (prova write/read).
 const BUMP_PROOF_BYTES: usize = 64;
+
+const COM1: u16 = 0x3F8;
 
 struct LineSink<'a> {
     serial: Option<&'a mut Serial>,
@@ -70,7 +70,7 @@ fn format_u64(mut n: u64, buf: &mut [u8; 20]) -> &str {
     core::str::from_utf8(&buf[i..]).unwrap()
 }
 
-fn emit_kv(sink: &mut LineSink<'_>, key: &str, value: u64) {
+fn emit_kv_uefi(sink: &mut LineSink<'_>, key: &str, value: u64) {
     let mut num = [0u8; 20];
     let digits = format_u64(value, &mut num);
     let mut line = [0u8; 96];
@@ -85,8 +85,7 @@ fn emit_kv(sink: &mut LineSink<'_>, key: &str, value: u64) {
     }
     line[len] = b'\n';
     len += 1;
-    let s = core::str::from_utf8(&line[..len]).unwrap();
-    sink.emit(s);
+    sink.emit(core::str::from_utf8(&line[..len]).unwrap());
 }
 
 fn count_conventional_pages(map: &impl MemoryMap) -> u64 {
@@ -115,6 +114,62 @@ fn prove_bump(base: NonNull<u8>, capacity: usize) -> Option<usize> {
     Some(BUMP_PROOF_BYTES)
 }
 
+// --- UART COM1 (16550) — único I/O válido após ExitBootServices ---
+
+unsafe fn outb(port: u16, val: u8) {
+    core::arch::asm!("out dx, al", in("dx") port, in("al") val, options(nostack, preserves_flags));
+}
+
+unsafe fn inb(port: u16) -> u8 {
+    let val: u8;
+    core::arch::asm!("in al, dx", out("al") val, in("dx") port, options(nostack, preserves_flags));
+    val
+}
+
+unsafe fn uart_init() {
+    outb(COM1 + 1, 0x00); // disable interrupts
+    outb(COM1 + 3, 0x80); // DLAB on
+    outb(COM1 + 0, 0x01); // divisor lo (115200)
+    outb(COM1 + 1, 0x00); // divisor hi
+    outb(COM1 + 3, 0x03); // 8N1
+    outb(COM1 + 2, 0xC7); // FIFO
+    outb(COM1 + 4, 0x0B); // IRQs enabled, RTS/DSR
+}
+
+unsafe fn uart_put(b: u8) {
+    for _ in 0..100_000 {
+        if inb(COM1 + 5) & 0x20 != 0 {
+            break;
+        }
+    }
+    outb(COM1, b);
+}
+
+unsafe fn uart_write(s: &str) {
+    for b in s.bytes() {
+        if b == b'\n' {
+            uart_put(b'\r');
+        }
+        uart_put(b);
+    }
+}
+
+unsafe fn uart_emit_kv(key: &str, value: u64) {
+    let mut num = [0u8; 20];
+    let digits = format_u64(value, &mut num);
+    uart_write(key);
+    uart_write(digits);
+    uart_write("\n");
+}
+
+fn halt() -> ! {
+    loop {
+        unsafe {
+            core::arch::asm!("hlt", options(nomem, nostack, preserves_flags));
+        }
+    }
+}
+
 #[entry]
 fn main() -> Status {
     uefi::helpers::init().unwrap();
@@ -127,11 +182,10 @@ fn main() -> Status {
 
     sink.emit(BOOT_OK);
 
-    // --- Mapa de memória UEFI (Boot Services) ---
     let map_ok = match boot::memory_map(MemoryType::LOADER_DATA) {
         Ok(map) => {
             let conventional = count_conventional_pages(&map);
-            emit_kv(
+            emit_kv_uefi(
                 &mut sink,
                 "IA_LIVRE_MEM_CONVENTIONAL_PAGES=",
                 conventional,
@@ -146,8 +200,7 @@ fn main() -> Status {
         return Status::SUCCESS;
     }
 
-    // --- AllocatePages + bump ---
-    match boot::allocate_pages(
+    let alloc_ptr = match boot::allocate_pages(
         AllocateType::AnyPages,
         MemoryType::LOADER_DATA,
         PROOF_PAGES,
@@ -155,14 +208,41 @@ fn main() -> Status {
         Ok(ptr) => {
             let capacity = PROOF_PAGES * PAGE_SIZE;
             if let Some(used) = prove_bump(ptr, capacity) {
-                emit_kv(&mut sink, "IA_LIVRE_ALLOC_BYTES=", used as u64);
+                emit_kv_uefi(&mut sink, "IA_LIVRE_ALLOC_BYTES=", used as u64);
                 sink.emit("IA_LIVRE_ALLOC_OK\n");
+                Some((ptr, capacity))
+            } else {
+                None
             }
-            // Bloco permanece alocado até o fim do app UEFI (sem ExitBoot).
-            let _ = ptr;
         }
-        Err(_) => {}
+        Err(_) => None,
+    };
+
+    let Some((proof_base, proof_cap)) = alloc_ptr else {
+        return Status::SUCCESS;
+    };
+
+    sink.emit(EXIT_BOOT_BEGIN);
+
+    // Soltar Serial UEFI antes do exit (protocolos invalidam).
+    drop(sink);
+    drop(serial);
+
+    // ExitBootServices: mapa owned; Boot Services acabam.
+    let map = unsafe { boot::exit_boot_services(MemoryType::LOADER_DATA) };
+
+    unsafe {
+        uart_init();
+
+        let pages = count_conventional_pages(&map);
+        uart_emit_kv("IA_LIVRE_EXIT_MAP_PAGES=", pages);
+        uart_write("IA_LIVRE_EXIT_MAP_OK\n");
+
+        if prove_bump(proof_base, proof_cap).is_some() {
+            uart_write("IA_LIVRE_EXIT_MEM_OK\n");
+            uart_write("IA_LIVRE_EXIT_BOOT_OK\n");
+        }
     }
 
-    Status::SUCCESS
+    halt()
 }
