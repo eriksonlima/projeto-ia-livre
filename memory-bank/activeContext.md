@@ -2,18 +2,18 @@
 
 ## Foco atual
 
-- Etapa 16 **feita** (ADR 0006 + desenho GPU manager / multi-GPU)
-- Roadmap sem `em_andamento` — próximo: promover B11 (licenças) se continuar
+- Etapa 17 — Licenças definitivas por componente — `em_andamento`
+- Lease: `cursor-agent-df93a573` (#17)
 
 ## Mudanças recentes
 
-- ADR 0006, `desenho-gpu-manager-multi-gpu.md`, pontes architecture/AGENTS
-- Lease liberado
+- Etapa 16 feita (ADR 0006)
+- B11 promovido → Etapa 17
 
 ## Próximo passo
 
-- Promoção autônoma do topo Abertas (B11) ao continuar / ao fechar etapa
+- Spec da Etapa 17 → registrar licenças por componente
 
 ## Notas
 
-- Um agente escritor; host ≠ manager nativo
+- Manifesto: preferência Apache 2.0 infra / GPLv3 onde preservação for prioridade

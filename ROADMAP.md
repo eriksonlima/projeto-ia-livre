@@ -113,3 +113,10 @@ Status: feita
 Issue: [#16](https://github.com/eriksonlima/projeto-ia-livre/issues/16)  
 Spec: specs/gpu-manager-multi-gpu-desenho/  
 Pronto quando: desenho (ADR/doc) do escopo candidato de GPU manager no kernel e multi-GPU — fronteira vs aceleração host (ADR 0002); desenho, não implementação completa.
+
+## Etapa 17 — Licenças definitivas por componente
+
+Status: em_andamento  
+Issue: [#17](https://github.com/eriksonlima/projeto-ia-livre/issues/17)  
+Spec: _(a definir na spec)_  
+Pronto quando: licença por componente (kernel, runtime, node, agent, docs) registrada no repositório, alinhada ao manifesto.

@@ -8,12 +8,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-### B11 — Licenças definitivas por componente
-
-- Origem: análise 2026-11-20; `docs/manifesto.md` (preferência a confirmar) + decisão aberta em `docs/architecture.md`.
-- Pronto quando sugerido: licença por componente (kernel, runtime, node, agent, docs) registrada no repositório, alinhada ao manifesto.
-- Issue: [#17](https://github.com/eriksonlima/projeto-ia-livre/issues/17)
-
 ### B12 — Evolução do harness (Linha A otimizada / perfil GPU)
 
 - Origem: análise 2026-11-20; limitações explícitas em `docs/harness-linha-a-b.md` (A sem tuning; GPU fora do v1).
@@ -21,6 +15,12 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Issue: [#18](https://github.com/eriksonlima/projeto-ia-livre/issues/18)
 
 ## Promovidas / arquivadas
+
+### B11 — Licenças definitivas por componente
+
+- Promovido para Etapa 17 do roadmap (promoção autônoma após Etapa 16).
+- Issue: [#17](https://github.com/eriksonlima/projeto-ia-livre/issues/17)
+- Etapa: [Etapa 17 — Licenças definitivas por componente](ROADMAP.md)
 
 ### B10 — GPU manager no kernel / multi-GPU (desenho)
 
