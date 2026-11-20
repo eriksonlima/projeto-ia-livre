@@ -1,17 +1,17 @@
 # Roadmap
 
-Project: _(bloqueado — token do `gh` sem escopos `project` / `read:project`; rode `gh auth refresh -s project,read:project` e reexecute `/atualizar-roadmap`)_
+Project: https://github.com/users/eriksonlima/projects/1
 
 ## Etapa 1 — Fundação do repositório
 
-Status: em_andamento  
+Status: feita  
 Issue: [#1](https://github.com/eriksonlima/projeto-ia-livre/issues/1)  
 Spec: _(opcional nesta etapa)_  
 Pronto quando: README, AGENTS.md, ROADMAP.md, scaffold `.cursor/` e remote GitHub existem; labels/issues/project criados.
 
 ## Etapa 2 — Manifesto Fundador e identidade
 
-Status: pendente  
+Status: em_andamento  
 Issue: [#2](https://github.com/eriksonlima/projeto-ia-livre/issues/2)  
 Spec: specs/manifesto-fundador/  
 Pronto quando: manifesto com missão, princípios imutáveis, nomenclatura (Projeto IA Livre / IA Livre / Rede IA Livre), governança B com proteções e política open source publicados em `docs/`.

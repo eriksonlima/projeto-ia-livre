@@ -2,21 +2,20 @@
 
 ## Foco atual
 
-- Etapa do roadmap: Etapa 1 — Fundação do repositório
-- Spec ativa: _(nenhuma ainda)_
-- Fatia / task: scaffold inicial, remote GitHub, labels/issues/project
+- Etapa do roadmap: Etapa 2 — Manifesto Fundador e identidade
+- Spec ativa: specs/manifesto-fundador/ _(ainda a criar)_
+- Fatia / task: especificar e publicar o manifesto em `docs/`
 
 ## Mudanças recentes
 
-- Repositório público em https://github.com/eriksonlima/projeto-ia-livre
-- Identidade: Projeto IA Livre / SO IA Livre / Rede IA Livre
-- Issues #1–#6 e labels `roadmap` / `status:*` criadas
-- Project V2 bloqueado: faltam escopos `project` e `read:project` no token do `gh`
+- Project V2 criado: https://github.com/users/eriksonlima/projects/1
+- Issues #1–#6 vinculadas; Status: Pendente / Em andamento / Feita / Bloqueada
+- Etapa 1 marcada como feita; Etapa 2 em andamento
 
 ## Próximo passo
 
-- Usuário: `gh auth refresh -s project,read:project` e completar Project V2
-- Depois: fechar Etapa 1 e seguir para Manifesto Fundador (Etapa 2)
+- Especificar Manifesto Fundador (`/especificar` ou subagente especificador)
+- Publicar missão, princípios, nomenclatura, governança e política open source
 
 ## Notas
 
