@@ -3,20 +3,21 @@
 ## Foco atual
 
 - Etapa do roadmap: Etapa 4 — Bootstrap do kernel IA Livre
-- Spec ativa: specs/bootstrap-kernel/ _(ainda a criar)_
-- Fatia / task: especificar bootstrap UEFI/QEMU + kernel Rust mínimo
+- Spec ativa: specs/bootstrap-kernel/
+- Fatia / task: Task 2 — `IA_LIVRE_BOOT_OK` na serial + gate completo
 
 ## Mudanças recentes
 
-- product-context e architecture aprofundados; ADR 0001 aceita
-- Etapa 3 feita; Etapa 4 em andamento
+- Task 1 feita: crate `kernel/`, workspace, Makefile (`build`/`esp`/`run`), AGENTS atualizado
+- `make build` gera `ia-livre-kernel.efi`; ESP em `build/esp/`
+- `make run` exige `qemu-system-x86` + `ovmf` no host (ainda não instalados neste ambiente sem sudo)
 
 ## Próximo passo
 
-- Especificar Etapa 4 (`/especificar` → bootstrap-kernel)
-- Depois: boot serial verificável em QEMU
+- Usuário: `sudo apt install qemu-system-x86 ovmf` (se ainda não tiver)
+- Implementar Task 2 (hello serial + gate)
 
 ## Notas
 
-- ADR 0001: kernel × runtime separados; P2P independente do SO
-- Primeiro alvo: x86-64 + UEFI + QEMU, CPU
+- Mensagem canônica Task 2: `IA_LIVRE_BOOT_OK`
+- `CARGO_TARGET_DIR` fixado no Makefile para `./target`

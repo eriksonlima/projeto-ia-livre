@@ -1,0 +1,10 @@
+[package]
+name = "ia-livre-kernel"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "Kernel mínimo do IA Livre (bootstrap UEFI)"
+
+[dependencies]
+uefi = { version = "0.33", features = ["panic_handler", "logger"] }
+log = "0.4"

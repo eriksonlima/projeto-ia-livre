@@ -13,6 +13,8 @@ dist/
 build/
 out/
 target/
+# ESP gerada pelo Makefile (EFI boot)
+# build/ já cobre build/esp/
 coverage/
 .venv/
 venv/
