@@ -192,7 +192,7 @@ cargo build -p ia-livre-runtime
 ./scripts/run-harness-line-b.sh
 ```
 
-Gate automatizado: `make verify-harness` (Task 3).
+Gate automatizado: `make verify-harness` (não exige QEMU/UEFI nem GPU; requer GGUF).
 
 ## Como verificar
 
@@ -283,6 +283,25 @@ grep -q 'IA_LIVRE_AGENT_OK' agent/src/main.rs
 
 `make verify-agent` falha se o modelo estiver ausente ou se faltarem `IA_LIVRE_TOOL_OK` / `IA_LIVRE_MEMORY_OK` / `IA_LIVRE_AGENT_OK` (timeout padrão 300s; `VERIFY_AGENT_TIMEOUT`). Gates do kernel, runtime e nó permanecem.
 
+### Gate do harness Linha A vs Linha B (Etapa 9 — adicional)
+
+Requer o GGUF local (`./scripts/fetch-model.sh` na primeira vez). **Não** usa QEMU/UEFI nem GPU. **Não** prova a hipótese — só o instrumento (A ok + B skip).
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+export LIBCLANG_PATH="${LIBCLANG_PATH:-/usr/lib/llvm-18/lib}"
+test -f scripts/verify-harness.sh
+test -f scripts/run-harness-line-a.sh
+test -f scripts/run-harness-line-b.sh
+test -f docs/harness-linha-a-b.md
+./scripts/fetch-model.sh
+make verify-harness
+grep -q 'IA_LIVRE_HARNESS_OK' scripts/run-harness-line-a.sh
+grep -q 'IA_LIVRE_HARNESS_B_SKIP' scripts/run-harness-line-b.sh
+```
+
+`make verify-harness` exige marcadores `IA_LIVRE_HARNESS_*` da Linha A (`LINE=A`, `OK`, load/tokens/model/`n-predict`) e `IA_LIVRE_HARNESS_B_SKIP` no stub B (timeout padrão 300s; `VERIFY_HARNESS_TIMEOUT`). Gates existentes permanecem.
+
 ## PATH
 
 Sempre inclua o GitHub CLI e o Cargo locais:
@@ -307,7 +326,7 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `Cargo.toml` — workspace Cargo (membros `kernel`, `runtime`, `node`, `agent`)
 - `docs/rede-ia-livre-prototipo.md` — framing/descoberta/mensagem do protótipo P2P
 - `docs/ambiente-autonomia-prototipo.md` — loop/memória/ferramenta do protótipo de autonomia
-- `Makefile` — `build` / `esp` / `run` / `verify` / `verify-runtime` / `verify-runtime-gpu` / `verify-node` / `verify-agent` / `clean`
+- `Makefile` — `build` / `esp` / `run` / `verify` / `verify-runtime` / `verify-runtime-gpu` / `verify-node` / `verify-agent` / `verify-harness` / `clean`
 - `scripts/run-qemu.sh` — atalho para `make run`
 - `scripts/verify-boot.sh` — gate serial `IA_LIVRE_BOOT_OK`
 - `scripts/verify-runtime.sh` — gate do runtime CPU (`IA_LIVRE_INFER_OK` + métricas)
@@ -321,6 +340,7 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `docs/harness-linha-a-b.md` — metodologia do harness Linha A vs Linha B (Etapa 9)
 - `scripts/run-harness-line-a.sh` — corrida Linha A (wrapper do runtime, marcadores `HARNESS_`)
 - `scripts/run-harness-line-b.sh` — stub Linha B (`IA_LIVRE_HARNESS_B_SKIP`)
+- `scripts/verify-harness.sh` — gate do harness (`IA_LIVRE_HARNESS_OK` + `IA_LIVRE_HARNESS_B_SKIP`)
 - `build/esp/` — ESP gerada (gitignored via `build/`)
 
 ## Fora de escopo do agente

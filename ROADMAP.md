@@ -60,7 +60,7 @@ Pronto quando: protótipo de aceleração GPU no host sobre o runtime existente 
 
 ## Etapa 9 — Harness da hipótese Linha A vs Linha B
 
-Status: em_andamento  
+Status: feita  
 Issue: [#9](https://github.com/eriksonlima/projeto-ia-livre/issues/9)  
 Spec: specs/harness-linha-a-b/  
 Pronto quando: harness comparável (mesmo modelo/quantização/carga) documentado para Linha A (Linux otimizado) vs Linha B (IA Livre), sem confundir com métricas dos protótipos CPU/GPU das Etapas 5/8.

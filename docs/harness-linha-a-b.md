@@ -74,7 +74,8 @@ cargo build -p ia-livre-runtime
 # Linha B (stub — skip canônico)
 ./scripts/run-harness-line-b.sh
 
-# Gate (Task 3): make verify-harness
+# Gate
+make verify-harness
 ```
 
 Overrides opcionais: `IA_LIVRE_MODEL`, `IA_LIVRE_HARNESS_PROMPT`, `IA_LIVRE_HARNESS_N_PREDICT`, `IA_LIVRE_RUNTIME_BIN`.  

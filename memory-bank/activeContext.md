@@ -2,20 +2,22 @@
 
 ## Foco atual
 
-- Etapa 9 — Harness da hipótese Linha A vs Linha B (`em_andamento`, Issue #9)
-- Spec: `specs/harness-linha-a-b/`
-- Tasks 1–2 feitas; próxima: Task 3 (`make verify-harness`)
+- Processo: backlog → roadmap (mínima interrupção)
+- Etapa do roadmap: nenhuma `em_andamento` (Etapas 1–9 **feitas**)
+- Spec ativa: nenhuma (última: `specs/harness-linha-a-b/`, Tasks 1–3 feitas)
 
 ## Mudanças recentes
 
-- Task 2: `scripts/run-harness-line-a.sh` + stub B; baseline A na doc (LOAD≈1.06s, ~14.8 tok/s)
-- AGENTS: Como rodar harness
-- README Tasks 1–2: considerado; não atualizado (ponte AGENTS)
+- Etapa 9: harness A vs B (`docs/harness-linha-a-b.md`, scripts A/stub B, `make verify-harness`)
+- Linha A: baseline no host; Linha B: `IA_LIVRE_HARNESS_B_SKIP`
+- B3 arquivado; Abertas do backlog: vazio
+- README Tasks 1–3: considerado; não atualizado (ponte AGENTS)
 
 ## Próximo passo
 
-- Task 3: `scripts/verify-harness.sh` + Makefile + AGENTS Como verificar; fechar etapa
+- Roadmap sem `em_andamento`/`pendente` e backlog Abertas vazio — fila comprometida acabou; novas demandas entram em `BACKLOG.md` sob pedido.
 
 ## Notas
 
-- Hipótese não comprovada; B = skip até runtime nativo
+- Hipótese A vs B **não** comprovada — só o instrumento
+- Runtime nativo (Linha B real) continua aberto

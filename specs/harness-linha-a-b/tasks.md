@@ -8,5 +8,5 @@ Uma task = uma fatia.
 - [x] Task 2 — Harness Linha A executável (wrapper do runtime) + stub Linha B com skip canônico
   - **Pronto quando:** comando/script documentado roda A no host e emite `IA_LIVRE_HARNESS_LINE=A` + `IA_LIVRE_HARNESS_OK` + load/tokens (mesma carga canônica); stub B emite `IA_LIVRE_HARNESS_B_SKIP` sem números inventados; baseline A de exemplo na doc do harness; Como rodar parcial/completo em `AGENTS.md`; README reavaliado.
 
-- [ ] Task 3 — Gate `make verify-harness` + política A obrigatória / B skip + `AGENTS.md` → Como verificar
+- [x] Task 3 — Gate `make verify-harness` + política A obrigatória / B skip + `AGENTS.md` → Como verificar
   - **Pronto quando:** `make verify-harness` passa com A ok e B skip; timeout documentado; não exige QEMU/GPU; `AGENTS.md` cobre verificar; gates existentes não regridem por mudanças acidentais; README reavaliado; etapa pronta para revisão (não marcar `feita` aqui).

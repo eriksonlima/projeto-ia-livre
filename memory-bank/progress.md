@@ -8,8 +8,8 @@
 - Runtime GPU: `make verify-runtime-gpu` (`IA_LIVRE_ACCEL` ≠ `cpu`; skip `IA_LIVRE_GPU_SKIP`)
 - Nó Rede IA Livre: `make verify-node`
 - Ambiente de autonomia: `make verify-agent`
-- Etapas 1–8 feitas
-- Etapa 9 em andamento: metodologia + scripts harness A/stub B (`docs/harness-linha-a-b.md`, `scripts/run-harness-line-*.sh`)
+- Harness A vs B: `make verify-harness` (A ok + B skip)
+- Etapas 1–9 feitas
 - Processo de backlog: `BACKLOG.md` + rule/command/skill
 - Processo README por fatia: `.cursor/rules/readme-por-fatia.mdc`
 
@@ -21,6 +21,5 @@
 
 ## Por etapa
 
-- Etapas 1–8: feitas
-- Etapa 9: Tasks 1–2 feitas; Task 3 aberta (`specs/harness-linha-a-b/`)
-- Backlog Abertas: vazio (B3 → Etapa 9)
+- Etapas 1–9: feitas
+- Backlog Abertas: vazio (B1→E7, B2→E8, B3→E9)
