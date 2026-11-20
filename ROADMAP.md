@@ -71,3 +71,10 @@ Status: feita
 Issue: [#10](https://github.com/eriksonlima/projeto-ia-livre/issues/10)  
 Spec: specs/kernel-alem-do-boot/  
 Pronto quando: no UEFI/QEMU, mecanismos mínimos além de `IA_LIVRE_BOOT_OK` (ex.: alocação/mapa de memória ou carregamento mínimo documentado), com gate serial verificável — ainda sem inferência no kernel.
+
+## Etapa 11 — Kernel pós-Boot Services
+
+Status: em_andamento  
+Issue: [#13](https://github.com/eriksonlima/projeto-ia-livre/issues/13)  
+Spec: specs/kernel-pos-boot-services/  
+Pronto quando: caminho documentado e verificável no UEFI/QEMU para sair de Boot Services (ou equivalente mínimo) com base estável (mapa preservado / memória utilizável), gate serial — ainda sem inferência no kernel.

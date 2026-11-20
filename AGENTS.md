@@ -42,8 +42,8 @@ make verify   # gate automatizado do kernel (marcadores: ver docs/kernel-alem-do
 
 Equivalente interativo: `./scripts/run-qemu.sh`.
 
-Na serial: `IA_LIVRE_BOOT_OK`, `IA_LIVRE_MEM_CONVENTIONAL_PAGES=<n>`, `IA_LIVRE_MEM_MAP_OK`, `IA_LIVRE_ALLOC_BYTES=<n>`, `IA_LIVRE_ALLOC_OK`.  
-Contrato: [`docs/kernel-alem-do-boot.md`](docs/kernel-alem-do-boot.md). Ainda **sem** inferência no kernel.
+Na serial: Etapa 10 (`BOOT_OK` … `ALLOC_OK`) + `IA_LIVRE_EXIT_BOOT_BEGIN`; após ExitBootServices (UART COM1): `EXIT_MAP_PAGES=` / `EXIT_MAP_OK` / `EXIT_MEM_OK` / `EXIT_BOOT_OK`.  
+Contratos: [`docs/kernel-alem-do-boot.md`](docs/kernel-alem-do-boot.md), [`docs/kernel-pos-boot-services.md`](docs/kernel-pos-boot-services.md). Ainda **sem** inferência no kernel.
 
 ### Runtime de inferência (host — Etapas 5 / 8)
 
@@ -324,6 +324,7 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `.cursor/` — rules, agents, skills, commands, hooks
 - `kernel/` — crate do kernel IA Livre (`Cargo.toml`, `src/main.rs`), target UEFI
 - `docs/kernel-alem-do-boot.md` — contrato Etapa 10 (mapa UEFI + alloc/bump; marcadores serial)
+- `docs/kernel-pos-boot-services.md` — contrato Etapa 11 (ExitBoot + UART COM1; marcadores `EXIT_*`)
 - `runtime/` — protótipo de runtime de inferência (host, llama-cpp-2; CPU default + features `cuda`/`vulkan`)
 - `node/` — protótipo do nó Rede IA Livre (host; independente do SO)
 - `agent/` — protótipo do ambiente de autonomia (host; consome runtime; independente do SO)

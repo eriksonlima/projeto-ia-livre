@@ -8,12 +8,6 @@ Promoção para `ROADMAP.md` exige **confirmação explícita** (ver `.cursor/ru
 
 ## Abertas
 
-### B7 — Kernel pós-Boot Services (ExitBootServices + base mínima)
-
-- Origem: análise 2026-11-20; Etapa 10 sob Boot Services; fora de escopo em `docs/kernel-alem-do-boot.md` (ExitBoot / MMU / heap); ponte típica para B5.
-- Pronto quando sugerido: caminho documentado e verificável no UEFI/QEMU para sair de Boot Services (ou equivalente mínimo) com base estável (mapa preservado / memória utilizável), gate serial — ainda sem inferência no kernel.
-- Issue: [#13](https://github.com/eriksonlima/projeto-ia-livre/issues/13)
-
 ### B5 — Runtime nativo / Linha B real (mínimo)
 
 - Origem: seed pós Etapas 1–9 (confirmação do usuário); harness Etapa 9 deixa Linha B como stub.
@@ -57,6 +51,12 @@ Promoção para `ROADMAP.md` exige **confirmação explícita** (ver `.cursor/ru
 - Issue: [#18](https://github.com/eriksonlima/projeto-ia-livre/issues/18)
 
 ## Promovidas / arquivadas
+
+### B7 — Kernel pós-Boot Services (ExitBootServices + base mínima)
+
+- Promovido para Etapa 11 do roadmap com confirmação explícita.
+- Issue: [#13](https://github.com/eriksonlima/projeto-ia-livre/issues/13)
+- Etapa: [Etapa 11 — Kernel pós-Boot Services](ROADMAP.md)
 
 ### B4 — Kernel além do boot
 

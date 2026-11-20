@@ -10,7 +10,7 @@ Não é inferência no núcleo (ADR 0001). Não é Linha B / runtime nativo (bac
 | Ambiente | UEFI Boot Services (mesmo QEMU/OVMF da Etapa 4) |
 | Mecanismo A | Mapa de memória UEFI + resumo na serial |
 | Mecanismo B | `AllocatePages` + bump allocator trivial sobre o bloco |
-| `ExitBootServices` | **Fora** desta etapa |
+| `ExitBootServices` | **Fora** desta etapa — ver Etapa 11: [`kernel-pos-boot-services.md`](kernel-pos-boot-services.md) |
 | Inferência / GGUF | **Proibido** no kernel |
 | Carregamento ESP | Fora do mínimo desta etapa |
 
