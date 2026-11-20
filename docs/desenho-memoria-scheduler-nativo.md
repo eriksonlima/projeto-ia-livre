@@ -62,7 +62,7 @@ O kernel **não** decide tokens, temperatura nem layout de tensores.
 
 - Syscalls finais, ABI estável, MMU completa
 - Swap de KV para disco, multi-tenant completo
-- GPU manager nativo, multi-GPU, RDMA
+- GPU manager nativo / multi-GPU nesta etapa — ver desenho complementar [`desenho-gpu-manager-multi-gpu.md`](desenho-gpu-manager-multi-gpu.md) (ADR 0006); RDMA
 - Implementação no `kernel/` ou medição A vs B com este contrato
 - Declarar hipótese comprovada
 

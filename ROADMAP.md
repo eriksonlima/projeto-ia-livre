@@ -109,7 +109,7 @@ Pronto quando: escopo documentado da primeira versão utilizável da camada 3 e 
 
 ## Etapa 16 — GPU manager no kernel / multi-GPU (desenho)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#16](https://github.com/eriksonlima/projeto-ia-livre/issues/16)  
 Spec: specs/gpu-manager-multi-gpu-desenho/  
 Pronto quando: desenho (ADR/doc) do escopo candidato de GPU manager no kernel e multi-GPU — fronteira vs aceleração host (ADR 0002); desenho, não implementação completa.

@@ -2,18 +2,18 @@
 
 ## Foco atual
 
-- Etapa 16 — GPU manager no kernel / multi-GPU (desenho) — `em_andamento`
-- Lease: `cursor-agent-df93a573` em `AGENT_CLAIM.md` (#16)
+- Etapa 16 **feita** (ADR 0006 + desenho GPU manager / multi-GPU)
+- Roadmap sem `em_andamento` — próximo: promover B11 (licenças) se continuar
 
 ## Mudanças recentes
 
-- Promovido B10 → Etapa 16
-- Skill `claim-agente-paralelo` no repo
+- ADR 0006, `desenho-gpu-manager-multi-gpu.md`, pontes architecture/AGENTS
+- Lease liberado
 
 ## Próximo passo
 
-- Spec `specs/` da Etapa 16 (especificador) → tasks → implementar desenho/ADR
+- Promoção autônoma do topo Abertas (B11) ao continuar / ao fechar etapa
 
 ## Notas
 
-- Um escritor; desenho ≠ implementação de GPU manager/multi-GPU
+- Um agente escritor; host ≠ manager nativo

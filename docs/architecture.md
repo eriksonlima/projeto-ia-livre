@@ -42,7 +42,7 @@ As camadas formam um ecossistema, não quatro produtos desconectados. A ordem de
 - Kernel pequeno; inteligência pesada (modelos, agentes) **fora** do kernel — ver ADR 0001.
 - Protocolo P2P **independente** do kernel/SO — desenvolvível em paralelo no host — ver ADR 0001.
 - Bootstrap inicial: **x86-64 + UEFI + QEMU**; **CPU antes de GPU**.
-- Aceleração NVIDIA multi-GPU como alvo **posterior** (após base CPU e runtime mínimo).
+- Aceleração multi-GPU / GPU manager nativo: alvo **posterior** à base CPU e ao protótipo host (ADR 0002); escopo candidato no desenho Etapa 16 (ADR 0006) — **não** implementado.
 - Nenhuma decisão só por curiosidade técnica (manifesto).
 - **Etapa 10:** primeiro mecanismo de memória no kernel UEFI — mapa + `AllocatePages`/bump sob Boot Services (sem inferência). Contrato: [`kernel-alem-do-boot.md`](kernel-alem-do-boot.md).
 - **Etapa 11:** `ExitBootServices` + base estável (mapa owned + memória); I/O pós-exit via UART COM1. Contrato: [`kernel-pos-boot-services.md`](kernel-pos-boot-services.md).
@@ -50,13 +50,14 @@ As camadas formam um ecossistema, não quatro produtos desconectados. A ordem de
 - **Etapa 13:** desenho candidato memória model-aware + scheduler por fases (ADR 0003) — **sem** implementação.
 - **Etapa 14:** desenho stack Rede IA Livre v1 (ADR 0004) — **sem** implementação no `node/`.
 - **Etapa 15:** escopo autonomia v1 (ADR 0005) — **sem** implementação no `agent/`.
+- **Etapa 16:** desenho GPU manager + multi-GPU (ADR 0006) — **sem** implementação no `kernel/`/`runtime/`.
 
 ## Decisões abertas
 
 - ~~Desenho fino de memória model-aware e do scheduler de inferência~~ — **decidido no nível desenho (Etapa 13):** classes `Weights`/`KvCache` + hints Prefill/Decode — ADR [`0003`](adr/0003-memoria-model-aware-e-scheduler-fases.md) + [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-scheduler-nativo.md). **Implementação e prova da hipótese continuam abertas.**
 - ~~Stack concreta do protocolo P2P (bibliotecas, transporte, identidade)~~ — **decidida no nível desenho (Etapa 14):** TCP+UDP, ed25519/`PeerId`, HELLO assinado + IDENT — ADR [`0004`](adr/0004-stack-protocolo-rede-ia-livre.md) + [`desenho-protocolo-rede-ia-livre.md`](desenho-protocolo-rede-ia-livre.md). **Implementação continua aberta.**
 - Licenças definitivas por componente (preferência a confirmar no manifesto).
-- ~~Estratégia de aceleração além de CPU~~ — **protótipo host:** CUDA canônico / Vulkan alternativa via llama.cpp (ADR 0002); GPU manager no kernel e multi-GPU continuam abertos.
+- ~~Estratégia de aceleração além de CPU~~ — **protótipo host (Etapa 8 / ADR 0002):** CUDA canônico / Vulkan alternativa via llama.cpp (single-GPU). ~~GPU manager no kernel e multi-GPU~~ — **decididos no nível desenho (Etapa 16):** enum/afinidade/placement + pipeline/layer sharding preferido — ADR [`0006`](adr/0006-gpu-manager-multi-gpu.md) + [`desenho-gpu-manager-multi-gpu.md`](desenho-gpu-manager-multi-gpu.md). **Implementação e prova continuam abertas.** Host ≠ manager nativo.
 - ~~Forma e escopo do ambiente de autonomia na primeira versão utilizável~~ — **decidido no nível desenho (Etapa 15):** host, `--prompt` one-shot, allowlist `note`/`recall`/`help`, política N últimas entradas — ADR [`0005`](adr/0005-autonomia-v1-utilizavel.md) + [`desenho-autonomia-v1.md`](desenho-autonomia-v1.md). **Implementação continua aberta.**
 - ~~Critérios exatos e harness do benchmark Linha A vs Linha B~~ — **harness v1 (Etapa 9)** + **Linha B mínima (Etapa 12):** proxy pós-ExitBoot no IA Livre ([`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md)); prova da hipótese e carga GGUF canônica em B continuam abertos.
 

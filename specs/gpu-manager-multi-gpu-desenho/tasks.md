@@ -10,5 +10,6 @@ Uma task = uma fatia.
   - **Pronto quando:** `docs/desenho-gpu-manager-multi-gpu.md` (ou nome alinhado à ADR) descreve motivação vs offload host, tabela fronteira ADR 0002 × caminho nativo, contrato esboçado runtime→kernel (list_devices / alloc+affinity / placement + fase), ciclo com Prefill/Decode, estratégia pipeline/layer sharding e alternativas nomeadas, não-objetivos e itens para implementação futura; deixa explícito que `kernel/`/`runtime/` atuais **não** implementam o manager nem multi-GPU. Sem código de produto. README reavaliado.
   - **Feito:** `docs/desenho-gpu-manager-multi-gpu.md`; README considerado (sem mudança).
 
-- [ ] Task 3 — Pontes em architecture / ADR 0002 / métricas e fechamento documental
+- [x] Task 3 — Pontes em architecture / ADR 0002 / métricas e fechamento documental
   - **Pronto quando:** `docs/architecture.md` marca GPU manager / multi-GPU como **decidido no nível desenho** (link ADR + doc), mantendo implementação e prova **abertas**; ponte mínima em `docs/adr/0002-aceleracao-gpu-host-llama-cpp.md` e/ou `docs/runtime-inferencia-gpu-metricas.md` (host ≠ manager nativo); ponte opcional em `docs/desenho-memoria-scheduler-nativo.md` se complementaridade com 0003 precisar ficar explícita; `AGENTS.md` aponta os docs se a estrutura pública precisar; README reavaliado; etapa pronta para revisão (não marcar `feita` aqui). Sem código de produto.
+  - **Feito:** pontes em architecture, ADR 0002, métricas GPU, desenho 0003, AGENTS; README considerado (sem mudança).

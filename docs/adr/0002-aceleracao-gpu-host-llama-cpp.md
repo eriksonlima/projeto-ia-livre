@@ -16,7 +16,8 @@ A Etapa 5 entregou inferência CPU no host (`ia-livre-runtime` / `llama-cpp-2`, 
 5. **ROCm / Metal / backends próprios:** fora do caminho crítico desta etapa (não são critério de aceite).
 6. **Offload:** flag CLI `--n-gpu-layers <N>`; default **`0`** = CPU (preserva Etapa 5). Build **default** sem feature GPU permanece CPU-only.
 7. **Fallback CPU:** obrigatório — gate CPU (`make verify-runtime`) não regride; gate GPU tem política de skip quando não há GPU.
-8. **Fora de escopo desta decisão:** multi-GPU, tensor/pipeline parallel, GPU manager no kernel, treino, troca de modelo canônico.
+8. **Fora de escopo desta decisão:** multi-GPU, tensor/pipeline parallel, GPU manager no kernel, treino, troca de modelo canônico.  
+   *(Desenho candidato desses itens: ADR [`0006`](0006-gpu-manager-multi-gpu.md) + [`desenho-gpu-manager-multi-gpu.md`](../desenho-gpu-manager-multi-gpu.md) — **não** altera este protótipo host.)*
 
 ## Consequências
 
