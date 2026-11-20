@@ -1,0 +1,12 @@
+---
+description: Avaliar README.md em cada fatia sem obrigar duplicar AGENTS.md
+alwaysApply: true
+---
+
+# README por fatia
+
+- Em cada fatia ou mudança relevante: **avaliar** se `README.md` precisa refletir a mudança (como rodar, estrutura nova, gate novo, ou superfície pública do repo no GitHub).
+- Atualize o README quando a home do GitHub ficaria **enganosa** sem a menção (ex.: novo entrypoint público, gate principal omitido, estrutura que o visitante espera ver na capa).
+- Se a mudança for só interna, ajuste trivial, ou `AGENTS.md` / `docs/` já cobrirem o operacional: **pode não atualizar** o README — registre na fatia (ou no relato) que foi considerado e não era necessário.
+- Não duplicar `AGENTS.md` no README. Preferir menção curta + ponte (“veja AGENTS.md → …”) quando a capa precisar apontar a novidade sem repetir o brief.
+- README não substitui o gate nem o contrato em `docs/`; é a superfície amigável do repositório.

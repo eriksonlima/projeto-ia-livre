@@ -9,6 +9,7 @@
 - Ambiente de autonomia: `make verify-agent` (`IA_LIVRE_TOOL_OK` + `IA_LIVRE_MEMORY_OK` + `IA_LIVRE_AGENT_OK`)
 - Etapas 1–7 feitas
 - Processo de backlog: `BACKLOG.md` + rule/command/skill
+- Processo README por fatia: `.cursor/rules/readme-por-fatia.mdc`
 
 ## Bloqueios
 

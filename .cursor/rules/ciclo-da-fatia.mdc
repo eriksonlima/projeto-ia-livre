@@ -10,7 +10,7 @@ alwaysApply: true
 - Pedido amplo ou nova etapa: chame `especificador` e/ou `fatiador` antes de implementar.
 - Verifique com o gate (`AGENTS.md` / regra de verificação) antes de declarar pronto. Diga o que foi e o que não foi verificado.
 - Depois do gate, chame o `revisor-de-fatia` passando o critério de pronto. Corrija bloqueio real.
-- Atualize `tasks.md`, Memory Bank e, se a etapa fechou, `ROADMAP.md` + GitHub. Depois skills/ferramentas se couber.
+- Atualize `tasks.md`, Memory Bank e, se a etapa fechou, `ROADMAP.md` + GitHub. Depois skills/ferramentas se couber. Considere `README.md` (rule `readme-por-fatia`); se não precisar, registre que foi considerado.
 - Depois do gate e do revisor (sem bloqueio real), e após atualizar `tasks.md` / Memory Bank / roadmap quando couber: o **agente principal** faz `git commit` da fatia e `git push` para o remote da branch atual. Não perguntar.
 - Continua proibido no commit/push automático: segredos/`.env`, `--no-verify`, force push, alterar config do git, abrir PR sem pedido. Em dúvida de escopo do commit, risco de segredo ou push não-fast-forward: pare e informe.
 - Se ainda existir task aberta na mesma etapa: declare a nova fatia e implemente na sequência, sem perguntar.

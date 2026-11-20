@@ -248,7 +248,7 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 
 ## Ponte
 
-- Rules: `.cursor/rules/`
+- Rules: `.cursor/rules/` (README por fatia: `readme-por-fatia`)
 - Roadmap: `ROADMAP.md`
 - Backlog: `BACKLOG.md` (comando `/atualizar-backlog`; skill `atualizar-backlog`)
 - Specs: `specs/`
