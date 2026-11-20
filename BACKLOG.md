@@ -8,12 +8,6 @@ Promoção para `ROADMAP.md` exige **confirmação explícita** (ver `.cursor/ru
 
 ## Abertas
 
-### B2 — Aceleração além de CPU (GPU)
-
-- Notas: CUDA/ROCm vs backends próprios; escopo do GPU manager — depois da base CPU (Etapa 5).
-- Origem: `docs/architecture.md` (decisões abertas)
-- Issue: [#8](https://github.com/eriksonlima/projeto-ia-livre/issues/8)
-
 ### B3 — Harness da hipótese Linha A vs Linha B
 
 - Notas: benchmark comparável (mesmo modelo/quantização/carga): Linux otimizado vs IA Livre; não confundir com métricas do protótipo CPU.
@@ -21,6 +15,12 @@ Promoção para `ROADMAP.md` exige **confirmação explícita** (ver `.cursor/ru
 - Issue: [#9](https://github.com/eriksonlima/projeto-ia-livre/issues/9)
 
 ## Promovidas / arquivadas
+
+### B2 — Aceleração além de CPU (GPU)
+
+- Promovido para Etapa 8 do roadmap com confirmação explícita.
+- Issue: [#8](https://github.com/eriksonlima/projeto-ia-livre/issues/8)
+- Etapa: [Etapa 8 — Aceleração além de CPU (GPU)](ROADMAP.md)
 
 ### B1 — Ambiente de autonomia (camada 3)
 

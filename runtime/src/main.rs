@@ -1,4 +1,4 @@
-//! CLI do protótipo de runtime de inferência CPU (Etapa 5).
+//! CLI do protótipo de runtime de inferência (Etapa 5 CPU + Etapa 8 GPU opcional).
 //! Carrega um GGUF no host, gera texto e emite métricas básicas grepáveis.
 
 use llama_cpp_2::context::params::LlamaContextParams;
@@ -21,12 +21,17 @@ const DEFAULT_PROMPT: &str = "Complete em uma frase: O Projeto IA Livre é";
 /// Tokens de saída (além do prompt). Baixo de propósito para o protótipo.
 const DEFAULT_N_PREDICT: i32 = 48;
 
-const USAGE: &str = "\
-Uso: ia-livre-runtime --model <caminho.gguf> [--prompt <texto>] [--n-predict <n>]
+/// Default = CPU (Etapa 5). N > 0 pede offload GPU (Etapa 8; requer feature cuda|vulkan).
+const DEFAULT_N_GPU_LAYERS: u32 = 0;
 
-Carrega o GGUF em CPU (llama.cpp) e imprime o texto gerado na stdout.
+const USAGE: &str = "\
+Uso: ia-livre-runtime --model <caminho.gguf> [--prompt <texto>] [--n-predict <n>] [--n-gpu-layers <n>]
+
+Carrega o GGUF (llama.cpp) e imprime o texto gerado na stdout.
+--n-gpu-layers: default 0 = CPU; N > 0 = offload (requer build com --features cuda|vulkan).
 Prompt padrão (fixado): \"Complete em uma frase: O Projeto IA Livre é\"
 Métricas: IA_LIVRE_LOAD_S=… IA_LIVRE_TOKENS_PER_S=… IA_LIVRE_INFER_OK
+Aceleração: IA_LIVRE_ACCEL=… IA_LIVRE_N_GPU_LAYERS=…
 ";
 
 fn main() -> ExitCode {
@@ -41,6 +46,7 @@ fn run() -> Result<(), ExitCode> {
     let mut model: Option<PathBuf> = None;
     let mut prompt = DEFAULT_PROMPT.to_string();
     let mut n_predict = DEFAULT_N_PREDICT;
+    let mut n_gpu_layers = DEFAULT_N_GPU_LAYERS;
 
     let mut i = 0;
     while i < args.len() {
@@ -80,6 +86,17 @@ fn run() -> Result<(), ExitCode> {
                     return Err(ExitCode::from(2));
                 }
             }
+            "--n-gpu-layers" => {
+                i += 1;
+                let Some(raw) = args.get(i) else {
+                    eprintln!("erro: --n-gpu-layers exige um inteiro >= 0");
+                    return Err(ExitCode::from(2));
+                };
+                n_gpu_layers = raw.parse().map_err(|_| {
+                    eprintln!("erro: --n-gpu-layers inválido: {raw}");
+                    ExitCode::from(2)
+                })?;
+            }
             other => {
                 eprintln!("erro: argumento desconhecido: {other}");
                 eprint!("{USAGE}");
@@ -105,18 +122,45 @@ fn run() -> Result<(), ExitCode> {
         return Err(ExitCode::from(1));
     }
 
-    if let Err(e) = infer(&model_path, &prompt, n_predict) {
+    if let Err(e) = infer(&model_path, &prompt, n_predict, n_gpu_layers) {
         eprintln!("erro: {e}");
         return Err(ExitCode::from(1));
     }
     Ok(())
 }
 
-fn infer(model_path: &std::path::Path, prompt: &str, n_predict: i32) -> Result<(), String> {
+/// Backend de aceleração refletido em `IA_LIVRE_ACCEL=` (compilação + pedido de layers).
+fn accel_label(n_gpu_layers: u32) -> &'static str {
+    if n_gpu_layers == 0 {
+        return "cpu";
+    }
+    if cfg!(feature = "cuda") {
+        "cuda"
+    } else if cfg!(feature = "vulkan") {
+        "vulkan"
+    } else {
+        // Pediu offload sem feature GPU: ainda CPU (llama.cpp ignora layers sem backend).
+        "cpu"
+    }
+}
+
+fn infer(
+    model_path: &std::path::Path,
+    prompt: &str,
+    n_predict: i32,
+    n_gpu_layers: u32,
+) -> Result<(), String> {
     let backend = LlamaBackend::init().map_err(|e| format!("init backend: {e}"))?;
 
-    // CPU only: zero camadas na GPU (mesmo se o build tiver aceleradores).
-    let model_params = LlamaModelParams::default().with_n_gpu_layers(0);
+    let model_params = LlamaModelParams::default().with_n_gpu_layers(n_gpu_layers);
+    let accel = accel_label(n_gpu_layers);
+
+    if n_gpu_layers > 0 && accel == "cpu" {
+        eprintln!(
+            "aviso: --n-gpu-layers={n_gpu_layers} mas o binário foi buildado sem --features cuda|vulkan; \
+             offload efetivo permanece CPU (IA_LIVRE_ACCEL=cpu). Ver ADR 0002 / AGENTS.md."
+        );
+    }
 
     let t_load = Instant::now();
     let model = LlamaModel::load_from_file(&backend, model_path, &model_params)
@@ -200,6 +244,8 @@ fn infer(model_path: &std::path::Path, prompt: &str, n_predict: i32) -> Result<(
     println!("IA_LIVRE_LOAD_S={load_s:.3}");
     println!("IA_LIVRE_TOKENS_PER_S={tokens_per_s:.3}");
     println!("IA_LIVRE_N_DECODE={n_decode}");
+    println!("IA_LIVRE_ACCEL={accel}");
+    println!("IA_LIVRE_N_GPU_LAYERS={n_gpu_layers}");
     println!("model={}", model_path.display());
     println!("prompt={prompt}");
     Ok(())

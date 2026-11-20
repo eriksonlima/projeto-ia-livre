@@ -2,23 +2,22 @@
 
 ## Foco atual
 
-- Processo: backlog → roadmap (mínima interrupção)
-- Etapa do roadmap: nenhuma `em_andamento` (Etapas 1–7 **feitas**)
-- Spec ativa: nenhuma (última: `specs/ambiente-autonomia/`, Tasks 1–3 feitas)
+- Etapa 8 — Aceleração além de CPU (GPU) (`em_andamento`, Issue #8)
+- Spec: `specs/aceleracao-gpu/`
+- Task 1 feita; próxima: Task 2 (caminho GPU real + métricas)
 
 ## Mudanças recentes
 
-- Processo: rule `readme-por-fatia` — em cada fatia considerar se `README.md` precisa atualizar; se não, ok (não duplicar AGENTS)
-- Etapa 7: protótipo autonomia (`agent/`, ferramenta `note`, memória JSONL, consome runtime)
-- Gate: `make verify-agent` (`IA_LIVRE_TOOL_OK` + `IA_LIVRE_MEMORY_OK` + `IA_LIVRE_AGENT_OK`)
-- B1 arquivado; Abertas: B2 (GPU), B3 (harness)
-- README E7: considerado; não atualizado (capa já aponta operacional para AGENTS.md)
+- B2 promovido → Etapa 8; backlog atualizado; issue #8 em Project (Em andamento)
+- Spec `specs/aceleracao-gpu/` (ADR CUDA/Vulkan, `--n-gpu-layers`, gate GPU com skip)
+- Task 1: ADR 0002, features Cargo, flag CLI, marcadores; `make verify-runtime` ok
+- README Task 1: considerado; não atualizado (ponte AGENTS)
 
 ## Próximo passo
 
-- Sob pedido “continuar” / confirmação: promover o topo do `BACKLOG.md` (B2 — GPU) para o roadmap + issue; depois especificar.
+- Task 2: build com feature GPU, inferência `--n-gpu-layers` > 0, métricas GPU, AGENTS Como rodar GPU
 
 ## Notas
 
-- Promoção exige confirmação explícita; não inventar Etapa 8 sozinho
-- Project V2 continua só para etapas do roadmap
+- Host: GTX 1050 + driver 535 (CUDA 12.2 no driver); `nvcc` pode estar ausente → tentar CUDA; se inviável, Vulkan (ADR 0002)
+- Não promover B3 sem confirmação

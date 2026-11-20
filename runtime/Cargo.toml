@@ -3,9 +3,16 @@ name = "ia-livre-runtime"
 version = "0.1.0"
 edition = "2021"
 publish = false
-description = "Protótipo de runtime de inferência CPU (camada 2) do Projeto IA Livre"
+description = "Protótipo de runtime de inferência (CPU + GPU opcional) do Projeto IA Livre"
+
+[features]
+default = []
+# Backends de aceleração (llama-cpp-2 / llama.cpp). Default = CPU only.
+# CUDA = canônico (ADR 0002); Vulkan = alternativa documentada.
+cuda = ["llama-cpp-2/cuda"]
+vulkan = ["llama-cpp-2/vulkan"]
 
 [dependencies]
-# Binding llama.cpp — CPU only (sem features cuda/metal/vulkan/rocm).
-# Requer cmake + libclang no host; ver AGENTS.md.
+# Binding llama.cpp — CPU by default; ative --features cuda|vulkan para GPU.
+# Requer cmake + libclang no host; ver AGENTS.md (e toolkit CUDA/Vulkan se feature GPU).
 llama-cpp-2 = { version = "0.1.161", default-features = true }

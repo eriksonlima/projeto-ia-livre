@@ -50,3 +50,10 @@ Status: feita
 Issue: [#7](https://github.com/eriksonlima/projeto-ia-livre/issues/7)  
 Spec: specs/ambiente-autonomia/  
 Pronto quando: protótipo da camada 3 no host Linux (`std`) com agente mínimo, memória persistente simples e pelo menos uma ferramenta; consome o runtime CPU existente; documentado; gate verificável — sem exigir o kernel UEFI / QEMU.
+
+## Etapa 8 — Aceleração além de CPU (GPU)
+
+Status: em_andamento  
+Issue: [#8](https://github.com/eriksonlima/projeto-ia-livre/issues/8)  
+Spec: specs/aceleracao-gpu/  
+Pronto quando: protótipo de aceleração GPU no host sobre o runtime existente (backend do llama.cpp), com escolha CUDA/Vulkan (ou equivalente suportado) documentada, fallback CPU preservado, métricas comparáveis às da Etapa 5 e gate verificável quando houver GPU — sem exigir o kernel UEFI / QEMU; multi-GPU e GPU manager completo fora de escopo.

@@ -44,9 +44,9 @@ Equivalente interativo: `./scripts/run-qemu.sh`.
 
 Na serial deve aparecer a linha canônica: `IA_LIVRE_BOOT_OK`.
 
-### Runtime de inferência CPU (host — Etapa 5)
+### Runtime de inferência (host — Etapas 5 / 8)
 
-Protótipo na **camada 2**, no host Linux (`std`), **não** no kernel UEFI. Backend: **llama-cpp-2** (CPU; sem CUDA/Metal/Vulkan).
+Protótipo na **camada 2**, no host Linux (`std`), **não** no kernel UEFI. Backend: **llama-cpp-2** / llama.cpp. Default = **CPU**; GPU opcional via features Cargo (ADR 0002: CUDA canônico / Vulkan alternativa).
 
 Modelo canônico (não versionado no git):
 
@@ -66,17 +66,18 @@ export BINDGEN_EXTRA_CLANG_ARGS="${BINDGEN_EXTRA_CLANG_ARGS:--I/usr/lib/gcc/x86_
 # Baixar pesos (gitignored)
 ./scripts/fetch-model.sh
 
-# Build do runtime (target host)
+# Build do runtime (target host) — default CPU, sem feature GPU
 cargo build -p ia-livre-runtime
 
-# Inferência CPU (prompt padrão documentado)
+# Inferência CPU (prompt padrão documentado; --n-gpu-layers default 0)
 cargo run -p ia-livre-runtime -- --model models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf
 ```
 
 Prompt padrão (fixado): `Complete em uma frase: O Projeto IA Livre é`  
-`n_gpu_layers=0` (CPU). Saída: texto gerado + `IA_LIVRE_INFER_OK` + métricas `IA_LIVRE_LOAD_S=` / `IA_LIVRE_TOKENS_PER_S=`.  
-Opcional: `--prompt "..."` / `--n-predict 32`.  
-Métricas documentadas: `docs/runtime-inferencia-cpu-metricas.md`.  
+`--n-gpu-layers` default `0` (CPU). Saída: texto gerado + `IA_LIVRE_INFER_OK` + métricas `IA_LIVRE_LOAD_S=` / `IA_LIVRE_TOKENS_PER_S=` + `IA_LIVRE_ACCEL=` / `IA_LIVRE_N_GPU_LAYERS=`.  
+Opcional: `--prompt "..."` / `--n-predict 32` / `--n-gpu-layers <N>`.  
+Features GPU (Etapa 8): `cargo build -p ia-livre-runtime --features cuda` (canônico) ou `--features vulkan` (alternativa); requer toolkit do backend no host — ver ADR 0002. Gate GPU e métricas GPU: Tasks seguintes / `docs/runtime-inferencia-gpu-metricas.md` quando existir.  
+Métricas CPU: `docs/runtime-inferencia-cpu-metricas.md`.  
 Fallback CLI do llama.cpp: só se a binding falhar no host — documentar a escolha aqui se for adotada.
 
 ### Nó Rede IA Livre (host — Etapa 6)
