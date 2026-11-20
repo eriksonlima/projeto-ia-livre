@@ -8,12 +8,6 @@ Promoção para `ROADMAP.md` exige **confirmação explícita** (ver `.cursor/ru
 
 ## Abertas
 
-### B1 — Ambiente de autonomia (camada 3)
-
-- Notas: agentes, memória e ferramentas no ambiente do projeto; primeira versão utilizável ainda aberta em architecture.
-- Origem: `docs/architecture.md` (decisões abertas) / `docs/product-context.md` (camada autonomia)
-- Issue: [#7](https://github.com/eriksonlima/projeto-ia-livre/issues/7)
-
 ### B2 — Aceleração além de CPU (GPU)
 
 - Notas: CUDA/ROCm vs backends próprios; escopo do GPU manager — depois da base CPU (Etapa 5).
@@ -28,4 +22,8 @@ Promoção para `ROADMAP.md` exige **confirmação explícita** (ver `.cursor/ru
 
 ## Promovidas / arquivadas
 
-_(vazio — ao promover, mover o item para cá com link da Issue/etapa)_
+### B1 — Ambiente de autonomia (camada 3)
+
+- Promovido para Etapa 7 do roadmap com confirmação explícita.
+- Issue: [#7](https://github.com/eriksonlima/projeto-ia-livre/issues/7)
+- Etapa: [Etapa 7 — Ambiente de autonomia (camada 3)](ROADMAP.md)

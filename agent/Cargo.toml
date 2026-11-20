@@ -1,0 +1,8 @@
+[package]
+name = "ia-livre-agent"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "Protótipo do ambiente de autonomia (camada 3) — host, consome runtime CPU"
+
+[dependencies]

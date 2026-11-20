@@ -43,3 +43,10 @@ Status: feita
 Issue: [#6](https://github.com/eriksonlima/projeto-ia-livre/issues/6)  
 Spec: specs/no-rede-ia-livre/  
 Pronto quando: cliente/nó em SO convencional comunica-se entre dois hosts (ou processos) com descoberta mínima e troca de mensagem documentada; participação sem exigir o SO IA Livre.
+
+## Etapa 7 — Ambiente de autonomia (camada 3)
+
+Status: em_andamento  
+Issue: [#7](https://github.com/eriksonlima/projeto-ia-livre/issues/7)  
+Spec: specs/ambiente-autonomia/  
+Pronto quando: protótipo da camada 3 no host Linux (`std`) com agente mínimo, memória persistente simples e pelo menos uma ferramenta; consome o runtime CPU existente; documentado; gate verificável — sem exigir o kernel UEFI / QEMU.

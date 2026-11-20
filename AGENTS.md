@@ -6,7 +6,7 @@ Brief do repositório para agentes. Em conflito com outros arquivos de ferrament
 
 - Nome: `Projeto IA Livre`
 - Resumo: Ecossistema open source brasileiro com SO próprio (IA Livre) especializado em IA nativa e rede P2P (Rede IA Livre) para colaboração computacional e de conhecimento. Participar da rede não exige o SO.
-- Stack: Kernel mínimo em Rust (`uefi-rs`, target `x86_64-unknown-uefi`) + QEMU/OVMF; runtime de inferência CPU no host (`runtime/` + llama.cpp); protótipo do nó Rede IA Livre no host (`node/`, TCP/UDP — **sem** exigir o SO IA Livre).
+- Stack: Kernel mínimo em Rust (`uefi-rs`, target `x86_64-unknown-uefi`) + QEMU/OVMF; runtime de inferência CPU no host (`runtime/` + llama.cpp); protótipo do nó Rede IA Livre no host (`node/`, TCP/UDP — **sem** exigir o SO IA Livre); protótipo do ambiente de autonomia no host (`agent/`, consome o runtime — **sem** exigir o SO IA Livre).
 
 ## Como rodar
 
@@ -107,6 +107,32 @@ Descoberta UDP: ambos anunciam `HELLO` na porta `--udp-port` (default `7410`); a
 
 Gate automatizado: `make verify-node` (não exige QEMU, GGUF nem runtime).
 
+### Ambiente de autonomia (host — Etapa 7)
+
+Protótipo da **camada 3** no host Linux (`std`). **Não** precisa do kernel UEFI / QEMU. Consome o runtime CPU existente (`ia-livre-runtime`) e o GGUF canônico. Este protótipo de autonomia **não exige** o SO IA Livre (ADR 0001).
+
+Contrato mínimo: [`docs/ambiente-autonomia-prototipo.md`](docs/ambiente-autonomia-prototipo.md).
+
+Pré-requisitos: Rust no host + deps/modelo do runtime (ver seção Runtime acima). **Sem** QEMU/OVMF para o agente.
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+export LIBCLANG_PATH="${LIBCLANG_PATH:-/usr/lib/llvm-18/lib}"
+
+# Modelo (se ainda não baixado)
+./scripts/fetch-model.sh
+
+# Build do agente (target host)
+cargo build -p ia-livre-agent
+
+# Scaffold (Task 1): parse de flags + IA_LIVRE_AGENT_SCAFFOLD_OK
+cargo run -p ia-livre-agent -- \
+  --model models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf \
+  --memory build/agent-memory/memory.jsonl
+```
+
+Flags: `--model` (default GGUF canônico), `--memory` (default `build/agent-memory/memory.jsonl`), `--n-predict` (default `16`). Loop completo (runtime + ferramenta + memória + gate) nas Tasks 2–3.
+
 ## Como verificar
 
 ### Gate do kernel (Etapa 4)
@@ -176,9 +202,11 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `kernel/` — crate do kernel IA Livre (`Cargo.toml`, `src/main.rs`), target UEFI
 - `runtime/` — protótipo de runtime de inferência CPU (host, llama-cpp-2)
 - `node/` — protótipo do nó Rede IA Livre (host; independente do SO)
+- `agent/` — protótipo do ambiente de autonomia (host; consome runtime; independente do SO)
 - `models/` — pesos GGUF locais (gitignored); obter com `./scripts/fetch-model.sh`
-- `Cargo.toml` — workspace Cargo (membros `kernel`, `runtime`, `node`)
+- `Cargo.toml` — workspace Cargo (membros `kernel`, `runtime`, `node`, `agent`)
 - `docs/rede-ia-livre-prototipo.md` — framing/descoberta/mensagem do protótipo P2P
+- `docs/ambiente-autonomia-prototipo.md` — loop/memória/ferramenta do protótipo de autonomia
 - `Makefile` — `build` / `esp` / `run` / `verify` / `verify-runtime` / `verify-node` / `clean`
 - `scripts/run-qemu.sh` — atalho para `make run`
 - `scripts/verify-boot.sh` — gate serial `IA_LIVRE_BOOT_OK`
