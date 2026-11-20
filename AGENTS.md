@@ -22,7 +22,7 @@ rustup target add x86_64-unknown-uefi
 sudo apt install qemu-system-x86 ovmf
 ```
 
-Opcional: `OVMF_CODE=/caminho/OVMF_CODE_4M.fd` se a firmware não estiver nos paths padrão.
+Opcional: `OVMF_BIOS=/caminho/OVMF.fd` ou `OVMF_CODE` + `OVMF_VARS_TEMPLATE` se a firmware não estiver nos paths padrão.
 
 ### Build e QEMU
 
@@ -30,17 +30,18 @@ Opcional: `OVMF_CODE=/caminho/OVMF_CODE_4M.fd` se a firmware não estiver nos pa
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 cd /caminho/para/projeto-ia-livre
 
-make build   # gera target/x86_64-unknown-uefi/debug/ia-livre-kernel.efi
-make run     # ESP em build/esp + QEMU UEFI, serial no stdio
+make build    # gera target/x86_64-unknown-uefi/debug/ia-livre-kernel.efi
+make run      # ESP em build/esp + QEMU UEFI, serial no stdio
+make verify   # gate automatizado (IA_LIVRE_BOOT_OK)
 ```
 
-Equivalente: `./scripts/run-qemu.sh`.
+Equivalente interativo: `./scripts/run-qemu.sh`.
 
-Na Task 1 (atual) a saída serial é o placeholder `IA Livre kernel scaffold`. A string canônica `IA_LIVRE_BOOT_OK` entra na Task 2.
+Na serial deve aparecer a linha canônica: `IA_LIVRE_BOOT_OK`.
 
 ## Como verificar
 
-Gate parcial da Task 1 (scaffold + EFI):
+Gate da Etapa 4 (obrigatório antes de declarar a fatia/etapa pronta):
 
 ```bash
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
@@ -49,10 +50,11 @@ test -d kernel && test -f kernel/Cargo.toml && test -f kernel/src/main.rs
 test -f Makefile && test -f Cargo.toml
 make build
 test -f target/x86_64-unknown-uefi/debug/ia-livre-kernel.efi
-grep -q 'em_andamento' ROADMAP.md
+make verify
+grep -q 'IA_LIVRE_BOOT_OK' kernel/src/main.rs
 ```
 
-Gate completo da Etapa 4 (Task 2): QEMU com timeout e `grep IA_LIVRE_BOOT_OK` — a documentar na próxima fatia.
+`make verify` falha se `IA_LIVRE_BOOT_OK` não aparecer na serial do QEMU (timeout padrão 45s; override com `VERIFY_TIMEOUT`).
 
 ## PATH
 
@@ -71,8 +73,9 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `.cursor/` — rules, agents, skills, commands, hooks
 - `kernel/` — crate do kernel IA Livre (`Cargo.toml`, `src/main.rs`), target UEFI
 - `Cargo.toml` — workspace Cargo (membro `kernel`)
-- `Makefile` — `build` / `esp` / `run` / `clean`
+- `Makefile` — `build` / `esp` / `run` / `verify` / `clean`
 - `scripts/run-qemu.sh` — atalho para `make run`
+- `scripts/verify-boot.sh` — gate serial `IA_LIVRE_BOOT_OK`
 - `build/esp/` — ESP gerada (gitignored via `build/`)
 
 ## Fora de escopo do agente

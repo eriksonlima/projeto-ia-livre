@@ -25,14 +25,14 @@ Pronto quando: `docs/product-context.md` e `docs/architecture.md` descrevem cama
 
 ## Etapa 4 — Bootstrap do kernel IA Livre
 
-Status: em_andamento  
+Status: feita  
 Issue: [#4](https://github.com/eriksonlima/projeto-ia-livre/issues/4)  
 Spec: specs/bootstrap-kernel/  
 Pronto quando: boot UEFI em QEMU (x86-64), kernel mínimo em Rust com saída serial verificável; instruções em AGENTS.md.
 
 ## Etapa 5 — Runtime mínimo de inferência (CPU)
 
-Status: pendente  
+Status: em_andamento  
 Issue: [#5](https://github.com/eriksonlima/projeto-ia-livre/issues/5)  
 Spec: specs/runtime-inferencia-cpu/  
 Pronto quando: carregar e executar um modelo pequeno em CPU no ambiente do projeto (ou protótipo no host de referência), com métricas básicas documentadas.

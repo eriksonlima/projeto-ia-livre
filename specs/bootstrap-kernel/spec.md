@@ -70,13 +70,13 @@ Alternativas **não** adotadas nesta etapa: Limine; crate `bootloader` (rust-osd
 
 ## Critérios de aceite
 
-- [ ] Existe crate/kernel Rust freestanding sob `kernel/` (ou path documentado) usando **uefi-rs** e target UEFI x86-64
-- [ ] `make run` (ou comando equivalente documentado) inicia QEMU UEFI e a mensagem serial conhecida aparece no host
-- [ ] Gate em `AGENTS.md` → **Como verificar** automatiza (ou documenta de forma executável) a checagem da mensagem serial e passa no ambiente de referência
-- [ ] `AGENTS.md` → **Como rodar** lista pré-requisitos e comandos reais de build/run
-- [ ] Layout do diretório do kernel está documentado; `.gitignore` inclui `target/`
-- [ ] Nenhum guest Linux; nenhum código de runtime LLM ou P2P introduzido como entrega desta etapa
-- [ ] Etapa 4 permanece alinhada ao roadmap; não marcar como `feita` nesta spec (só após gate + revisão)
+- [x] Existe crate/kernel Rust freestanding sob `kernel/` (ou path documentado) usando **uefi-rs** e target UEFI x86-64
+- [x] `make run` (ou comando equivalente documentado) inicia QEMU UEFI e a mensagem serial conhecida aparece no host
+- [x] Gate em `AGENTS.md` → **Como verificar** automatiza (ou documenta de forma executável) a checagem da mensagem serial e passa no ambiente de referência
+- [x] `AGENTS.md` → **Como rodar** lista pré-requisitos e comandos reais de build/run
+- [x] Layout do diretório do kernel está documentado; `.gitignore` inclui `target/`
+- [x] Nenhum guest Linux; nenhum código de runtime LLM ou P2P introduzido como entrega desta etapa
+- [x] Etapa 4 permanece alinhada ao roadmap; não marcar como `feita` nesta spec (só após gate + revisão)
 
 ## Riscos e rollback
 

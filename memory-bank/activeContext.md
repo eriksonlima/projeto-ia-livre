@@ -2,22 +2,20 @@
 
 ## Foco atual
 
-- Etapa do roadmap: Etapa 4 — Bootstrap do kernel IA Livre
-- Spec ativa: specs/bootstrap-kernel/
-- Fatia / task: Task 2 — `IA_LIVRE_BOOT_OK` na serial + gate completo
+- Etapa do roadmap: Etapa 5 — Runtime mínimo de inferência (CPU)
+- Spec ativa: specs/runtime-inferencia-cpu/ _(ainda a criar)_
+- Fatia / task: especificar runtime CPU
 
 ## Mudanças recentes
 
-- Task 1 feita: crate `kernel/`, workspace, Makefile (`build`/`esp`/`run`), AGENTS atualizado
-- `make build` gera `ia-livre-kernel.efi`; ESP em `build/esp/`
-- `make run` exige `qemu-system-x86` + `ovmf` no host (ainda não instalados neste ambiente sem sudo)
+- Etapa 4 feita: boot UEFI + `IA_LIVRE_BOOT_OK` + `make verify`
+- Kernel em `kernel/` com uefi-rs; gate em `scripts/verify-boot.sh`
 
 ## Próximo passo
 
-- Usuário: `sudo apt install qemu-system-x86 ovmf` (se ainda não tiver)
-- Implementar Task 2 (hello serial + gate)
+- Especificar Etapa 5 (`/especificar` → runtime-inferencia-cpu)
 
 ## Notas
 
-- Mensagem canônica Task 2: `IA_LIVRE_BOOT_OK`
-- `CARGO_TARGET_DIR` fixado no Makefile para `./target`
+- Gate kernel: `make verify` (marcador `IA_LIVRE_BOOT_OK`)
+- ADR 0001: inteligência pesada fora do kernel — runtime é camada 2
