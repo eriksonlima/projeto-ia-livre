@@ -20,6 +20,7 @@ Veja `AGENTS.md` → **Como verificar**.
 
 ## Documentação
 
+- Manifesto Fundador: `docs/manifesto.md`
 - Roadmap: `ROADMAP.md`
 - Specs: `specs/`
 - Produto: `docs/product-context.md`

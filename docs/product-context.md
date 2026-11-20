@@ -12,6 +12,8 @@ Grandes modelos de IA concentram-se em infraestrutura proprietária e centraliza
 
 ## Princípios
 
+Fonte canônica: [`docs/manifesto.md`](manifesto.md).
+
 - Open source e sem fins lucrativos
 - Participação na Rede IA Livre **não** exige instalar o SO IA Livre
 - Governança descentralizada com proteções contra captura (princípios + comunidade + técnica)

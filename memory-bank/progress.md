@@ -2,9 +2,9 @@
 
 ## O que funciona
 
-- Scaffold completo + remote público: https://github.com/eriksonlima/projeto-ia-livre
-- Labels, issues #1–#6 e Project https://github.com/users/eriksonlima/projects/1
-- Etapa 1 (fundação) concluída
+- Scaffold + remote + Project V2
+- Manifesto Fundador em `docs/manifesto.md`
+- Etapas 1 e 2 feitas
 
 ## Bloqueios
 
@@ -13,5 +13,6 @@
 ## Por etapa
 
 - Etapa 1: feita
-- Etapa 2 (em_andamento): Manifesto Fundador e identidade
-- Etapas 3–6: pendentes
+- Etapa 2: feita (manifesto-fundador)
+- Etapa 3 (em_andamento): product-context e architecture
+- Etapas 4–6: pendentes

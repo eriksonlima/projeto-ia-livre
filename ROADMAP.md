@@ -11,14 +11,14 @@ Pronto quando: README, AGENTS.md, ROADMAP.md, scaffold `.cursor/` e remote GitHu
 
 ## Etapa 2 — Manifesto Fundador e identidade
 
-Status: em_andamento  
+Status: feita  
 Issue: [#2](https://github.com/eriksonlima/projeto-ia-livre/issues/2)  
 Spec: specs/manifesto-fundador/  
 Pronto quando: manifesto com missão, princípios imutáveis, nomenclatura (Projeto IA Livre / IA Livre / Rede IA Livre), governança B com proteções e política open source publicados em `docs/`.
 
 ## Etapa 3 — Contexto de produto e arquitetura inicial
 
-Status: pendente  
+Status: em_andamento  
 Issue: [#3](https://github.com/eriksonlima/projeto-ia-livre/issues/3)  
 Spec: specs/arquitetura-inicial/  
 Pronto quando: `docs/product-context.md` e `docs/architecture.md` descrevem camadas (kernel, runtime, autonomia, P2P), hipóteses de pesquisa e decisões abertas; ADR inicial se houver escolha estrutural.
