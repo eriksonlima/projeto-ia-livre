@@ -5,12 +5,12 @@ Regra: `.cursor/rules/agentes-em-paralelo.mdc`.
 
 ## Estado atual
 
-- **holder:** _(nenhum — pausa de coordenação)_
-- **etapa:** —
-- **issue:** —
-- **paths:** —
-- **since:** —
-- **expires:** —
+- **holder:** cursor-agent-df93a573
+- **etapa:** 16 — GPU manager no kernel / multi-GPU (desenho)
+- **issue:** #16
+- **paths:** ROADMAP.md, BACKLOG.md, specs/gpu-manager-multi-gpu/, docs/adr/, docs/desenho*, docs/architecture.md, AGENTS.md, memory-bank/
+- **since:** 2026-11-20T23:28:00Z
+- **expires:** 2026-11-21T01:28:00Z
 
 ## Como usar
 
