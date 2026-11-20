@@ -19,6 +19,6 @@ Começar um projeto é criar código que deve continuar existindo. Exploração,
   - criar labels `roadmap` e `status:*`; uma issue por etapa; Project V2 (Pendente / Em andamento / Feita / Bloqueada); gravar números e URL no `ROADMAP.md` (seguir `/atualizar-roadmap`)
   - `.cursor/mcp.json` só se o projeto já nascer com servidor necessário
 - Sem `.env`, chaves ou credenciais no commit.
-- Esse primeiro commit e o push para `origin` são a exceção da regra de só commitar quando pedido. Commits seguintes continuam dependendo de um pedido explícito.
+- O primeiro commit + push do scaffold é obrigatório. Nas fatias seguintes, commit + push ao fechar a fatia (ver `ciclo-da-fatia`) também são obrigatórios — não dependem de pedido explícito.
 - Não altere a configuração do git, não use `--no-verify`, não faça force push e não abra pull request por conta própria.
 - Repositório hospedado no Cursor não substitui o GitHub.
