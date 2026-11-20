@@ -1,5 +1,5 @@
 ---
-description: Backlog local canônico com espelho GitHub best-effort e promoção sob confirmação
+description: Backlog local canônico com espelho GitHub best-effort e promoção autônoma do topo
 alwaysApply: true
 ---
 
@@ -11,6 +11,7 @@ alwaysApply: true
 - **Não** exija Project V2 para itens só de backlog. Project continua espelhando etapas do `ROADMAP.md`.
 - Durante uma fatia em andamento: **não** interromper para perguntar sobre backlog. Só capture se o usuário pedir (“anota no backlog…”) ou se o pedido for claramente fora do escopo — anote e siga a fatia.
 - Etapas novas no roadmap vêm do backlog **ou** de pedido explícito de etapa. Não inventar etapa sem um dos dois.
-- Promoção backlog → roadmap: só com **confirmação explícita**. Reutilize a issue de backlog se existir (trocar label `backlog` → `roadmap` + `status:*`, `Pronto quando`, vincular ao Project); senão criar via `/atualizar-roadmap`. Grave a etapa em `ROADMAP.md` e mova o item para **Promovidas / arquivadas**.
-- Se o roadmap não tiver etapa `em_andamento` nem `pendente` e o usuário pedir continuar / próximo passo: proponha o **topo** de `BACKLOG.md` (título + `Pronto quando` sugerido) e espere confirmação.
+- Promoção backlog → roadmap: **autônoma** — **não** peça confirmação. Reutilize a issue de backlog se existir (trocar label `backlog` → `roadmap` + `status:*`, `Pronto quando`, vincular ao Project); senão criar via `/atualizar-roadmap`. Grave a etapa em `ROADMAP.md` e mova o item para **Promovidas / arquivadas**. Relato curto (id + etapa + `#N`).
+- Quando promover: se o roadmap não tiver `em_andamento`, a etapa promovida entra como `em_andamento`; se já houver uma `em_andamento`, a nova entra como `pendente` (só uma `em_andamento`).
+- Se o roadmap não tiver etapa `em_andamento` nem `pendente` e o usuário pedir continuar / próximo passo **ou** a etapa atual acabou de fechar: **promova o topo** de `BACKLOG.md` na hora, depois chame `especificador` (e `fatiador` se couber) e siga — sem perguntar. Se Abertas estiver vazia, pare e diga.
 - Comando: `/atualizar-backlog`. Skill: `.cursor/skills/atualizar-backlog/SKILL.md`.

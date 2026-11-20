@@ -2,8 +2,9 @@
 name: atualizar-backlog
 description: >-
   Captura, reordena ou arquiva demandas em BACKLOG.md com espelho GitHub
-  best-effort (label backlog) e promove para ROADMAP.md só com confirmação.
-  Use ao anotar ideia fora da etapa, ao esvaziar o roadmap, ou /atualizar-backlog.
+  best-effort (label backlog) e promove o topo para ROADMAP.md de forma autônoma
+  quando o roadmap esvazia ou a etapa fecha. Use ao anotar ideia fora da etapa,
+  ao esvaziar o roadmap, ou /atualizar-backlog.
 disable-model-invocation: true
 ---
 
@@ -13,6 +14,7 @@ disable-model-invocation: true
 
 - Usuário pede para anotar demanda / ideia / lacuna fora da etapa atual
 - Roadmap sem `em_andamento` nem `pendente` e o pedido é “continuar” / “próximo”
+- Etapa do roadmap acabou de fechar e há itens em **Abertas**
 - Comando `/atualizar-backlog`
 
 ## Canônico
@@ -35,20 +37,24 @@ disable-model-invocation: true
 - Reordenar: sob pedido, mova itens em **Abertas** (topo = próxima candidata).
 - Arquivar: sob pedido, mova para **Promovidas / arquivadas** com motivo; não apague histórico sem pedido.
 
-## Roadmap vazio (“continuar”)
+## Roadmap vazio (“continuar”) / etapa fechou
 
 1. Leia `ROADMAP.md` e `BACKLOG.md`.
-2. Se não houver etapa `em_andamento`/`pendente` e houver item em **Abertas**: proponha o **topo** (título + `Pronto quando` sugerido) e **espere confirmação**.
-3. Não invente etapa nem implemente produto só por estar no backlog.
+2. Se não houver etapa `em_andamento`/`pendente` e houver item em **Abertas**: **promova o topo imediatamente** (sem perguntar) — ver Promover.
+3. Depois da promoção: chame `especificador` (e `fatiador` se couber) e siga a etapa.
+4. Se Abertas estiver vazia: pare e diga. Não invente etapa.
 
-## Promover (só com confirmação explícita)
+## Promover (autônomo — não peça confirmação)
 
-Ex.: “promova B1”, “vamos para o topo do backlog”.
+Gatilhos: “continuar” / “próximo” com roadmap vazio; etapa acabou de fechar; pedido explícito “promova B…”.
 
-1. Grave a etapa em `ROADMAP.md` (`pendente` ou `em_andamento`).
+1. Grave a etapa em `ROADMAP.md` (`em_andamento` se não houver outra; senão `pendente`).
 2. Se já existir issue de backlog: remova label `backlog`, adicione `roadmap` + `status:*`, atualize `Pronto quando`, vincule ao Project. Senão, crie via `/atualizar-roadmap`.
 3. Mova o item para **Promovidas / arquivadas** com `Issue: #N`.
-4. Se `gh` falhar na promoção: mantenha `ROADMAP.md`/`BACKLOG.md` locais, registre bloqueio, não invente outro board.
+4. Relato curto: id + título da etapa + `#N`.
+5. Se `gh` falhar na promoção: mantenha `ROADMAP.md`/`BACKLOG.md` locais, registre bloqueio, não invente outro board.
+
+`/atualizar-backlog` sozinho (só captura/reordenar/arquivar) **não** promove — promoção é pelos gatilhos acima.
 
 ## Durante a fatia
 

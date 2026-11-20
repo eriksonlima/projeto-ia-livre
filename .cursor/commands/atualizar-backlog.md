@@ -1,6 +1,7 @@
 # atualizar-backlog
 
-Gerencie `BACKLOG.md` (capturar, reordenar, arquivar) e o espelho GitHub **best-effort**. **Não** promove para o roadmap sozinho.
+Gerencie `BACKLOG.md` (capturar, reordenar, arquivar) e o espelho GitHub **best-effort**.
+Este comando sozinho **não** promove; a promoção autônoma ocorre quando o roadmap esvazia / a etapa fecha / “continuar” (ver skill e rule `backlog-do-projeto`).
 
 ## Capturar
 
@@ -23,10 +24,11 @@ Gerencie `BACKLOG.md` (capturar, reordenar, arquivar) e o espelho GitHub **best-
 1. Sob pedido (descartar / já feito fora do roadmap), mova para **Promovidas / arquivadas** com motivo curto.
 2. Não delete histórico sem pedido.
 
-## Promover (só se o usuário confirmar nesta conversa)
+## Promover (autônomo nos gatilhos; não peça confirmação)
 
-1. Não rode promoção só porque o comando foi invocado — precisa de “promova B…” / “vamos para o topo do backlog” explícito.
-2. Se confirmado:
-   - Se o item já tem `Issue: #N` de backlog: `gh issue edit N` — remover label `backlog`, adicionar `roadmap` + `status:*`, atualizar body com `Pronto quando`; vincular ao Project se ainda não estiver.
-   - Se não tem issue: criar via `/atualizar-roadmap` como etapa nova.
-   - Grave a etapa em `ROADMAP.md` e mova o item para **Promovidas / arquivadas** com `Issue: #N`.
+Gatilhos: roadmap sem `em_andamento`/`pendente` + “continuar”/próximo; etapa acabou de fechar; “promova B…”.
+
+1. Se o item já tem `Issue: #N` de backlog: `gh issue edit N` — remover label `backlog`, adicionar `roadmap` + `status:*`, atualizar body com `Pronto quando`; vincular ao Project se ainda não estiver.
+2. Se não tem issue: criar via `/atualizar-roadmap` como etapa nova.
+3. Grave a etapa em `ROADMAP.md` e mova o item para **Promovidas / arquivadas** com `Issue: #N`.
+4. Relato curto: id + etapa + `#N`. Em seguida `especificador` / seguir a etapa.

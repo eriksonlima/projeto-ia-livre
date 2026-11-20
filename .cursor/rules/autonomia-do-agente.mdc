@@ -1,0 +1,15 @@
+---
+description: Encadear tasks sem pedir Sim; promover backlog e seguir sem confirmação
+alwaysApply: true
+---
+
+# Autonomia do agente
+
+- Com pedido claro, plano aprovado ou etapa em andamento: execute **sem** pedir “posso seguir?” / “quer que eu continue?” / “confirma?”.
+- Ao concluir uma task/fatia com gate ok: marque-a feita, atualize Memory Bank e **passe imediatamente à próxima task aberta** da mesma etapa/`tasks.md`.
+- Não espere o usuário dizer “próxima” entre subtasks da mesma etapa.
+- Pare (relato curto, sem pedir permissão) somente quando:
+  - não há mais task aberta na etapa atual **e** o backlog Abertas está vazio (nada a promover), ou
+  - bloqueio real (credencial, escolha de produto ambígua, destrutivo, regra de início/GitHub).
+- Quando a etapa do roadmap fechar (ou o roadmap não tiver `em_andamento`/`pendente`) e houver item em `BACKLOG.md` **Abertas**: **promova o topo** para o roadmap **sem perguntar**, espelhe GitHub, chame `especificador` (e `fatiador` se couber) e continue. Não invente etapa fora do backlog.
+- Não peça confirmação para promoção backlog → roadmap. Relato curto do que promoveu basta.

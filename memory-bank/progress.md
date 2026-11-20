@@ -14,5 +14,6 @@
 
 ## Por etapa
 
-- Etapas 1–13: feitas
-- Backlog Abertas (topo): B8 (#14), B9–B12 (#15–#18)
+- Etapas 1–13: feitas; Etapa 14 em_andamento (B8/#14)
+- Backlog Abertas (topo): B9 (#15), B10–B12 (#16–#18)
+- Processo: promoção backlog → roadmap autônoma

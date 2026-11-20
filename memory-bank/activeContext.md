@@ -2,19 +2,19 @@
 
 ## Foco atual
 
+- Etapa 14 — Protocolo P2P além do protótipo (`em_andamento`, Issue #14)
+- Spec: `specs/protocolo-p2p-alem-prototipo/` (Tasks 1–3 abertas)
 - Processo: promoção backlog → roadmap **autônoma** (sem pedir confirmação)
-- Etapa do roadmap: promover **B8** → próxima etapa (roadmap 1–13 feitas)
-- Spec ativa: a criar após promoção
 
 ## Mudanças recentes
 
 - Processo: rules/skill/command — promoção do topo sem “confirma?”
-- Etapa 13: ADR 0003 + desenho Weights/KvCache + Prefill/Decode (só docs)
+- B8 promovido a Etapa 14; spec gerada
 
 ## Próximo passo
 
-- Promover B8 (#14), especificar e fatiar
+- Task 1: ADR 0004 da stack candidata Rede IA Livre v1
 
 ## Notas
 
-- Hipótese A vs B não comprovada; GGUF canônico em B ainda aberto
+- Hipótese A vs B não comprovada
