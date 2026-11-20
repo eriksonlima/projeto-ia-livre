@@ -5,12 +5,12 @@ Regra: `.cursor/rules/agentes-em-paralelo.mdc`.
 
 ## Estado atual
 
-- **holder:** cursor-agent-df93a573
-- **etapa:** 17 — Licenças definitivas por componente
-- **issue:** #17
-- **paths:** ROADMAP.md, BACKLOG.md, specs/, LICENSE*, docs/, AGENTS.md, README.md, memory-bank/
-- **since:** 2026-11-20T23:36:41Z
-- **expires:** 2026-11-21T01:36:41Z
+- **holder:** _(nenhum)_
+- **etapa:** —
+- **issue:** —
+- **paths:** —
+- **since:** —
+- **expires:** —
 
 ## Como usar
 

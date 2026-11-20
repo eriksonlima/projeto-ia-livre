@@ -116,7 +116,7 @@ Pronto quando: desenho (ADR/doc) do escopo candidato de GPU manager no kernel e 
 
 ## Etapa 17 — Licenças definitivas por componente
 
-Status: em_andamento  
+Status: feita  
 Issue: [#17](https://github.com/eriksonlima/projeto-ia-livre/issues/17)  
 Spec: specs/licencas-por-componente/  
 Pronto quando: licença por componente (kernel, runtime, node, agent, docs) registrada no repositório, alinhada ao manifesto.

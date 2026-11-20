@@ -10,6 +10,8 @@ Iniciativa brasileira, open source e sem fins lucrativos, para infraestrutura de
 
 > Nascido no Brasil. Aberto ao mundo. Livre por princípio.
 
+**Licença (1ª parte):** [Apache-2.0](LICENSE) — ver ADR [`docs/adr/0007-licencas-por-componente.md`](docs/adr/0007-licencas-por-componente.md). Terceiros: [`docs/licencas-terceiros.md`](docs/licencas-terceiros.md).
+
 ## Como rodar
 
 Veja `AGENTS.md` → **Como rodar**.

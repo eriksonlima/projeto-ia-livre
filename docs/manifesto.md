@@ -56,7 +56,7 @@ Nenhum mecanismo impede absolutamente toda captura. O objetivo é barreiras sobr
 - Modelos, pesos e dados: licenças e origens documentadas com transparência; código aberto não implica automaticamente pesos abertos.
 - Resultados de pesquisa: publicação aberta sempre que possível, respeitando direitos de terceiros.
 
-**Preferência de licenças (decisão a confirmar, não regra fechada):** Apache 2.0 para componentes de infraestrutura; GPLv3 onde a preservação das liberdades de redistribuição for prioridade. A escolha definitiva será por componente, com orientação jurídica quando necessário.
+**Licenças de 1ª parte (confirmadas — Etapa 17):** Apache License 2.0 (`Apache-2.0`) para `kernel`, `runtime`, `node`, `agent` e documentação do repositório — ver [`LICENSE`](../LICENSE), ADR [`0007`](adr/0007-licencas-por-componente.md). Dependências de terceiros mantêm licenças próprias ([`licencas-terceiros.md`](licencas-terceiros.md)). GPLv3 não foi aplicada a esses componentes nesta decisão; mudança futura exige nova ADR. Isto **não** é parecer jurídico.
 
 ## Sustentabilidade
 

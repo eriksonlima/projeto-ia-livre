@@ -358,6 +358,8 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `docs/adr/0003-memoria-model-aware-e-scheduler-fases.md` — ADR do desenho (sem implementação)
 - `docs/desenho-gpu-manager-multi-gpu.md` — desenho GPU manager / multi-GPU (ADR 0006; não implementado)
 - `docs/adr/0006-gpu-manager-multi-gpu.md` — ADR do escopo candidato (host ≠ nativo)
+- `LICENSE` / `NOTICE` — Apache-2.0 (1ª parte); ADR [`0007`](docs/adr/0007-licencas-por-componente.md)
+- `docs/licencas-terceiros.md` — aviso de deps (llama.cpp, uefi, …)
 - `scripts/run-harness-line-a.sh` — corrida Linha A (wrapper do runtime, marcadores `HARNESS_`)
 - `scripts/run-harness-line-b.sh` — Linha B via QEMU (proxy; `HARNESS_OK` + `PROXY_*`)
 - `scripts/verify-harness.sh` — gate A (GGUF) + B (proxy QEMU)

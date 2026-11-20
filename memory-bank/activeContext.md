@@ -2,18 +2,18 @@
 
 ## Foco atual
 
-- Etapa 17 — Licenças definitivas por componente — `em_andamento`
-- Lease: `cursor-agent-df93a573` (#17)
+- Etapa 17 **feita** (Apache-2.0 por componente)
+- Próximo: promover B12 (harness) se Abertas
 
 ## Mudanças recentes
 
-- Etapa 16 feita (ADR 0006)
-- B11 promovido → Etapa 17
+- LICENSE / NOTICE / ADR 0007 / pontes manifesto·README
+- Lease liberado
 
 ## Próximo passo
 
-- Spec da Etapa 17 → registrar licenças por componente
+- Promoção autônoma B12 → Etapa 18
 
 ## Notas
 
-- Manifesto: preferência Apache 2.0 infra / GPLv3 onde preservação for prioridade
+- Um agente escritor no main
