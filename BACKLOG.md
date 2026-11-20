@@ -8,13 +8,15 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-### B12 — Evolução do harness (Linha A otimizada / perfil GPU)
-
-- Origem: análise 2026-11-20; limitações explícitas em `docs/harness-linha-a-b.md` (A sem tuning; GPU fora do v1).
-- Pronto quando sugerido: metodologia documentada para «Linux otimizado» na A e/ou perfil GPU espelhado A/B; gate só se houver execução real.
-- Issue: [#18](https://github.com/eriksonlima/projeto-ia-livre/issues/18)
+_(vazio — próxima etapa só por pedido explícito ou novo item)_
 
 ## Promovidas / arquivadas
+
+### B12 — Evolução do harness (Linha A otimizada / perfil GPU)
+
+- Promovido para Etapa 18 do roadmap (promoção autônoma após Etapa 17).
+- Issue: [#18](https://github.com/eriksonlima/projeto-ia-livre/issues/18)
+- Etapa: [Etapa 18 — Evolução do harness (Linha A otimizada / perfil GPU)](ROADMAP.md)
 
 ### B11 — Licenças definitivas por componente
 

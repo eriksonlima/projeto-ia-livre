@@ -120,3 +120,10 @@ Status: feita
 Issue: [#17](https://github.com/eriksonlima/projeto-ia-livre/issues/17)  
 Spec: specs/licencas-por-componente/  
 Pronto quando: licença por componente (kernel, runtime, node, agent, docs) registrada no repositório, alinhada ao manifesto.
+
+## Etapa 18 — Evolução do harness (Linha A otimizada / perfil GPU)
+
+Status: em_andamento  
+Issue: [#18](https://github.com/eriksonlima/projeto-ia-livre/issues/18)  
+Spec: _(a definir na spec)_  
+Pronto quando: metodologia documentada para «Linux otimizado» na Linha A e/ou perfil GPU espelhado A/B; gate só se houver execução real.

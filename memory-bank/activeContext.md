@@ -2,18 +2,17 @@
 
 ## Foco atual
 
-- Etapa 17 **feita** (Apache-2.0 por componente)
-- Próximo: promover B12 (harness) se Abertas
+- Etapa 18 — Evolução do harness — `em_andamento`
+- Lease: `cursor-agent-df93a573` (#18)
 
 ## Mudanças recentes
 
-- LICENSE / NOTICE / ADR 0007 / pontes manifesto·README
-- Lease liberado
+- Etapas 16–17 feitas; B12 promovido
 
 ## Próximo passo
 
-- Promoção autônoma B12 → Etapa 18
+- Spec Etapa 18 → metodologia A otimizada / perfil GPU
 
 ## Notas
 
-- Um agente escritor no main
+- Backlog Abertas vazio após esta promoção
