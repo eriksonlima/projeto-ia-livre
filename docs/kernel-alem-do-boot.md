@@ -56,8 +56,8 @@ IA_LIVRE_ALLOC_OK
 ```bash
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 make build
-make run    # serial no stdio — procurar os marcadores acima
-# Gate estendido (Task 3): make verify exige BOOT_OK + MEM_MAP_OK + ALLOC_OK
+make run      # serial no stdio — procurar os marcadores acima
+make verify   # exige BOOT_OK + MEM_MAP_OK + ALLOC_OK (+ páginas/bytes); VERIFY_TIMEOUT default 45s
 ```
 
 ## Fora de escopo

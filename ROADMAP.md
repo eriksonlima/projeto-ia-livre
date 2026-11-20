@@ -67,7 +67,7 @@ Pronto quando: harness comparável (mesmo modelo/quantização/carga) documentad
 
 ## Etapa 10 — Kernel além do boot
 
-Status: em_andamento  
+Status: feita  
 Issue: [#10](https://github.com/eriksonlima/projeto-ia-livre/issues/10)  
 Spec: specs/kernel-alem-do-boot/  
 Pronto quando: no UEFI/QEMU, mecanismos mínimos além de `IA_LIVRE_BOOT_OK` (ex.: alocação/mapa de memória ou carregamento mínimo documentado), com gate serial verificável — ainda sem inferência no kernel.

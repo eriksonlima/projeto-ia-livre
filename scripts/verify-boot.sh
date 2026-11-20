@@ -1,27 +1,44 @@
 #!/usr/bin/env bash
-# Gate Etapa 4: boot UEFI em QEMU deve emitir IA_LIVRE_BOOT_OK na serial.
+# Gate do kernel (Etapas 4 / 10): serial QEMU deve emitir BOOT_OK + MEM_MAP_OK + ALLOC_OK.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 export PATH="${HOME}/.cargo/bin:${HOME}/.local/bin:${PATH}"
 
-MARKER="IA_LIVRE_BOOT_OK"
+MARKERS=(
+  "IA_LIVRE_BOOT_OK"
+  "IA_LIVRE_MEM_MAP_OK"
+  "IA_LIVRE_ALLOC_OK"
+)
+# Evidência numérica (Task 10) — presença da linha, não valor fixo.
+NUMERIC=(
+  "IA_LIVRE_MEM_CONVENTIONAL_PAGES="
+  "IA_LIVRE_ALLOC_BYTES="
+)
+
 TIMEOUT_SEC="${VERIFY_TIMEOUT:-45}"
 LOG="$(mktemp)"
 trap 'rm -f "$LOG"; [[ -n "${QEMU_PID:-}" ]] && kill -KILL "$QEMU_PID" 2>/dev/null || true' EXIT
 
 make esp
 
-# Roda QEMU em background e encerra assim que a marcação aparecer
 make run >"$LOG" 2>&1 &
 QEMU_PID=$!
 
+all_present() {
+  local m
+  for m in "${MARKERS[@]}" "${NUMERIC[@]}"; do
+    grep -q "$m" "$LOG" 2>/dev/null || return 1
+  done
+  return 0
+}
+
 deadline=$((SECONDS + TIMEOUT_SEC))
 while (( SECONDS < deadline )); do
-  if grep -q "$MARKER" "$LOG" 2>/dev/null; then
+  if all_present; then
     kill -KILL "$QEMU_PID" 2>/dev/null || true
     wait "$QEMU_PID" 2>/dev/null || true
     QEMU_PID=
-    echo "GATE_OK: encontrada $MARKER na serial"
+    echo "GATE_OK: kernel — IA_LIVRE_BOOT_OK IA_LIVRE_MEM_MAP_OK IA_LIVRE_ALLOC_OK (+ páginas/bytes)"
     exit 0
   fi
   if ! kill -0 "$QEMU_PID" 2>/dev/null; then
@@ -36,7 +53,8 @@ kill -KILL "$QEMU_PID" 2>/dev/null || true
 wait "$QEMU_PID" 2>/dev/null || true
 QEMU_PID=
 
-echo "GATE_FAIL: $MARKER não apareceu em ${TIMEOUT_SEC}s"
+echo "GATE_FAIL: marcadores do kernel incompletos em ${TIMEOUT_SEC}s"
+echo "Esperado: ${MARKERS[*]} e ${NUMERIC[*]}"
 echo "---- serial (últimas 80 linhas) ----"
 tail -n 80 "$LOG" || true
 exit 1

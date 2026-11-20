@@ -3,20 +3,19 @@
 ## Foco atual
 
 - Processo: backlog → roadmap (mínima interrupção)
-- Etapa do roadmap: **Etapa 10 — Kernel além do boot** (`em_andamento`, Issue #10)
-- Spec ativa: `specs/kernel-alem-do-boot/` (Tasks 1–2 feitas; Task 3 aberta)
+- Etapa do roadmap: nenhuma `em_andamento` (Etapas 1–10 **feitas**)
+- Spec ativa: nenhuma (última: `specs/kernel-alem-do-boot/`, Tasks 1–3 feitas)
 
 ## Mudanças recentes
 
-- Seed backlog B4–B6 (#10–#12); B4 promovido a Etapa 10
-- Task 1: contrato `docs/kernel-alem-do-boot.md`
-- Task 2: mapa + AllocatePages(2) + bump 64 B → marcadores na serial QEMU
+- Etapa 10: mapa UEFI + AllocatePages/bump; `make verify` exige BOOT_OK + MEM_MAP_OK + ALLOC_OK
+- Seed backlog: B5–B6 + horizonte B7–B12 (ExitBoot, P2P, autonomia v1, GPU manager, licenças, harness)
 
 ## Próximo passo
 
-- Task 3: estender `make verify` / `verify-boot.sh` para MEM_MAP_OK + ALLOC_OK
+- Propor topo do backlog (**B7 — Kernel pós-Boot Services**) e esperar confirmação para promover
 
 ## Notas
 
-- B5 (Linha B real) e B6 (desenho scheduler/memória) permanecem em Abertas
-- Sem ExitBootServices / inferência no kernel nesta etapa
+- Hipótese A vs B ainda não comprovada; Linha B = stub (B5)
+- README considerado nas fatias E10; sem mudança (ponte AGENTS)
