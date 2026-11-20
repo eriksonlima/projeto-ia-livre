@@ -51,6 +51,7 @@ As camadas formam um ecossistema, não quatro produtos desconectados. A ordem de
 - **Etapa 14:** desenho stack Rede IA Livre v1 (ADR 0004) — **sem** implementação no `node/`.
 - **Etapa 15:** escopo autonomia v1 (ADR 0005) — **sem** implementação no `agent/`.
 - **Etapa 16:** desenho GPU manager + multi-GPU (ADR 0006) — **sem** implementação no `kernel/`/`runtime/`.
+- **Etapa 18:** metodologia harness A otimizada / perfil GPU — [`harness-perfis-a-otimizada-gpu.md`](harness-perfis-a-otimizada-gpu.md); hipótese **não** comprovada.
 
 ## Decisões abertas
 
@@ -59,7 +60,7 @@ As camadas formam um ecossistema, não quatro produtos desconectados. A ordem de
 - ~~Licenças definitivas por componente~~ — **decididas (Etapa 17):** Apache-2.0 para kernel, runtime, node, agent e docs — ADR [`0007`](adr/0007-licencas-por-componente.md) + [`LICENSE`](../LICENSE). Deps de terceiros: [`licencas-terceiros.md`](licencas-terceiros.md).
 - ~~Estratégia de aceleração além de CPU~~ — **protótipo host (Etapa 8 / ADR 0002):** CUDA canônico / Vulkan alternativa via llama.cpp (single-GPU). ~~GPU manager no kernel e multi-GPU~~ — **decididos no nível desenho (Etapa 16):** enum/afinidade/placement + pipeline/layer sharding preferido — ADR [`0006`](adr/0006-gpu-manager-multi-gpu.md) + [`desenho-gpu-manager-multi-gpu.md`](desenho-gpu-manager-multi-gpu.md). **Implementação e prova continuam abertas.** Host ≠ manager nativo.
 - ~~Forma e escopo do ambiente de autonomia na primeira versão utilizável~~ — **decidido no nível desenho (Etapa 15):** host, `--prompt` one-shot, allowlist `note`/`recall`/`help`, política N últimas entradas — ADR [`0005`](adr/0005-autonomia-v1-utilizavel.md) + [`desenho-autonomia-v1.md`](desenho-autonomia-v1.md). **Implementação continua aberta.**
-- ~~Critérios exatos e harness do benchmark Linha A vs Linha B~~ — **harness v1 (Etapa 9)** + **Linha B mínima (Etapa 12):** proxy pós-ExitBoot no IA Livre ([`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md)); prova da hipótese e carga GGUF canônica em B continuam abertos.
+- ~~Critérios exatos e harness do benchmark Linha A vs Linha B~~ — **harness v1 (Etapa 9)** + **Linha B mínima (Etapa 12):** proxy pós-ExitBoot ([`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md)); **metodologia de perfis (Etapa 18):** A «Linux otimizado» + GPU espelhado A/B — [`harness-perfis-a-otimizada-gpu.md`](harness-perfis-a-otimizada-gpu.md) (gate permanece `make verify-harness`; perfis ≠ prova). Prova da hipótese e carga GGUF canônica em B continuam **abertas**.
 
 ## Referências próximas
 

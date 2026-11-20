@@ -5,12 +5,12 @@ Regra: `.cursor/rules/agentes-em-paralelo.mdc`.
 
 ## Estado atual
 
-- **holder:** cursor-agent-df93a573
-- **etapa:** 18 — Evolução do harness (Linha A otimizada / perfil GPU)
-- **issue:** #18
-- **paths:** ROADMAP.md, BACKLOG.md, specs/, docs/harness*, docs/runtime*, AGENTS.md, scripts/, memory-bank/
-- **since:** 2026-11-20T23:45:00Z
-- **expires:** 2026-11-21T01:45:00Z
+- **holder:** _(nenhum)_
+- **etapa:** —
+- **issue:** —
+- **paths:** —
+- **since:** —
+- **expires:** —
 
 ## Como usar
 

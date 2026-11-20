@@ -18,7 +18,8 @@ Contrato do caminho B mínimo: [`runtime-nativo-linha-b.md`](runtime-nativo-linh
 
 ### Limitação da referência A
 
-“Linux otimizado” na hipótese completa implica tuning de SO (sysctl, isolamento de CPU, etc.). Nesta etapa, A é a **referência pragmática do projeto**: Ubuntu no host de referência + o mesmo binário `ia-livre-runtime` das Etapas 5/8, **sem** campanha de tuning. Evolução de “otimizado” fica para etapas futuras, documentada.
+“Linux otimizado” na hipótese completa implica tuning de SO (sysctl, isolamento de CPU, etc.). No harness **v1** (gate), A é a **referência pragmática**: Ubuntu no host de referência + o mesmo binário `ia-livre-runtime` das Etapas 5/8, **sem** campanha de tuning.  
+Metodologia dos perfis **A otimizada** e **GPU espelhado A/B** (Etapa 18): [`harness-perfis-a-otimizada-gpu.md`](harness-perfis-a-otimizada-gpu.md) — **não** substituem o gate v1 e **não** provam a hipótese.
 
 ### O que **não** conta como Linha B
 
@@ -38,7 +39,7 @@ Contrato do caminho B mínimo: [`runtime-nativo-linha-b.md`](runtime-nativo-linh
 | Aceleração | **CPU** (`--n-gpu-layers 0`) |
 | Hardware | Mesmo host para A e (no futuro) B — ver tabela baseline |
 
-Perfil GPU espelhado A/B fica fora do harness v1 (decisão aberta / etapa futura).
+Perfil GPU espelhado A/B fica **fora do gate** do harness v1; metodologia documentada na Etapa 18: [`harness-perfis-a-otimizada-gpu.md`](harness-perfis-a-otimizada-gpu.md) (GPU-B só quando houver GGUF/acelerador real em B).
 
 ## Marcadores (`IA_LIVRE_HARNESS_*`)
 

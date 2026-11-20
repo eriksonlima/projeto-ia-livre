@@ -4,7 +4,8 @@ Protótipo da **Etapa 8** (camada 2 no host). Valores obtidos no **host de refer
 
 > **Não** é o benchmark da hipótese de pesquisa (Linha A vs Linha B). Só registra o caminho load + geração com offload GPU via llama.cpp, comparável às métricas CPU da Etapa 5.  
 > Harness A vs B: [`harness-linha-a-b.md`](harness-linha-a-b.md).  
-> **Host ≠ GPU manager nativo / multi-GPU:** este doc é Etapa 8 (ADR 0002). Desenho candidato: [`desenho-gpu-manager-multi-gpu.md`](desenho-gpu-manager-multi-gpu.md) / ADR [`0006`](adr/0006-gpu-manager-multi-gpu.md).
+> **Host ≠ GPU manager nativo / multi-GPU:** este doc é Etapa 8 (ADR 0002). Desenho candidato: [`desenho-gpu-manager-multi-gpu.md`](desenho-gpu-manager-multi-gpu.md) / ADR [`0006`](adr/0006-gpu-manager-multi-gpu.md).  
+> **≠ perfil GPU do harness:** metodologia harness A/B — [`harness-perfis-a-otimizada-gpu.md`](harness-perfis-a-otimizada-gpu.md) (`HARNESS_*`, não `INFER_*`).
 
 ## Ambiente
 

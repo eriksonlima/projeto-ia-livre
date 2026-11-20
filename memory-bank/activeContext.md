@@ -2,17 +2,18 @@
 
 ## Foco atual
 
-- Etapa 18 — Evolução do harness — `em_andamento`
-- Lease: `cursor-agent-df93a573` (#18)
+- Etapas 1–18 **feitas**; backlog **Abertas vazio**
+- Nenhuma `em_andamento`; lease liberado
 
 ## Mudanças recentes
 
-- Etapas 16–17 feitas; B12 promovido
+- E16 GPU manager desenho; E17 Apache-2.0; E18 perfis harness
+- Skill `claim-agente-paralelo`
 
 ## Próximo passo
 
-- Spec Etapa 18 → metodologia A otimizada / perfil GPU
+- Pedido explícito ou novo item em `BACKLOG.md` — não inventar etapa
 
 ## Notas
 
-- Backlog Abertas vazio após esta promoção
+- Um agente escritor; claim antes de editar `em_andamento`

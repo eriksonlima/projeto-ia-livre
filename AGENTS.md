@@ -353,6 +353,7 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `scripts/fetch-model.sh` — download do GGUF canônico da Etapa 5
 - `docs/runtime-inferencia-cpu-metricas.md` — métricas do protótipo no host
 - `docs/harness-linha-a-b.md` — metodologia do harness Linha A vs Linha B
+- `docs/harness-perfis-a-otimizada-gpu.md` — perfis A otimizada / GPU (Etapa 18; gate permanece `verify-harness`)
 - `docs/runtime-nativo-linha-b.md` — contrato Linha B mínima (proxy pós-ExitBoot)
 - `docs/desenho-memoria-scheduler-nativo.md` — desenho candidato Weights/KvCache + Prefill/Decode (ADR 0003)
 - `docs/adr/0003-memoria-model-aware-e-scheduler-fases.md` — ADR do desenho (sem implementação)

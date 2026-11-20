@@ -123,7 +123,7 @@ Pronto quando: licença por componente (kernel, runtime, node, agent, docs) regi
 
 ## Etapa 18 — Evolução do harness (Linha A otimizada / perfil GPU)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#18](https://github.com/eriksonlima/projeto-ia-livre/issues/18)  
 Spec: specs/evolucao-harness-linha-a-gpu/  
 Pronto quando: metodologia documentada para «Linux otimizado» na Linha A e/ou perfil GPU espelhado A/B; gate só se houver execução real.
