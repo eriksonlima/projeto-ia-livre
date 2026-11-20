@@ -8,9 +8,25 @@ Promoção para `ROADMAP.md` exige **confirmação explícita** (ver `.cursor/ru
 
 ## Abertas
 
-_(vazio — sem demandas abertas)_
+### B5 — Runtime nativo / Linha B real (mínimo)
+
+- Origem: seed pós Etapas 1–9 (confirmação do usuário); harness Etapa 9 deixa Linha B como stub.
+- Pronto quando sugerido: caminho documentado e verificável para a carga canônica do harness emitir `IA_LIVRE_HARNESS_*` com `LINE=B` no ambiente IA Livre (ou stub honestamente substituído por execução real mínima); sem fingir hipótese comprovada.
+- Issue: [#11](https://github.com/eriksonlima/projeto-ia-livre/issues/11)
+
+### B6 — Lacunas de arquitetura (scheduler / memória model-aware)
+
+- Origem: seed pós Etapas 1–9; lacunas abertas em `docs/architecture.md`.
+- Pronto quando sugerido: desenho (doc/ADR) do mecanismo nativo candidato que diferencia Linha B da A — escopo de desenho, não implementação completa.
+- Issue: [#12](https://github.com/eriksonlima/projeto-ia-livre/issues/12)
 
 ## Promovidas / arquivadas
+
+### B4 — Kernel além do boot
+
+- Promovido para Etapa 10 do roadmap com confirmação explícita.
+- Issue: [#10](https://github.com/eriksonlima/projeto-ia-livre/issues/10)
+- Etapa: [Etapa 10 — Kernel além do boot](ROADMAP.md)
 
 ### B3 — Harness da hipótese Linha A vs Linha B
 

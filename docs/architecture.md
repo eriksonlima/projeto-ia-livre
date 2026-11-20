@@ -44,6 +44,7 @@ As camadas formam um ecossistema, não quatro produtos desconectados. A ordem de
 - Bootstrap inicial: **x86-64 + UEFI + QEMU**; **CPU antes de GPU**.
 - Aceleração NVIDIA multi-GPU como alvo **posterior** (após base CPU e runtime mínimo).
 - Nenhuma decisão só por curiosidade técnica (manifesto).
+- **Etapa 10 (em andamento):** primeiro mecanismo de memória no kernel UEFI — mapa + `AllocatePages`/bump sob Boot Services (sem `ExitBootServices`, sem inferência). Contrato: [`kernel-alem-do-boot.md`](kernel-alem-do-boot.md).
 
 ## Decisões abertas
 

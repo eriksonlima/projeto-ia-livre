@@ -3,21 +3,20 @@
 ## Foco atual
 
 - Processo: backlog → roadmap (mínima interrupção)
-- Etapa do roadmap: nenhuma `em_andamento` (Etapas 1–9 **feitas**)
-- Spec ativa: nenhuma (última: `specs/harness-linha-a-b/`, Tasks 1–3 feitas)
+- Etapa do roadmap: **Etapa 10 — Kernel além do boot** (`em_andamento`, Issue #10)
+- Spec ativa: `specs/kernel-alem-do-boot/` (Task 1 feita; Task 2–3 abertas)
 
 ## Mudanças recentes
 
-- Etapa 9: harness A vs B (`docs/harness-linha-a-b.md`, scripts A/stub B, `make verify-harness`)
-- Linha A: baseline no host; Linha B: `IA_LIVRE_HARNESS_B_SKIP`
-- B3 arquivado; Abertas do backlog: vazio
-- README Tasks 1–3: considerado; não atualizado (ponte AGENTS)
+- Seed backlog B4–B6 (#10–#12); B4 promovido a Etapa 10
+- Spec `specs/kernel-alem-do-boot/` (mapa UEFI + AllocatePages/bump sob Boot Services)
+- Task 1: `docs/kernel-alem-do-boot.md` + pontes architecture/AGENTS; README considerado
 
 ## Próximo passo
 
-- Roadmap sem `em_andamento`/`pendente` e backlog Abertas vazio — fila comprometida acabou; novas demandas entram em `BACKLOG.md` sob pedido.
+- Task 2: implementar mapa + alloc/bump no `kernel/` com marcadores serial
 
 ## Notas
 
-- Hipótese A vs B **não** comprovada — só o instrumento
-- Runtime nativo (Linha B real) continua aberto
+- B5 (Linha B real) e B6 (desenho scheduler/memória) permanecem em Abertas
+- Sem ExitBootServices / inferência no kernel nesta etapa

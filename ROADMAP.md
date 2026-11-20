@@ -64,3 +64,10 @@ Status: feita
 Issue: [#9](https://github.com/eriksonlima/projeto-ia-livre/issues/9)  
 Spec: specs/harness-linha-a-b/  
 Pronto quando: harness comparável (mesmo modelo/quantização/carga) documentado para Linha A (Linux otimizado) vs Linha B (IA Livre), sem confundir com métricas dos protótipos CPU/GPU das Etapas 5/8.
+
+## Etapa 10 — Kernel além do boot
+
+Status: em_andamento  
+Issue: [#10](https://github.com/eriksonlima/projeto-ia-livre/issues/10)  
+Spec: specs/kernel-alem-do-boot/  
+Pronto quando: no UEFI/QEMU, mecanismos mínimos além de `IA_LIVRE_BOOT_OK` (ex.: alocação/mapa de memória ou carregamento mínimo documentado), com gate serial verificável — ainda sem inferência no kernel.

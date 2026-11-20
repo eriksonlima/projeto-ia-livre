@@ -37,12 +37,13 @@ cd /caminho/para/projeto-ia-livre
 
 make build    # gera target/x86_64-unknown-uefi/debug/ia-livre-kernel.efi
 make run      # ESP em build/esp + QEMU UEFI, serial no stdio
-make verify   # gate automatizado (IA_LIVRE_BOOT_OK)
+make verify   # gate automatizado do kernel (marcadores: ver docs/kernel-alem-do-boot.md)
 ```
 
 Equivalente interativo: `./scripts/run-qemu.sh`.
 
-Na serial deve aparecer a linha canônica: `IA_LIVRE_BOOT_OK`.
+Na serial deve aparecer pelo menos `IA_LIVRE_BOOT_OK`.  
+Etapa 10 (em andamento): além do boot, mapa de memória UEFI + alocação/bump sob Boot Services — marcadores `IA_LIVRE_MEM_MAP_OK` / `IA_LIVRE_ALLOC_OK` (contrato: [`docs/kernel-alem-do-boot.md`](docs/kernel-alem-do-boot.md)). Ainda **sem** inferência no kernel.
 
 ### Runtime de inferência (host — Etapas 5 / 8)
 
@@ -319,6 +320,7 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `memory-bank/` — contexto volátil entre chats (`activeContext.md`, `progress.md`)
 - `.cursor/` — rules, agents, skills, commands, hooks
 - `kernel/` — crate do kernel IA Livre (`Cargo.toml`, `src/main.rs`), target UEFI
+- `docs/kernel-alem-do-boot.md` — contrato Etapa 10 (mapa UEFI + alloc/bump; marcadores serial)
 - `runtime/` — protótipo de runtime de inferência (host, llama-cpp-2; CPU default + features `cuda`/`vulkan`)
 - `node/` — protótipo do nó Rede IA Livre (host; independente do SO)
 - `agent/` — protótipo do ambiente de autonomia (host; consome runtime; independente do SO)
