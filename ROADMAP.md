@@ -432,3 +432,10 @@ Spec: specs/guia-primeiro-boot-usb-release/
 Pronto quando: guia passo a passo (Secure Boot, serial, o que esperar) + tag/release com ESP/tar/checksums; sem declarar hipótese comprovada.  
 **Desfecho:** `docs/guia-primeiro-boot-usb.md` + `prepare-baremetal-release.sh` + `SHA256SUMS`; `make verify-boot-guide-release`; hipótese INCONCLUSIVO explícita.
 
+## Etapa 58 — Definição verificável de “protótipo objetivo atingido”
+
+Status: em_andamento  
+Issue: [#58](https://github.com/eriksonlima/projeto-ia-livre/issues/58)  
+Spec: specs/prototipo-objetivo-atingido/  
+Pronto quando: checklist em `docs/` (hipótese A/B decidível **ou** bloqueio honesto final; USB metal com boot+IA mínima; Rede+autonomia host verdes) + espelho no ROADMAP/Memory Bank; celebrar só com evidência.
+

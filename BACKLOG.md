@@ -10,14 +10,9 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Meta do protótipo (objetivo do projeto):** um ecossistema verificável em que (1) a **hipótese A vs B** possa ser comprovada ou refutada com geração real na Linha B (`TOKENS_PER_S`), (2) o **SO IA Livre** boote de USB/ESP em hardware real com caminho de IA nativo mínimo honesto, (3) a **Rede** e a **autonomia** continuem utilizáveis **sem** exigir o SO. Ordem abaixo = prioridade sugerida (topo primeiro).
 
+_(vazio — topo promovido para Etapa 58)_
 
-
-
-
-
-
-
-
+## Promovidas / arquivadas
 
 ### B52 — Definição verificável de “protótipo objetivo atingido”
 - Issue: [#58](https://github.com/eriksonlima/projeto-ia-livre/issues/58)
@@ -26,7 +21,8 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Pronto quando: checklist em `docs/` (hipótese A/B decidível **ou** bloqueio honesto final; USB metal com boot+IA mínima; Rede+autonomia host verdes) + espelho no ROADMAP/Memory Bank; celebrar só com evidência
 - Deps: B39 + B40 + B42 (mínimo sugerido)
 
-## Promovidas / arquivadas
+- Promovido para Etapa 58 do roadmap (promoção + spec).
+- Etapa: [Etapa 58 — protótipo objetivo atingido](ROADMAP.md)
 
 ### B51 — Guia “primeiro boot USB” + release de artefato
 - Issue: [#57](https://github.com/eriksonlima/projeto-ia-livre/issues/57)
