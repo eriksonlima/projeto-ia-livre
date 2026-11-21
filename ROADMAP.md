@@ -252,5 +252,5 @@ Pronto quando: perfil `A_otimizada` documentado + corrida verificável lado a la
 
 Status: em_andamento  
 Issue: [#34](https://github.com/eriksonlima/projeto-ia-livre/issues/34)  
-Spec: (a definir — `especificador`)  
+Spec: specs/boot-uefi-hardware-real/  
 Pronto quando: evidência em PC real com ≥ `BOOT_OK` (ideal `EXIT_BOOT_OK`) via serial; sem fingir CI de metal.
