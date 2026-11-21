@@ -5,12 +5,12 @@ Regra: `.cursor/rules/agentes-em-paralelo.mdc`.
 
 ## Estado atual
 
-- **holder:** _(nenhum)_
-- **etapa:** —
-- **issue:** —
-- **paths:** —
-- **since:** —
-- **expires:** —
+- **holder:** cursor-agent-main
+- **etapa:** 30
+- **issue:** #30
+- **paths:** ROADMAP.md, BACKLOG.md, specs/boot-hardware-real/, docs/, scripts/, Makefile, memory-bank/, AGENTS.md, README.md
+- **since:** 2026-11-21T06:43:56Z
+- **expires:** 2026-11-21T08:43:56Z
 
 ## Como usar
 
