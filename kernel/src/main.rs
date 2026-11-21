@@ -3,11 +3,15 @@
 
 use core::fmt::Write;
 use core::ptr::NonNull;
-use uefi::boot::{self, AllocateType, MemoryType, PAGE_SIZE};
+use uefi::boot::{
+    self, AllocateType, MemoryType, OpenProtocolAttributes, OpenProtocolParams, SearchType,
+    PAGE_SIZE,
+};
 use uefi::cstr16;
 use uefi::mem::memory_map::MemoryMap;
 use uefi::prelude::*;
 use uefi::proto::console::serial::Serial;
+use uefi::proto::media::block::BlockIO;
 use uefi::proto::media::file::{File, FileAttribute, FileMode};
 
 const BOOT_OK: &str = "IA_LIVRE_BOOT_OK\n";
@@ -27,7 +31,7 @@ const TYPED_KVCACHE_BYTES: usize = 256;
 const QUANTUM_PREFILL: u64 = 8;
 const QUANTUM_DECODE: u64 = 2;
 
-/// Etapa 26 — prefixo GGUF no ESP (não o modelo completo; ver ADR 0008).
+/// Etapa 26 — prefixo GGUF no ESP; Etapa 27 — arquivo completo quando presente (ADR 0008/0009).
 const GGUF_PREFIX_MAX: usize = 4096;
 const GGUF_MAGIC: [u8; 4] = *b"GGUF";
 
@@ -178,9 +182,103 @@ fn prove_typed_region(ptr: NonNull<u8>, size: usize, salt: u8) -> bool {
     true
 }
 
-/// Etapa 26: lê prefixo GGUF do ESP sob Boot Services (SimpleFileSystem).
-/// Retorna (ptr, bytes) se magic+leitura ok; emite marcadores via `sink`.
-fn try_load_gguf_prefix(sink: &mut LineSink<'_>) -> Option<(NonNull<u8>, usize)> {
+fn parse_ascii_u64(buf: &[u8]) -> Option<u64> {
+    let mut n = 0u64;
+    let mut any = false;
+    for &b in buf {
+        if b == b'\n' || b == b'\r' || b == 0 {
+            break;
+        }
+        if b.is_ascii_whitespace() {
+            continue;
+        }
+        if !(b'0'..=b'9').contains(&b) {
+            return None;
+        }
+        any = true;
+        n = n.saturating_mul(10).saturating_add((b - b'0') as u64);
+    }
+    if any {
+        Some(n)
+    } else {
+        None
+    }
+}
+
+fn read_u64_le(buf: &[u8]) -> Option<u64> {
+    if buf.len() < 8 {
+        return None;
+    }
+    let mut a = [0u8; 8];
+    a.copy_from_slice(&buf[..8]);
+    Some(u64::from_le_bytes(a))
+}
+
+/// Carrega GGUF completo de um BlockIO cujo tamanho ≈ `want` (disco raw QEMU).
+fn try_load_gguf_blockio(sink: &mut LineSink<'_>, want: u64) -> Option<(NonNull<u8>, usize)> {
+    if want < 16 {
+        return None;
+    }
+    let handles = boot::locate_handle_buffer(SearchType::from_proto::<BlockIO>()).ok()?;
+    for &handle in handles.iter() {
+        let bio = unsafe {
+            boot::open_protocol::<BlockIO>(
+                OpenProtocolParams {
+                    handle,
+                    agent: boot::image_handle(),
+                    controller: None,
+                },
+                OpenProtocolAttributes::GetProtocol,
+            )
+        };
+        let Ok(bio) = bio else {
+            continue;
+        };
+        let media = bio.media();
+        if !media.is_media_present() {
+            continue;
+        }
+        let bs = media.block_size() as u64;
+        if bs == 0 {
+            continue;
+        }
+        let media_bytes = media.last_block().saturating_add(1).saturating_mul(bs);
+        // Aceita mídia com tamanho == want (arquivo raw) ou want arredondado a bloco.
+        if media_bytes < want || media_bytes > want.saturating_add(bs) {
+            continue;
+        }
+        let read_len = ((want as usize + bs as usize - 1) / bs as usize) * bs as usize;
+        let pages = (read_len + PAGE_SIZE - 1) / PAGE_SIZE;
+        let base = boot::allocate_pages(AllocateType::AnyPages, MemoryType::LOADER_DATA, pages).ok()?;
+        let buf = unsafe { core::slice::from_raw_parts_mut(base.as_ptr(), read_len) };
+        // Alinhamento: buffer em páginas deve satisfazer io_align típico.
+        if bio
+            .read_blocks(media.media_id(), 0, buf)
+            .is_err()
+        {
+            continue;
+        }
+        let n = want as usize;
+        if n < 16 || buf[..4] != GGUF_MAGIC {
+            continue;
+        }
+        sink.emit("IA_LIVRE_GGUF_MAGIC_OK\n");
+        emit_kv_uefi(sink, "IA_LIVRE_GGUF_FILE_BYTES=", want);
+        emit_kv_uefi(sink, "IA_LIVRE_GGUF_BYTES=", n as u64);
+        sink.emit("IA_LIVRE_GGUF_HEADER_OK\n");
+        sink.emit("IA_LIVRE_GGUF_NATIVE_LOADER=blockio_full\n");
+        if let Some(tc) = read_u64_le(&buf[8..]) {
+            emit_kv_uefi(sink, "IA_LIVRE_GGUF_TENSOR_COUNT=", tc);
+            sink.emit("IA_LIVRE_GGUF_TENSORS_STUB_OK\n");
+            sink.emit("IA_LIVRE_GGUF_STATUS=tensors_stub_ok\n");
+        }
+        return Some((base, n));
+    }
+    None
+}
+
+/// Etapa 26/27: lê GGUF do ESP (completo se `model.gguf` + size; senão prefixo `gguf.hdr`).
+fn try_load_gguf(sink: &mut LineSink<'_>) -> Option<(NonNull<u8>, usize)> {
     sink.emit("IA_LIVRE_GGUF_LOADER_BEGIN\n");
 
     let mut sfs = match boot::get_image_file_system(boot::image_handle()) {
@@ -197,6 +295,31 @@ fn try_load_gguf_prefix(sink: &mut LineSink<'_>) -> Option<(NonNull<u8>, usize)>
             return None;
         }
     };
+
+    // Etapa 27: tamanho esperado no ESP; bytes via BlockIO (disco raw QEMU).
+    // Motivo: fat:rw do QEMU é FAT16 (~516 MiB) — GGUF ~638 MiB não cabe no ESP.
+    let want_sz = (|| {
+        let mut sz_file = root
+            .open(
+                cstr16!("\\IA_LIVRE\\model.gguf.sz"),
+                FileMode::Read,
+                FileAttribute::empty(),
+            )
+            .ok()?
+            .into_regular_file()?;
+        let mut sz_buf = [0u8; 32];
+        let sn = sz_file.read(&mut sz_buf).ok()?;
+        parse_ascii_u64(&sz_buf[..sn])
+    })();
+
+    if let Some(want) = want_sz {
+        if let Some((base, n)) = try_load_gguf_blockio(sink, want) {
+            return Some((base, n));
+        }
+        sink.emit("IA_LIVRE_GGUF_LOADER_FAIL=blockio\n");
+    }
+
+    // Fallback Etapa 26: só prefixo.
     let handle = match root.open(
         cstr16!("\\IA_LIVRE\\gguf.hdr"),
         FileMode::Read,
@@ -435,7 +558,7 @@ fn main() -> Status {
     };
 
     // Etapa 26 — loader GGUF mínimo (ESP) sob Boot Services; sem TOKENS_PER_S.
-    let gguf_prefix = try_load_gguf_prefix(&mut sink);
+    let gguf_prefix = try_load_gguf(&mut sink);
 
     sink.emit(EXIT_BOOT_BEGIN);
 
@@ -458,11 +581,21 @@ fn main() -> Status {
             uart_write("IA_LIVRE_EXIT_BOOT_OK\n");
 
             // Reemite evidência do loader na UART COM1 (harness pós-exit).
-            if let Some((_p, n)) = gguf_prefix {
+            if let Some((p, n)) = gguf_prefix {
                 uart_write("IA_LIVRE_GGUF_MAGIC_OK\n");
                 uart_emit_kv("IA_LIVRE_GGUF_BYTES=", n as u64);
                 uart_write("IA_LIVRE_GGUF_HEADER_OK\n");
-                uart_write("IA_LIVRE_GGUF_NATIVE_LOADER=esp_header\n");
+                if n > GGUF_PREFIX_MAX {
+                    uart_write("IA_LIVRE_GGUF_NATIVE_LOADER=blockio_full\n");
+                    let slice = core::slice::from_raw_parts(p.as_ptr(), n);
+                    if let Some(tc) = read_u64_le(&slice[8..]) {
+                        uart_emit_kv("IA_LIVRE_GGUF_TENSOR_COUNT=", tc);
+                        uart_write("IA_LIVRE_GGUF_TENSORS_STUB_OK\n");
+                        uart_write("IA_LIVRE_GGUF_STATUS=tensors_stub_ok\n");
+                    }
+                } else {
+                    uart_write("IA_LIVRE_GGUF_NATIVE_LOADER=esp_header\n");
+                }
             }
 
             // Etapa 19 — memória tipada + Prefill/Decode (≠ NATIVE_BENCH / ≠ geração GGUF).

@@ -99,16 +99,15 @@ for marker in \
   'IA_LIVRE_HARNESS_CONTRACT_READY=1' \
   'IA_LIVRE_HARNESS_GGUF_TARGET_MODEL=' \
   'IA_LIVRE_HARNESS_GGUF_TARGET_N_PREDICT=32' \
-  'IA_LIVRE_HARNESS_GGUF_NATIVE_LOADER=esp_header' \
-  'IA_LIVRE_HARNESS_GGUF_STATUS=header_ok'; do
+  'IA_LIVRE_HARNESS_GGUF_NATIVE_LOADER=blockio_full' \
+  'IA_LIVRE_HARNESS_GGUF_STATUS=tensors_stub_ok'; do
   if ! grep -q "$marker" "$LOG_B"; then
     echo "GATE_FAIL: marcador ausente na Linha B: $marker"
     fail=1
   fi
 done
-# Loader não pode permanecer absent após Etapa 26
-if grep -q 'IA_LIVRE_HARNESS_GGUF_NATIVE_LOADER=absent' "$LOG_B"; then
-  echo "GATE_FAIL: GGUF_NATIVE_LOADER=absent — Etapa 26 exige loader ESP (≠ absent)"
+if ! grep -q 'IA_LIVRE_HARNESS_GGUF_NATIVE_LOADER=blockio_full' "$LOG_B"; then
+  echo "GATE_FAIL: Etapa 27 exige GGUF_NATIVE_LOADER=blockio_full (disco raw + stub)"
   fail=1
 fi
 
@@ -139,12 +138,12 @@ if ! grep -q 'IA_LIVRE_HARNESS_B_BLOCK=' "$LOG_B"; then
   echo "GATE_FAIL: B deve declarar B_BLOCK= (estado honesto; ex. no_gguf_infer)"
   fail=1
 fi
-if grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=(no_gguf_path|awaiting_b13_b14)' "$LOG_B"; then
-  echo "GATE_FAIL: B_BLOCK=no_gguf_path legado — path ESP desbloqueado na Etapa 26; use no_gguf_infer"
+if grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=(no_gguf_path|awaiting_b13_b14|no_gguf_infer)$' "$LOG_B"; then
+  echo "GATE_FAIL: B_BLOCK legado — Etapa 27 exige no_gguf_infer_engine"
   fail=1
 fi
-if ! grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=no_gguf_infer' "$LOG_B"; then
-  echo "GATE_FAIL: B_BLOCK deve ser no_gguf_infer (sem geração; loader presente)"
+if ! grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=no_gguf_infer_engine' "$LOG_B"; then
+  echo "GATE_FAIL: B_BLOCK deve ser no_gguf_infer_engine (arquivo/stub ok; sem motor)"
   fail=1
 fi
 
@@ -153,5 +152,5 @@ if (( fail )); then
   exit 1
 fi
 
-echo "GATE_OK: harness — A (GGUF) ok + B (proxy + CONTRACT_READY + loader esp_header) ok — hipótese NÃO comprovada"
+echo "GATE_OK: harness — A (GGUF) ok + B (proxy + CONTRACT_READY + loader blockio_full + stub) ok — hipótese NÃO comprovada"
 exit 0

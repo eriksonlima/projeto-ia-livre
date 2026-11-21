@@ -2,23 +2,22 @@
 
 ## Foco atual
 
-- Etapa 26 **feita** — loader GGUF ESP (`esp_header`); `B_BLOCK=no_gguf_infer`
-- Métricas CPU serial atualizadas (~13,4 tok/s mediana)
-- Backlog Abertas: B21 (inferência B), B22 (re-corrida quieta)
+- Etapas **1–27 feitas**
+- E27: `blockio_full` + `tensors_stub_ok` + `B_BLOCK=no_gguf_infer_engine`
+- Backlog Abertas: **B22** (re-corrida quieta)
 - Lease: livre
 
 ## Mudanças recentes
 
-- Remediação métricas CPU sem contenção
-- B20–B22 capturados; B20 → Etapa 26 feita
-- ADR 0008; prefixo `IA_LIVRE/gguf.hdr` no ESP; gates atualizados
+- Métricas CPU serial (~13,4 tok/s mediana)
+- E26 loader ESP header; E27 GGUF completo via BlockIO (FAT16 cap documentada)
+- Hipótese ainda INCONCLUSIVO (sem TOKENS_PER_S em B)
 
 ## Próximo passo
 
-- Promover B21 → Etapa 27 (inferência mínima / TOKENS_PER_S em B) ao continuar
-- Hipótese A vs B ainda **INCONCLUSIVO**
+- Promover B22 ou etapa de **motor de inferência** em B (novo item) para sair de `no_gguf_infer_engine`
 
 ## Notas
 
-- README considerado; operacional em AGENTS.md
-- Medições T/s: um gate por vez; host 4 threads
+- Medições T/s: um gate por vez
+- `build/gguf-canon.gguf` gitignored via `build/`

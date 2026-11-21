@@ -82,7 +82,7 @@ fi
 if (( b_is_proxy )); then
   # B ainda proxy: loader ESP (E26) ≠ geração — sem TOKENS_PER_S em B → INCONCLUSIVO
   echo "IA_LIVRE_HARNESS_VERDICT=INCONCLUSIVO"
-  echo "IA_LIVRE_HARNESS_VERDICT_REASON=B_proxy_sem_TOKENS_PER_S_E26_no_gguf_infer"
+  echo "IA_LIVRE_HARNESS_VERDICT_REASON=B_proxy_sem_TOKENS_PER_S_E27_no_gguf_infer_engine"
   exit 0
 fi
 

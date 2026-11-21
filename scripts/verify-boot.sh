@@ -14,7 +14,8 @@ MARKERS=(
   "IA_LIVRE_EXIT_BOOT_OK"
   "IA_LIVRE_GGUF_MAGIC_OK"
   "IA_LIVRE_GGUF_HEADER_OK"
-  "IA_LIVRE_GGUF_NATIVE_LOADER=esp_header"
+  "IA_LIVRE_GGUF_NATIVE_LOADER=blockio_full"
+  "IA_LIVRE_GGUF_TENSORS_STUB_OK"
   "IA_LIVRE_TYPED_WEIGHTS_OK"
   "IA_LIVRE_TYPED_KVCACHE_OK"
   "IA_LIVRE_PHASE=prefill"
@@ -34,7 +35,8 @@ NUMERIC=(
   "IA_LIVRE_NATIVE_BENCH_MS="
 )
 
-TIMEOUT_SEC="${VERIFY_TIMEOUT:-45}"
+# Etapa 27: carga GGUF ~638 MiB via FAT pode demorar.
+TIMEOUT_SEC="${VERIFY_TIMEOUT:-300}"
 LOG="$(mktemp)"
 trap 'rm -f "$LOG"; [[ -n "${QEMU_PID:-}" ]] && kill -KILL "$QEMU_PID" 2>/dev/null || true' EXIT
 
@@ -57,7 +59,7 @@ while (( SECONDS < deadline )); do
     kill -KILL "$QEMU_PID" 2>/dev/null || true
     wait "$QEMU_PID" 2>/dev/null || true
     QEMU_PID=
-    echo "GATE_OK: kernel — BOOT_OK … EXIT_BOOT_OK + GGUF esp_header + MEM_SCHED_OK + NATIVE_BENCH_OK"
+    echo "GATE_OK: kernel — BOOT_OK … EXIT_BOOT_OK + GGUF blockio_full + MEM_SCHED_OK + NATIVE_BENCH_OK"
     exit 0
   fi
   if ! kill -0 "$QEMU_PID" 2>/dev/null; then

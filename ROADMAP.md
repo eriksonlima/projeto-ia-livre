@@ -186,7 +186,8 @@ Pronto quando: caminho verificável para o GGUF canônico (ou bytes/cabeçalho d
 
 ## Etapa 27 — Inferência mínima / TOKENS_PER_S na Linha B (após loader)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#27](https://github.com/eriksonlima/projeto-ia-livre/issues/27)  
 Spec: specs/inferencia-minima-linha-b/  
-Pronto quando: geração mínima na Linha B com a carga canônica (ou caminho intermediário documentado) emitindo `TOKENS_PER_S` / `LOAD_S` **medidos** comparáveis em espécie aos de A, **ou** bloqueio honesto novo documentado; gates harness atualizados sem inventar números; hipótese só deixa `INCONCLUSIVO` com evidência real; depende da Etapa 26 (loader).
+Pronto quando: geração mínima na Linha B com a carga canônica (ou caminho intermediário documentado) emitindo `TOKENS_PER_S` / `LOAD_S` **medidos** comparáveis em espécie aos de A, **ou** bloqueio honesto novo documentado; gates harness atualizados sem inventar números; hipótese só deixa `INCONCLUSIVO` com evidência real; depende da Etapa 26 (loader).  
+**Desfecho:** fatia A mínima — GGUF completo via BlockIO + stub tensores; `B_BLOCK=no_gguf_infer_engine` (sem motor/`TOKENS_PER_S`).

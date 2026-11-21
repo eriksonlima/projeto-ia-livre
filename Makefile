@@ -26,6 +26,11 @@ OVMF_VARS_TEMPLATE ?= $(firstword \
 OVMF_VARS := $(CURDIR)/build/OVMF_VARS.fd
 
 QEMU ?= qemu-system-x86_64
+# Etapa 27: RAM para GGUF ~638 MiB + overhead (documentado ADR 0009).
+QEMU_MEM ?= 1536M
+MODEL_GGUF ?= models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf
+# Cópia dedicada para QEMU BlockIO (evita lock com runtime host / fat16).
+GGUF_QEMU_IMG ?= build/gguf-canon.gguf
 
 help:
 	@echo "Alvos: build | esp | run | verify | verify-runtime | verify-runtime-gpu | verify-runtime-contract | verify-gpu-manager | verify-node | verify-agent | verify-harness | verify-harness-comparable | clean"
@@ -39,26 +44,40 @@ esp: build
 	mkdir -p "$(ESP_DIR)/EFI/BOOT"
 	cp "$(KERNEL_EFI)" "$(ESP_BOOT)"
 	./scripts/esp-stage-gguf-prefix.sh
+	@test -f "$(MODEL_GGUF)" || { echo "Modelo ausente: $(MODEL_GGUF)"; exit 1; }
+	@mkdir -p build
+	@if [ ! -f "$(GGUF_QEMU_IMG)" ] || [ "$$(wc -c <"$(GGUF_QEMU_IMG)")" != "$$(wc -c <"$(MODEL_GGUF)")" ]; then \
+		echo "esp: staging $(GGUF_QEMU_IMG) for QEMU BlockIO…"; \
+		cp -f "$(MODEL_GGUF)" "$(GGUF_QEMU_IMG)"; \
+	fi
 
 run: esp
 	@command -v "$(QEMU)" >/dev/null || { echo "Instale QEMU: sudo apt install qemu-system-x86"; exit 1; }
 	@if [ -n "$(OVMF_BIOS)" ] && [ -f "$(OVMF_BIOS)" ]; then \
+		test -f "$(GGUF_QEMU_IMG)" || { echo "Ausente $(GGUF_QEMU_IMG) — make esp"; exit 1; }; \
 		$(QEMU) \
 			-machine q35 \
-			-m 256M \
+			-m $(QEMU_MEM) \
 			-bios "$(OVMF_BIOS)" \
 			-drive format=raw,file=fat:rw:$(ESP_DIR) \
+			-blockdev driver=file,node-name=gguf-file,filename="$(GGUF_QEMU_IMG)",locking=off \
+			-blockdev driver=raw,node-name=gguf0,file=gguf-file \
+			-device ide-hd,drive=gguf0,bus=ide.1 \
 			-serial stdio \
 			-display none \
 			-net none; \
 	elif [ -n "$(OVMF_CODE)" ] && [ -f "$(OVMF_CODE)" ] && [ -n "$(OVMF_VARS_TEMPLATE)" ] && [ -f "$(OVMF_VARS_TEMPLATE)" ]; then \
 		mkdir -p build && cp "$(OVMF_VARS_TEMPLATE)" "$(OVMF_VARS)"; \
+		test -f "$(GGUF_QEMU_IMG)" || { echo "Ausente $(GGUF_QEMU_IMG) — make esp"; exit 1; }; \
 		$(QEMU) \
 			-machine q35 \
-			-m 256M \
+			-m $(QEMU_MEM) \
 			-drive if=pflash,format=raw,readonly=on,file="$(OVMF_CODE)" \
 			-drive if=pflash,format=raw,file="$(OVMF_VARS)" \
 			-drive format=raw,file=fat:rw:$(ESP_DIR) \
+			-blockdev driver=file,node-name=gguf-file,filename="$(GGUF_QEMU_IMG)",locking=off \
+			-blockdev driver=raw,node-name=gguf0,file=gguf-file \
+			-device ide-hd,drive=gguf0,bus=ide.1 \
 			-serial stdio \
 			-display none \
 			-net none; \
