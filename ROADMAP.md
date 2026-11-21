@@ -258,7 +258,15 @@ Pronto quando: evidência em PC real com ≥ `BOOT_OK` (ideal `EXIT_BOOT_OK`) vi
 
 ## Etapa 36 — GGUF canônico completo em mídia bare-metal (+ path I/O)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#35](https://github.com/eriksonlima/projeto-ia-livre/issues/35)  
 Spec: specs/gguf-baremetal-midia/  
-Pronto quando: modelo/path documentado na mídia/metal com loader verificável; deps E35.
+Pronto quando: modelo/path documentado na mídia/metal com loader verificável; deps E35.  
+**Desfecho:** `FULL_GGUF=1` → `model.gguf` + `BAREMETAL_GGUF_OK`; doc modos a/b + glue SimpleFileSystem.
+
+## Etapa 37 — Observabilidade mínima no SO (além de UART-only)
+
+Status: em_andamento  
+Issue: [#36](https://github.com/eriksonlima/projeto-ia-livre/issues/36)  
+Spec: (a definir — `especificador`)  
+Pronto quando: caminho mínimo (GOP text ou input) + marcador de prova; sem desktop.

@@ -57,6 +57,34 @@ echo "IA_LIVRE_BAREMETAL_ESP_DIR=$OUT_DIR"
 echo "IA_LIVRE_BAREMETAL_TAR=$TAR_OUT"
 echo "IA_LIVRE_BAREMETAL_IMAGE_OK"
 
+# --- GGUF completo na ESP (Etapa 36, opt-in) ---
+FULL_GGUF="${IA_LIVRE_BAREMETAL_FULL_GGUF:-0}"
+GGUF_FILE="$OUT_DIR/IA_LIVRE/model.gguf"
+MIN_GGUF_BYTES=$((600 * 1024 * 1024))
+if [[ "$FULL_GGUF" == "1" ]]; then
+  if [[ ! -f "$GGUF_FILE" ]]; then
+    echo "GATE_FAIL: FULL_GGUF=1 mas ausente $GGUF_FILE"
+    exit 1
+  fi
+  GGUF_BYTES="$(wc -c <"$GGUF_FILE" | tr -d ' ')"
+  if (( GGUF_BYTES < MIN_GGUF_BYTES )); then
+    echo "GATE_FAIL: model.gguf pequeno demais ($GGUF_BYTES < $MIN_GGUF_BYTES)"
+    exit 1
+  fi
+  magic="$(od -An -N4 -tx1 "$GGUF_FILE" | tr -d ' \n')"
+  # GGUF little-endian ASCII: 47 47 55 46
+  if [[ "$magic" != "47475546" ]]; then
+    echo "GATE_FAIL: model.gguf sem magic GGUF"
+    exit 1
+  fi
+  GGUF_SHA="$(sha256sum "$GGUF_FILE" | awk '{print $1}')"
+  echo "IA_LIVRE_BAREMETAL_GGUF_SIZE=$GGUF_BYTES"
+  echo "IA_LIVRE_BAREMETAL_GGUF_SHA256=$GGUF_SHA"
+  echo "IA_LIVRE_BAREMETAL_GGUF_OK"
+else
+  echo "nota: GGUF completo não exigido (sem IA_LIVRE_BAREMETAL_FULL_GGUF=1) — docs/gguf-baremetal-midia.md"
+fi
+
 # --- Metal (Etapa 35) ---
 if [[ "${IA_LIVRE_BAREMETAL_SKIP:-1}" == "1" ]]; then
   echo "IA_LIVRE_BAREMETAL_SKIP=1"

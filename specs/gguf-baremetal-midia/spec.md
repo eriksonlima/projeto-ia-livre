@@ -35,18 +35,18 @@ Dois modos de entrega coexistem:
 
 ## Critérios de aceite
 
-- [ ] `docs/gguf-baremetal-midia.md` descreve os dois modos (a) e (b), path UEFI
+- [x] `docs/gguf-baremetal-midia.md` descreve os dois modos (a) e (b), path UEFI
   `EFI_SIMPLE_FILE_SYSTEM_PROTOCOL`, limites honestos e tabela de ambientes atualizada
-- [ ] `scripts/make-baremetal-esp.sh` com suporte a `IA_LIVRE_BAREMETAL_FULL_GGUF=1`:
+- [x] `scripts/make-baremetal-esp.sh` com suporte a `IA_LIVRE_BAREMETAL_FULL_GGUF=1`:
   copia `models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf` → `build/baremetal-esp/IA_LIVRE/model.gguf`
   e emite `IA_LIVRE_BAREMETAL_GGUF_SIZE=<bytes>` + `IA_LIVRE_BAREMETAL_GGUF_SHA256=<sha>`
-- [ ] `scripts/verify-baremetal.sh` com gate GGUF quando `FULL_GGUF=1`:
+- [x] `scripts/verify-baremetal.sh` com gate GGUF quando `FULL_GGUF=1`:
   valida presença + tamanho ≥ 600 MiB + SHA confere → emite `IA_LIVRE_BAREMETAL_GGUF_OK`
-- [ ] Gate **sem** `FULL_GGUF=1` continua verde (`IMAGE_OK`) sem exigir GGUF
-- [ ] `README.txt` da ESP atualizado quando GGUF presente (menciona `model.gguf`)
-- [ ] `docs/boot-hardware-real.md` atualizado: seção "GGUF na mídia" com referência ao novo doc
-- [ ] `AGENTS.md` atualizado: referência ao doc + marcador `BAREMETAL_GGUF_OK`
-- [ ] `make verify-baremetal` continua passando com e sem `FULL_GGUF=1`
+- [x] Gate **sem** `FULL_GGUF=1` continua verde (`IMAGE_OK`) sem exigir GGUF
+- [x] `README.txt` da ESP atualizado quando GGUF presente (menciona `model.gguf`)
+- [x] `docs/boot-hardware-real.md` atualizado: seção "GGUF na mídia" com referência ao novo doc
+- [x] `AGENTS.md` atualizado: referência ao doc + marcador `BAREMETAL_GGUF_OK`
+- [x] `make verify-baremetal` continua passando com e sem `FULL_GGUF=1`
 
 ---
 

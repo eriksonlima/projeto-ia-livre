@@ -2,17 +2,17 @@
 
 ## Foco atual
 
-- Etapa **36** `em_andamento` (#35) — GGUF completo em mídia bare-metal
-- E35 **feita**: gate metal/SKIP; sem captura PC nesta máquina
+- Etapa **37** `em_andamento` (#36) — observabilidade mínima (GOP/input)
+- E36 **feita**: `BAREMETAL_GGUF_OK` opt-in
 
 ## Mudanças recentes
 
-- E32–E35: tokens path até `no_gguf_full_prefill`; A_otimizada; boot metal contrato
+- E36: GGUF completo na ESP via `IA_LIVRE_BAREMETAL_FULL_GGUF=1`
 
 ## Próximo passo
 
-- Especificar Etapa 36; ou anexar log serial real de PC para `METAL_OK` sem skip
+- Especificar Etapa 37
 
 ## Notas
 
-- README: E35 docs internos — capa sem mudança obrigatória
+- README E36: considerado — AGENTS/docs cobrem; capa sem mudança obrigatória

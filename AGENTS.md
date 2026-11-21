@@ -430,6 +430,8 @@ grep -q 'IA_LIVRE_BAREMETAL_IMAGE_OK' scripts/verify-baremetal.sh
 
 Esperado: `IA_LIVRE_BAREMETAL_IMAGE_OK` + `EFI_SHA256=` / `EFI_BYTES=`. Default `IA_LIVRE_BAREMETAL_SKIP=1` (hardware não exercitado). Imagem FAT `.img` só se `mtools` estiver instalado.
 
+**GGUF completo na ESP (Etapa 36):** opt-in `IA_LIVRE_BAREMETAL_FULL_GGUF=1` (após `./scripts/fetch-model.sh`) → `IA_LIVRE/model.gguf` + `IA_LIVRE_BAREMETAL_GGUF_OK`. Contrato: [`docs/gguf-baremetal-midia.md`](docs/gguf-baremetal-midia.md). Default do gate **não** exige o ~638 MiB.
+
 **Metal (Etapa 35):** com log real em PC, `IA_LIVRE_BAREMETAL_SKIP=0 IA_LIVRE_BAREMETAL_EVIDENCE=docs/evidence/boot-metal/….txt make verify-baremetal` → `IA_LIVRE_BAREMETAL_METAL_OK` (≥ `BOOT_OK`, sem QEMU/OVMF no log). Formato: [`docs/boot-hardware-real.md`](docs/boot-hardware-real.md) / [`docs/evidence/boot-metal/`](docs/evidence/boot-metal/).
 
 ## PATH

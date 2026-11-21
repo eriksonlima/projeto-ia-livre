@@ -29,8 +29,18 @@ O gate valida estrutura + EFI (MZ) + tar + checksum. **Não** sobe QEMU e **não
 
 - `EFI/BOOT/BOOTX64.EFI` — kernel buildado
 - `IA_LIVRE/README.txt` — limites
-- `IA_LIVRE/gguf.hdr` — opcional, só 4 KiB; **modelo completo (~638 MiB) não vai na mídia do gate**
+- `IA_LIVRE/gguf.hdr` — opcional, só 4 KiB (default do gate)
+- `IA_LIVRE/model.gguf` — **opt-in** (`IA_LIVRE_BAREMETAL_FULL_GGUF=1`); ver [gguf-baremetal-midia.md](gguf-baremetal-midia.md)
 
+### GGUF na mídia (Etapa 36)
+
+| Modo | Flag | Gate |
+|------|------|------|
+| Prefixo 4 KiB | default | `IMAGE_OK` |
+| Modelo completo ~638 MiB | `IA_LIVRE_BAREMETAL_FULL_GGUF=1` | + `BAREMETAL_GGUF_OK` |
+| USB externo / path doc | operador copia `model.gguf` | SimpleFileSystem documentado |
+
+Contrato completo: [`gguf-baremetal-midia.md`](gguf-baremetal-midia.md).
 ## Gravar USB / ESP (manual)
 
 1. Gerar artefato (`make baremetal-esp`).

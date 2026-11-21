@@ -8,12 +8,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-### B30 — Observabilidade mínima no SO (além de UART-only)
-
-- Issue: [#36](https://github.com/eriksonlima/projeto-ia-livre/issues/36)
-- Origem: sem framebuffer/teclado o SO é só EFI+serial
-- Pronto quando: caminho mínimo (GOP text ou input) + marcador de prova; sem desktop
-
 ### B31 — GPU manager nativo (mecanismos kernel ↔ runtime)
 
 - Issue: [#37](https://github.com/eriksonlima/projeto-ia-livre/issues/37)
@@ -46,6 +40,11 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Pronto quando: `architecture.md` / README-AGENTS refletem estado atual sem ambiguidade
 
 ## Promovidas / arquivadas
+
+### B30 — Observabilidade mínima no SO (além de UART-only)
+
+- Promovido para Etapa 37 do roadmap (promoção autônoma após Etapa 36).
+- Issue: [#36](https://github.com/eriksonlima/projeto-ia-livre/issues/36)
 
 ### B29 — GGUF canônico completo em mídia bare-metal (+ path I/O)
 
