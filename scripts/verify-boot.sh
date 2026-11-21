@@ -8,6 +8,7 @@ MARKERS=(
   "IA_LIVRE_BOOT_OK"
   "IA_LIVRE_MEM_MAP_OK"
   "IA_LIVRE_ALLOC_OK"
+  "IA_LIVRE_OBS_OK"
   "IA_LIVRE_EXIT_BOOT_BEGIN"
   "IA_LIVRE_EXIT_MAP_OK"
   "IA_LIVRE_EXIT_MEM_OK"
@@ -66,13 +67,31 @@ all_present() {
   return 0
 }
 
+# Etapa 37: OBS_OK exige modo alinhado a GOP_OK ou INPUT_OK (anti-fraude).
+obs_mode_ok() {
+  local mode
+  mode="$(grep -oE 'IA_LIVRE_OBS_MODE=(gop|input|skip)' "$LOG" 2>/dev/null | tail -n1 | cut -d= -f2 || true)"
+  case "$mode" in
+    gop)
+      grep -q 'IA_LIVRE_GOP_OK' "$LOG" 2>/dev/null || return 1
+      ;;
+    input)
+      grep -q 'IA_LIVRE_INPUT_OK' "$LOG" 2>/dev/null || return 1
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+  return 0
+}
+
 deadline=$((SECONDS + TIMEOUT_SEC))
 while (( SECONDS < deadline )); do
-  if all_present; then
+  if all_present && obs_mode_ok; then
     kill -KILL "$QEMU_PID" 2>/dev/null || true
     wait "$QEMU_PID" 2>/dev/null || true
     QEMU_PID=
-    echo "GATE_OK: kernel — BOOT_OK … EXIT_BOOT_OK + GGUF blockio_full + LAYOUT_OK + MEM_SCHED_OK + NATIVE_BENCH_OK"
+    echo "GATE_OK: kernel — BOOT_OK … OBS_OK … EXIT_BOOT_OK + GGUF blockio_full + LAYOUT_OK + MEM_SCHED_OK + NATIVE_BENCH_OK"
     exit 0
   fi
   if ! kill -0 "$QEMU_PID" 2>/dev/null; then
@@ -88,7 +107,7 @@ wait "$QEMU_PID" 2>/dev/null || true
 QEMU_PID=
 
 echo "GATE_FAIL: marcadores do kernel incompletos em ${TIMEOUT_SEC}s"
-echo "Esperado: ${MARKERS[*]} e ${NUMERIC[*]}"
+echo "Esperado: ${MARKERS[*]} e ${NUMERIC[*]} + OBS_MODE=gop|input alinhado"
 echo "---- serial (últimas 80 linhas) ----"
 tail -n 80 "$LOG" || true
 exit 1

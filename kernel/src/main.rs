@@ -1,6 +1,8 @@
 #![no_main]
 #![no_std]
 
+mod obs;
+
 use core::fmt::Write;
 use core::ptr::NonNull;
 use uefi::boot::{
@@ -65,12 +67,12 @@ impl Phase {
 
 const COM1: u16 = 0x3F8;
 
-struct LineSink<'a> {
+pub(crate) struct LineSink<'a> {
     serial: Option<&'a mut Serial>,
 }
 
 impl LineSink<'_> {
-    fn emit(&mut self, line: &str) {
+    pub(crate) fn emit(&mut self, line: &str) {
         if let Some(serial) = self.serial.as_mut() {
             let _ = serial.write_str(line);
         }
@@ -105,7 +107,7 @@ impl Bump {
     }
 }
 
-fn format_u64(mut n: u64, buf: &mut [u8; 20]) -> &str {
+pub(crate) fn format_u64(mut n: u64, buf: &mut [u8; 20]) -> &str {
     if n == 0 {
         buf[19] = b'0';
         return core::str::from_utf8(&buf[19..]).unwrap();
@@ -559,6 +561,9 @@ fn main() -> Status {
 
     // Etapa 26 — loader GGUF mínimo (ESP) sob Boot Services; sem TOKENS_PER_S.
     let gguf_prefix = try_load_gguf(&mut sink);
+
+    // Etapa 37 — observabilidade mínima (GOP ou input) antes do ExitBoot.
+    obs::run_observability(&mut sink);
 
     sink.emit(EXIT_BOOT_BEGIN);
 

@@ -2,17 +2,19 @@
 
 ## Foco atual
 
-- Etapa **37** `em_andamento` (#36) — observabilidade mínima (GOP/input)
-- E36 **feita**: `BAREMETAL_GGUF_OK` opt-in
+- Etapa **38** `em_andamento` (#37) — GPU manager nativo (kernel ↔ runtime)
+- E37 **feita**: GOP/input mínimo + `OBS_OK` no gate
 
 ## Mudanças recentes
 
-- E36: GGUF completo na ESP via `IA_LIVRE_BAREMETAL_FULL_GGUF=1`
+- E37: `kernel/src/obs.rs` — GOP fill + bitmap; fallback SimpleTextInput; `verify-boot` exige `OBS_OK`
+- E36: GGUF completo opt-in na ESP
 
 ## Próximo passo
 
-- Especificar Etapa 37
+- Especificar Etapa 38 (B31)
 
 ## Notas
 
-- README E36: considerado — AGENTS/docs cobrem; capa sem mudança obrigatória
+- README E37: considerado — AGENTS/docs cobrem; capa sem mudança obrigatória
+- Lease: claimar E38 antes de editar produto

@@ -8,13 +8,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-### B31 — GPU manager nativo (mecanismos kernel ↔ runtime)
-
-- Issue: [#37](https://github.com/eriksonlima/projeto-ia-livre/issues/37)
-- Origem: ADR 0006 / E25 stub host ≠ nativo
-- Pronto quando: enum/afinidade/placement mínimo pós-ExitBoot verificável; sem fingir multi-GPU completo
-- Deps: preferível após B25
-
 ### B32 — Rede IA Livre além de v1 (descoberta WAN mínima)
 
 - Issue: [#38](https://github.com/eriksonlima/projeto-ia-livre/issues/38)
@@ -40,6 +33,11 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Pronto quando: `architecture.md` / README-AGENTS refletem estado atual sem ambiguidade
 
 ## Promovidas / arquivadas
+
+### B31 — GPU manager nativo (mecanismos kernel ↔ runtime)
+
+- Promovido para Etapa 38 do roadmap (promoção autônoma após Etapa 37).
+- Issue: [#37](https://github.com/eriksonlima/projeto-ia-livre/issues/37)
 
 ### B30 — Observabilidade mínima no SO (além de UART-only)
 

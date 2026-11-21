@@ -97,7 +97,7 @@ IA_LIVRE_BOOT_OK
 ### Limites honestos
 
 - Path BlockIO/`gguf-canon` do QEMU **não** se aplica automaticamente ao PC; GGUF completo em metal é etapa futura.
-- Sem framebuffer/teclado no kernel — observação via serial.
+- Observação canônica do gate metal: **serial**. Etapa 37 adiciona GOP/input **mínimos** sob Boot Services (prova também na serial) — ver [`observabilidade-minima-so.md`](observabilidade-minima-so.md); **não** substitui UART nem exige screenshot.
 - Skip de metal (`BAREMETAL_SKIP`) ≠ sucesso em hardware.
 
 ## Relação com outros gates

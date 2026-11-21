@@ -42,7 +42,7 @@ make verify   # gate automatizado do kernel (marcadores: ver docs/kernel-alem-do
 
 Equivalente interativo: `./scripts/run-qemu.sh`.
 
-Na serial: Etapa 10 (`BOOT_OK` … `ALLOC_OK`) + loader Etapas 26/27 (`GGUF_LOADER_*` / `GGUF_MAGIC_OK` / `GGUF_NATIVE_LOADER=blockio_full` / `GGUF_TENSORS_STUB_OK`) + `IA_LIVRE_EXIT_BOOT_BEGIN`; após ExitBootServices (UART COM1): `EXIT_*` + reemissão GGUF + demo Etapa 19 (`TYPED_*` / `PHASE=` / `MEM_SCHED_OK`) + proxy Linha B (`NATIVE_BENCH_*`).  
+Na serial: Etapa 10 (`BOOT_OK` … `ALLOC_OK`) + loader Etapas 26/27 (`GGUF_LOADER_*` / `GGUF_MAGIC_OK` / `GGUF_NATIVE_LOADER=blockio_full` / `GGUF_TENSORS_STUB_OK`) + obs Etapa 37 (`GOP_OK`/`INPUT_OK`/`OBS_OK`, ver [`docs/observabilidade-minima-so.md`](docs/observabilidade-minima-so.md)) + `IA_LIVRE_EXIT_BOOT_BEGIN`; após ExitBootServices (UART COM1): `EXIT_*` + reemissão GGUF + demo Etapa 19 (`TYPED_*` / `PHASE=` / `MEM_SCHED_OK`) + proxy Linha B (`NATIVE_BENCH_*`).  
 Contratos: kernel-alem-do-boot, kernel-pos-boot-services, memoria-scheduler-impl-minima, runtime-nativo-linha-b (BlockIO full + attn/FFN layer0). **Sem** geração/`TOKENS_PER_S` no kernel (`B_BLOCK=no_gguf_full_prefill`).
 
 ### Runtime de inferência (host — Etapas 5 / 8)
@@ -244,7 +244,7 @@ Timeout: `VERIFY_HARNESS_COMPARABLE_TIMEOUT` (default = `VERIFY_HARNESS_TIMEOUT`
 
 ## Como verificar
 
-### Gate do kernel (Etapas 4 / 10 / 11 / 12 / 19)
+### Gate do kernel (Etapas 4 / 10 / 11 / 12 / 19 / 37)
 
 ```bash
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
@@ -254,6 +254,7 @@ test -f Makefile && test -f Cargo.toml
 test -f docs/kernel-alem-do-boot.md
 test -f docs/kernel-pos-boot-services.md
 test -f docs/memoria-scheduler-impl-minima.md
+test -f docs/observabilidade-minima-so.md
 make build
 test -f target/x86_64-unknown-uefi/debug/ia-livre-kernel.efi
 make verify
@@ -264,9 +265,12 @@ grep -q 'IA_LIVRE_EXIT_BOOT_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_MEM_SCHED_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_TYPED_WEIGHTS_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_NATIVE_BENCH_OK' kernel/src/main.rs
+grep -q 'IA_LIVRE_OBS_OK' kernel/src/obs.rs
+grep -q 'IA_LIVRE_GOP_OK' kernel/src/obs.rs
+grep -q 'IA_LIVRE_OBS_OK' scripts/verify-boot.sh
 ```
 
-`make verify` falha se faltarem BOOT/MEM/ALLOC/EXIT_* / `GGUF_MAGIC_OK` + `GGUF_NATIVE_LOADER=blockio_full` / `RUNTIME_NATIVE_LAYOUT_OK` (Etapa 29) / `MEM_SCHED_OK` (Etapa 19) / `NATIVE_BENCH_OK` (proxy Linha B). Timeout padrão 45s (GGUF: use `VERIFY_TIMEOUT` maior); `VERIFY_TIMEOUT`.
+`make verify` falha se faltarem BOOT/MEM/ALLOC/`OBS_OK` (Etapa 37; `OBS_MODE=gop|input` alinhado a `GOP_OK`/`INPUT_OK`) / EXIT_* / `GGUF_MAGIC_OK` + `GGUF_NATIVE_LOADER=blockio_full` / `RUNTIME_NATIVE_LAYOUT_OK` (Etapa 29) / `MEM_SCHED_OK` (Etapa 19) / `NATIVE_BENCH_OK` (proxy Linha B). Timeout padrão 300s com GGUF (`VERIFY_TIMEOUT`).
 
 ### Gate do runtime (Etapa 5 — adicional)
 
@@ -453,6 +457,7 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `kernel/` — crate do kernel IA Livre (`Cargo.toml`, `src/main.rs`), target UEFI
 - `docs/kernel-alem-do-boot.md` — contrato Etapa 10 (mapa UEFI + alloc/bump; marcadores serial)
 - `docs/kernel-pos-boot-services.md` — contrato Etapa 11 (ExitBoot + UART COM1; marcadores `EXIT_*`)
+- `docs/observabilidade-minima-so.md` — contrato Etapa 37 (GOP/input mínimo; `GOP_OK`/`OBS_OK`; sem desktop)
 - `docs/memoria-scheduler-impl-minima.md` — contrato Etapa 19 (allocator tipado Weights/KvCache + Prefill/Decode; `MEM_SCHED_OK`)
 - `runtime/` — protótipo de runtime de inferência (host, llama-cpp-2; CPU default + features `cuda`/`vulkan`)
 - `runtime-contract/` — shim host do contrato nativo Weights/KvCache + fases (Etapa 20; ≠ Linha B)

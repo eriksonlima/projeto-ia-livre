@@ -266,7 +266,15 @@ Pronto quando: modelo/path documentado na mídia/metal com loader verificável; 
 
 ## Etapa 37 — Observabilidade mínima no SO (além de UART-only)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#36](https://github.com/eriksonlima/projeto-ia-livre/issues/36)  
+Spec: specs/observabilidade-minima-so/  
+Pronto quando: caminho mínimo (GOP text ou input) + marcador de prova; sem desktop.  
+**Desfecho:** GOP fill+bitmap `IA Livre` + `GOP_OK`/`OBS_OK` pré-exit; gate aditivo; fallback input documentado.
+
+## Etapa 38 — GPU manager nativo (mecanismos kernel ↔ runtime)
+
+Status: em_andamento  
+Issue: [#37](https://github.com/eriksonlima/projeto-ia-livre/issues/37)  
 Spec: (a definir — `especificador`)  
-Pronto quando: caminho mínimo (GOP text ou input) + marcador de prova; sem desktop.
+Pronto quando: enum/afinidade/placement mínimo pós-ExitBoot verificável; sem fingir multi-GPU completo.

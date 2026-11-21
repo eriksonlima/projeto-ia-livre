@@ -10,8 +10,9 @@ Pré-requisito: Etapa 10 — [`kernel-alem-do-boot.md`](kernel-alem-do-boot.md).
 | Peça | Escolha |
 |------|---------|
 | Saída | `boot::exit_boot_services(LOADER_DATA)` (uefi 0.33) |
-| Pré-exit I/O | Serial UEFI / ConOut (marcadores Etapa 10 + `EXIT_BOOT_BEGIN`) |
+| Pré-exit I/O | Serial UEFI / ConOut (marcadores Etapa 10 + obs E37 + `EXIT_BOOT_BEGIN`) |
 | Pós-exit I/O | **UART 16550 COM1 `0x3F8`** bare-metal (mesma `-serial stdio`) |
+| Obs. pré-exit | GOP fill/texto **ou** SimpleTextInput — [`observabilidade-minima-so.md`](observabilidade-minima-so.md) (Etapa 37) |
 | Mapa pós-exit | `MemoryMapOwned` retornado pela API |
 | Memória | Reprovar bump no bloco `AllocatePages` da Etapa 10 **após** o exit |
 | MMU / heap geral | **Fora** |
@@ -27,6 +28,7 @@ Spec: [`specs/kernel-pos-boot-services/`](../specs/kernel-pos-boot-services/).
 | Marcador | Significado |
 |----------|-------------|
 | `IA_LIVRE_BOOT_OK` … `ALLOC_OK` | Regressão Etapa 4/10 |
+| `IA_LIVRE_GOP_OK` / `INPUT_OK` / `OBS_OK` | Observabilidade mínima (Etapa 37), antes do begin |
 | `IA_LIVRE_EXIT_BOOT_BEGIN` | Última linha UEFI antes de `exit_boot_services` |
 
 ### Pós-exit (somente COM1)
