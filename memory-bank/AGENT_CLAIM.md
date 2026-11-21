@@ -5,18 +5,18 @@ Regra: `.cursor/rules/agentes-em-paralelo.mdc`.
 
 ## Estado atual
 
-- **holder:** _(nenhum)_
-- **etapa:** —
-- **issue:** —
-- **paths:** —
-- **since:** —
-- **expires:** —
+- **holder:** cursor-agent-main
+- **etapa:** 29
+- **issue:** #29
+- **paths:** ROADMAP.md, BACKLOG.md, specs/motor-inferencia-linha-b/, docs/, kernel/, runtime*/, scripts/, memory-bank/, AGENTS.md, Cargo.toml, Makefile
+- **since:** 2026-11-21T02:31:41Z
+- **expires:** 2026-11-21T04:31:41Z
 
 ## Como usar
 
 1. `git fetch` + `pull --ff-only`.
-2. Se `holder` preenchido e `expires` no futuro e **não** for você → **pare** (não edite a etapa/`paths`).
-3. Para claimar: preencha este arquivo, **commit + push só do claim** (mensagem `chore: claim Etapa N`), `fetch` de novo; se o tip ainda tiver o seu holder, siga.
-4. Ao terminar a fatia/etapa (ou abortar): limpe para o estado “nenhum” e push `chore: release claim`.
+2. Se `holder` preenchido e `expires` no futuro e **não** for você → **pare**.
+3. Para claimar: preencha, commit+push só do claim, fetch de novo.
+4. Ao terminar: limpe e push `chore: release claim`.
 
-TTL sugerido: **2 horas**. Se expirou, outro agente pode claimar após sync.
+TTL sugerido: **2 horas**.
