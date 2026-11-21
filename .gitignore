@@ -38,8 +38,8 @@ tmp/
 temp/
 .cache/
 
-# Modelos GGUF / pesos (Etapa 5 — runtime)
-models/
+# Modelos GGUF / pesos (Etapa 5 — runtime; só raiz do repo)
+/models/
 *.gguf
 *.gguf.partial
 
@@ -47,3 +47,4 @@ models/
 distro/overlay/opt/ia-livre/bin/ia-livre-runtime
 distro/overlay/opt/ia-livre/bin/ia-livre-agent
 distro/overlay/opt/ia-livre/bin/ia-livre-node
+distro/overlay/var/lib/ia-livre/agent-memory/

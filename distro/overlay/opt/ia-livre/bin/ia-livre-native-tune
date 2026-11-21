@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+# Perfil nativo default (espírito A_otimizada): threads hint + governor + sysctl.
+# Sem root: SKIP honesto; sempre emite NATIVE_TUNE_OK.
+set -euo pipefail
+
+NPROC="$(nproc 2>/dev/null || echo 1)"
+# Deixa 1 CPU para o SO se houver ≥2
+if [[ "$NPROC" -ge 2 ]]; then
+  HINT_END=$((NPROC - 2))
+  if [[ "$HINT_END" -lt 0 ]]; then
+    HINT_END=0
+  fi
+  N_THREADS_HINT=$((HINT_END + 1))
+else
+  N_THREADS_HINT=1
+fi
+echo "IA_LIVRE_NATIVE_N_THREADS_HINT=$N_THREADS_HINT"
+echo "IA_LIVRE_NATIVE_NPROC=$NPROC"
+
+GOV_STATUS=skip_no_cpufreq
+if [[ -d /sys/devices/system/cpu/cpu0/cpufreq ]]; then
+  if [[ "$(id -u)" -eq 0 ]]; then
+    ok=0
+    for g in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
+      if [[ -w "$g" ]]; then
+        echo performance >"$g" 2>/dev/null && ok=1 || true
+      fi
+    done
+    if [[ "$ok" -eq 1 ]]; then
+      GOV_STATUS=performance
+    else
+      GOV_STATUS=skip_write_fail
+    fi
+  else
+    GOV_STATUS=skip_need_root
+  fi
+fi
+echo "IA_LIVRE_NATIVE_GOVERNOR=$GOV_STATUS"
+
+SYSCTL_STATUS=skip_no_conf
+CONF_CANDIDATES=(
+  /etc/sysctl.d/99-ia-livre-native.conf
+)
+# Overlay relative to this script: …/opt/ia-livre/bin → …/etc/sysctl.d/
+ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
+if [[ -f "$ROOT/etc/sysctl.d/99-ia-livre-native.conf" ]]; then
+  CONF_CANDIDATES+=("$ROOT/etc/sysctl.d/99-ia-livre-native.conf")
+fi
+
+CONF=""
+for c in "${CONF_CANDIDATES[@]}"; do
+  if [[ -f "$c" ]]; then
+    CONF="$c"
+    break
+  fi
+done
+
+if [[ -n "$CONF" ]]; then
+  if [[ "$(id -u)" -eq 0 ]] && command -v sysctl >/dev/null 2>&1; then
+    if sysctl -p "$CONF" >/dev/null 2>&1; then
+      SYSCTL_STATUS=applied
+    else
+      SYSCTL_STATUS=skip_sysctl_fail
+    fi
+  else
+    SYSCTL_STATUS=skip_need_root
+  fi
+  echo "IA_LIVRE_NATIVE_SYSCTL_CONF=$CONF"
+else
+  SYSCTL_STATUS=skip_no_conf
+fi
+echo "IA_LIVRE_NATIVE_SYSCTL=$SYSCTL_STATUS"
+
+echo "IA_LIVRE_NATIVE_TUNE_OK"

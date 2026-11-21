@@ -7,6 +7,7 @@ ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
 if [[ -f /etc/ia-livre/ia-livre.conf ]]; then
   CONF=/etc/ia-livre/ia-livre.conf
   BIN_DIR=/opt/ia-livre/bin
+  MODELS_DIR=/var/lib/ia-livre/models
   # shellcheck disable=SC1090
   set -a
   # shellcheck source=/dev/null
@@ -15,12 +16,12 @@ if [[ -f /etc/ia-livre/ia-livre.conf ]]; then
 else
   CONF="$ROOT/etc/ia-livre/ia-livre.conf"
   BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+  MODELS_DIR="$ROOT/var/lib/ia-livre/models"
   # shellcheck disable=SC1090
   set -a
   # shellcheck source=/dev/null
   source "$CONF"
   set +a
-  # Em overlay do repo, reescreve paths relativos ao overlay
   if [[ "${IA_LIVRE_MODEL}" == /var/lib/* ]]; then
     IA_LIVRE_MODEL="$ROOT${IA_LIVRE_MODEL}"
   fi
@@ -34,16 +35,44 @@ N_PREDICT="${IA_LIVRE_N_PREDICT:-32}"
 N_GPU="${IA_LIVRE_N_GPU_LAYERS:-0}"
 MEM="${IA_LIVRE_AGENT_MEMORY:-/var/lib/ia-livre/agent-memory/memory.jsonl}"
 
+persist_conf_model() {
+  local new_path="$1"
+  local abs
+  abs="$(cd "$(dirname "$new_path")" && pwd)/$(basename "$new_path")"
+  if [[ ! -f "$abs" ]]; then
+    echo "erro: GGUF ausente: $abs" >&2
+    exit 1
+  fi
+  # Guarda path "de sistema" se sob overlay
+  local store="$abs"
+  if [[ -n "${ROOT:-}" && "$abs" == "$ROOT"/var/lib/ia-livre/models/* ]]; then
+    store="/var/lib/ia-livre/models/$(basename "$abs")"
+  elif [[ "$abs" == /var/lib/ia-livre/models/* ]]; then
+    store="$abs"
+  fi
+  if grep -q '^IA_LIVRE_MODEL=' "$CONF" 2>/dev/null; then
+    sed -i "s|^IA_LIVRE_MODEL=.*|IA_LIVRE_MODEL=${store}|" "$CONF"
+  else
+    echo "IA_LIVRE_MODEL=${store}" >>"$CONF"
+  fi
+  echo "IA_LIVRE_MODEL_SET=$store"
+  echo "IA_LIVRE_MODEL_FILE=$abs"
+}
+
 usage() {
   cat <<EOF
 Uso: ia-livre <comando> [args]
 
-  infer [args…]     ia-livre-runtime --model \$IA_LIVRE_MODEL …
-  agent [args…]     ia-livre-agent --model … --memory …
-  node [args…]      ia-livre-node …
-  conf              mostra config efetiva
+  infer [args…]          runtime --model \$IA_LIVRE_MODEL …
+  agent [args…]          agent --model … --memory …
+  node [args…]           ia-livre-node …
+  model list             lista *.gguf em models/
+  model set <arquivo>    define IA_LIVRE_MODEL (qualquer GGUF) e grava conf
+  model show             mostra modelo efetivo
+  conf                   mostra config efetiva
   help
 
+Models dir: $MODELS_DIR
 Config: $CONF
 EOF
 }
@@ -70,6 +99,51 @@ case "$cmd" in
   node)
     exec "$BIN_DIR/ia-livre-node" "$@"
     ;;
+  model)
+    sub="${1:-show}"
+    shift || true
+    case "$sub" in
+      list)
+        mkdir -p "$MODELS_DIR"
+        shopt -s nullglob
+        local_ggufs=("$MODELS_DIR"/*.gguf)
+        if ((${#local_ggufs[@]} == 0)); then
+          echo "(nenhum .gguf em $MODELS_DIR)"
+          echo "Copie qualquer GGUF para lá e rode: ia-livre model set <arquivo>"
+        else
+          for f in "${local_ggufs[@]}"; do
+            echo "$(basename "$f")	$f"
+          done
+        fi
+        echo "IA_LIVRE_MODEL_LIST_OK"
+        ;;
+      set)
+        target="${1:-}"
+        if [[ -z "$target" ]]; then
+          echo "uso: ia-livre model set <caminho.gguf>" >&2
+          exit 1
+        fi
+        if [[ "$target" != /* && ! -f "$target" ]]; then
+          target="$MODELS_DIR/$target"
+        fi
+        persist_conf_model "$target"
+        echo "IA_LIVRE_MODEL_OK"
+        ;;
+      show)
+        echo "MODEL=$MODEL"
+        if [[ -f "$MODEL" ]]; then
+          echo "IA_LIVRE_MODEL_OK"
+        else
+          echo "IA_LIVRE_MODEL_MISSING=1"
+          exit 1
+        fi
+        ;;
+      *)
+        echo "subcomando model desconhecido: $sub" >&2
+        exit 1
+        ;;
+    esac
+    ;;
   conf)
     echo "CONF=$CONF"
     echo "MODEL=$MODEL"
@@ -77,6 +151,7 @@ case "$cmd" in
     echo "N_GPU_LAYERS=$N_GPU"
     echo "MEMORY=$MEM"
     echo "BIN_DIR=$BIN_DIR"
+    echo "MODELS_DIR=$MODELS_DIR"
     ;;
   help|-h|--help)
     usage

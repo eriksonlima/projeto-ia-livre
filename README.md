@@ -29,7 +29,7 @@ Veja `AGENTS.md` → **Como verificar**.
 - Specs: `specs/`
 - Produto: `docs/product-context.md` · checklist protótipo (ok): [`docs/prototipo-objetivo-atingido.md`](docs/prototipo-objetivo-atingido.md) / `make verify-prototipo-objetivo`
 - Arquitetura: `docs/architecture.md` · Glossário: `docs/glossario.md`
-- Linux IA-nativo (produto): ADR [`0027`](docs/adr/0027-produto-linux-ia-nativo.md) · scaffold: `distro/`
+- Linux IA-nativo (produto): ADR [`0027`](docs/adr/0027-produto-linux-ia-nativo.md) · `distro/` · USB: [`docs/guia-ia-livre-linux-usb.md`](docs/guia-ia-livre-linux-usb.md) · gates `verify-distro-*` / `verify-linux-usb-artifact`
 - Harness / UEFI / bare-metal ESP (lab arquivado): `docs/harness-linha-a-b.md` · `docs/baremetal-report.md` · `docs/boot-hardware-real.md` — **≠** meta de produto
 - Rede (v1 + TASK + bootstrap + mDNS + relay): `docs/rede-ia-livre-v1.md` · `docs/rede-descoberta-wan.md` — `make verify-node` / `verify-node-relay` · bridge: `make verify-rede-bridge` · TCP guest: `make verify-rede-guest` (ADR 0024)
 - Autonomia (`calc` + REPL + read_local): `docs/autonomia-alem-v1.md` · `docs/autonomia-repl.md` · bridge host↔nativo: `docs/autonomia-bridge-nativo.md` / `make verify-autonomia-bridge`

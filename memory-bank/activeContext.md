@@ -2,15 +2,17 @@
 
 ## Foco atual
 
-- Etapas 1–77 **feitas**
+- Etapas 1–81 **feitas**
 - **Produto:** Linux IA-nativo (ADR 0027); Linha B UEFI **arquivada**
-- Scaffold `distro/` + `make verify-distro-scaffold` ok
-- Abertas: B73 (config/modelos), B74 (tuning), B75 (smoke QEMU), B76 (USB Linux)
+- E78–81: config/modelos, native-tune, smoke rootfs, artefato USB Linux
+- Abertas: **vazio**
 
 ## Próximo passo
 
-- Promover **B73** (topo) no próximo “continuar”
+- Sem item em Abertas — parar até novo pedido / item de backlog
+- Opcional futuro: ISO Debian live completa; QEMU montando rootfs (hoje QEMU Alpine = best-effort/skip)
 
 ## Notas
 
-- Lease: liberar após push E77
+- Gates: `verify-distro-config-models`, `verify-distro-native-tune`, `verify-distro-smoke`, `verify-linux-usb-artifact`
+- USB Linux ≠ writer ESP UEFI

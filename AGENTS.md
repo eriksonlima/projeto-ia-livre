@@ -18,12 +18,13 @@ export LIBCLANG_PATH="${LIBCLANG_PATH:-/usr/lib/llvm-18/lib}"
 # se bindgen falhar: export BINDGEN_EXTRA_CLANG_ARGS="-I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/include"
 ./scripts/fetch-model.sh
 make stage-distro
-./distro/overlay/opt/ia-livre/bin/ia-livre conf
+./distro/overlay/opt/ia-livre/bin/ia-livre model list
 ./distro/overlay/opt/ia-livre/bin/ia-livre infer
+./distro/overlay/opt/ia-livre/bin/ia-livre-native-tune
 ```
 
-Contrato: [`docs/linux-ia-nativo.md`](docs/linux-ia-nativo.md) · ADR [`0027`](docs/adr/0027-produto-linux-ia-nativo.md).  
-Gate: `make verify-distro-scaffold`.
+Contrato: [`docs/linux-ia-nativo.md`](docs/linux-ia-nativo.md) · USB: [`docs/guia-ia-livre-linux-usb.md`](docs/guia-ia-livre-linux-usb.md) · ADR [`0027`](docs/adr/0027-produto-linux-ia-nativo.md).  
+Gates: `make verify-distro-scaffold` · `verify-distro-config-models` · `verify-distro-native-tune` · `verify-distro-smoke` · `verify-linux-usb-artifact`.
 
 ### Pré-requisitos (host)
 
@@ -751,8 +752,10 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `docs/adr/0025-baremetal-report-esp.md` — ADR do canal ESP
 - `docs/adr/0026-produto-sem-comprovacao-ab.md` — produto sem COMPROVA
 - `docs/adr/0027-produto-linux-ia-nativo.md` — produto Linux IA-nativo; Linha B arquivada
-- `docs/linux-ia-nativo.md` / `distro/` — scaffold SO Linux (Etapa 77)
+- `docs/linux-ia-nativo.md` / `distro/` — SO Linux (Etapas 77–81)
+- `docs/guia-ia-livre-linux-usb.md` — USB Linux (≠ ESP UEFI)
 - `scripts/stage-distro-overlay.sh` / `scripts/verify-distro-scaffold.sh` — stage + gate scaffold
+- `scripts/verify-distro-config-models.sh` / `verify-distro-native-tune.sh` / `verify-distro-smoke.sh` / `verify-linux-usb-artifact.sh` — gates produto
 - `scripts/write-usb-esp.sh` / `scripts/verify-write-usb.sh` — gravar pendrive com confirmação (Etapa 47)
 - `docs/guia-primeiro-boot-usb.md` — onboarding USB (Etapa 57)
 - `scripts/prepare-baremetal-release.sh` / `scripts/verify-boot-guide-release.sh` — release + gate Etapa 57

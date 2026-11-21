@@ -592,3 +592,35 @@ Spec: specs/linux-ia-nativo-fundacao/
 Pronto quando: ADR 0027 + docs; scaffold `distro/`; `make verify-distro-scaffold`; Linha B arquivada como produto.  
 **Desfecho:** ADR 0027; overlay `distro/` + wrapper `ia-livre` + stage; `make verify-distro-scaffold` (`DISTRO_SCAFFOLD_OK` + infer); Linha B arquivada; Abertas B73–B76.
 
+## Etapa 78 — Layout config/modelos (qualquer GGUF)
+
+Status: feita  
+Issue: [#79](https://github.com/eriksonlima/projeto-ia-livre/issues/79)  
+Spec: specs/linux-ia-nativo-produto/  
+Pronto quando: `/etc/ia-livre` + models path; `model list|set|show`; troca de GGUF documentada.  
+**Desfecho:** wrapper `ia-livre model *`; `make verify-distro-config-models` (`DISTRO_CONFIG_MODELS_OK`).
+
+## Etapa 79 — Perfil nativo default (tuning)
+
+Status: feita  
+Issue: [#80](https://github.com/eriksonlima/projeto-ia-livre/issues/80)  
+Spec: specs/linux-ia-nativo-produto/  
+Pronto quando: sysctl + `ia-livre-native-tune` (SKIP honesto sem root); documentado.  
+**Desfecho:** `99-ia-livre-native.conf` + tune script; `make verify-distro-native-tune`.
+
+## Etapa 80 — Gate verify-distro-smoke
+
+Status: feita  
+Issue: [#81](https://github.com/eriksonlima/projeto-ia-livre/issues/81)  
+Spec: specs/linux-ia-nativo-produto/  
+Pronto quando: rootfs tar + smoke userspace; QEMU Alpine best-effort/skip; ≠ metal UEFI.  
+**Desfecho:** `pack-distro-rootfs` + `run-distro-smoke`; `make verify-distro-smoke` (`DISTRO_SMOKE_OK` + infer/agent).
+
+## Etapa 81 — USB Linux de uso (writer + guia)
+
+Status: feita  
+Issue: [#82](https://github.com/eriksonlima/projeto-ia-livre/issues/82)  
+Spec: specs/linux-ia-nativo-produto/  
+Pronto quando: guia + prepare/write Linux USB; gate artefato sem device; ≠ ESP UEFI.  
+**Desfecho:** `docs/guia-ia-livre-linux-usb.md` + `prepare-linux-usb-artifact` / `write-linux-usb`; `make verify-linux-usb-artifact`.
+

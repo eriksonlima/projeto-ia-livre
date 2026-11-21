@@ -10,33 +10,37 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Produto (ADR 0027):** **Linux IA-nativo** (TTY, shell, qualquer GGUF, tuning/kernel Linux). Linha B UEFI **arquivada**. Ordem = prioridade (topo primeiro).
 
+*(vazio — B73–B76 promovidas e fechadas nas Etapas 78–81)*
 
-
-### B73 — Layout config/modelos (qualquer GGUF)
-- Issue: [#79](https://github.com/eriksonlima/projeto-ia-livre/issues/79)
-- Origem: plano Linux IA-nativo
-- Pronto quando: `/etc/ia-livre` + models path; troca de GGUF documentada
-- Deps: B72
-
-### B74 — Perfil nativo default (tuning A_otimizada)
-- Issue: [#80](https://github.com/eriksonlima/projeto-ia-livre/issues/80)
-- Origem: plano Linux IA-nativo
-- Pronto quando: sysctl/isolcpus (ou equiv.) default documentado
-- Deps: B72
-
-### B75 — Gate verify-distro-smoke (QEMU)
-- Issue: [#81](https://github.com/eriksonlima/projeto-ia-livre/issues/81)
-- Origem: plano Linux IA-nativo
-- Pronto quando: smoke QEMU da imagem/rootfs; ≠ metal UEFI
-- Deps: B72
+## Promovidas / arquivadas
 
 ### B76 — USB Linux de uso (writer + guia)
 - Issue: [#82](https://github.com/eriksonlima/projeto-ia-livre/issues/82)
 - Origem: plano Linux IA-nativo
 - Pronto quando: gravador/guia imagem Linux (≠ ESP freestanding)
-- Deps: B72/B75 preferível
+- Promovido para Etapa 81.
+- Etapa: [Etapa 81 — USB Linux](ROADMAP.md)
 
-## Promovidas / arquivadas
+### B75 — Gate verify-distro-smoke (QEMU)
+- Issue: [#81](https://github.com/eriksonlima/projeto-ia-livre/issues/81)
+- Origem: plano Linux IA-nativo
+- Pronto quando: smoke QEMU da imagem/rootfs; ≠ metal UEFI
+- Promovido para Etapa 80.
+- Etapa: [Etapa 80 — verify-distro-smoke](ROADMAP.md)
+
+### B74 — Perfil nativo default (tuning A_otimizada)
+- Issue: [#80](https://github.com/eriksonlima/projeto-ia-livre/issues/80)
+- Origem: plano Linux IA-nativo
+- Pronto quando: sysctl/isolcpus (ou equiv.) default documentado
+- Promovido para Etapa 79.
+- Etapa: [Etapa 79 — Perfil nativo](ROADMAP.md)
+
+### B73 — Layout config/modelos (qualquer GGUF)
+- Issue: [#79](https://github.com/eriksonlima/projeto-ia-livre/issues/79)
+- Origem: plano Linux IA-nativo
+- Pronto quando: `/etc/ia-livre` + models path; troca de GGUF documentada
+- Promovido para Etapa 78.
+- Etapa: [Etapa 78 — config/modelos](ROADMAP.md)
 
 ### B72 — Fundação Linux IA-nativo (ADR 0027 + scaffold distro)
 - Issue: [#78](https://github.com/eriksonlima/projeto-ia-livre/issues/78)

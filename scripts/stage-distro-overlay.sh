@@ -20,6 +20,7 @@ cp -f target/release/ia-livre-runtime "$OUT/"
 cp -f target/release/ia-livre-agent "$OUT/"
 cp -f target/release/ia-livre-node "$OUT/"
 chmod +x distro/overlay/opt/ia-livre/bin/ia-livre
+chmod +x distro/overlay/opt/ia-livre/bin/ia-livre-native-tune 2>/dev/null || true
 chmod +x "$OUT"/ia-livre-runtime "$OUT"/ia-livre-agent "$OUT"/ia-livre-node
 
 # Modelo opcional (não falha se ausente)
