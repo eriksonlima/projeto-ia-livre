@@ -384,3 +384,10 @@ Spec: specs/tarefa-conhecimento-rede/
 Pronto quando: tipo de mensagem v1 (`TASK` + `TASK_ACK`) + ACK correspondente + gate de dois nós; sem marketplace; sem exigir SO.  
 **Desfecho:** `TASK t1 prova-task-v1` / `TASK_ACK t1` → `IA_LIVRE_TASK_OK`; `make verify-node` exige TASK_OK; KNOW/marketplace fora.
 
+## Etapa 52 — Nó Rede no SO nativo (pós-ExitBoot ou bridge)
+
+Status: em_andamento  
+Issue: [#52](https://github.com/eriksonlima/projeto-ia-livre/issues/52)  
+Spec: specs/no-rede-so-nativo/  
+Pronto quando: stack TCP mínima no kernel/runtime-native **ou** bridge documentada UEFI↔host com marcadores; participação na Rede a partir do caminho B; ADR 0001 (host continua válido).
+

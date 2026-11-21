@@ -16,13 +16,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 
 
-### B46 — Nó Rede no SO nativo (pós-ExitBoot ou bridge)
-- Issue: [#52](https://github.com/eriksonlima/projeto-ia-livre/issues/52)
-
-- Origem: nó nativo de referência (hoje só host `std`)
-- Pronto quando: stack TCP mínima no kernel/runtime-native **ou** bridge documentada UEFI↔host com marcadores; participação na Rede a partir do caminho B; ADR 0001 (host continua válido)
-- Deps: E11; B45 preferível
-
 ### B47 — REPL sandboxed no agente (host)
 - Issue: [#53](https://github.com/eriksonlima/projeto-ia-livre/issues/53)
 
@@ -66,6 +59,16 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: B39 + B40 + B42 (mínimo sugerido)
 
 ## Promovidas / arquivadas
+
+### B46 — Nó Rede no SO nativo (pós-ExitBoot ou bridge)
+- Issue: [#52](https://github.com/eriksonlima/projeto-ia-livre/issues/52)
+
+- Origem: nó nativo de referência (hoje só host `std`)
+- Pronto quando: stack TCP mínima no kernel/runtime-native **ou** bridge documentada UEFI↔host com marcadores; participação na Rede a partir do caminho B; ADR 0001 (host continua válido)
+- Deps: E11; B45 preferível
+
+- Promovido para Etapa 52 do roadmap (promoção autônoma após E51).
+- Etapa: [Etapa 52 — Nó Rede no SO](ROADMAP.md)
 
 ### B45 — Tarefa/conhecimento mínimo na Rede (além de PING)
 - Issue: [#51](https://github.com/eriksonlima/projeto-ia-livre/issues/51)
