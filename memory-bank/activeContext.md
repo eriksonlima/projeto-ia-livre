@@ -2,20 +2,18 @@
 
 ## Foco atual
 
-- Etapa **32** `em_andamento` (#42) — geração canônica Linha B
-- Spec: `specs/geracao-canonica-linha-b/`
-- Lease: `cursor-agent-main` (E32)
-- Task 1 **feita** (ADR 0013); Tasks 2–4 abertas
+- Etapa **32** `em_andamento` (#42)
+- Tasks 1–2 **feitas**; Task 3 próxima (camada parcial → tokens ou B_BLOCK novo)
 
 ## Mudanças recentes
 
-- ADR 0013 + pontes docs/AGENTS (marcadores TOKENIZE/EMBED/LAYER_PARTIAL)
+- Task 2: tokenize ids fixos + embed `token_embd` Q4_K (unit tests ok)
+- `IA_LIVRE_DUMP_TOKEN_IDS=1` no runtime host para regenerar ids
 
 ## Próximo passo
 
-- Task 2: tokenize + embedding `token_embd` em `runtime-native/`
+- Task 3: camada transformer parcial + Prefill/Decode ou `B_BLOCK=no_gguf_decode`
 
 ## Notas
 
-- README: Task 1 só docs — sem mudança na capa
-- Preferência: tokens reais; fallback = B_BLOCK novo após intermediários
+- README: Task 2 interna — capa não precisa mudar

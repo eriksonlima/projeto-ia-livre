@@ -176,6 +176,13 @@ fn infer(
 
     let tokens_list = model.vocab().tokenize(prompt.as_bytes(), true, true);
 
+    if env::var_os("IA_LIVRE_DUMP_TOKEN_IDS").is_some() {
+        let ids: Vec<i32> = tokens_list.iter().map(|t| t.0).collect();
+        println!("IA_LIVRE_TOKEN_IDS={ids:?}");
+        println!("IA_LIVRE_TOKEN_N={}", ids.len());
+        return Ok(());
+    }
+
     let n_ctx = ctx.n_ctx() as i32;
     let n_prompt = tokens_list.len() as i32;
     let n_len = n_prompt + n_predict;

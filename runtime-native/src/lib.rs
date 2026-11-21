@@ -1,7 +1,25 @@
-//! Runtime nativo freestanding (Linha B) — ADR 0010 / 0012.
-//! Layout + mapa de tensores + dequant Q4_K + op parcial.
-//! Geração canônica TinyLlama: ainda não (`no_gguf_generate`).
+//! Runtime nativo freestanding (Linha B) — ADR 0010 / 0012 / 0013.
+//! Layout + mapa + dequant Q4_K + op + tokenize/embed (E32).
+//! Geração canônica TinyLlama: Prefill/Decode/sampling ainda não.
 #![no_std]
+
+/// Dimensão de embedding TinyLlama 1.1B.
+pub const N_EMBD: usize = 2048;
+
+/// Prompt canônico (mesmo texto da Linha A / harness).
+pub const CANONICAL_PROMPT: &str = "Complete em uma frase: O Projeto IA Livre é";
+
+/// Token IDs do prompt canônico (TinyLlama SPM + BOS), capturados via
+/// `ia-livre-runtime` / llama.cpp (`IA_LIVRE_DUMP_TOKEN_IDS=1`). Não é um
+/// tokenizer SPM completo no guest — ids fixos para a carga canônica.
+pub const CANONICAL_PROMPT_TOKEN_IDS: &[u32] = &[
+    1, 25034, 953, 3672, 5227, 344, 29901, 438, 1019, 4026, 29877, 306, 29909,
+    16238, 276, 904,
+];
+
+const TOKEN_EMBD_NAME: &[u8] = b"token_embd.weight";
+/// Blocos Q4_K por linha de embedding (2048 / 256).
+const BLOCKS_PER_EMBD_ROW: usize = N_EMBD / QK_K;
 
 /// Relatório de layout após `prepare`.
 #[derive(Clone, Copy, Debug)]
@@ -41,10 +59,14 @@ pub enum PrepareError {
 pub enum ForwardError {
     /// Geração Prefill+Decode+sampling ainda não implementada.
     NoGenerate,
+    /// Tokenize+embed+camada ok; decode/sampling ainda não (E32 fallback).
+    NoDecode,
     TensorNotFound,
     UnsupportedType,
     Truncated,
     DequantFail,
+    BadToken,
+    BadDims,
 }
 
 const GGUF_MAGIC: [u8; 4] = *b"GGUF";
@@ -195,13 +217,93 @@ pub fn try_forward_partial(gguf: &[u8], layout: &LayoutReport) -> Result<Partial
     })
 }
 
-/// Tentativa de geração canônica — Etapa 31: ainda não.
+/// Tokenização mínima do prompt canônico (ids fixos; sem SPM no guest).
+pub fn tokenize_canonical() -> TokenizeReport {
+    TokenizeReport {
+        n_tokens: CANONICAL_PROMPT_TOKEN_IDS.len() as u32,
+        first_id: CANONICAL_PROMPT_TOKEN_IDS[0],
+        last_id: *CANONICAL_PROMPT_TOKEN_IDS
+            .last()
+            .unwrap_or(&0),
+    }
+}
+
+/// Lookup de uma linha de `token_embd.weight` (Q4_K, dims [2048, vocab]).
+pub fn embed_token(
+    gguf: &[u8],
+    layout: &LayoutReport,
+    token_id: u32,
+    out: &mut [f32; N_EMBD],
+) -> Result<u32, ForwardError> {
+    let tensor = find_tensor(gguf, layout, TOKEN_EMBD_NAME)?;
+    if tensor.ggml_type != GGML_TYPE_Q4_K {
+        return Err(ForwardError::UnsupportedType);
+    }
+    if tensor.n_dims < 2 || tensor.dims[0] != N_EMBD as u64 {
+        return Err(ForwardError::BadDims);
+    }
+    let vocab = tensor.dims[1];
+    if token_id as u64 >= vocab {
+        return Err(ForwardError::BadToken);
+    }
+    let row_bytes = BLOCKS_PER_EMBD_ROW
+        .checked_mul(BLOCK_Q4_K_SIZE)
+        .ok_or(ForwardError::Truncated)?;
+    let abs = layout
+        .data_offset
+        .checked_add(tensor.data_rel as usize)
+        .ok_or(ForwardError::Truncated)?
+        .checked_add((token_id as usize).checked_mul(row_bytes).ok_or(ForwardError::Truncated)?)
+        .ok_or(ForwardError::Truncated)?;
+    let end = abs
+        .checked_add(row_bytes)
+        .ok_or(ForwardError::Truncated)?;
+    if end > gguf.len() {
+        return Err(ForwardError::Truncated);
+    }
+    let mut acc = 0f32;
+    for b in 0..BLOCKS_PER_EMBD_ROW {
+        let boff = abs + b * BLOCK_Q4_K_SIZE;
+        let mut block_out = [0f32; QK_K];
+        dequant_block_q4_k(&gguf[boff..boff + BLOCK_Q4_K_SIZE], &mut block_out)?;
+        let dst = b * QK_K;
+        out[dst..dst + QK_K].copy_from_slice(&block_out);
+        for &v in block_out.iter() {
+            acc += if v >= 0.0 { v } else { -v };
+        }
+    }
+    Ok((acc * 1000.0) as u32)
+}
+
+/// Tokenize + embed do último token do prompt canônico (evidência E32 Task 2).
+pub fn try_embed_canonical(
+    gguf: &[u8],
+    layout: &LayoutReport,
+) -> Result<EmbedReport, ForwardError> {
+    let tok = tokenize_canonical();
+    let last = *CANONICAL_PROMPT_TOKEN_IDS
+        .last()
+        .ok_or(ForwardError::BadToken)?;
+    let mut emb = [0f32; N_EMBD];
+    let checksum = embed_token(gguf, layout, last, &mut emb)?;
+    if checksum == 0 {
+        return Err(ForwardError::DequantFail);
+    }
+    Ok(EmbedReport {
+        n_tokens: tok.n_tokens,
+        token_id: last,
+        embed_checksum_milli: checksum,
+    })
+}
+
+/// Tentativa de geração canônica — ainda sem Prefill/Decode/sampling.
 pub fn try_forward_canonical(
     gguf: &[u8],
     layout: &LayoutReport,
 ) -> Result<(), ForwardError> {
-    // Garante que o caminho parcial existe; geração completa não.
     let _ = try_forward_partial(gguf, layout)?;
+    let _ = try_embed_canonical(gguf, layout)?;
+    // Camada / decode virão na Task 3; até lá sem tokens.
     Err(ForwardError::NoGenerate)
 }
 
@@ -210,6 +312,20 @@ pub struct PartialReport {
     pub tensor_ggml_type: u32,
     pub dequant_checksum_milli: u32,
     pub op_checksum_milli: u32,
+}
+
+#[derive(Clone, Copy, Debug)]
+pub struct TokenizeReport {
+    pub n_tokens: u32,
+    pub first_id: u32,
+    pub last_id: u32,
+}
+
+#[derive(Clone, Copy, Debug)]
+pub struct EmbedReport {
+    pub n_tokens: u32,
+    pub token_id: u32,
+    pub embed_checksum_milli: u32,
 }
 
 fn dequant_block_q4_k(block: &[u8], out: &mut [f32; QK_K]) -> Result<(), ForwardError> {
@@ -408,16 +524,23 @@ mod tests {
     use std::path::PathBuf;
     use std::vec::Vec;
 
-    #[test]
-    fn map_dequant_op_canonical_gguf() {
+    fn load_canonical_gguf() -> Option<(Vec<u8>, LayoutReport)> {
         let mut root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
         root.pop();
         let path = root.join("models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf");
         if !path.is_file() {
-            return;
+            return None;
         }
         let data: Vec<u8> = fs::read(&path).expect("read gguf");
         let layout = prepare(&data).expect("prepare");
+        Some((data, layout))
+    }
+
+    #[test]
+    fn map_dequant_op_canonical_gguf() {
+        let Some((data, layout)) = load_canonical_gguf() else {
+            return;
+        };
         let t = find_tensor(&data, &layout, b"blk.0.attn_k.weight").expect("find");
         assert_eq!(t.ggml_type, GGML_TYPE_Q4_K);
         let mut buf = [0f32; QK_K];
@@ -431,5 +554,34 @@ mod tests {
             try_forward_canonical(&data, &layout),
             Err(ForwardError::NoGenerate)
         ));
+    }
+
+    #[test]
+    fn tokenize_and_embed_canonical() {
+        let tok = tokenize_canonical();
+        assert_eq!(tok.n_tokens, 16);
+        assert_eq!(tok.first_id, 1);
+        assert_eq!(tok.last_id, 904);
+        assert_eq!(CANONICAL_PROMPT_TOKEN_IDS.len(), 16);
+
+        let Some((data, layout)) = load_canonical_gguf() else {
+            return;
+        };
+        let emb = find_tensor(&data, &layout, b"token_embd.weight").expect("token_embd");
+        assert_eq!(emb.ggml_type, GGML_TYPE_Q4_K);
+        assert_eq!(emb.dims[0], N_EMBD as u64);
+        assert_eq!(emb.dims[1], 32000);
+
+        let report = try_embed_canonical(&data, &layout).expect("embed");
+        assert_eq!(report.n_tokens, 16);
+        assert_eq!(report.token_id, 904);
+        assert!(report.embed_checksum_milli > 0);
+
+        let mut out = [0f32; N_EMBD];
+        let cs = embed_token(&data, &layout, 1, &mut out).expect("bos embed");
+        assert!(cs > 0);
+        // Linhas distintas devem diferir no checksum (smoke).
+        let cs2 = embed_token(&data, &layout, 904, &mut out).expect("last embed");
+        assert_ne!(cs, cs2);
     }
 }
