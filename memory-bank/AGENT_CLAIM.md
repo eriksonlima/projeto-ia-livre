@@ -5,12 +5,12 @@ Regra: `.cursor/rules/agentes-em-paralelo.mdc`.
 
 ## Estado atual
 
-- **holder:** cursor-agent-principal-e20
-- **etapa:** 20 — Runtime falando o contrato nativo (além do proxy Linha B)
-- **issue:** #20
-- **paths:** ROADMAP.md, BACKLOG.md, memory-bank/, specs/runtime-contrato-nativo/, runtime-contract/, docs/, AGENTS.md, Makefile, scripts/
-- **since:** 2026-11-21T00:16:32Z
-- **expires:** 2026-11-21T02:16:32Z
+- **holder:** _(nenhum)_
+- **etapa:** —
+- **issue:** —
+- **paths:** —
+- **since:** —
+- **expires:** —
 
 ## Como usar
 

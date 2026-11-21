@@ -2,20 +2,19 @@
 
 ## Foco atual
 
-- **Etapa 20** — Runtime falando o contrato nativo (B14) — Task 4 concluída; fechando etapa
-- Issue [#20](https://github.com/eriksonlima/projeto-ia-livre/issues/20)
-- Spec: `specs/runtime-contrato-nativo/` (Tasks 1–4 feitas)
+- Etapa 20 **feita** — runtime/shim + harness B com evidência `MEM_SCHED` / `HARNESS_CONTRACT_*`
+- Lease liberado
+- Branches paralelas B15–B19 podem já ter etapas `pendente` — **não** duplicar promoções
 
 ## Mudanças recentes
 
-- Task 4: harness B observa `MEM_SCHED_*`/`TYPED_*`, reemite `HARNESS_CONTRACT_*`, preserva proxy
-- Gates: `make verify`, `make verify-runtime-contract`, `make verify-harness` OK
-- Hipótese **não** comprovada
+- Etapa 20 Tasks 1–4: shim host + gate host + QEMU observa contrato E19 no harness B
+- Proxy E12 preservado; hipótese **não** comprovada
 
 ## Próximo passo
 
-- Marcar Etapa 20 `feita`, liberar lease, merge em `main`; não duplicar promoções B15+ (paralelo)
+- Sync `main`; se houver etapa `pendente` coerente (topo) sem conflito de lease/merge em massa, claim e continuar; senão relatar estado das pendentes
 
 ## Notas
 
-- Shim host ≠ Linha B; B = proxy + evidência contrato; sem `TOKENS_PER_S`
+- Sem `TOKENS_PER_S` em B; B ≠ GGUF canônico (B15+)

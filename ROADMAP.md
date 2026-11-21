@@ -137,7 +137,7 @@ Pronto quando: contrato mínimo verificável no kernel pós-ExitBoot — allocat
 
 ## Etapa 20 — Runtime falando o contrato nativo (além do proxy Linha B)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#20](https://github.com/eriksonlima/projeto-ia-livre/issues/20)  
 Spec: specs/runtime-contrato-nativo/  
 Pronto quando: runtime (host e/ou caminho nativo) com evidência verificável de uso do contrato `Weights`/`KvCache` e/ou phase hints; harness B atualizado honestamente (sem fingir `TOKENS_PER_S` GGUF se ainda não houver); hipótese **não** comprovada; sem GPU manager. Depende da Etapa 19 (contrato no kernel).

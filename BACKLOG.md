@@ -47,7 +47,7 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ### B14 — Runtime falando o contrato nativo (além do proxy Linha B)
 
-- Promovido para Etapa 20 do roadmap (espelho GitHub `roadmap`/`status:pendente`; alinhamento pós-Etapa 19 — branch `etapa-b14-runtime-contrato`).
+- Promovido para Etapa 20 do roadmap — **feita** (Tasks 1–4; harness B + shim host).
 - Issue: [#20](https://github.com/eriksonlima/projeto-ia-livre/issues/20)
 - Etapa: [Etapa 20 — Runtime falando o contrato nativo (além do proxy Linha B)](ROADMAP.md)
 
