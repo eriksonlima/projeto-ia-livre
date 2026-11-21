@@ -142,3 +142,37 @@ Issue: [#20](https://github.com/eriksonlima/projeto-ia-livre/issues/20)
 Spec: specs/runtime-contrato-nativo/  
 Pronto quando: runtime (host e/ou caminho nativo) com evidência verificável de uso do contrato `Weights`/`KvCache` e/ou phase hints; harness B atualizado honestamente (sem fingir `TOKENS_PER_S` GGUF se ainda não houver); hipótese **não** comprovada; sem GPU manager. Depende da Etapa 19 (contrato no kernel).
 
+## Etapa 21 — Carga GGUF canônica na Linha B (mínimo honesto)
+
+Status: pendente  
+Issue: [#21](https://github.com/eriksonlima/projeto-ia-livre/issues/21)  
+Spec: specs/carga-gguf-linha-b/  
+Pronto quando: caminho mínimo da carga canônica do harness (TinyLlama Q4_K_M) na Linha B (QEMU/IA Livre) emite métricas B em espécie comparáveis às de A, **ou** bloqueio honesto documentado; gate harness atualizado sem inventar números; hipótese **não** comprovada; sem GPU manager. Depende das Etapas 19/20.
+
+## Etapa 22 — Harness A vs B comparável (prova ou refutação da hipótese)
+
+Status: pendente  
+Issue: [#22](https://github.com/eriksonlima/projeto-ia-livre/issues/22)  
+Spec: specs/harness-a-b-comparavel/  
+Pronto quando: corrida lado a lado documentada (mesmo modelo/quantização/carga) com resultado comprova, refuta ou inconclusivo; sem vitória sem evidência. Depende da Etapa 21.
+
+## Etapa 23 — Protocolo Rede IA Livre v1 (impl. em node/)
+
+Status: pendente  
+Issue: [#23](https://github.com/eriksonlima/projeto-ia-livre/issues/23)  
+Spec: specs/protocolo-rede-v1/  
+Pronto quando: contratos do desenho Rede v1 em `node/` + gate `verify-node` (ou extensão); sem marketplace; independente do SO.
+
+## Etapa 24 — Autonomia v1 utilizável (impl. em agent/)
+
+Status: pendente  
+Issue: [#24](https://github.com/eriksonlima/projeto-ia-livre/issues/24)  
+Spec: specs/autonomia-v1-impl/  
+Pronto quando: prova v1 com ≥2 ferramentas + marcadores de política; `verify-agent` preservado/estendido; host only.
+
+## Etapa 25 — GPU manager / multi-GPU (protótipo mínimo)
+
+Status: pendente  
+Issue: [#25](https://github.com/eriksonlima/projeto-ia-livre/issues/25)  
+Spec: specs/gpu-manager-prototipo/  
+Pronto quando: caminho verificável de manager/afinidade/placement e/ou shard documentado; skip/gate honesto; sem prova A vs B via multi-GPU.

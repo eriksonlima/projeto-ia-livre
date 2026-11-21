@@ -8,42 +8,39 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
+_(nenhuma — B15–B19 já promovidas às Etapas 21–25)_
+
+## Promovidas / arquivadas
+
 ### B15 — Carga GGUF canônica na Linha B (mínimo honesto)
 
+- Promovido para Etapa 21 do roadmap (`pendente`; trabalho em branch paralela — não duplicar).
 - Issue: [#21](https://github.com/eriksonlima/projeto-ia-livre/issues/21)
-- Origem: `docs/runtime-nativo-linha-b.md` / architecture (GGUF em B aberto)
-- Notas: caminho mínimo da carga canônica do harness em B (QEMU/IA Livre). Depende de B13/B14.
-- Pronto quando (candidato): métricas B em espécie comparáveis às de A, ou bloqueio honesto documentado.
+- Etapa: Etapa 21
 
 ### B16 — Harness A vs B comparável (prova ou refutação da hipótese)
 
+- Promovido para Etapa 22 do roadmap (`pendente`; trabalho em branch paralela — não duplicar).
 - Issue: [#22](https://github.com/eriksonlima/projeto-ia-livre/issues/22)
-- Origem: hipótese central (product-context); Etapas 9/12/18 = metodologia, não prova
-- Notas: corrida lado a lado mesmo modelo/quantização/carga; resultado comprova, refuta ou inconclusivo. Depende de B15.
-- Pronto quando (candidato): corrida reproduzível documentada; sem vitória sem evidência.
+- Etapa: Etapa 22
 
 ### B17 — Protocolo Rede IA Livre v1 (impl. em node/)
 
+- Promovido para Etapa 23 do roadmap (`pendente`; trabalho em branch paralela — não duplicar).
 - Issue: [#23](https://github.com/eriksonlima/projeto-ia-livre/issues/23)
-- Origem: Etapa 14 / ADR 0004; `node/` ainda é protótipo E6
-- Notas: ed25519/PeerId, HELLO assinado, IDENT, MSG/ACK, PING/PONG; sem libp2p/NAT/DHT; independente do SO.
-- Pronto quando (candidato): contratos do desenho em `node/` + gate `verify-node` (ou extensão).
+- Etapa: Etapa 23
 
 ### B18 — Autonomia v1 utilizável (impl. em agent/)
 
+- Promovido para Etapa 24 do roadmap (`pendente`; trabalho em branch paralela — não duplicar).
 - Issue: [#24](https://github.com/eriksonlima/projeto-ia-livre/issues/24)
-- Origem: Etapa 15 / ADR 0005; `agent/` ainda é protótipo E7
-- Notas: `--prompt`, allowlist `note`/`recall`/`help`, política N=8; host only.
-- Pronto quando (candidato): prova v1 com ≥2 ferramentas + marcadores de política; `verify-agent` preservado/estendido.
+- Etapa: Etapa 24
 
 ### B19 — GPU manager / multi-GPU (protótipo mínimo)
 
+- Promovido para Etapa 25 do roadmap (`pendente`; trabalho em branch paralela — não duplicar).
 - Issue: [#25](https://github.com/eriksonlima/projeto-ia-livre/issues/25)
-- Origem: Etapa 16 / ADR 0006; E8 = host GPU ≠ manager nativo
-- Notas: enum/afinidade/placement e/ou shard documentado; posterior à trilha da hipótese.
-- Pronto quando (candidato): caminho verificável; skip/gate honesto; sem prova A vs B via multi-GPU.
-
-## Promovidas / arquivadas
+- Etapa: Etapa 25
 
 ### B14 — Runtime falando o contrato nativo (além do proxy Linha B)
 

@@ -2,19 +2,20 @@
 
 ## Foco atual
 
-- Etapa 20 **feita** — runtime/shim + harness B com evidência `MEM_SCHED` / `HARNESS_CONTRACT_*`
+- Etapas 1–20 **feitas** (E20 mergeada em `main`)
+- Etapas 21–25 já **pendentes** no GitHub/branches paralelas (`etapa-b15`…`b19`) — **não** claimadas aqui
 - Lease liberado
-- Branches paralelas B15–B19 podem já ter etapas `pendente` — **não** duplicar promoções
 
 ## Mudanças recentes
 
-- Etapa 20 Tasks 1–4: shim host + gate host + QEMU observa contrato E19 no harness B
-- Proxy E12 preservado; hipótese **não** comprovada
+- Etapa 20 fechada: shim host + harness B com `HARNESS_CONTRACT_*` (MEM_SCHED)
+- ROADMAP/`main` alinhado com Etapas 21–25 já promovidas por agentes paralelos
 
 ## Próximo passo
 
-- Sync `main`; se houver etapa `pendente` coerente (topo) sem conflito de lease/merge em massa, claim e continuar; senão relatar estado das pendentes
+- Agente da branch `etapa-b15-gguf-linha-b` (Etapa 21 / #21) deve integrar `main` (E19+E20) e claimar
+- Não duplicar promoções; sem segunda `em_andamento` sem lease
 
 ## Notas
 
-- Sem `TOKENS_PER_S` em B; B ≠ GGUF canônico (B15+)
+- Hipótese A vs B **não** comprovada
