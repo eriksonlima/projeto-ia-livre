@@ -360,3 +360,10 @@ Spec: specs/inferencia-minima-metal/
 Pronto quando: no PC (ou QEMU espelhando path metal), após boot USB/ESP com `model.gguf`, caminho nativo emite geração mínima **ou** `B_BLOCK`/`metal` honesto documentado; sem `TOKENS_PER_S` fingido.  
 **Desfecho:** ADR 0017; QEMU ESP-only → `GGUF_PATH=esp_sfs` + `B_BLOCK_METAL=no_gguf_metal_io`; `make verify-metal-infer`; sem TOKENS fingidos; ≠ METAL_OK.
 
+## Etapa 49 — Autonomia mínima no caminho nativo (ou bridge SO↔host)
+
+Status: em_andamento  
+Issue: [#49](https://github.com/eriksonlima/projeto-ia-livre/issues/49)  
+Spec: (a gerar)  
+Pronto quando: agente one-shot (ou bridge verificável) consome runtime nativo/metal **ou** contrato explícito host↔nativo com gate; sem shell irrestrito; ADR 0001 preservada.
+

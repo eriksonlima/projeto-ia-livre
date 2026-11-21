@@ -15,12 +15,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 
 
-### B43 — Autonomia mínima no caminho nativo (ou bridge SO↔host documentada)
-- Issue: [#49](https://github.com/eriksonlima/projeto-ia-livre/issues/49)
-
-- Origem: camada 3 no ecossistema do SO, não só Linux host
-- Pronto quando: agente one-shot (ou bridge verificável) consome runtime nativo/metal **ou** contrato explícito host↔nativo com gate; sem shell irrestrito; ADR 0001 preservada
-- Deps: B38 ou runtime host + metal estável
 
 ### B44 — mDNS real na Rede IA Livre (além do skip)
 - Issue: [#50](https://github.com/eriksonlima/projeto-ia-livre/issues/50)
@@ -86,6 +80,16 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: B39 + B40 + B42 (mínimo sugerido)
 
 ## Promovidas / arquivadas
+
+### B43 — Autonomia mínima no caminho nativo (ou bridge SO↔host documentada)
+- Issue: [#49](https://github.com/eriksonlima/projeto-ia-livre/issues/49)
+
+- Origem: camada 3 no ecossistema do SO, não só Linux host
+- Pronto quando: agente one-shot (ou bridge verificável) consome runtime nativo/metal **ou** contrato explícito host↔nativo com gate; sem shell irrestrito; ADR 0001 preservada
+- Deps: B38 ou runtime host + metal estável
+
+- Promovido para Etapa 49 do roadmap (promoção autônoma após E48).
+- Etapa: [Etapa 49 — Autonomia mínima no caminho nativo](ROADMAP.md)
 
 ### B42 — Inferência mínima no metal (GGUF ESP → geração ou bloqueio honesto)
 - Issue: [#48](https://github.com/eriksonlima/projeto-ia-livre/issues/48)
