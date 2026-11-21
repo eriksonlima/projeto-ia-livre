@@ -14,7 +14,7 @@ _(nenhuma — B15–B19 já promovidas às Etapas 21–25)_
 
 ### B15 — Carga GGUF canônica na Linha B (mínimo honesto)
 
-- Promovido para Etapa 21 do roadmap (`em_andamento`; branch `etapa-b15-gguf-linha-b`).
+- Promovido para Etapa 21 do roadmap — **feita** (Tasks 1–4; bloqueio honesto `no_gguf_path`).
 - Issue: [#21](https://github.com/eriksonlima/projeto-ia-livre/issues/21)
 - Etapa: [Etapa 21 — Carga GGUF canônica na Linha B (mínimo honesto)](ROADMAP.md)
 
