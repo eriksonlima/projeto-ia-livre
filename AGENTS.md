@@ -196,6 +196,20 @@ Linha B (Etapa 12): proxy pós-ExitBoot no QEMU — **não** é TinyLlama; ver [
 
 Gate automatizado: `make verify-harness` (A = GGUF no host; B = QEMU/kernel proxy; requer GGUF para A).
 
+### Contrato nativo — consumidor / shim host (Etapa 20)
+
+Consumidor do contrato ADR 0003 no **host** (stub/shim) — **não** é Linha B, **não** exige QEMU nem kernel E19 mergeado. Doc: [`docs/runtime-contrato-nativo.md`](docs/runtime-contrato-nativo.md). Hipótese **não** comprovada; **proibido** `TOKENS_PER_S`.
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+cargo build -p ia-livre-runtime-contract
+cargo run -p ia-livre-runtime-contract
+# Esperado: IA_LIVRE_CONTRACT_* + IA_LIVRE_RUNTIME_CONTRACT_OK
+make verify-runtime-contract
+```
+
+Integração QEMU contra marcadores reais da Etapa 19 (`MEM_SCHED_OK` / `TYPED_*`) fica para a Task 4 (bloqueada até E19).
+
 ## Como verificar
 
 ### Gate do kernel (Etapas 4 / 10 / 11)
@@ -311,6 +325,21 @@ grep -q 'post_exit_microbench' scripts/run-harness-line-b.sh
 
 `make verify-harness` exige A (`LINE=A`, `OK`, load/tokens) **e** B (`LINE=B`, `OK`, `PROXY=*`, sem `TOKENS_PER_S` / sem `B_SKIP`). Timeout padrão 300s; `VERIFY_HARNESS_TIMEOUT`. Gates existentes permanecem.
 
+### Gate do contrato nativo host (Etapa 20 — adicional)
+
+Só Rust no host. **Não** usa QEMU, GGUF nem o kernel E19. Shim ≠ Linha B. Hipótese **não** comprovada.
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+test -d runtime-contract && test -f runtime-contract/Cargo.toml && test -f runtime-contract/src/main.rs
+test -f scripts/verify-runtime-contract.sh && test -f docs/runtime-contrato-nativo.md
+make verify-runtime-contract
+grep -q 'IA_LIVRE_RUNTIME_CONTRACT_OK' runtime-contract/src/main.rs
+grep -q 'IA_LIVRE_CONTRACT_BACKEND' runtime-contract/src/main.rs
+```
+
+`make verify-runtime-contract` exige `CONTRACT_BACKEND=host_shim`, alloc Weights/KvCache, fases Prefill+Decode e `RUNTIME_CONTRACT_OK` (timeout padrão 30s; `VERIFY_RUNTIME_CONTRACT_TIMEOUT`). **Não** exige `MEM_SCHED_OK` (provedor E19). Gates existentes permanecem; `verify-harness` continua A+B proxy.
+
 ## PATH
 
 Sempre inclua o GitHub CLI e o Cargo locais:
@@ -331,21 +360,24 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `docs/kernel-alem-do-boot.md` — contrato Etapa 10 (mapa UEFI + alloc/bump; marcadores serial)
 - `docs/kernel-pos-boot-services.md` — contrato Etapa 11 (ExitBoot + UART COM1; marcadores `EXIT_*`)
 - `runtime/` — protótipo de runtime de inferência (host, llama-cpp-2; CPU default + features `cuda`/`vulkan`)
+- `runtime-contract/` — shim host do contrato nativo Weights/KvCache + fases (Etapa 20; ≠ Linha B)
+- `docs/runtime-contrato-nativo.md` — contrato consumidor + marcadores `CONTRACT_*` / `RUNTIME_CONTRACT_OK`
 - `node/` — protótipo do nó Rede IA Livre (host; independente do SO)
 - `agent/` — protótipo do ambiente de autonomia (host; consome runtime; independente do SO)
 - `models/` — pesos GGUF locais (gitignored); obter com `./scripts/fetch-model.sh`
-- `Cargo.toml` — workspace Cargo (membros `kernel`, `runtime`, `node`, `agent`)
+- `Cargo.toml` — workspace Cargo (membros `kernel`, `runtime`, `runtime-contract`, `node`, `agent`)
 - `docs/rede-ia-livre-prototipo.md` — framing/descoberta/mensagem do protótipo P2P (Etapa 6)
 - `docs/desenho-protocolo-rede-ia-livre.md` — desenho Rede IA Livre v1 (ADR 0004; não implementado)
 - `docs/adr/0004-stack-protocolo-rede-ia-livre.md` — ADR da stack candidata P2P
 - `docs/ambiente-autonomia-prototipo.md` — loop/memória/ferramenta do protótipo de autonomia (Etapa 7)
 - `docs/desenho-autonomia-v1.md` — escopo autonomia v1 (ADR 0005; não implementado)
 - `docs/adr/0005-autonomia-v1-utilizavel.md` — ADR do escopo v1
-- `Makefile` — `build` / `esp` / `run` / `verify` / `verify-runtime` / `verify-runtime-gpu` / `verify-node` / `verify-agent` / `verify-harness` / `clean`
+- `Makefile` — `build` / `esp` / `run` / `verify` / `verify-runtime` / `verify-runtime-gpu` / `verify-runtime-contract` / `verify-node` / `verify-agent` / `verify-harness` / `clean`
 - `scripts/run-qemu.sh` — atalho para `make run`
 - `scripts/verify-boot.sh` — gate serial do kernel (`BOOT_OK` + mem/alloc + `EXIT_BOOT_OK`)
 - `scripts/verify-runtime.sh` — gate do runtime CPU (`IA_LIVRE_INFER_OK` + métricas)
 - `scripts/verify-runtime-gpu.sh` — gate GPU (`IA_LIVRE_ACCEL` ≠ `cpu`; skip `IA_LIVRE_GPU_SKIP`)
+- `scripts/verify-runtime-contract.sh` — gate shim host do contrato nativo (`RUNTIME_CONTRACT_OK`)
 - `docs/runtime-inferencia-gpu-metricas.md` — métricas do protótipo GPU no host
 - `docs/adr/0002-aceleracao-gpu-host-llama-cpp.md` — CUDA canônico / Vulkan alternativa
 - `scripts/verify-node.sh` — gate do nó Rede IA Livre (`IA_LIVRE_PEER_OK` + `IA_LIVRE_MSG_OK`)

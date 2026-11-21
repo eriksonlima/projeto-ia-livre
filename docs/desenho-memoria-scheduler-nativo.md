@@ -66,9 +66,9 @@ O kernel **não** decide tokens, temperatura nem layout de tensores.
 - Implementação no `kernel/` ou medição A vs B com este contrato
 - Declarar hipótese comprovada
 
-## Implementação futura (backlog — sem auto-promover)
+## Implementação (trilha)
 
-1. Allocator tipado pós-ExitBoot (`Weights` / `KvCache`)
-2. Hints de fase + política mínima de quantum
-3. Runtime host/nativo falando o contrato
-4. Só então: carga GGUF canônica em B e comparação justa no harness
+1. Allocator tipado pós-ExitBoot (`Weights` / `KvCache`) — **Etapa 19** (provedor kernel)
+2. Hints de fase + política mínima de quantum — **Etapa 19**
+3. Runtime host/nativo falando o contrato — **Etapa 20** ([`runtime-contrato-nativo.md`](runtime-contrato-nativo.md); shim host avançável sem E19 mergeado)
+4. Só então: carga GGUF canônica em B e comparação justa no harness (B15+)

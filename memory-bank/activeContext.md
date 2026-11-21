@@ -2,21 +2,23 @@
 
 ## Foco atual
 
-- **Etapa 19** `em_andamento` — Memória model-aware + scheduler por fases (impl. mínima)
-- Issue [#19](https://github.com/eriksonlima/projeto-ia-livre/issues/19); Project: https://github.com/users/eriksonlima/projects/1
-- Spec alvo: `specs/memoria-scheduler-impl-minima/` (a gerar)
-- Lease: `cursor-agent-principal` em `AGENT_CLAIM.md`
+- **Etapa 19** `em_andamento` — Memória model-aware + scheduler por fases (impl. mínima) — **outro agente** (`cursor-agent-principal` no lease); **não** editar aqui
+- **Etapa 20** `pendente` — Runtime falando o contrato nativo (B14) — branch `etapa-b14-runtime-contrato` / worktree `projeto-ia-livre-b14`
+- Issue [#20](https://github.com/eriksonlima/projeto-ia-livre/issues/20); Spec: `specs/runtime-contrato-nativo/`
+- Lease global **não** claimado por B14 (ocupado pela E19)
 
-## Mudanças recentes
+## Mudanças recentes (Etapa 20 / esta branch)
 
-- Promovido B13 → Etapa 19 (promoção autônoma após “continuar”)
-- Labels issue #19: `roadmap` + `status:em_andamento` (removido `backlog`); item no Project V2
+- Promovido B14 → Etapa 20 `pendente` (não segunda `em_andamento`)
+- Spec + Tasks 1–3 feitas: docs + shim host `runtime-contract/` + gate `verify-runtime-contract`
+- Task 4 bloqueada até E19 mergear contrato no kernel
 
 ## Próximo passo
 
-- Especificar + fatiar Etapa 19; implementar tasks uma a uma com gate `make verify`
+- Aguardar E19 `feita`/merge → desbloquear Task 4 (QEMU + `MEM_SCHED_OK`/`TYPED_*`)
+- Só então considerar subir Etapa 20 a `em_andamento` (com lease liberado)
 
 ## Notas
 
-- Sem GGUF; sem prova da hipótese; sem ABI estável/multi-tenant/GPU manager
-- ADR 0003 + `docs/desenho-memoria-scheduler-nativo.md`
+- Shim host ≠ Linha B; sem `TOKENS_PER_S`; hipótese **não** comprovada
+- Sem editar `kernel/` nesta branch enquanto E19 trabalha

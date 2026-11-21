@@ -69,10 +69,15 @@ Fora do mínimo v1: joules, p95 multi-request, VRAM multi-tenant (candidatos da 
 2. `scripts/run-harness-line-b.sh` sobe QEMU, captura serial e reemite `HARNESS_LINE=B` + `HARNESS_OK` + marcadores proxy.
 3. **Não** declara hipótese comprovada; A e B **não** são lado a lado comparáveis até B rodar a carga canônica GGUF.
 
+### Contrato nativo (Etapa 20) vs Linha B
+
+Evidência de uso do contrato ADR 0003 (shim host ou, depois, QEMU+E19) documentada em [`runtime-contrato-nativo.md`](runtime-contrato-nativo.md).  
+**Não** substitui a Linha B no harness v1; **não** conta como carga canônica; **proibido** `TOKENS_PER_S` nesse caminho. Gate separado: `make verify-runtime-contract`.
+
 ### Ainda falta (carga canônica em B)
 
-Runtime nativo de inferência no IA Livre com TinyLlama Q4_K_M, prompt e `n-predict=32` — fora desta etapa.  
-Desenho dos mecanismos nativos (memória/scheduler) que tornariam B diferencial: [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-scheduler-nativo.md) (ADR 0003) — **desenho ≠ implementação ≠ prova**.
+Runtime nativo de inferência no IA Livre com TinyLlama Q4_K_M, prompt e `n-predict=32` — fora desta etapa (B15+).  
+Desenho dos mecanismos nativos (memória/scheduler): [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-scheduler-nativo.md) (ADR 0003) — **desenho ≠ prova**.
 
 ## Como rodar
 

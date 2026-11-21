@@ -28,5 +28,6 @@ Veja `AGENTS.md` → **Como verificar**.
 - Produto: `docs/product-context.md`
 - Arquitetura: `docs/architecture.md`
 - ADRs: `docs/adr/`
+- Contrato nativo (consumidor / Etapa 20): `docs/runtime-contrato-nativo.md` — veja também `AGENTS.md` → gate `verify-runtime-contract`
 - Contexto ativo (Memory Bank): `memory-bank/activeContext.md`
 - Contribuição: `CONTRIBUTING.md`
