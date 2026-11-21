@@ -354,8 +354,9 @@ Pronto quando: script ou procedimento único (detecta device com confirmação, 
 
 ## Etapa 48 — Inferência mínima no metal (GGUF ESP → geração ou bloqueio honesto)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#48](https://github.com/eriksonlima/projeto-ia-livre/issues/48)  
-Spec: (a gerar)  
-Pronto quando: no PC (ou QEMU espelhando path metal), após boot USB/ESP com `model.gguf`, caminho nativo emite geração mínima **ou** `B_BLOCK`/`metal` honesto documentado; sem `TOKENS_PER_S` fingido.
+Spec: specs/inferencia-minima-metal/  
+Pronto quando: no PC (ou QEMU espelhando path metal), após boot USB/ESP com `model.gguf`, caminho nativo emite geração mínima **ou** `B_BLOCK`/`metal` honesto documentado; sem `TOKENS_PER_S` fingido.  
+**Desfecho:** ADR 0017; QEMU ESP-only → `GGUF_PATH=esp_sfs` + `B_BLOCK_METAL=no_gguf_metal_io`; `make verify-metal-infer`; sem TOKENS fingidos; ≠ METAL_OK.
 

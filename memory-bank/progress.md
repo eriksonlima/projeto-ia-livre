@@ -2,14 +2,14 @@
 
 ## Funciona
 
-- Etapas 1–47
-- Writer USB: `make verify-write-usb`
-- Linha B gera TOKENS_PER_S (subset); metal SKIP
+- Etapas 1–48
+- Writer USB; metal-infer bloqueio honesto SFS
+- Linha B gera TOKENS (subset BlockIO)
 
 ## Residual
 
-- 22L×32; METAL_OK com log; B42+ inferência metal
+- GGUF full via SFS/FAT32; METAL_OK com log PC; B43+
 
 ## Roadmap
 
-- Sem em_andamento após E47; próxima: B42
+- Sem em_andamento; próxima: B43

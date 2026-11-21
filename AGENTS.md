@@ -477,6 +477,16 @@ grep -q 'IA_LIVRE_WRITE_USB_OK' scripts/verify-write-usb.sh
 
 Gravação real (operador): `make baremetal-esp` → `./scripts/write-usb-esp.sh --list` → `--device /dev/sdX --confirm /dev/sdX --yes`. Contrato: [`docs/boot-hardware-real.md`](docs/boot-hardware-real.md).
 
+### Gate inferência path metal / ESP-only (Etapa 48 — adicional)
+
+QEMU **sem** BlockIO: prova `GGUF_PATH=esp_sfs` + `B_BLOCK_METAL=no_gguf_metal_io` (ADR [`0017`](docs/adr/0017-path-metal-sfs-vs-blockio.md)). **≠** `METAL_OK`; **≠** geração BlockIO.
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+make verify-metal-infer
+grep -q 'IA_LIVRE_B_BLOCK_METAL=no_gguf_metal_io' scripts/verify-metal-infer.sh
+```
+
 ## PATH
 
 Sempre inclua o GitHub CLI e o Cargo locais:

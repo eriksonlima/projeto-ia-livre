@@ -593,6 +593,7 @@ fn main() -> Status {
                 uart_write("IA_LIVRE_GGUF_HEADER_OK\n");
                 if n > GGUF_PREFIX_MAX {
                     uart_write("IA_LIVRE_GGUF_NATIVE_LOADER=blockio_full\n");
+                    uart_write("IA_LIVRE_GGUF_PATH=blockio\n");
                     let slice = core::slice::from_raw_parts(p.as_ptr(), n);
                     if let Some(tc) = read_u64_le(&slice[8..]) {
                         uart_emit_kv("IA_LIVRE_GGUF_TENSOR_COUNT=", tc);
@@ -600,7 +601,10 @@ fn main() -> Status {
                         uart_write("IA_LIVRE_GGUF_STATUS=tensors_stub_ok\n");
                     }
                 } else {
+                    // Path metal/ESP: só prefixo — GGUF full via SFS inviável no FAT16 QEMU (ADR 0017).
                     uart_write("IA_LIVRE_GGUF_NATIVE_LOADER=esp_header\n");
+                    uart_write("IA_LIVRE_GGUF_PATH=esp_sfs\n");
+                    uart_write("IA_LIVRE_B_BLOCK_METAL=no_gguf_metal_io\n");
                 }
             }
 

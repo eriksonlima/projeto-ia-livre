@@ -2,14 +2,14 @@
 
 ## Foco atual
 
-- Etapa 47 **feita** (writer USB seguro)
-- Etapas 1–47 feitas
-- Topo Abertas: **B42** (inferência mínima no metal)
+- Etapas 1–48 **feitas**
+- Path metal: `B_BLOCK_METAL=no_gguf_metal_io` (FAT16)
+- Topo Abertas: **B43** (autonomia no caminho nativo)
 
 ## Próximo passo
 
-- Promover B42 ou “continuar”
+- Promover B43 ou continuar
 
 ## Notas
 
-- Lease: liberar após push E47
+- Lease livre após push E48

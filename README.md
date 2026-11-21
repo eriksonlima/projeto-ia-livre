@@ -28,7 +28,7 @@ Veja `AGENTS.md` → **Como verificar**.
 - Produto: `docs/product-context.md`
 - Arquitetura: `docs/architecture.md` · Glossário: `docs/glossario.md`
 - Harness A vs B: `docs/harness-linha-a-b.md` · comparável: `docs/harness-a-b-comparavel.md` (veja `AGENTS.md` → gates)
-- Boot/imagem hardware real (ESP/USB): `docs/boot-hardware-real.md` — `make verify-baremetal` (artefato; ≠ QEMU); gravar pendrive: `./scripts/write-usb-esp.sh` / `make verify-write-usb` (confirmação obrigatória; ≠ METAL_OK)
+- Boot/imagem hardware real (ESP/USB): `docs/boot-hardware-real.md` — `make verify-baremetal` (artefato; ≠ QEMU); gravar pendrive: `./scripts/write-usb-esp.sh` / `make verify-write-usb`; path metal SFS: `make verify-metal-infer` (`B_BLOCK_METAL`; ≠ METAL_OK)
 - Rede (v1 + bootstrap): `docs/rede-ia-livre-v1.md` · `docs/rede-descoberta-wan.md`
 - Autonomia (`calc`): `docs/autonomia-alem-v1.md`
 - GPU host shard: `docs/shard-multi-gpu-host.md` — `make verify-gpu-shard-host`
