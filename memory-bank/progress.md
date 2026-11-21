@@ -2,9 +2,10 @@
 
 ## O que funciona
 
-- Etapas 1–22 feitas
+- Etapas 1–23 feitas
 - E21: `CONTRACT_READY` + `B_BLOCK=no_gguf_path`
 - E22: `make verify-harness-comparable` → `VERDICT=INCONCLUSIVO`
+- E23: Rede v1 em `node/` — `make verify-node` → PEER/MSG/IDENT/PING
 
 ## Bloqueios
 
@@ -12,5 +13,5 @@
 
 ## Por etapa
 
-- 1–22: feitas
-- 23–25: pendente (branches `etapa-b17` / `b18` / `b19`)
+- 1–23: feitas
+- 24–25: pendente (branches `etapa-b18` / `b19`)

@@ -5,12 +5,12 @@ Regra: `.cursor/rules/agentes-em-paralelo.mdc`.
 
 ## Estado atual
 
-- **holder:** agente-principal-integracao-b17-b19
-- **etapa:** 23
-- **issue:** #23
-- **paths:** node/, specs/protocolo-rede-v1/, docs/desenho-protocolo-rede-ia-livre.md, docs/rede-ia-livre-prototipo.md, AGENTS.md, ROADMAP.md, memory-bank/, scripts/verify-node.sh
-- **since:** 2026-11-21T00:53:07Z
-- **expires:** 2026-11-21T02:53:07Z
+- **holder:** _(nenhum)_
+- **etapa:** —
+- **issue:** —
+- **paths:** —
+- **since:** —
+- **expires:** —
 
 ## Como usar
 

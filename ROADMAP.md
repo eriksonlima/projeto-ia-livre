@@ -158,7 +158,7 @@ Pronto quando: corrida lado a lado documentada (mesmo modelo/quantização/carga
 
 ## Etapa 23 — Protocolo Rede IA Livre v1 (impl. em node/)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#23](https://github.com/eriksonlima/projeto-ia-livre/issues/23)  
 Spec: specs/protocolo-rede-v1/  
 Pronto quando: contratos do desenho ADR 0004 cobertos em `node/` — ed25519/PeerId, HELLO UDP assinado, IDENT no TCP, MSG/ACK, PING/PONG, dial `--peer`; `make verify-node` (ou extensão documentada) verde; participação **sem** exigir o SO IA Livre; sem libp2p/NAT/DHT/marketplace.

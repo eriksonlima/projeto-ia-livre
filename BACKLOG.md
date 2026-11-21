@@ -26,9 +26,9 @@ _(nenhuma — B15–B19 já promovidas às Etapas 21–25)_
 
 ### B17 — Protocolo Rede IA Livre v1 (impl. em node/)
 
-- Promovido para Etapa 23 do roadmap (`em_andamento`; integração em `main`).
+- Promovido para Etapa 23 do roadmap — **feita** (Tasks 1–3; IDENT/PING; `verify-node` estendido).
 - Issue: [#23](https://github.com/eriksonlima/projeto-ia-livre/issues/23)
-- Etapa: Etapa 23
+- Etapa: [Etapa 23 — Protocolo Rede IA Livre v1 (impl. em node/)](ROADMAP.md)
 
 ### B18 — Autonomia v1 utilizável (impl. em agent/)
 

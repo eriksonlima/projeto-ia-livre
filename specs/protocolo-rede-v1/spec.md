@@ -95,15 +95,15 @@ PING / PONG              →  liveness
 
 ## Critérios de aceite
 
-- [ ] `node/` usa ed25519 + `PeerId` estável; apelido `--node-id` não é âncora de confiança
-- [ ] HELLO UDP v1 assinado + versão; HELLO inválido não dispara dial confiável
-- [ ] IDENT no TCP com nonce antes de MSG de aplicação
-- [ ] MSG/ACK da prova preservados; `IA_LIVRE_PEER_OK` + `IA_LIVRE_MSG_OK` no fluxo `--peer`
-- [ ] PING/PONG implementados e documentados (cobertos pelo gate ou marcador verificável)
-- [ ] `make verify-node` verde (preservado ou extensão documentada)
-- [ ] Doc + `AGENTS.md` descrevem v1 e independência do SO; README avaliado
-- [ ] Sem libp2p/NAT/DHT/marketplace/QUIC obrigatório na entrega
-- [ ] Etapa 23 não marcada `feita` nesta spec
+- [x] `node/` usa ed25519 + `PeerId` estável; apelido `--node-id` não é âncora de confiança
+- [x] HELLO UDP v1 assinado + versão; HELLO inválido não dispara dial confiável
+- [x] IDENT no TCP com nonce antes de MSG de aplicação
+- [x] MSG/ACK da prova preservados; `IA_LIVRE_PEER_OK` + `IA_LIVRE_MSG_OK` no fluxo `--peer`
+- [x] PING/PONG implementados e documentados (cobertos pelo gate ou marcador verificável)
+- [x] `make verify-node` verde (preservado ou extensão documentada)
+- [x] Doc + `AGENTS.md` descrevem v1 e independência do SO; README avaliado
+- [x] Sem libp2p/NAT/DHT/marketplace/QUIC obrigatório na entrega
+- [x] Etapa 23 marcada `feita` após gate + revisor (integração em `main`)
 
 ## Riscos e rollback
 
