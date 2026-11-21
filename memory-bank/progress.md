@@ -3,14 +3,15 @@
 ## Funciona
 
 - Etapas 1–58
-- Checklist meta do protótipo (E58) + `IA_LIVRE_PROTOTIPO_OBJETIVO_OK`
-- Guia USB + release; harness A_gpu; GPU real host; Rede/autonomia bridges; agent REPL/`read_local`
+- Checklist meta (E58) + gates host (node/agent/bridges/USB guia)
+- Geração B subset com `TOKENS_PER_S` medidos (≠ espécie canônica)
 
-## Residual
+## Residual (Abertas B53–B67)
 
-- Espécie canônica na Linha B (22L + n_predict=32) para `COMPROVA`/`REFUTA`
-- `METAL_OK` com log de boot em PC físico (sem QEMU/OVMF no log)
+- Pilar 1: SIMD/teto → espécie 22L×32 → re-corrida quieta (ou bloqueio final B58)
+- Pilar 2: `METAL_OK` PC + I/O GGUF metal
+- Depois: accel simétrica, GPU guest, TCP nativo, WAN, KNOW, multi-GPU, autonomia nativa, ABI, sync docs
 
 ## Roadmap
 
-- Todas as etapas 1–58 `feita`; Abertas vazio — aguardar backlog ou pedido explícito
+- Sem `em_andamento`; próxima candidata = topo Abertas (B53)

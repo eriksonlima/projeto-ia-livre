@@ -9,8 +9,98 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 ## Abertas
 
 > **Meta do protótipo (objetivo do projeto):** um ecossistema verificável em que (1) a **hipótese A vs B** possa ser comprovada ou refutada com geração real na Linha B (`TOKENS_PER_S`), (2) o **SO IA Livre** boote de USB/ESP em hardware real com caminho de IA nativo mínimo honesto, (3) a **Rede** e a **autonomia** continuem utilizáveis **sem** exigir o SO. Ordem abaixo = prioridade sugerida (topo primeiro).
+>
+> **Análise pós-E58 (2026-11-21):** etapas 1–58 feitas; pilar 3 verde; pilares 1–2 abertos (`INCONCLUSIVO` + sem `METAL_OK`). Ordem: desbloquear espécie canônica B → metal → accel/Rede.
 
-_(vazio — topo promovido para Etapa 58)_
+### B53 — Otimizar runtime-native (SIMD/teto) para espécie canônica
+- Issue: [#59](https://github.com/eriksonlima/projeto-ia-livre/issues/59)
+- Origem: ADR 0016 — 22L×32 inviável no gate sem ganho de ordem de magnitude
+- Pronto quando: medição documentada (passo N≥8 / n_predict≥8 ou 22L×32 no timeout) **ou** ADR nova pós-otimização com inviável evidenciado
+- Deps: `runtime-native`; E44/E45
+
+### B54 — Espécie canônica Linha B (22L × n_predict=32)
+- Issue: [#60](https://github.com/eriksonlima/projeto-ia-livre/issues/60)
+- Origem: pilar 1 E58 — `COMPROVA`/`REFUTA` só com espécie = A
+- Pronto quando: `verify-harness-comparable` com B 22L×32 + veredito ∈ {COMPROVA,REFUTA,INCONCLUSIVO} **sem** reason de teto/subset
+- Deps: B53 preferível; ADR 0014–0016
+
+### B55 — Re-corrida harness A/B quieta pós-espécie canônica
+- Issue: [#61](https://github.com/eriksonlima/projeto-ia-livre/issues/61)
+- Origem: instrumento E22/E28 existe; falta corrida decisiva
+- Pronto quando: `VERDICT` + `REASON` limpos; quieto; comprovada/refutada **ou** `INCONCLUSIVO` numérico (não teto de espécie)
+- Deps: B54
+
+### B56 — Evidência METAL_OK em PC real
+- Issue: [#62](https://github.com/eriksonlima/projeto-ia-livre/issues/62)
+- Origem: pilar 2 — `docs/evidence/boot-metal/` só `STATUS-SKIP`
+- Pronto quando: log real + `IA_LIVRE_BAREMETAL_SKIP=0` → `METAL_OK` (≥ `BOOT_OK`, sem QEMU/OVMF)
+- Deps: E35/E46/E47/E57
+
+### B57 — I/O GGUF no path metal (além de no_gguf_metal_io)
+- Issue: [#63](https://github.com/eriksonlima/projeto-ia-livre/issues/63)
+- Origem: E48/ADR 0017 — path metal ainda é bloqueio SFS
+- Pronto quando: geração mínima ou loader full no PC/ESP + marcadores; sem `TOKENS` fingidos; ≠ BlockIO como metal
+- Deps: E36; E48; B56 preferível
+
+### B58 — Bloqueio final documentado da hipótese A/B
+- Issue: [#64](https://github.com/eriksonlima/projeto-ia-livre/issues/64)
+- Origem: alternativa E58 se espécie canônica continuar inviável após B53
+- Pronto quando: ADR/doc declara espécie **terminalmente** inviável; instrumento honesto; sem fingir `COMPROVA`
+- Deps: B53; E58; ADR 0016
+
+### B59 — Accel GPU simétrica A/B no harness
+- Issue: [#73](https://github.com/eriksonlima/projeto-ia-livre/issues/73)
+- Origem: E56 — `INCONCLUSIVO` por assimetria A GPU vs B CPU
+- Pronto quando: corrida mesmo perfil accel; skip sem GPU; **proibido** ACCEL fingido em B
+- Deps: B54 (ou subset simétrico); E8/E56
+
+### B60 — GPU real no guest (PCI/pass-through)
+- Issue: [#65](https://github.com/eriksonlima/projeto-ia-livre/issues/65)
+- Origem: E55 = `SRC=host`; QEMU ainda `KIND=synthetic`
+- Pronto quando: `GPU_REAL_SRC=pci_passthrough` (ou equiv.) + `GPU_REAL_OK` **ou** skip `need_gpu`; ≠ só enum host
+- Deps: E38/E55
+
+### B61 — Stack TCP Rede nativa no guest
+- Issue: [#66](https://github.com/eriksonlima/projeto-ia-livre/issues/66)
+- Origem: E52 = bridge only; ADR 0019 adia TCP pós-Exit
+- Pronto quando: sessão Rede no caminho B + marcadores; `verify-node` host intacto (ADR 0001)
+- Deps: E11; E52
+
+### B62 — Descoberta WAN (NAT/DHT/relay)
+- Issue: [#67](https://github.com/eriksonlima/projeto-ia-livre/issues/67)
+- Origem: ADR 0004 — bootstrap/mDNS não cobrem WAN
+- Pronto quando: DHT **ou** relay verificável + gate/skip; sem libp2p monólito sem ADR
+- Deps: E39/E50
+
+### B63 — Mensagem KNOW na Rede
+- Issue: [#68](https://github.com/eriksonlima/projeto-ia-livre/issues/68)
+- Origem: manifesto — conhecimento; E51 só `TASK`
+- Pronto quando: `KNOW`(+ACK) + gate dois nós; sem marketplace; sem exigir SO
+- Deps: E51
+
+### B64 — Multi-GPU completo além do shard host
+- Issue: [#69](https://github.com/eriksonlima/projeto-ia-livre/issues/69)
+- Origem: architecture — multi-GPU completo aberto; E41 = pipeline host/skip
+- Pronto quando: placement/execução multi-device real com evidência; sem fingir
+- Deps: E41; ADR 0006
+
+### B65 — Autonomia consumindo runtime/evidência nativa
+- Issue: [#70](https://github.com/eriksonlima/projeto-ia-livre/issues/70)
+- Origem: E49 bridge só valida log; sem loop usando nativo/metal
+- Pronto quando: one-shot que consome fonte nativa **ou** contrato “bridge = máximo até X”; ADR 0001
+- Deps: E49; B56/B57 preferíveis
+
+### B66 — ABI mínima estável kernel↔runtime-native
+- Issue: [#71](https://github.com/eriksonlima/projeto-ia-livre/issues/71)
+- Origem: ADR 0003 — ABI fora; glue/serial ad hoc na Linha B
+- Pronto quando: contrato versionado documentado + consumidor nativo; sem puxar inferência pro kernel
+- Deps: E19/E20; `runtime-native`
+
+### B67 — Sincronizar architecture/product pós-E58
+- Issue: [#72](https://github.com/eriksonlima/projeto-ia-livre/issues/72)
+- Origem: `architecture.md` ainda lista REPL/GPU harness como abertos; mapa pós-E41 defasado
+- Pronto quando: architecture + product-context + glossário refletem E42–E58 e decisões abertas reais
+- Deps: E58
 
 ## Promovidas / arquivadas
 

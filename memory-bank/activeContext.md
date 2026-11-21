@@ -2,22 +2,22 @@
 
 ## Foco atual
 
-- Etapas 1–58 **feitas**
-- E58: checklist canônico dos 3 pilares (`docs/prototipo-objetivo-atingido.md`) + gate `verify-prototipo-objetivo`
-- Backlog **Abertas vazio** — nenhuma `em_andamento`
+- Etapas 1–58 **feitas**; sem `em_andamento`
+- Backlog **Abertas** repovoado (B53–B67) após análise pós-E58
+- Topo: **B53** (otimizar runtime-native / teto) → B54 espécie canônica
 
 ## Estado dos pilares (E58)
 
-1. Hipótese A/B: **INCONCLUSIVO** (geração B subset ≠ espécie canônica)
-2. USB/metal: artefato+guia ok; **sem** `METAL_OK` até log de PC real
-3. Rede+autonomia host: **verde** (gates node/agent/bridges)
+1. Hipótese A/B: **INCONCLUSIVO** (subset; ADR 0016 teto)
+2. USB/metal: artefato+guia ok; **sem** `METAL_OK` (só SKIP)
+3. Rede+autonomia host: **verde**
 
 ## Próximo passo
 
-- Pedido explícito ou novo item em `BACKLOG.md` — **não** inventar etapa
-- Residual técnico: espécie canônica B para COMPROVA/REFUTA; `METAL_OK` com evidência PC
+- Promover B53 (ou pedido explícito) quando “continuar”
+- Ordem sugerida: B53→B54→B55 (pilar 1) ‖ B56→B57 (pilar 2); B58 se espécie inviável pós-B53
 
 ## Notas
 
-- Lease liberado após push E58
-- Um agente escritor; claim antes de editar `em_andamento`
+- Lease livre
+- Espelho GitHub: issues #59–#73 (B59=#73)
