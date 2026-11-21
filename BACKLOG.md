@@ -11,12 +11,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 > **Meta do protótipo (objetivo do projeto):** um ecossistema verificável em que (1) a **hipótese A vs B** possa ser comprovada ou refutada com geração real na Linha B (`TOKENS_PER_S`), (2) o **SO IA Livre** boote de USB/ESP em hardware real com caminho de IA nativo mínimo honesto, (3) a **Rede** e a **autonomia** continuem utilizáveis **sem** exigir o SO. Ordem abaixo = prioridade sugerida (topo primeiro).
 
 
-### B39 — Re-corrida harness A vs B com geração real (veredito limpo)
-- Issue: [#45](https://github.com/eriksonlima/projeto-ia-livre/issues/45)
-
-- Origem: Etapa 22 ainda INCONCLUSIVO com B parcial
-- Pronto quando: `make verify-harness-comparable` com B gerando; veredito ∈ {COMPROVA, REFUTA, INCONCLUSIVO} **sem** reason de proxy/`no_gguf_full_prefill`; metodologia quieta preservada
-- Deps: B38
 
 ### B40 — Evidência de boot metal real (serial ≥ `BOOT_OK` em PC)
 - Issue: [#46](https://github.com/eriksonlima/projeto-ia-livre/issues/46)
@@ -110,6 +104,16 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: B39 + B40 + B42 (mínimo sugerido)
 
 ## Promovidas / arquivadas
+
+### B39 — Re-corrida harness A vs B com geração real (veredito limpo)
+- Issue: [#45](https://github.com/eriksonlima/projeto-ia-livre/issues/45)
+
+- Origem: Etapa 22 ainda INCONCLUSIVO com B parcial
+- Pronto quando: `make verify-harness-comparable` com B gerando; veredito ∈ {COMPROVA, REFUTA, INCONCLUSIVO} **sem** reason de proxy/`no_gguf_full_prefill`; metodologia quieta preservada
+- Deps: B38
+
+- Promovido para Etapa 45 do roadmap (promoção autônoma após E44).
+- Etapa: [Etapa 45 — Re-corrida harness A vs B com geração real (veredito limpo)](ROADMAP.md)
 
 ### B38 — Decode + sampling + `TOKENS_PER_S` canônico na Linha B
 - Issue: [#44](https://github.com/eriksonlima/projeto-ia-livre/issues/44)

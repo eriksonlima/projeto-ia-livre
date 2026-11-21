@@ -328,3 +328,10 @@ Spec: specs/decode-tokens-linha-b/
 Pronto quando: geração canônica em B emite `TOKENS_PER_S` (e marcadores Decode/sampling) honestos; `B_BLOCK` removido ou substituído; gate harness B atualizado.  
 **Desfecho:** Decode greedy subset 2L×`n_predict=1` + `TOKENS_PER_S` medidos; `LOAD_KIND=gguf`; `PROFILE=release`; comparable `INCONCLUSIVO` (espécie ≠ A); ADR 0015; sem `B_BLOCK` no sucesso.
 
+## Etapa 45 — Re-corrida harness A vs B com geração real (veredito limpo)
+
+Status: em_andamento  
+Issue: [#45](https://github.com/eriksonlima/projeto-ia-livre/issues/45)  
+Spec: (a gerar)  
+Pronto quando: `make verify-harness-comparable` com B gerando; veredito ∈ {COMPROVA, REFUTA, INCONCLUSIVO} **sem** reason de proxy/`no_gguf_full_prefill`/subset-espécie; metodologia quieta preservada.
+
