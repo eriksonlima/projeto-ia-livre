@@ -24,8 +24,8 @@ Objetivo do protótipo = **os três** pilares no estado “atingido” (ou bloqu
 | Critério decidível | `make verify-harness-comparable` emite `IA_LIVRE_HARNESS_VERDICT=COMPROVA` **ou** `REFUTA` com espécie canônica (22L + `n_predict=32` em B) — ver [`harness-a-b-comparavel.md`](harness-a-b-comparavel.md) |
 | Bloqueio honesto final | Doc/ADR declara terminalmente inviável a espécie canônica **e** o instrumento permanece honesto (`INCONCLUSIVO` ou reason terminal) — sem fingir `COMPROVA` |
 | Evidência | `IA_LIVRE_HARNESS_VERDICT=` / `VERDICT_REASON=` |
-| **Estado atual** | **`INCONCLUSIVO`** — geração B **subset** (E44); E60/ADR [`0021`](adr/0021-especie-canonica-linha-b-inviavel.md) declara 22L×32 inviável no gate atual; perfil GPU E56 também `INCONCLUSIVO`. Hipótese **não** comprovada nem refutada (bloqueio **final** = B58) |
-| Não conta | Celebrar subset / `A_gpu` / proxy como `COMPROVA` |
+| **Estado atual** | **`BLOQUEIO_FINAL`** — ADR [`0022`](adr/0022-bloqueio-final-hipotese-ab.md) (terminal no gate/motor atuais; encadeia 0020/0021). Instrumento comparable permanece `INCONCLUSIVO`/teto (sem `COMPROVA`). Reabertura: critérios na 0022 |
+| Não conta | Celebrar subset / `A_gpu` / proxy como `COMPROVA`; tratar teto operacional 0020/0021 sozinhos como bloqueio final |
 
 ---
 
@@ -60,17 +60,17 @@ Objetivo do protótipo = **os três** pilares no estado “atingido” (ou bloqu
 
 **Proibido** declarar “protótipo objetivo atingido” / vitória da hipótese enquanto:
 
-1. Pilar 1 estiver `INCONCLUSIVO` **sem** bloqueio final documentado, **ou**
+1. Pilar 1 estiver `INCONCLUSIVO` **sem** bloqueio final documentado (hoje: **`BLOQUEIO_FINAL`** via ADR 0022 — este item cumprido), **ou**
 2. Pilar 2 carecer de caminho honesto **e** (quando celebrar metal) de `METAL_OK` real, **ou**
 3. Pilar 3 falhar `verify-node` / `verify-agent`.
 
-**Permitido** celebrar **parciais** (ex.: “pilar 3 verde”; “artefato USB + guia publicados”) citando o gate correspondente.
+**Permitido** celebrar **parciais** (ex.: “pilar 3 verde”; “pilar 1 com bloqueio final documentado”; “artefato USB + guia”) citando o gate/ADR correspondente.
 
 ### O que falta para o objetivo global (resumo)
 
 | Pilar | Falta |
 |-------|--------|
-| 1 | Espécie canônica em B **ou** bloqueio final explícito |
+| 1 | — (bloqueio **final** ADR 0022; reabertura só com critérios da ADR) |
 | 2 | Evidência `METAL_OK` em PC (quando quiser fechar metal) — artefato/guia já ok |
 | 3 | — (critério host satisfeito) |
 

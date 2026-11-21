@@ -105,6 +105,7 @@ Com B = proxy + Prefill multi/KV subset (Etapa 43, `no_gguf_prefill_22l`): o ins
 
 **A_gpu (opt-in, Etapa 56):** perfil harness GPU — A com accel host + B subset assimétrico → `INCONCLUSIVO` (`E56_A_gpu_B_subset_accel_asymmetric`). Gate: `make verify-harness-gpu`. **Não** prova hipótese; sem ACCEL GPU fingido em B.
 
-**Espécie canônica (Etapa 60 / ADR [`0021`](adr/0021-especie-canonica-linha-b-inviavel.md)):** 22L×32 no guest **inviável** no gate atual (pós E59/ADR 0020). Comparable permanece `INCONCLUSIVO` / teto; **proibido** `COMPROVA` com subset. Bloqueio **final** da hipótese = backlog B58.
+**Espécie canônica (Etapa 60 / ADR [`0021`](adr/0021-especie-canonica-linha-b-inviavel.md)):** 22L×32 no guest **inviável** no gate atual (pós E59/ADR 0020). Comparable permanece `INCONCLUSIVO` / teto; **proibido** `COMPROVA` com subset.  
+**Bloqueio final (Etapa 61 / ADR [`0022`](adr/0022-bloqueio-final-hipotese-ab.md)):** pilar 1 do checklist = `BLOQUEIO_FINAL` (terminal no escopo atual; reabertura documentada na 0022).
 
 Para medição sem contenção de benchmarks: seguir [`harness-corrida-quieta.md`](harness-corrida-quieta.md).

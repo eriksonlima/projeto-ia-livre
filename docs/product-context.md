@@ -62,7 +62,7 @@ Queremos **comprovar ou refutar**, com método justo:
 
 - Kernel UEFI + gates QEMU; observabilidade GOP mínima; GPU manager nativo sintético
 - Runtime host (CPU/GPU) + agente (`note`/`recall`/`help`/`calc`) + nó Rede v1 com bootstrap
-- Harness A vs B: veredito tipicamente **INCONCLUSIVO** até geração canônica em B (`TOKENS_PER_S` proibido fingido)
+- Harness A vs B: veredito **INCONCLUSIVO**/teto; pilar 1 em **`BLOQUEIO_FINAL`** (ADR [`0022`](adr/0022-bloqueio-final-hipotese-ab.md)) — sem `COMPROVA` fingido; reabertura só com critérios da ADR
 - Bare-metal: artefato ESP + metal/GGUF via evidência/opt-in (QEMU ≠ PC real)
 
 Glossário: [`glossario.md`](glossario.md). Detalhe técnico: [`architecture.md`](architecture.md). Operacional: `AGENTS.md`.

@@ -534,7 +534,7 @@ make verify-prototipo-objetivo
 grep -q 'IA_LIVRE_PROTOTIPO_OBJETIVO_OK' scripts/verify-prototipo-objetivo.sh
 ```
 
-Esperado: `IA_LIVRE_PROTOTIPO_OBJETIVO_OK`. Celebrar meta global só com evidência do checklist.
+Esperado: `IA_LIVRE_PROTOTIPO_OBJETIVO_OK` + pilar 1 `BLOQUEIO_FINAL` (ADR [`0022`](docs/adr/0022-bloqueio-final-hipotese-ab.md)). Celebrar meta global só com evidência do checklist.
 
 ### Gate runtime-native perf / espécie (Etapa 59 — adicional)
 

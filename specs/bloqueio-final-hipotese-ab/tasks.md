@@ -2,10 +2,10 @@
 
 Uma task = uma fatia.
 
-- [ ] Task 1 — ADR **0022** (preferida): bloqueio **terminal** do pilar 1 / hipótese no gate atual vs inviabilidade **operacional** (0020/0021); critérios explícitos de **reabertura**; ponte 0016/0020/0021/E58; sem expandir espécie guest; sem COMPROVA
-- [ ] Task 2 — Atualizar `prototipo-objetivo-atingido.md` pilar 1 (atingido via bloqueio final) + glossário + `product-context.md` + notas comparable/`runtime-native-perf-especie`; instrumento honesto; README avaliado
-- [ ] Task 3 — Gate documental: estender `verify-prototipo-objetivo` e/ou `verify-runtime-native-perf` (ADR 0022 / marcadores terminal+reabertura) + `AGENTS.md`/`Makefile` se couber; **não** exigir COMPROVA
+- [x] Task 1 — ADR **0022** — terminal vs operacional; reabertura; ponte 0020/0021
+- [x] Task 2 — Checklist E58 pilar 1 + glossário + product-context + comparable/harness
+- [x] Task 3 — Gate documental (`verify-prototipo-objetivo`) + AGENTS; README avaliado (não necessário — AGENTS/docs)
 
-## Critério de pronto da etapa (espelho ROADMAP)
+## Critério de pronto da etapa
 
-ADR/doc declara espécie/hipótese **terminalmente** inviável no gate atual (ou caminho reaberto explícito); instrumento comparable honesto; checklist E58 pilar 1 atualizado; sem fingir `COMPROVA`.
+ADR/doc declara hipótese/espécie **terminalmente** inviável no gate atual (ou reabertura explícita); comparable honesto; checklist E58 pilar 1 = `BLOQUEIO_FINAL`; sem fingir COMPROVA.

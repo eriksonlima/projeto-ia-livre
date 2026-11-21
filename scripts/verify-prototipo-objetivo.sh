@@ -11,17 +11,22 @@ fail=0
 for needle in \
   'Hipótese A vs B' \
   'INCONCLUSIVO' \
+  'BLOQUEIO_FINAL' \
   'verify-node' \
   'verify-agent' \
   'METAL_OK' \
   'Celebrar só com evidência' \
-  'ADR 0001'
+  'ADR 0001' \
+  '0022'
 do
   if ! grep -q "$needle" "$DOC"; then
     echo "GATE_FAIL: checklist sem: $needle"
     fail=1
   fi
 done
+
+test -f docs/adr/0022-bloqueio-final-hipotese-ab.md \
+  || { echo "GATE_FAIL: falta ADR 0022"; fail=1; }
 
 # Três pilares nomeados
 grep -q 'Pilar 1' "$DOC" || fail=1
@@ -47,5 +52,5 @@ if (( fail )); then
 fi
 
 echo "IA_LIVRE_PROTOTIPO_OBJETIVO_OK"
-echo "GATE_OK: prototipo-objetivo — checklist canônico presente (Etapa 58; sem fingir COMPROVA)"
+echo "GATE_OK: prototipo-objetivo — checklist + BLOQUEIO_FINAL (ADR 0022; sem fingir COMPROVA)"
 exit 0

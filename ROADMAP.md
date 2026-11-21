@@ -458,8 +458,9 @@ Pronto quando: `make verify-harness-comparable` com B `PREFILL_LAYERS=22` + `N_P
 
 ## Etapa 61 — Bloqueio final documentado da hipótese A/B
 
-Status: em_andamento  
+Status: feita  
 Issue: [#64](https://github.com/eriksonlima/projeto-ia-livre/issues/64)  
 Spec: specs/bloqueio-final-hipotese-ab/  
-Pronto quando: ADR/doc declara espécie/hipótese **terminalmente** inviável no gate atual (ou caminho reaberto explícito); instrumento comparable honesto; checklist E58 pilar 1 atualizado; sem fingir COMPROVA.
+Pronto quando: ADR/doc declara espécie/hipótese **terminalmente** inviável no gate atual (ou caminho reaberto explícito); instrumento comparable honesto; checklist E58 pilar 1 atualizado; sem fingir COMPROVA.  
+**Desfecho:** ADR [`0022`](docs/adr/0022-bloqueio-final-hipotese-ab.md) — pilar 1 = `BLOQUEIO_FINAL`; comparable permanece teto/`INCONCLUSIVO`; `make verify-prototipo-objetivo` exige 0022; reabertura documentada; sem `COMPROVA`.
 
