@@ -352,3 +352,10 @@ Spec: specs/gravar-pendrive-uefi/
 Pronto quando: script ou procedimento único (detecta device com confirmação, grava ESP/FAT ou `.img`) + README/AGENTS; **sem** gravar `/dev/sdX` sem confirmação explícita.  
 **Desfecho:** `write-usb-esp.sh` + `make verify-write-usb` (`IA_LIVRE_WRITE_USB_OK`); confirmação obrigatória; ≠ METAL_OK.
 
+## Etapa 48 — Inferência mínima no metal (GGUF ESP → geração ou bloqueio honesto)
+
+Status: em_andamento  
+Issue: [#48](https://github.com/eriksonlima/projeto-ia-livre/issues/48)  
+Spec: (a gerar)  
+Pronto quando: no PC (ou QEMU espelhando path metal), após boot USB/ESP com `model.gguf`, caminho nativo emite geração mínima **ou** `B_BLOCK`/`metal` honesto documentado; sem `TOKENS_PER_S` fingido.
+

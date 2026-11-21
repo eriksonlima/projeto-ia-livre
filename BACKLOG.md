@@ -14,12 +14,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 
 
-### B42 — Inferência mínima no metal (GGUF ESP → geração ou bloqueio honesto)
-- Issue: [#48](https://github.com/eriksonlima/projeto-ia-livre/issues/48)
-
-- Origem: protótipo SO usável além de marcadores de boot
-- Pronto quando: no PC (ou QEMU espelhando path metal), após boot USB/ESP com `model.gguf`, caminho nativo emite geração mínima **ou** `B_BLOCK`/`metal` honesto documentado; sem `TOKENS_PER_S` fingido
-- Deps: B40 preferível; E36 FULL_GGUF; caminho B37/B38 se aplicável
 
 ### B43 — Autonomia mínima no caminho nativo (ou bridge SO↔host documentada)
 - Issue: [#49](https://github.com/eriksonlima/projeto-ia-livre/issues/49)
@@ -92,6 +86,16 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: B39 + B40 + B42 (mínimo sugerido)
 
 ## Promovidas / arquivadas
+
+### B42 — Inferência mínima no metal (GGUF ESP → geração ou bloqueio honesto)
+- Issue: [#48](https://github.com/eriksonlima/projeto-ia-livre/issues/48)
+
+- Origem: protótipo SO usável além de marcadores de boot
+- Pronto quando: no PC (ou QEMU espelhando path metal), após boot USB/ESP com `model.gguf`, caminho nativo emite geração mínima **ou** `B_BLOCK`/`metal` honesto documentado; sem `TOKENS_PER_S` fingido
+- Deps: B40 preferível; E36 FULL_GGUF; caminho B37/B38 se aplicável
+
+- Promovido para Etapa 48 do roadmap (promoção autônoma após E47).
+- Etapa: [Etapa 48 — Inferência mínima no metal](ROADMAP.md)
 
 ### B41 — One-shot gravar pendrive UEFI (script + doc contribuidores)
 - Issue: [#47](https://github.com/eriksonlima/projeto-ia-livre/issues/47)
