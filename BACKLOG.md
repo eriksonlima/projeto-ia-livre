@@ -8,9 +8,27 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-_(nenhuma — B15–B19 já promovidas às Etapas 21–25)_
+### B21 — Inferência mínima / TOKENS_PER_S na Linha B (após loader)
+
+- Issue: [#27](https://github.com/eriksonlima/projeto-ia-livre/issues/27)
+- Origem: desbloqueio da Etapa 22 / hipótese; depende de B20
+- Notas: geração mínima canônica em B com métricas em espécie iguais às de A
+- Pronto quando (candidato): `TOKENS_PER_S`/`LOAD_S` medidos em B ou bloqueio honesto novo; gates atualizados
+
+### B22 — Re-corrida harness A vs B quieta (COMPROVA/REFUTA ou INCONCLUSIVO limpo)
+
+- Issue: [#28](https://github.com/eriksonlima/projeto-ia-livre/issues/28)
+- Origem: auditoria pós-paralelo (T/s sob contenção); métricas CPU serial em `docs/runtime-inferencia-cpu-metricas.md`
+- Notas: protocolo de medição serial + re-corrida quando B tiver GGUF; depende de B21 para COMPROVA/REFUTA
+- Pronto quando (candidato): procedimento quieto documentado; corrida verificável; veredito honesto
 
 ## Promovidas / arquivadas
+
+### B20 — Loader GGUF nativo mínimo na Linha B (desbloquear no_gguf_path)
+
+- Promovido para Etapa 26 do roadmap (promoção autônoma após “continuar” + métricas serial).
+- Issue: [#26](https://github.com/eriksonlima/projeto-ia-livre/issues/26)
+- Etapa: [Etapa 26 — Loader GGUF nativo mínimo na Linha B](ROADMAP.md)
 
 ### B15 — Carga GGUF canônica na Linha B (mínimo honesto)
 
