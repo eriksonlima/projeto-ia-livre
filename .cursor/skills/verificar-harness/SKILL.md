@@ -1,10 +1,9 @@
 ---
 name: verificar-harness
 description: >-
-  Roda o gate do harness Linha A vs B (make verify-harness): A = GGUF no host;
-  B = proxy QEMU + HARNESS_CONTRACT_* + CONTRACT_READY + loader ESP esp_header
-  (Etapa 26; B_BLOCK=no_gguf_infer). Use ao validar harness ou docs runtime-nativo.
-  Não prova a hipótese.
+  Roda gates do harness A vs B: verify-harness (A GGUF + B proxy/BlockIO stub) e,
+  sob protocolo quieto, verify-harness-comparable (VERDICT). Use ao validar harness
+  ou docs runtime-nativo / corrida-quieta. Não prova a hipótese.
 disable-model-invocation: true
 ---
 
@@ -12,12 +11,12 @@ disable-model-invocation: true
 
 ## Quando
 
-Após alterar `scripts/run-harness-line-a.sh`, `scripts/run-harness-line-b.sh`, `scripts/verify-harness.sh`, `docs/harness-linha-a-b.md`, `docs/runtime-nativo-linha-b.md`, `docs/runtime-contrato-nativo.md` ou marcadores `NATIVE_BENCH_*` / `MEM_SCHED_*` / `GGUF_*` no kernel.
+Após alterar `scripts/run-harness-line-*.sh`, `scripts/verify-harness*.sh`, `docs/harness-*.md`, `docs/runtime-nativo-linha-b.md` ou marcadores `NATIVE_BENCH_*` / `MEM_SCHED_*` / `GGUF_*` no kernel.
 
 ## Pré-requisitos
 
-- GGUF canônico (`./scripts/fetch-model.sh`) — Linha A + prefixo ESP
-- QEMU/OVMF (Linha B)
+- GGUF canônico (`./scripts/fetch-model.sh`)
+- QEMU/OVMF (Linha B); preferir **um gate por vez** — [`docs/harness-corrida-quieta.md`](../../../docs/harness-corrida-quieta.md)
 - `PATH` com Cargo; `LIBCLANG_PATH` se necessário
 
 ## Comandos
@@ -25,18 +24,25 @@ Após alterar `scripts/run-harness-line-a.sh`, `scripts/run-harness-line-b.sh`, 
 ```bash
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 export LIBCLANG_PATH="${LIBCLANG_PATH:-/usr/lib/llvm-18/lib}"
+
+# Harness v1 (A + B)
 make verify-harness
+
+# Comparável + VERDICT (Etapa 22/28) — sob protocolo quieto
+make verify-harness-comparable
 ```
 
-Sucesso esperado: `GATE_OK: harness — A (GGUF) ok + B (proxy + CONTRACT_READY + loader esp_header) ok — hipótese NÃO comprovada`.
+Sucesso `verify-harness`: `GATE_OK` com B `GGUF_NATIVE_LOADER=blockio_full`, `GGUF_STATUS=tensors_stub_ok`, `B_BLOCK=no_gguf_infer_engine`, `LOAD_KIND=proxy` — **sem** `TOKENS_PER_S` / `LOAD_S` em B.
 
-B deve incluir: `CONTRACT_READY=1`, `GGUF_TARGET_*`, `GGUF_NATIVE_LOADER=esp_header`, `B_BLOCK=no_gguf_infer`, `GGUF_STATUS=header_ok`, `LOAD_KIND=proxy` — **sem** `TOKENS_PER_S` / `LOAD_S` / `LOAD_KIND=gguf`.
+Sucesso `verify-harness-comparable` (estado atual): `VERDICT=INCONCLUSIVO` + reason `…E27_no_gguf_infer_engine`.
 
-Timeout: `VERIFY_HARNESS_TIMEOUT=600 make verify-harness`.
+Preflight quieto: aviso se QEMU/`verify-*` concorrente; `IA_LIVRE_HARNESS_QUIET_STRICT=1` falha; `IA_LIVRE_HARNESS_QUIET_FORCE=1` override.
+
+Timeouts: `VERIFY_HARNESS_TIMEOUT` / `VERIFY_HARNESS_COMPARABLE_TIMEOUT`.
 
 ## Não fazer
 
-- Não tratar B como TinyLlama / emitir `TOKENS_PER_S` ou `LOAD_S` em B
-- Não fingir `LOAD_KIND=gguf` ou `HARNESS_MODEL=` TinyLlama em B
-- Não declarar hipótese comprovada
-- Não confundir com `make verify` (só kernel) ou `make verify-runtime` / `verify-runtime-contract` (shim host)
+- Não inventar `TOKENS_PER_S` / `LOAD_KIND=gguf` em B
+- Não declarar hipótese comprovada sob `no_gguf_infer_engine`
+- Não rodar vários gates/QEMU/runtime em paralelo na mesma medição
+- Não confundir com `make verify` (kernel) ou `verify-runtime` / `verify-runtime-contract`
