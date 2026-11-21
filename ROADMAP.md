@@ -134,3 +134,12 @@ Status: em_andamento
 Issue: [#19](https://github.com/eriksonlima/projeto-ia-livre/issues/19)  
 Spec: specs/memoria-scheduler-impl-minima/  
 Pronto quando: contrato mínimo verificável no kernel pós-ExitBoot — allocator tipado `Weights`/`KvCache`, hints Prefill/Decode com política de quantum mínima e marcadores serial; `make verify` (ou extensão documentada) cobre o caminho; sem GGUF; sem prova da hipótese; sem ABI estável/multi-tenant/GPU manager.
+
+<!-- Etapas 20–21 = B14/B15 em branches paralelas (#20/#21). Não duplicar nesta branch. -->
+
+## Etapa 22 — Harness A vs B comparável (prova ou refutação da hipótese)
+
+Status: pendente  
+Issue: [#22](https://github.com/eriksonlima/projeto-ia-livre/issues/22)  
+Spec: specs/harness-a-b-comparavel/  
+Pronto quando: corrida lado a lado (mesmo modelo/quantização/carga) Linha A vs Linha B reproduzível e documentada, com relatório honesto (comprova / refuta / inconclusivo + limites); gate ou script verificável; sem declarar vitória sem evidência comparável (carga GGUF real em B — depende das Etapas 20–21 / B14–B15); sem GPU manager.

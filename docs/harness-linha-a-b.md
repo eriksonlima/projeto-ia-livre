@@ -7,6 +7,8 @@ Ponte: [`architecture.md`](architecture.md) (seção Hipótese) e [`product-cont
 > **A e B nesta etapa não são comparáveis** lado a lado para a hipótese (`TOKENS_PER_S` vs `PROXY_MS`).  
 > **Não** confundir com as métricas dos protótipos: [`runtime-inferencia-cpu-metricas.md`](runtime-inferencia-cpu-metricas.md) (Etapa 5) e [`runtime-inferencia-gpu-metricas.md`](runtime-inferencia-gpu-metricas.md) (Etapa 8).
 
+**Comparável (prova / refutação / inconclusivo):** Etapa 22 — [`harness-a-b-comparavel.md`](harness-a-b-comparavel.md) + `make verify-harness-comparable`. Enquanto B for proxy, o veredito honesto é `INCONCLUSIVO`.
+
 Contrato do caminho B mínimo: [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md).
 
 ## Definição nesta etapa

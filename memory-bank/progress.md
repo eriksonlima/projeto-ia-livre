@@ -17,3 +17,8 @@
 
 - 1–18: feitas
 - Próxima candidata (topo Abertas): B13 — memória model-aware + scheduler (impl. mínima) → #19
+
+## Paralelo B16 (branch)
+
+- Etapa 22 `pendente` (#22): instrumento comparável entregue (doc + script + gate); veredito honesto `INCONCLUSIVO` enquanto B=proxy
+- Bloqueio para COMPROVA/REFUTA: depende B15 (GGUF em B) / Etapas 20–21

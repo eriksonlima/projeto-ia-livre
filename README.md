@@ -27,6 +27,7 @@ Veja `AGENTS.md` → **Como verificar**.
 - Specs: `specs/`
 - Produto: `docs/product-context.md`
 - Arquitetura: `docs/architecture.md`
+- Harness A vs B (metodologia): `docs/harness-linha-a-b.md` — comparável / veredito: `docs/harness-a-b-comparavel.md` (veja `AGENTS.md` → gates)
 - ADRs: `docs/adr/`
 - Contexto ativo (Memory Bank): `memory-bank/activeContext.md`
 - Contribuição: `CONTRIBUTING.md`

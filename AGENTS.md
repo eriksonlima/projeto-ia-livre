@@ -196,6 +196,26 @@ Linha B (Etapa 12): proxy pós-ExitBoot no QEMU — **não** é TinyLlama; ver [
 
 Gate automatizado: `make verify-harness` (A = GGUF no host; B = QEMU/kernel proxy; requer GGUF para A).
 
+### Harness A vs B comparável (Etapa 22)
+
+Metodologia + veredito: [`docs/harness-a-b-comparavel.md`](docs/harness-a-b-comparavel.md).  
+Corrida agregada A+B com `IA_LIVRE_HARNESS_VERDICT=` ∈ {`COMPROVA`,`REFUTA`,`INCONCLUSIVO`}. Com B proxy → **`INCONCLUSIVO`** (obrigatório). **Não** inventa métricas lado a lado sem GGUF real em B.
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+export LIBCLANG_PATH="${LIBCLANG_PATH:-/usr/lib/llvm-18/lib}"
+
+./scripts/fetch-model.sh
+cargo build -p ia-livre-runtime
+
+./scripts/run-harness-a-b-comparable.sh
+# Gate:
+make verify-harness-comparable
+```
+
+Override opcional quando B15 existir: `IA_LIVRE_HARNESS_B_SCRIPT=/caminho/para/entrypoint-b-gguf`.  
+Timeout: `VERIFY_HARNESS_COMPARABLE_TIMEOUT` (default = `VERIFY_HARNESS_TIMEOUT`, 300s).
+
 ## Como verificar
 
 ### Gate do kernel (Etapas 4 / 10 / 11)
@@ -311,6 +331,24 @@ grep -q 'post_exit_microbench' scripts/run-harness-line-b.sh
 
 `make verify-harness` exige A (`LINE=A`, `OK`, load/tokens) **e** B (`LINE=B`, `OK`, `PROXY=*`, sem `TOKENS_PER_S` / sem `B_SKIP`). Timeout padrão 300s; `VERIFY_HARNESS_TIMEOUT`. Gates existentes permanecem.
 
+### Gate do harness A vs B comparável (Etapa 22 — adicional)
+
+Requer GGUF para A e QEMU para B (proxy até B15). Emite veredito; **aceita** `INCONCLUSIVO` com B proxy. **Não** prova a hipótese sem GGUF comparável em B.
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+export LIBCLANG_PATH="${LIBCLANG_PATH:-/usr/lib/llvm-18/lib}"
+test -f scripts/verify-harness-comparable.sh
+test -f scripts/run-harness-a-b-comparable.sh
+test -f docs/harness-a-b-comparavel.md
+./scripts/fetch-model.sh
+make verify-harness-comparable
+grep -q 'IA_LIVRE_HARNESS_VERDICT' scripts/run-harness-a-b-comparable.sh
+grep -q 'VERDICT_REASON' scripts/run-harness-a-b-comparable.sh
+```
+
+`make verify-harness-comparable` exige `VERDICT=` ∈ {COMPROVA, REFUTA, INCONCLUSIVO} + `VERDICT_REASON=`; falha se `COMPROVA`/`REFUTA` com B proxy ou se o runner exit ≠ 0 (fraude/timeout). Timeout: `VERIFY_HARNESS_COMPARABLE_TIMEOUT` (default 300s). `make verify-harness` (v1) permanece.
+
 ## PATH
 
 Sempre inclua o GitHub CLI e o Cargo locais:
@@ -341,7 +379,7 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `docs/ambiente-autonomia-prototipo.md` — loop/memória/ferramenta do protótipo de autonomia (Etapa 7)
 - `docs/desenho-autonomia-v1.md` — escopo autonomia v1 (ADR 0005; não implementado)
 - `docs/adr/0005-autonomia-v1-utilizavel.md` — ADR do escopo v1
-- `Makefile` — `build` / `esp` / `run` / `verify` / `verify-runtime` / `verify-runtime-gpu` / `verify-node` / `verify-agent` / `verify-harness` / `clean`
+- `Makefile` — `build` / `esp` / `run` / `verify` / `verify-runtime` / `verify-runtime-gpu` / `verify-node` / `verify-agent` / `verify-harness` / `verify-harness-comparable` / `clean`
 - `scripts/run-qemu.sh` — atalho para `make run`
 - `scripts/verify-boot.sh` — gate serial do kernel (`BOOT_OK` + mem/alloc + `EXIT_BOOT_OK`)
 - `scripts/verify-runtime.sh` — gate do runtime CPU (`IA_LIVRE_INFER_OK` + métricas)
@@ -353,6 +391,7 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `scripts/fetch-model.sh` — download do GGUF canônico da Etapa 5
 - `docs/runtime-inferencia-cpu-metricas.md` — métricas do protótipo no host
 - `docs/harness-linha-a-b.md` — metodologia do harness Linha A vs Linha B
+- `docs/harness-a-b-comparavel.md` — veredito COMPROVA/REFUTA/INCONCLUSIVO (Etapa 22)
 - `docs/harness-perfis-a-otimizada-gpu.md` — perfis A otimizada / GPU (Etapa 18; gate permanece `verify-harness`)
 - `docs/runtime-nativo-linha-b.md` — contrato Linha B mínima (proxy pós-ExitBoot)
 - `docs/desenho-memoria-scheduler-nativo.md` — desenho candidato Weights/KvCache + Prefill/Decode (ADR 0003)
@@ -364,6 +403,8 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `scripts/run-harness-line-a.sh` — corrida Linha A (wrapper do runtime, marcadores `HARNESS_`)
 - `scripts/run-harness-line-b.sh` — Linha B via QEMU (proxy; `HARNESS_OK` + `PROXY_*`)
 - `scripts/verify-harness.sh` — gate A (GGUF) + B (proxy QEMU)
+- `scripts/run-harness-a-b-comparable.sh` — corrida A+B + `VERDICT`/`VERDICT_REASON` (Etapa 22)
+- `scripts/verify-harness-comparable.sh` — gate do instrumento comparável
 - `build/esp/` — ESP gerada (gitignored via `build/`)
 
 ## Fora de escopo do agente

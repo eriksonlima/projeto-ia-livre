@@ -22,13 +22,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Notas: caminho mínimo da carga canônica do harness em B (QEMU/IA Livre). Depende de B13/B14.
 - Pronto quando (candidato): métricas B em espécie comparáveis às de A, ou bloqueio honesto documentado.
 
-### B16 — Harness A vs B comparável (prova ou refutação da hipótese)
-
-- Issue: [#22](https://github.com/eriksonlima/projeto-ia-livre/issues/22)
-- Origem: hipótese central (product-context); Etapas 9/12/18 = metodologia, não prova
-- Notas: corrida lado a lado mesmo modelo/quantização/carga; resultado comprova, refuta ou inconclusivo. Depende de B15.
-- Pronto quando (candidato): corrida reproduzível documentada; sem vitória sem evidência.
-
 ### B17 — Protocolo Rede IA Livre v1 (impl. em node/)
 
 - Issue: [#23](https://github.com/eriksonlima/projeto-ia-livre/issues/23)
@@ -51,6 +44,13 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Pronto quando (candidato): caminho verificável; skip/gate honesto; sem prova A vs B via multi-GPU.
 
 ## Promovidas / arquivadas
+
+### B16 — Harness A vs B comparável (prova ou refutação da hipótese)
+
+- Promovido para Etapa 22 do roadmap (`pendente` em paralelo à Etapa 19 `em_andamento`; branch `etapa-b16-harness-comparavel` / worktree `projeto-ia-livre-b16`).
+- Issue: [#22](https://github.com/eriksonlima/projeto-ia-livre/issues/22)
+- Etapa: [Etapa 22 — Harness A vs B comparável (prova ou refutação da hipótese)](ROADMAP.md)
+- Depende: B15 / Etapa 21 (carga GGUF em B); sem prova falsa sem carga real.
 
 ### B13 — Memória model-aware + scheduler por fases (impl. mínima)
 

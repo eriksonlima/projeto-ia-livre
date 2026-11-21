@@ -3,6 +3,7 @@
 Caminho **honesto** para a Linha B no IA Livre (QEMU), sem TinyLlama no kernel e **sem** comprovar a hipótese A vs B.
 
 Ponte harness: [`harness-linha-a-b.md`](harness-linha-a-b.md).  
+Comparável (veredito; Etapa 22): [`harness-a-b-comparavel.md`](harness-a-b-comparavel.md) — com este proxy o veredito é `INCONCLUSIVO`.  
 Perfis A otimizada / GPU (metodologia; GPU-B futuro): [`harness-perfis-a-otimizada-gpu.md`](harness-perfis-a-otimizada-gpu.md).  
 Pré-requisito kernel: [`kernel-pos-boot-services.md`](kernel-pos-boot-services.md) (`EXIT_BOOT_OK`).
 

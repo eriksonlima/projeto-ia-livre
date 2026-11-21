@@ -20,3 +20,12 @@
 
 - Sem GGUF; sem prova da hipótese; sem ABI estável/multi-tenant/GPU manager
 - ADR 0003 + `docs/desenho-memoria-scheduler-nativo.md`
+
+## Paralelo (esta branch)
+
+- **Etapa 22** `pendente` — B16 Harness A vs B comparável (Issue #22)
+- Branch/worktree: `etapa-b16-harness-comparavel` / `projeto-ia-livre-b16`
+- Spec: `specs/harness-a-b-comparavel/` (tasks 1–3 feitas)
+- Gate: `make verify-harness-comparable` → `VERDICT=INCONCLUSIVO` (B ainda proxy; aguarda B15)
+- **Não** claimou lease da Etapa 19; **não** promoveu a `em_andamento`
+
