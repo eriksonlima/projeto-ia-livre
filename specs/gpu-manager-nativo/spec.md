@@ -106,14 +106,14 @@ Regressão obrigatória: `BOOT_OK` … `EXIT_BOOT_OK` … `MEM_SCHED_OK` … `NA
 
 ## Critérios de aceite
 
-- [ ] `docs/gpu-manager-nativo.md`: contrato, marcadores, ordem, QEMU sem GPU real, fronteira host×nativo×E8.
-- [ ] Pontes em `docs/desenho-gpu-manager-multi-gpu.md` (item «enum nativo pós-ExitBoot» = E38) e `docs/gpu-manager-prototipo-host.md` (stub ≠ nativo).
-- [ ] `kernel/`: demo pós-`MEM_SCHED_OK` emitindo marcadores conforme spec; módulo dedicado (ex. `kernel/src/gpu_mgr.rs`) preferível.
-- [ ] `scripts/verify-boot.sh` + greps em `AGENTS.md` exigem `GPU_MGR=native`, `GPU_MGR_OK`, `GPU_DEVICES=`, afinidade e placement mínimos.
-- [ ] `make verify` verde; `make verify-gpu-manager` e `make verify-runtime-gpu` sem regressão de semântica/skip.
-- [ ] Opcional documentado: ponte `runtime-native` sem `TOKENS_PER_S`.
-- [ ] README avaliado (`readme-por-fatia`).
-- [ ] Nenhuma prova A vs B nem multi-GPU completo fingido.
+- [x] `docs/gpu-manager-nativo.md`: contrato, marcadores, ordem, QEMU sem GPU real, fronteira host×nativo×E8.
+- [x] Pontes em `docs/desenho-gpu-manager-multi-gpu.md` (item «enum nativo pós-ExitBoot» = E38) e `docs/gpu-manager-prototipo-host.md` (stub ≠ nativo).
+- [x] `kernel/`: demo pós-`MEM_SCHED_OK` emitindo marcadores conforme spec; módulo dedicado (ex. `kernel/src/gpu_mgr.rs`) preferível.
+- [x] `scripts/verify-boot.sh` + greps em `AGENTS.md` exigem `GPU_MGR=native`, `GPU_MGR_OK`, `GPU_DEVICES=`, afinidade e placement mínimos.
+- [x] `make verify` verde; `make verify-gpu-manager` e `make verify-runtime-gpu` sem regressão de semântica/skip.
+- [x] Opcional documentado: ponte `runtime-native` sem `TOKENS_PER_S`.
+- [x] README avaliado (`readme-por-fatia`).
+- [x] Nenhuma prova A vs B nem multi-GPU completo fingido.
 
 ---
 
