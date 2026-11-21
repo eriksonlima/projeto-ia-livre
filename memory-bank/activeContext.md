@@ -2,14 +2,14 @@
 
 ## Foco atual
 
-- Etapa **50** `em_andamento` (B44 → mDNS) · Issue #50 · Spec `specs/mdns-rede-ia-livre/`
-- Task 1 feita (contrato docs); Task 2 = impl `node/` com `mdns-sd`
-- Lease: cursor-agent-main · etapa 50
+- Etapas 1–50 **feitas**
+- E50: mDNS `_ia-livre._tcp` (`mdns-sd`); gate opt-in
+- Topo Abertas: **B45** (TASK/KNOW na Rede)
 
 ## Próximo passo
 
-- Task 2: anúncio/resolução `_ia-livre._tcp` + `DISC_MODE=mdns` / `DISC_OK`
+- Promover B45 → Etapa 51 ou continuar
 
 ## Notas
 
-- E49 bridge feita; `verify-agent` independente do SO
+- Lease: liberar após push E50

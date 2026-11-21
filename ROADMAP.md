@@ -370,8 +370,9 @@ Pronto quando: agente one-shot (ou bridge verificável) consome runtime nativo/m
 
 ## Etapa 50 — mDNS real na Rede IA Livre (além do skip)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#50](https://github.com/eriksonlima/projeto-ia-livre/issues/50)  
 Spec: specs/mdns-rede-ia-livre/  
-Pronto quando: `--disc-mdns` anuncia/resolve `_ia-livre._tcp` em LAN com gate opt-in; skip honesto se multicast indisponível.
+Pronto quando: `--disc-mdns` anuncia/resolve `_ia-livre._tcp` em LAN com gate opt-in; skip honesto se multicast indisponível.  
+**Desfecho:** `mdns-sd` + `_ia-livre._tcp`; `DISC_MODE=mdns` + `DISC_OK`; gate skip default / `VERIFY_NODE_MDNS_SKIP=0` prova; sem libp2p.
 

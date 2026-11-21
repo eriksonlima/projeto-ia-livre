@@ -113,9 +113,9 @@ Esperado: `IA_LIVRE_INFER_OK`, `IA_LIVRE_ACCEL=vulkan` (ou `cuda`), `IA_LIVRE_N_
 Com `--n-gpu-layers 0` (ou build sem feature) permanece CPU (`IA_LIVRE_ACCEL=cpu`).  
 Métricas GPU: `docs/runtime-inferencia-gpu-metricas.md`. Gate automatizado: `make verify-runtime-gpu`.
 
-### Nó Rede IA Livre (host — Etapas 6 / 23 / 39)
+### Nó Rede IA Livre (host — Etapas 6 / 23 / 39 / 50)
 
-Nó da **camada 4** no host Linux (`std`) — protocolo **v1** (Etapa 23) + descoberta WAN mínima (Etapa 39). **Não** precisa do kernel UEFI, QEMU, GGUF nem do runtime de inferência. Participar da Rede **não exige** o SO IA Livre (ADR 0001).
+Nó da **camada 4** no host Linux (`std`) — protocolo **v1** (Etapa 23) + descoberta WAN (bootstrap Etapa 39 + mDNS Etapa 50). **Não** precisa do kernel UEFI, QEMU, GGUF nem do runtime de inferência. Participar da Rede **não exige** o SO IA Livre (ADR 0001).
 
 Contrato v1: [`docs/rede-ia-livre-v1.md`](docs/rede-ia-livre-v1.md) · descoberta: [`docs/rede-descoberta-wan.md`](docs/rede-descoberta-wan.md) (histórico E6: [`docs/rede-ia-livre-prototipo.md`](docs/rede-ia-livre-prototipo.md)).
 
@@ -132,12 +132,16 @@ cargo run -p ia-livre-node -- --tcp-port 7400 --node-id alice
 # Terminal B — regressão (--peer) ou bootstrap (Etapa 39, sem --peer):
 cargo run -p ia-livre-node -- --tcp-port 7401 --node-id bob --peer 127.0.0.1:7400
 cargo run -p ia-livre-node -- --tcp-port 7401 --node-id bob --bootstrap 127.0.0.1:7400
+
+# mDNS (Etapa 50) — dois terminais, sem --peer / sem --bootstrap:
+cargo run -p ia-livre-node -- --tcp-port 7400 --node-id alice --disc-mdns
+cargo run -p ia-livre-node -- --tcp-port 7401 --node-id bob --disc-mdns
 ```
 
-Esperado: `IA_LIVRE_PROTO=v1`, `IA_LIVRE_PEER_ID=…`, `IA_LIVRE_IDENT_OK`, `IA_LIVRE_PEER_OK`, `IA_LIVRE_MSG_OK`, `IA_LIVRE_PING_OK`; com bootstrap: `IA_LIVRE_DISC_MODE=bootstrap` + `IA_LIVRE_DISC_OK`.  
-`--node-id` é apelido; a âncora de confiança é o PeerId ed25519. `--peer` tem precedência sobre bootstrap.
+Esperado: `IA_LIVRE_PROTO=v1`, `IA_LIVRE_PEER_ID=…`, `IA_LIVRE_IDENT_OK`, `IA_LIVRE_PEER_OK`, `IA_LIVRE_MSG_OK`, `IA_LIVRE_PING_OK`; com bootstrap: `IA_LIVRE_DISC_MODE=bootstrap` + `IA_LIVRE_DISC_OK`; com mDNS: `IA_LIVRE_DISC_MODE=mdns` + `IA_LIVRE_DISC_OK`.  
+`--node-id` é apelido; a âncora de confiança é o PeerId ed25519. Precedência dial: `--peer` > bootstrap > mdns.
 
-Gate automatizado: `make verify-node` (peer + bootstrap; não exige QEMU, GGUF nem runtime).
+Gate automatizado: `make verify-node` (peer + bootstrap; mDNS skip default; não exige QEMU, GGUF nem runtime).
 
 ### Ambiente de autonomia (host — Etapas 7 / 24)
 
@@ -348,15 +352,16 @@ grep -q 'host_shard_exec' scripts/run-gpu-shard-host.sh
 Com ≥2 GPUs: `IA_LIVRE_GPU_SHARD_EXEC_OK` + plano `0:0-10,1:11-21`.  
 Com &lt;2 GPUs / CI: `IA_LIVRE_GPU_SHARD_SKIP` (ex. `need_2_devices`) exit **0** — **sem** `EXEC_OK`. Force skip: `VERIFY_GPU_SHARD_SKIP=1`.
 
-### Gate do nó Rede IA Livre (Etapas 6 / 23 / 39 — adicional)
+### Gate do nó Rede IA Livre (Etapas 6 / 23 / 39 / 50 — adicional)
 
-Só Rust no host. **Não** usa QEMU, GGUF nem o runtime de inferência. Participar da Rede **não exige** o SO IA Livre. Gate: regressão `--peer` + estágio `--bootstrap` (`DISC_OK`).
+Só Rust no host. **Não** usa QEMU, GGUF nem o runtime de inferência. Participar da Rede **não exige** o SO IA Livre. Gate: regressão `--peer` + estágio `--bootstrap` (`DISC_OK`) + mDNS opt-in (Etapa 50).
 
 ```bash
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 test -d node && test -f node/Cargo.toml && test -f node/src/main.rs
 test -f scripts/verify-node.sh && test -f docs/rede-ia-livre-v1.md
 test -f docs/rede-descoberta-wan.md
+test -f node/src/mdns.rs
 make verify-node
 grep -q 'IA_LIVRE_PEER_OK' node/src/session.rs
 grep -q 'IA_LIVRE_MSG_OK' node/src/session.rs
@@ -364,10 +369,12 @@ grep -q 'IA_LIVRE_IDENT_OK' node/src/session.rs
 grep -q 'IA_LIVRE_PING_OK' node/src/session.rs
 grep -q 'IA_LIVRE_DISC_OK' node/src/main.rs
 grep -q 'IA_LIVRE_DISC_MODE=bootstrap' scripts/verify-node.sh
+grep -q '_ia-livre._tcp' node/src/mdns.rs
 ! grep -qi 'libp2p' node/Cargo.toml
 ```
 
-`make verify-node` roda estágio peer **e** bootstrap (B sem `--peer`); exige v1 + `IA_LIVRE_DISC_OK` no bootstrap. Timeout por estágio: `VERIFY_NODE_TIMEOUT` (default 45s). mDNS: `VERIFY_NODE_MDNS_SKIP=1` (default). Gates do kernel/runtime permanecem.
+`make verify-node` roda estágio peer **e** bootstrap (B sem `--peer`); exige v1 + `IA_LIVRE_DISC_OK` no bootstrap. Timeout por estágio: `VERIFY_NODE_TIMEOUT` (default 45s).  
+mDNS: `VERIFY_NODE_MDNS_SKIP=1` (default) → `IA_LIVRE_DISC_MDNS_SKIP=…`. Prova: `VERIFY_NODE_MDNS_SKIP=0 make verify-node` (exige `DISC_MODE=mdns` + `DISC_OK`); se multicast falhar sem `VERIFY_NODE_MDNS_FORCE=1`, skip honesto. Gates do kernel/runtime permanecem.
 
 ### Gate do ambiente de autonomia (Etapas 7 / 24 / 40 — adicional)
 
@@ -560,8 +567,9 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `docs/gpu-manager-prototipo-host.md` — contrato do stub host (≠ nativo; ≠ prova A vs B)
 - `docs/runtime-inferencia-gpu-metricas.md` — métricas do protótipo GPU no host
 - `docs/adr/0002-aceleracao-gpu-host-llama-cpp.md` — CUDA canônico / Vulkan alternativa
-- `scripts/verify-node.sh` — gate do nó (v1 + bootstrap Etapa 39: `PEER_OK`/`MSG_OK`/`IDENT_OK`/`PING_OK` + `DISC_OK`)
-- `docs/rede-descoberta-wan.md` — contrato descoberta WAN mínima (bootstrap / mDNS skip)
+- `scripts/verify-node.sh` — gate do nó (v1 + bootstrap E39 + mDNS E50 opt-in: `PEER_OK`/`MSG_OK`/`IDENT_OK`/`PING_OK` + `DISC_OK`)
+- `node/src/mdns.rs` — anúncio/resolução `_ia-livre._tcp` (Etapa 50; `mdns-sd`)
+- `docs/rede-descoberta-wan.md` — contrato descoberta WAN (bootstrap E39 / mDNS E50)
 - `scripts/verify-agent.sh` — gate autonomia E7+v1+E40 (`TOOL_OK` / `MEMORY_OK` / `AGENT_OK` + `MEMORY_POLICY_OK` + ≥2 tools + `calc`/`TOOL_SANDBOX_OK`)
 - `scripts/fetch-model.sh` — download do GGUF canônico da Etapa 5
 - `docs/runtime-inferencia-cpu-metricas.md` — métricas do protótipo no host

@@ -1,9 +1,10 @@
-//! CLI do nó Rede IA Livre v1 + descoberta WAN mínima (Etapas 23 / 39).
+//! CLI do nó Rede IA Livre v1 + descoberta WAN mínima (Etapas 23 / 39 / 50).
 //! Identidade ed25519/PeerId, HELLO UDP assinado, IDENT, MSG/ACK, PING/PONG.
-//! Bootstrap: `--bootstrap` / `--bootstrap-file` (sem exigir SO IA Livre).
+//! Bootstrap + mDNS `_ia-livre._tcp` (sem exigir SO IA Livre).
 
 mod discovery;
 mod identity;
+mod mdns;
 mod proto;
 mod session;
 
@@ -30,8 +31,8 @@ Uso: ia-livre-node [--node-id <apelido>] [--tcp-port <porta>] [--udp-port <porta
                    [--peer <host:port>] [--bootstrap <host:port>]…
                    [--bootstrap-file <path>] [--disc-mdns] [--key-file <path>]
 
-Nó Rede IA Livre v1 + descoberta WAN mínima (bootstrap).
---peer tem precedência sobre bootstrap para dial. Ver docs/rede-descoberta-wan.md.
+Nó Rede IA Livre v1 + descoberta (bootstrap / mDNS).
+--peer > bootstrap > mdns para dial. Ver docs/rede-descoberta-wan.md.
 ";
 
 struct Config {
@@ -250,7 +251,7 @@ async fn run_udp_discovery(
     }
 }
 
-async fn try_dial_addr(
+pub(crate) async fn try_dial_addr(
     addr: SocketAddr,
     sk: SigningKey,
     peer_id: String,
@@ -365,11 +366,6 @@ async fn run(cfg: Config) -> Result<(), String> {
     println!("udp_port={}", cfg.udp_port);
     println!("key_file={}", cfg.key_file.display());
 
-    if cfg.disc_mdns {
-        // Opt-in reservado; implementação adiada — skip honesto no gate.
-        println!("IA_LIVRE_DISC_MDNS=skip");
-    }
-
     let peer_ok = Arc::new(AtomicBool::new(false));
     let dialing = Arc::new(AtomicBool::new(false));
 
@@ -409,7 +405,22 @@ async fn run(cfg: Config) -> Result<(), String> {
         dialing.clone(),
     ));
 
-    // Precedência: --peer > bootstrap > LAN-only.
+    // mDNS: anuncia sempre com --disc-mdns; dial só se não houver peer/bootstrap.
+    let mdns_should_dial = cfg.disc_mdns && cfg.peer.is_none() && cfg.bootstrap.is_empty();
+    if cfg.disc_mdns {
+        tokio::spawn(mdns::run_mdns(
+            cfg.alias.clone(),
+            cfg.tcp_port,
+            peer_id.clone(),
+            sk.clone(),
+            pubkey.clone(),
+            peer_ok.clone(),
+            dialing.clone(),
+            mdns_should_dial,
+        ));
+    }
+
+    // Precedência dial: --peer > bootstrap > mdns > LAN-only.
     if let Some(peer) = cfg.peer {
         println!("peer={peer}");
         tokio::spawn(dial_peer(

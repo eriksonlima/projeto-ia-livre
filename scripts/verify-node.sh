@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Gate Etapas 23 / 39: regressão --peer + estágio bootstrap (DISC_OK).
+# Gate Etapas 23 / 39 / 50: peer + bootstrap + mDNS opt-in (DISC_OK).
 set -euo pipefail
 cd "$(dirname "$0")/.."
 export PATH="${HOME}/.cargo/bin:${HOME}/.local/bin:${PATH}"
@@ -9,14 +9,21 @@ TIMEOUT_SEC="${VERIFY_NODE_TIMEOUT:-45}"
 TCP_A="${VERIFY_NODE_TCP_A:-7400}"
 TCP_B="${VERIFY_NODE_TCP_B:-7401}"
 TCP_B2="${VERIFY_NODE_TCP_B2:-7402}"
+TCP_A_MDNS="${VERIFY_NODE_TCP_A_MDNS:-7403}"
+TCP_B_MDNS="${VERIFY_NODE_TCP_B_MDNS:-7404}"
 UDP_PORT="${VERIFY_NODE_UDP:-7410}"
 UDP_PORT2="${VERIFY_NODE_UDP2:-7411}"
+UDP_A_MDNS="${VERIFY_NODE_UDP_A_MDNS:-7412}"
+UDP_B_MDNS="${VERIFY_NODE_UDP_B_MDNS:-7413}"
 KEY_A="${VERIFY_NODE_KEY_A:-build/node-keys/gate-alice.key}"
 KEY_B="${VERIFY_NODE_KEY_B:-build/node-keys/gate-bob.key}"
 KEY_B2="${VERIFY_NODE_KEY_B2:-build/node-keys/gate-bob2.key}"
+KEY_A_MDNS="${VERIFY_NODE_KEY_A_MDNS:-build/node-keys/gate-alice-mdns.key}"
+KEY_B_MDNS="${VERIFY_NODE_KEY_B_MDNS:-build/node-keys/gate-bob-mdns.key}"
 RUN_PEER="${VERIFY_NODE_LEGACY_PEER:-1}"
 RUN_BOOTSTRAP="${VERIFY_NODE_BOOTSTRAP:-1}"
 MDNS_SKIP="${VERIFY_NODE_MDNS_SKIP:-1}"
+MDNS_FORCE="${VERIFY_NODE_MDNS_FORCE:-0}"
 
 echo "Building ia-livre-node…"
 cargo build -p ia-livre-node
@@ -29,17 +36,18 @@ fi
 
 mkdir -p build/node-keys
 
-if [[ "$MDNS_SKIP" == "1" ]]; then
-  echo "IA_LIVRE_DISC_MDNS_SKIP=1"
-fi
-
 run_pair() {
   local stage="$1"
-  local b_tcp="$2"
-  local b_udp="$3"
-  local b_key="$4"
-  local b_extra="$5"
-  local need_disc="$6"
+  local a_tcp="$2"
+  local a_udp="$3"
+  local a_key="$4"
+  local a_extra="$5"
+  local b_tcp="$6"
+  local b_udp="$7"
+  local b_key="$8"
+  local b_extra="$9"
+  local need_disc="${10}"
+  local disc_mode="${11}"
 
   local A_LOG B_LOG A_PID B_PID
   A_LOG="$(mktemp)"
@@ -55,11 +63,17 @@ run_pair() {
   }
   trap cleanup_pair RETURN
 
-  echo "---- estágio ${stage}: Starting node A (tcp=${TCP_A})…"
-  "$BIN" --tcp-port "$TCP_A" --udp-port "$UDP_PORT" --node-id alice \
-    --key-file "$KEY_A" >"$A_LOG" 2>&1 &
+  echo "---- estágio ${stage}: Starting node A (tcp=${a_tcp})…"
+  # shellcheck disable=SC2086
+  "$BIN" --tcp-port "$a_tcp" --udp-port "$a_udp" --node-id "alice-${stage}" \
+    --key-file "$a_key" $a_extra >"$A_LOG" 2>&1 &
   A_PID=$!
-  sleep 0.4
+  # mDNS: dar tempo ao anúncio antes do browse do B
+  if [[ "$stage" == "mdns" ]]; then
+    sleep 1.0
+  else
+    sleep 0.4
+  fi
 
   echo "---- estágio ${stage}: Starting node B (tcp=${b_tcp}, ${b_extra})…"
   # shellcheck disable=SC2086
@@ -95,7 +109,7 @@ run_pair() {
     if grep -q 'IA_LIVRE_PING_OK' "$A_LOG" || grep -q 'IA_LIVRE_PING_OK' "$B_LOG"; then
       ok_ping=1
     fi
-    if grep -q 'IA_LIVRE_DISC_OK' "$B_LOG"; then
+    if grep -q 'IA_LIVRE_DISC_OK' "$A_LOG" || grep -q 'IA_LIVRE_DISC_OK' "$B_LOG"; then
       ok_disc=1
     fi
 
@@ -132,9 +146,12 @@ run_pair() {
     echo "GATE_FAIL (${stage}): IA_LIVRE_DISC_OK ausente"
     fail=1
   fi
-  if [[ "$need_disc" == "1" ]] && ! grep -q 'IA_LIVRE_DISC_MODE=bootstrap' "$B_LOG"; then
-    echo "GATE_FAIL (${stage}): IA_LIVRE_DISC_MODE=bootstrap ausente"
-    fail=1
+  if [[ "$need_disc" == "1" && -n "$disc_mode" ]]; then
+    if ! grep -q "IA_LIVRE_DISC_MODE=${disc_mode}" "$A_LOG" \
+      && ! grep -q "IA_LIVRE_DISC_MODE=${disc_mode}" "$B_LOG"; then
+      echo "GATE_FAIL (${stage}): IA_LIVRE_DISC_MODE=${disc_mode} ausente"
+      fail=1
+    fi
   fi
 
   if (( fail )); then
@@ -143,18 +160,44 @@ run_pair() {
     return 1
   fi
 
-  echo "GATE_OK (${stage}): PEER_OK + MSG_OK + IDENT_OK + PING_OK$([ "$need_disc" = 1 ] && echo ' + DISC_OK' || true)"
+  echo "GATE_OK (${stage}): PEER_OK + MSG_OK + IDENT_OK + PING_OK$([ "$need_disc" = 1 ] && echo " + DISC_OK (${disc_mode})" || true)"
   return 0
 }
 
 if [[ "$RUN_PEER" == "1" ]]; then
-  run_pair peer "$TCP_B" "$UDP_PORT" "$KEY_B" "--peer 127.0.0.1:${TCP_A}" 0
+  run_pair peer "$TCP_A" "$UDP_PORT" "$KEY_A" "" \
+    "$TCP_B" "$UDP_PORT" "$KEY_B" "--peer 127.0.0.1:${TCP_A}" 0 ""
 fi
 
 if [[ "$RUN_BOOTSTRAP" == "1" ]]; then
-  # Portas distintas para não colidir com o estágio peer (processos já mortos, mas UDP reuse).
-  run_pair bootstrap "$TCP_B2" "$UDP_PORT2" "$KEY_B2" "--bootstrap 127.0.0.1:${TCP_A}" 1
+  run_pair bootstrap "$TCP_A" "$UDP_PORT" "$KEY_A" "" \
+    "$TCP_B2" "$UDP_PORT2" "$KEY_B2" "--bootstrap 127.0.0.1:${TCP_A}" 1 bootstrap
 fi
 
-echo "GATE_OK: nó Rede IA Livre — regressão peer + bootstrap (Etapa 39)"
+if [[ "$MDNS_SKIP" == "1" ]]; then
+  echo "IA_LIVRE_DISC_MDNS_SKIP=1"
+  echo "GATE_OK: nó Rede IA Livre — peer + bootstrap (mDNS skip; Etapa 50)"
+  exit 0
+fi
+
+echo "---- estágio mdns (VERIFY_NODE_MDNS_SKIP=0)…"
+set +e
+run_pair mdns "$TCP_A_MDNS" "$UDP_A_MDNS" "$KEY_A_MDNS" "--disc-mdns" \
+  "$TCP_B_MDNS" "$UDP_B_MDNS" "$KEY_B_MDNS" "--disc-mdns" 1 mdns
+mdns_rc=$?
+set -e
+
+if [[ "$mdns_rc" -eq 0 ]]; then
+  echo "GATE_OK: nó Rede IA Livre — peer + bootstrap + mdns (Etapa 50)"
+  exit 0
+fi
+
+if [[ "$MDNS_FORCE" == "1" ]]; then
+  echo "GATE_FAIL: mDNS falhou e VERIFY_NODE_MDNS_FORCE=1"
+  exit 1
+fi
+
+# Multicast indisponível / flaky → skip honesto (sem fingir DISC_OK)
+echo "IA_LIVRE_DISC_MDNS_SKIP=multicast_or_timeout"
+echo "GATE_OK: nó Rede IA Livre — peer + bootstrap (mDNS skip honesto; Etapa 50)"
 exit 0

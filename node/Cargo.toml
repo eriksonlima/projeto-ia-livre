@@ -12,3 +12,4 @@ socket2 = { version = "0.5", features = ["all"] }
 ed25519-dalek = { version = "2", features = ["rand_core"] }
 rand = "0.8"
 hex = "0.4"
+mdns-sd = "0.22"

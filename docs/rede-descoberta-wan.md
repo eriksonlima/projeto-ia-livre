@@ -44,7 +44,7 @@ Arquivo exemplo (gitignored via `build/`): `build/node-bootstrap.txt`.
 | Porta | TCP do nó (`--tcp-port`) |
 | Instance | alias `--node-id` + porta (unicidade na LAN) |
 | TXT | opcional / mínimo — **não** substitui IDENT |
-| Crate candidata | `mdns-sd` (leve; **sem** libp2p) — confirmação na impl. |
+| Crate | `mdns-sd` (leve; **sem** libp2p) |
 
 Comportamento com `--disc-mdns`:
 
