@@ -2,17 +2,17 @@
 
 ## O que funciona
 
-- Etapas 1–39
-- E39: bootstrap WAN mínimo + `DISC_OK` no gate do nó
-- E38: GPU manager nativo
+- Etapas 1–40
+- E40: `calc` sandboxed + gate agent
+- E39: bootstrap WAN
 
 ## Bloqueios
 
-- Sem TOKENS_PER_S em B (22L/KV)
+- Sem TOKENS_PER_S em B
 - Sem log metal real (SKIP)
-- mDNS ainda skip (não implementado)
+- Shard multi-GPU host ainda não executado (E41)
 
 ## Por etapa
 
-- 1–39: feitas
-- 40: em_andamento (#39) — autonomia além de v1
+- 1–40: feitas
+- 41: em_andamento (#40)

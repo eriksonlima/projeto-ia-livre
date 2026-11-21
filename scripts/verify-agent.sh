@@ -101,6 +101,20 @@ if ! grep -qE 'IA_LIVRE_TOOL=(recall|help)' "$COMBINED"; then
   fail=1
 fi
 
+# Extensão Etapa 40 — calc sandboxed
+if ! grep -q 'IA_LIVRE_TOOL=calc' "$COMBINED"; then
+  echo "GATE_FAIL: marcador ausente: IA_LIVRE_TOOL=calc"
+  fail=1
+fi
+if ! grep -q 'IA_LIVRE_TOOL_SANDBOX_OK' "$COMBINED"; then
+  echo "GATE_FAIL: marcador ausente: IA_LIVRE_TOOL_SANDBOX_OK"
+  fail=1
+fi
+if ! grep -qE 'IA_LIVRE_CALC_RESULT=7(\.0)?' "$COMBINED"; then
+  echo "GATE_FAIL: IA_LIVRE_CALC_RESULT=7 ausente (prova 1+2*3)"
+  fail=1
+fi
+
 if [[ ! -f "$MEMORY_FILE" ]] || ! grep -q 'prova-autonomia-ia-livre' "$MEMORY_FILE"; then
   echo "GATE_FAIL: memória de prova ausente ou sem nota canônica"
   fail=1
@@ -112,5 +126,5 @@ if (( fail )); then
   exit 1
 fi
 
-echo "GATE_OK: autonomia v1 — $(grep -E 'IA_LIVRE_(TOOL_OK|MEMORY_OK|AGENT_OK|MEMORY_POLICY_OK|TOOLS_USED=|RUNTIME_USED=)' "$COMBINED" | tr '\n' ' ')"
+echo "GATE_OK: autonomia v1+calc — $(grep -E 'IA_LIVRE_(TOOL_OK|MEMORY_OK|AGENT_OK|MEMORY_POLICY_OK|TOOLS_USED=|RUNTIME_USED=|TOOL_SANDBOX_OK|TOOL=calc)' "$COMBINED" | tr '\n' ' ')"
 exit 0

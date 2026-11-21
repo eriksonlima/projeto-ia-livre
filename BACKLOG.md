@@ -8,12 +8,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-### B34 — Shard multi-GPU host executado (além do stub)
-
-- Issue: [#40](https://github.com/eriksonlima/projeto-ia-livre/issues/40)
-- Origem: E25 só `SHARD_DOC`
-- Pronto quando: placement/shard mínimo real no host com evidência ou skip honesto; ≠ manager nativo
-
 ### B35 — Sincronizar architecture/product + glossário pós-E30
 
 - Issue: [#41](https://github.com/eriksonlima/projeto-ia-livre/issues/41)
@@ -21,6 +15,11 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Pronto quando: `architecture.md` / README-AGENTS refletem estado atual sem ambiguidade
 
 ## Promovidas / arquivadas
+
+### B34 — Shard multi-GPU host executado (além do stub)
+
+- Promovido para Etapa 41 do roadmap (promoção autônoma após Etapa 40).
+- Issue: [#40](https://github.com/eriksonlima/projeto-ia-livre/issues/40)
 
 ### B33 — Autonomia além de v1 (REPL ou tool sandboxed)
 

@@ -2,18 +2,18 @@
 
 ## Foco atual
 
-- Etapa **40** `em_andamento` (#39) — autonomia além de v1 (REPL / tool sandboxed)
-- E39 **feita**: bootstrap + `DISC_OK` no `verify-node`
+- Etapa **41** `em_andamento` (#40) — shard multi-GPU host
+- E40 **feita**: tool `calc` sandboxed
 
 ## Mudanças recentes
 
-- E39: `--bootstrap` / `--bootstrap-file`; gate peer+bootstrap; mDNS skip
-- E38: `GPU_MGR=native`
+- E40: `agent/src/calc.rs` + `TOOL_SANDBOX_OK` no `verify-agent`
+- E39: bootstrap + `DISC_OK`
 
 ## Próximo passo
 
-- Especificar Etapa 40 (B33)
+- Especificar Etapa 41 (B34)
 
 ## Notas
 
-- README E39: considerado — AGENTS cobre bootstrap; capa sem mudança obrigatória
+- README E40: considerado — AGENTS/docs cobrem; capa sem mudança obrigatória

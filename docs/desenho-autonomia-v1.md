@@ -24,7 +24,7 @@ ADR 0001: autonomia fora do kernel; sem exigir o SO IA Livre.
 | Host Linux / sem SO IA Livre | sim | sim | — |
 | Subprocesso `ia-livre-runtime` | sim | sim | lib opcional |
 | `--prompt` usuário | não | sim | REPL |
-| Ferramentas | `note` | `note`/`recall`/`help` | allowlist maior / sandbox |
+| Ferramentas | `note` | `note`/`recall`/`help` | **E40:** +`calc` sandboxed ([`autonomia-alem-v1.md`](autonomia-alem-v1.md)); REPL/`read_local` futuro |
 | Memória | JSONL mínimo | kinds + N=8 no prompt | RAG / vetores |
 | P2P / kernel | fora | fora | etapas próprias |
 | Gate | `verify-agent` | E7 intacto; extensão na implementação | gate v1 |
@@ -89,4 +89,5 @@ Cenário de prova v1 (documental):
 ## Implementação
 
 1. **Etapa 24** (`specs/autonomia-v1-impl/`): `--prompt`, `recall`/`help`, política N=8, gate estendido — **feito** em `agent/`.
-2. Depois: REPL, sandbox, integração Rede (ADR própria)
+2. **Etapa 40:** tool sandboxed `calc` — feito ([`autonomia-alem-v1.md`](autonomia-alem-v1.md))
+3. Depois: REPL, `read_local`, integração Rede (ADR própria)

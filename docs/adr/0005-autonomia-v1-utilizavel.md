@@ -57,5 +57,6 @@ Esta ADR **não** implementa a v1 em `agent/`. Detalhe: doc de desenho da Etapa 
 | Etapa 7 | Protótipo `note` + JSONL — continua válido |
 | Etapa 15 | Esta ADR + doc de desenho — **sem** código `agent/` |
 | Etapa 24 | Implementação v1 (`--prompt`, `recall`/`help`, política N=8) + gate estendido |
+| Etapa 40 | Addendum: tool sandboxed `calc` — [`autonomia-alem-v1.md`](../autonomia-alem-v1.md); allowlist permanece fechada (sem shell/HTTP) |
 
-Doc de desenho (Task 2): [`docs/desenho-autonomia-v1.md`](../desenho-autonomia-v1.md) (a criar).
+Doc de desenho: [`docs/desenho-autonomia-v1.md`](../desenho-autonomia-v1.md).

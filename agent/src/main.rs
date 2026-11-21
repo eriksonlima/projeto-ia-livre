@@ -1,8 +1,11 @@
 //! CLI do ambiente de autonomia v1 (Etapa 24) — evolui o protótipo Etapa 7.
 //! Loop: memória (N=8) → prompt → runtime (subprocesso) → ferramentas allowlist → re-leitura.
 //! Marcadores E7: `IA_LIVRE_TOOL_OK`, `IA_LIVRE_MEMORY_OK`, `IA_LIVRE_AGENT_OK`.
-//! Marcadores v1: `IA_LIVRE_MEMORY_POLICY_OK` (+ evidência de tools na Task 2).
-//! Ver docs/desenho-autonomia-v1.md e docs/ambiente-autonomia-prototipo.md.
+//! Etapa 40: tool sandboxed `calc` + `IA_LIVRE_TOOL_SANDBOX_OK`.
+//! Marcadores v1: `IA_LIVRE_MEMORY_POLICY_OK` (+ evidência de tools).
+//! Ver docs/desenho-autonomia-v1.md e docs/autonomia-alem-v1.md.
+
+mod calc;
 
 use std::env;
 use std::fs::{self, OpenOptions};
@@ -18,7 +21,7 @@ Uso: ia-livre-agent [--model <path>] [--memory <path>] [--n-predict <n>] \\
 Autonomia v1 (camada 3) no host Linux — one-shot.
 Consome o runtime CPU existente; não exige o SO IA Livre / QEMU / UEFI.
 Sem --prompt: cenário de prova E7. Política de memória: últimas N=8 entradas no prompt.
-Allowlist: note / recall / help (recall+help na evolução v1).
+Allowlist: note / recall / help / calc (Etapa 40).
 Ver docs/desenho-autonomia-v1.md.
 ";
 
@@ -27,6 +30,10 @@ const DEFAULT_MEMORY: &str = "build/agent-memory/memory.jsonl";
 const DEFAULT_N_PREDICT: u32 = 16;
 /// Prompt de prova alinhado ao runtime (Etapa 5 / E7).
 const PROOF_PROMPT: &str = "Complete em uma frase: O Projeto IA Livre é";
+/// Expressão canônica da prova `calc` (Etapa 40).
+const PROOF_CALC_EXPR: &str = "1+2*3";
+const PROOF_CALC_RESULT: f64 = 7.0;
+
 /// Texto canônico gravado pela ferramenta `note` no cenário de prova.
 const PROOF_NOTE: &str = "prova-autonomia-ia-livre";
 /// Política de memória v1: últimas N entradas injetadas no prompt (fixado).
@@ -239,10 +246,19 @@ allowlist:
   note   — args: text; append kind=note ao JSONL
   recall — args: n opcional; lista entradas recentes do JSONL
   help   — lista ferramentas e contratos curtos
+  calc   — args: expr; aritmética pura sandboxed (0-9 . + - * / ( ))
 proibido: shell, HTTP, write fora do path de memória
 ";
     append_memory_line(memory, "tool", "help")?;
     Ok(HELP)
+}
+
+/// Ferramenta `calc`: avalia expressão aritmética sandboxed; registra kind `tool`.
+fn tool_calc(memory: &Path, expr: &str) -> Result<f64, String> {
+    let value = calc::eval_expr(expr)?;
+    let summary = format!("calc: {expr} = {value}");
+    append_memory_line(memory, "tool", &summary)?;
+    Ok(value)
 }
 
 fn find_runtime_bin(explicit: Option<&Path>) -> Result<PathBuf, String> {
@@ -364,6 +380,23 @@ fn run(config: &Config) -> Result<(), String> {
     for line in help_text.lines().take(8) {
         println!("help: {line}");
     }
+
+    // Etapa 40 — calc sandboxed (prova determinística)
+    let calc_val = tool_calc(&config.memory, PROOF_CALC_EXPR)?;
+    if (calc_val - PROOF_CALC_RESULT).abs() > 1e-9 {
+        return Err(format!(
+            "calc prova: esperado {PROOF_CALC_RESULT}, obtido {calc_val}"
+        ));
+    }
+    tools_used += 1;
+    println!("IA_LIVRE_TOOL=calc");
+    println!("IA_LIVRE_CALC_RESULT={calc_val}");
+    println!("calc: {PROOF_CALC_EXPR} = {calc_val}");
+    // Rejeição rápida (charset) — prova negativa embutida
+    if calc::eval_expr("1;rm").is_ok() {
+        return Err("calc sandbox falhou: aceitou ';'".into());
+    }
+    println!("IA_LIVRE_TOOL_SANDBOX_OK");
 
     println!("IA_LIVRE_TOOLS_USED={tools_used}");
     if tools_used < 2 {

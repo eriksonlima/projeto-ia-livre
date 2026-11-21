@@ -290,7 +290,15 @@ Pronto quando: descoberta além de `--peer`/HELLO LAN + gate; sem exigir SO.
 
 ## Etapa 40 — Autonomia além de v1 (REPL ou tool sandboxed)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#39](https://github.com/eriksonlima/projeto-ia-livre/issues/39)  
+Spec: specs/autonomia-alem-v1/  
+Pronto quando: REPL ou ≥1 tool nova sandboxed + gate; sem shell/HTTP irrestrito.  
+**Desfecho:** tool `calc` sandboxed + `TOOL_SANDBOX_OK` no gate; REPL adiado.
+
+## Etapa 41 — Shard multi-GPU host executado (além do stub)
+
+Status: em_andamento  
+Issue: [#40](https://github.com/eriksonlima/projeto-ia-livre/issues/40)  
 Spec: (a definir — `especificador`)  
-Pronto quando: REPL ou ≥1 tool nova sandboxed + gate; sem shell/HTTP irrestrito.
+Pronto quando: placement/shard mínimo real no host com evidência ou skip honesto; ≠ manager nativo.

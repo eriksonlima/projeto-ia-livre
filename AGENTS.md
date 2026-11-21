@@ -353,7 +353,7 @@ grep -q 'IA_LIVRE_DISC_MODE=bootstrap' scripts/verify-node.sh
 
 `make verify-node` roda estágio peer **e** bootstrap (B sem `--peer`); exige v1 + `IA_LIVRE_DISC_OK` no bootstrap. Timeout por estágio: `VERIFY_NODE_TIMEOUT` (default 45s). mDNS: `VERIFY_NODE_MDNS_SKIP=1` (default). Gates do kernel/runtime permanecem.
 
-### Gate do ambiente de autonomia (Etapas 7 / 24 — adicional)
+### Gate do ambiente de autonomia (Etapas 7 / 24 / 40 — adicional)
 
 Requer o GGUF local (`./scripts/fetch-model.sh` na primeira vez). **Não** usa QEMU/UEFI nem o nó P2P. Autonomia **não exige** o SO IA Livre.
 
@@ -363,6 +363,7 @@ export LIBCLANG_PATH="${LIBCLANG_PATH:-/usr/lib/llvm-18/lib}"
 test -d agent && test -f agent/Cargo.toml && test -f agent/src/main.rs
 test -f scripts/verify-agent.sh && test -f docs/ambiente-autonomia-prototipo.md
 test -f docs/desenho-autonomia-v1.md
+test -f docs/autonomia-alem-v1.md
 ./scripts/fetch-model.sh
 make verify-agent
 grep -q 'IA_LIVRE_TOOL_OK' agent/src/main.rs
@@ -370,9 +371,11 @@ grep -q 'IA_LIVRE_MEMORY_OK' agent/src/main.rs
 grep -q 'IA_LIVRE_AGENT_OK' agent/src/main.rs
 grep -q 'IA_LIVRE_MEMORY_POLICY_OK' agent/src/main.rs
 grep -q 'IA_LIVRE_TOOLS_USED' agent/src/main.rs
+grep -q 'IA_LIVRE_TOOL_SANDBOX_OK' agent/src/main.rs
+grep -q 'IA_LIVRE_TOOL=calc' agent/src/main.rs
 ```
 
-`make verify-agent` falha se o modelo estiver ausente ou se faltarem marcadores E7 (`TOOL_OK` / `MEMORY_OK` / `AGENT_OK`) **ou** v1 (`MEMORY_POLICY_OK` + `TOOLS_USED`≥2 + `TOOL=note` e `TOOL=recall|help`) (timeout padrão 300s; `VERIFY_AGENT_TIMEOUT`). Gates do kernel, runtime e nó permanecem.
+`make verify-agent` falha se o modelo estiver ausente ou se faltarem marcadores E7 (`TOOL_OK` / `MEMORY_OK` / `AGENT_OK`) **ou** v1 (`MEMORY_POLICY_OK` + `TOOLS_USED`≥2 + `TOOL=note` e `TOOL=recall|help`) **ou** E40 (`TOOL=calc` + `TOOL_SANDBOX_OK` + `CALC_RESULT=7`) (timeout padrão 300s; `VERIFY_AGENT_TIMEOUT`). Gates do kernel, runtime e nó permanecem.
 
 ### Gate do harness Linha A vs Linha B (Etapas 9 / 12 / 20 — adicional)
 
@@ -471,7 +474,8 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `runtime-contract/` — shim host do contrato nativo Weights/KvCache + fases (Etapa 20; ≠ Linha B)
 - `docs/runtime-contrato-nativo.md` — contrato consumidor + marcadores `CONTRACT_*` / `RUNTIME_CONTRACT_OK`
 - `node/` — nó Rede IA Livre v1 (host; ed25519/PeerId; independente do SO)
-- `agent/` — autonomia v1 (host; `--prompt`, allowlist note/recall/help, política N=8; consome runtime; independente do SO)
+- `agent/` — autonomia v1+E40 (host; `--prompt`, allowlist note/recall/help/`calc`, política N=8; consome runtime; independente do SO)
+- `docs/autonomia-alem-v1.md` — contrato tool sandboxed `calc` (Etapa 40)
 - `models/` — pesos GGUF locais (gitignored); obter com `./scripts/fetch-model.sh`
 - `runtime-native/` — runtime freestanding Linha B (Etapa 29; layout GGUF; forward futuro; ≠ host `runtime/`)
 - `Cargo.toml` — workspace Cargo (membros `kernel`, `runtime`, `runtime-contract`, `runtime-native`, `node`, `agent`)
@@ -497,7 +501,7 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `docs/adr/0002-aceleracao-gpu-host-llama-cpp.md` — CUDA canônico / Vulkan alternativa
 - `scripts/verify-node.sh` — gate do nó (v1 + bootstrap Etapa 39: `PEER_OK`/`MSG_OK`/`IDENT_OK`/`PING_OK` + `DISC_OK`)
 - `docs/rede-descoberta-wan.md` — contrato descoberta WAN mínima (bootstrap / mDNS skip)
-- `scripts/verify-agent.sh` — gate autonomia E7+v1 (`TOOL_OK` / `MEMORY_OK` / `AGENT_OK` + `MEMORY_POLICY_OK` + ≥2 tools)
+- `scripts/verify-agent.sh` — gate autonomia E7+v1+E40 (`TOOL_OK` / `MEMORY_OK` / `AGENT_OK` + `MEMORY_POLICY_OK` + ≥2 tools + `calc`/`TOOL_SANDBOX_OK`)
 - `scripts/fetch-model.sh` — download do GGUF canônico da Etapa 5
 - `docs/runtime-inferencia-cpu-metricas.md` — métricas do protótipo no host
 - `docs/harness-linha-a-b.md` — metodologia do harness Linha A vs Linha B
