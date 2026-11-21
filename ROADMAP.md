@@ -568,3 +568,19 @@ Spec: specs/baremetal-report-post-exit/
 Pronto quando: append pós-ExitBoot (`EXIT_*` / `MEM_SCHED` / métricas subset) via BlockIO/slot no report; `REPORT_POST_OK` ou FAIL honesto; docs; gate serial; sem `COMPROVA`.  
 **Desfecho:** slot `IALVPST1` no report pré-exit; buffer pós-exit via `uart_write`; `REPORT_POST_OK` + tentativa BlockIO rewrite (best-effort; QEMU fat:rw pode hang após OK); `make verify` exige REPORT_POST; ADR 0026 produto sem COMPROVA; B55 arquivada.
 
+## Etapa 75 — Inferência mínima path metal no baremetal-report
+
+Status: feita  
+Issue: [#76](https://github.com/eriksonlima/projeto-ia-livre/issues/76)  
+Spec: specs/baremetal-report-tokens/  
+Pronto quando: geração subset + `TOKENS_PER_S` medidos no report (honesto); ≠ comparable/`COMPROVA`.  
+**Desfecho:** pós-exit já captura `TOKENS_PER_S_MILLI` (uart→buffer); doc + `make verify-baremetal-report-tokens`; ≠ COMPROVA.
+
+## Etapa 76 — Script collect-baremetal-report.sh
+
+Status: feita  
+Issue: [#77](https://github.com/eriksonlima/projeto-ia-livre/issues/77)  
+Spec: specs/collect-baremetal-report/  
+Pronto quando: script acha mount IALIVRE, copia report; opcional verify SKIP=0; documentado.  
+**Desfecho:** `scripts/collect-baremetal-report.sh` + `make verify-collect-baremetal-report` (smoke fixture).
+

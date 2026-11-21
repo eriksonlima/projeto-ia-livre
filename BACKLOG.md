@@ -12,19 +12,23 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 
 
-### B70 — Inferência mínima path metal no baremetal-report
-- Issue: [#76](https://github.com/eriksonlima/projeto-ia-livre/issues/76)
-- Origem: plano evolução Linha B
-- Pronto quando: geração subset + `TOKENS_PER_S` medidos **no report** (honesto); **não** alimenta comparable/`COMPROVA`
-- Deps: B69 preferível
+## Promovidas / arquivadas
 
 ### B71 — Script collect-baremetal-report.sh
 - Issue: [#77](https://github.com/eriksonlima/projeto-ia-livre/issues/77)
 - Origem: DX operador (mount IALIVRE → evidence)
 - Pronto quando: script copia report (+ post); opcional `verify-baremetal SKIP=0`; doc no guia
 - Deps: B69 preferível
+- Promovido para Etapa 76.
+- Etapa: [Etapa 76 — collect-baremetal-report](ROADMAP.md)
 
-## Promovidas / arquivadas
+### B70 — Inferência mínima path metal no baremetal-report
+- Issue: [#76](https://github.com/eriksonlima/projeto-ia-livre/issues/76)
+- Origem: plano evolução Linha B
+- Pronto quando: geração subset + `TOKENS_PER_S` medidos **no report** (honesto); **não** alimenta comparable/`COMPROVA`
+- Deps: B69 preferível
+- Promovido para Etapa 75.
+- Etapa: [Etapa 75 — tokens no baremetal-report](ROADMAP.md)
 
 ### B69 — Persistência pós-ExitBoot no baremetal-report (BlockIO)
 - Issue: [#75](https://github.com/eriksonlima/projeto-ia-livre/issues/75)

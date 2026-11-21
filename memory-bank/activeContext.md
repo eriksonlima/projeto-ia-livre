@@ -2,15 +2,14 @@
 
 ## Foco atual
 
-- Etapas 1–74 **feitas**
-- Checklist 3 pilares **ok**; hipótese A/B **arquivada** (ADR 0026); B55 arquivada
-- E74: pós-exit no baremetal-report (`REPORT_POST_OK` + slot BlockIO)
-- Abertas: **B70** (tokens metal no report), **B71** (collect script)
+- Etapas 1–76 **feitas**
+- Checklist 3 pilares **ok**; ADR 0026 (sem COMPROVA); Linha B: report pré+pós-exit + tokens + collect
+- **Abertas:** vazia
 
 ## Próximo passo
 
-- Promover topo Abertas (**B70**) quando “continuar” / roadmap sem `em_andamento`
+- Pedido explícito de etapa / novo item de backlog (nada a promover)
 
 ## Notas
 
-- Lease: liberar após push E74
+- Lease livre após push

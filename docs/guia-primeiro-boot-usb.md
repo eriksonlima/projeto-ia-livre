@@ -64,7 +64,12 @@ Canal canônico: arquivo na ESP [`baremetal-report.md`](baremetal-report.md) / A
 
 1. Boot até a tela azul (“IA Livre”) / `EXIT_BOOT_BEGIN`.
 2. Desligue; no Linux, monte o pendrive.
-3. Copie `IA_LIVRE/baremetal-report.txt` para `docs/evidence/boot-metal/YYYY-MM-DD-<host>.txt`.
+3. Colete o report (ou copie à mão):
+
+   ```bash
+   ./scripts/collect-baremetal-report.sh --mount /media/$USER/IALIVRE
+   # opcional: --verify
+   ```
 4. Valide:
    ```bash
    IA_LIVRE_BAREMETAL_SKIP=0 \

@@ -61,9 +61,21 @@ make verify-baremetal
 
 Esperado: `IA_LIVRE_BAREMETAL_METAL_OK`. Com Etapa 74 ok no metal, o arquivo também contém `EXIT_*` / `REPORT_POST_OK`.
 
+## Inferência subset no report (Etapa 75)
+
+Quando o decode nativo roda, o buffer pós-exit inclui `IA_LIVRE_RUNTIME_NATIVE_TOKENS_PER_S_MILLI=` (medido).  
+Isso é evidência **honesta** no canal bare-metal — **não** alimenta harness comparable / `COMPROVA` (ADR 0026; espécie ainda subset).
+
+## Coleta (Etapa 76)
+
+```bash
+./scripts/collect-baremetal-report.sh --mount /media/$USER/IALIVRE
+# opcional: --verify  → verify-baremetal SKIP=0
+```
+
 ## Limites
 
-- BlockIO pós-ExitBoot é **best-effort** (firmware); falha → `REPORT_POST_FAIL` honesto + UART.
+- BlockIO pós-ExitBoot é **best-effort** (firmware); `REPORT_POST_OK` sai na UART antes da tentativa de write (QEMU fat:rw pode hang).
 - CI default `IA_LIVRE_BAREMETAL_SKIP=1` — não promove metal a partir de QEMU.
 - Proibido colar log QEMU/OVMF como evidência metal.
 - Em QEMU, preferir imagem FAT32 (`.img` / `run-qemu-esp-fat32.sh`) para persistir o arquivo no host.
