@@ -394,8 +394,9 @@ Pronto quando: stack TCP mínima no kernel/runtime-native **ou** bridge document
 
 ## Etapa 53 — REPL sandboxed no agente (host)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#53](https://github.com/eriksonlima/projeto-ia-livre/issues/53)  
 Spec: specs/repl-sandboxed-agente/  
-Pronto quando: `--repl` com allowlist; modo scripted para `verify-agent`; sem shell/HTTP.
+Pronto quando: `--repl` com allowlist; modo scripted para `verify-agent`; sem shell/HTTP.  
+**Desfecho:** `--repl` / `--repl-script`; `REPL_MODE=scripted` + `REPL_OK`; `make verify-agent` estágio fixture; sem shell/HTTP.
 

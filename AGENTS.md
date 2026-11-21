@@ -397,9 +397,12 @@ grep -q 'IA_LIVRE_MEMORY_POLICY_OK' agent/src/main.rs
 grep -q 'IA_LIVRE_TOOLS_USED' agent/src/main.rs
 grep -q 'IA_LIVRE_TOOL_SANDBOX_OK' agent/src/main.rs
 grep -q 'IA_LIVRE_TOOL=calc' agent/src/main.rs
+grep -q 'IA_LIVRE_REPL_OK' agent/src/repl.rs
+test -f docs/autonomia-repl.md
+test -f agent/fixtures/repl-smoke.txt
 ```
 
-`make verify-agent` falha se o modelo estiver ausente ou se faltarem marcadores E7 (`TOOL_OK` / `MEMORY_OK` / `AGENT_OK`) **ou** v1 (`MEMORY_POLICY_OK` + `TOOLS_USED`≥2 + `TOOL=note` e `TOOL=recall|help`) **ou** E40 (`TOOL=calc` + `TOOL_SANDBOX_OK` + `CALC_RESULT=7`) (timeout padrão 300s; `VERIFY_AGENT_TIMEOUT`). Gates do kernel, runtime e nó permanecem.
+`make verify-agent` falha se o modelo estiver ausente ou se faltarem marcadores E7 (`TOOL_OK` / `MEMORY_OK` / `AGENT_OK`) **ou** v1 (`MEMORY_POLICY_OK` + `TOOLS_USED`≥2 + `TOOL=note` e `TOOL=recall|help`) **ou** E40 (`TOOL=calc` + `TOOL_SANDBOX_OK` + `CALC_RESULT=7`) **ou** E53 (`REPL_MODE=scripted` + `REPL_OK`) (timeout padrão 300s; `VERIFY_AGENT_TIMEOUT`). Gates do kernel, runtime e nó permanecem.
 
 ### Gate do harness Linha A vs Linha B (Etapas 9 / 12 / 20 — adicional)
 

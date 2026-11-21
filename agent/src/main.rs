@@ -6,6 +6,7 @@
 //! Ver docs/desenho-autonomia-v1.md e docs/autonomia-alem-v1.md.
 
 mod calc;
+mod repl;
 
 use std::env;
 use std::fs::{self, OpenOptions};
@@ -16,13 +17,13 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 const USAGE: &str = "\
 Uso: ia-livre-agent [--model <path>] [--memory <path>] [--n-predict <n>] \\
-                    [--runtime-bin <path>] [--prompt <texto>]
+                    [--runtime-bin <path>] [--prompt <texto>] \\
+                    [--repl] [--repl-script <file>]
 
-Autonomia v1 (camada 3) no host Linux — one-shot.
-Consome o runtime CPU existente; não exige o SO IA Livre / QEMU / UEFI.
-Sem --prompt: cenário de prova E7. Política de memória: últimas N=8 entradas no prompt.
-Allowlist: note / recall / help / calc (Etapa 40).
-Ver docs/desenho-autonomia-v1.md.
+Autonomia v1+E40+E53 (camada 3) no host Linux.
+Consome o runtime CPU (prova/--prompt); REPL sandboxed não exige inferência.
+Não exige o SO IA Livre / QEMU / UEFI.
+Allowlist: note / recall / help / calc. Ver docs/autonomia-repl.md.
 ";
 
 const DEFAULT_MODEL: &str = "models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf";
@@ -46,6 +47,8 @@ struct Config {
     runtime_bin: Option<PathBuf>,
     /// `None` = cenário de prova E7 (PROOF_PROMPT).
     prompt: Option<String>,
+    repl: bool,
+    repl_script: Option<PathBuf>,
 }
 
 fn parse_args() -> Result<Config, i32> {
@@ -55,6 +58,8 @@ fn parse_args() -> Result<Config, i32> {
     let mut n_predict = DEFAULT_N_PREDICT;
     let mut runtime_bin: Option<PathBuf> = None;
     let mut prompt: Option<String> = None;
+    let mut repl = false;
+    let mut repl_script: Option<PathBuf> = None;
 
     let mut i = 0;
     while i < args.len() {
@@ -109,6 +114,17 @@ fn parse_args() -> Result<Config, i32> {
                 };
                 prompt = Some(v.clone());
             }
+            "--repl" => {
+                repl = true;
+            }
+            "--repl-script" => {
+                i += 1;
+                let Some(v) = args.get(i) else {
+                    eprintln!("erro: --repl-script exige um arquivo");
+                    return Err(2);
+                };
+                repl_script = Some(PathBuf::from(v));
+            }
             other => {
                 eprintln!("erro: argumento desconhecido: {other}");
                 eprint!("{USAGE}");
@@ -118,12 +134,19 @@ fn parse_args() -> Result<Config, i32> {
         i += 1;
     }
 
+    if prompt.is_some() && (repl || repl_script.is_some()) {
+        eprintln!("erro: --prompt não combina com --repl / --repl-script");
+        return Err(2);
+    }
+
     Ok(Config {
         model,
         memory,
         n_predict,
         runtime_bin,
         prompt,
+        repl,
+        repl_script,
     })
 }
 
@@ -224,12 +247,12 @@ fn append_memory_line(memory: &Path, kind: &str, text: &str) -> Result<(), Strin
 }
 
 /// Ferramenta `note`: appenda `{kind:"note", …}`.
-fn tool_note(memory: &Path, text: &str) -> Result<(), String> {
+pub(crate) fn tool_note(memory: &Path, text: &str) -> Result<(), String> {
     append_memory_line(memory, "note", text)
 }
 
 /// Ferramenta `recall`: lista até `n` entradas recentes (default N=8); registra kind `tool`.
-fn tool_recall(memory: &Path, n: Option<usize>) -> Result<Vec<String>, String> {
+pub(crate) fn tool_recall(memory: &Path, n: Option<usize>) -> Result<Vec<String>, String> {
     let limit = n.unwrap_or(MEMORY_POLICY_N);
     let lines = read_memory_lines(memory)?;
     let recent = last_n_entries(&lines, limit);
@@ -240,7 +263,7 @@ fn tool_recall(memory: &Path, n: Option<usize>) -> Result<Vec<String>, String> {
 }
 
 /// Ferramenta `help`: lista allowlist + contratos curtos; registra kind `tool`.
-fn tool_help(memory: &Path) -> Result<&'static str, String> {
+pub(crate) fn tool_help(memory: &Path) -> Result<&'static str, String> {
     const HELP: &str = "\
 allowlist:
   note   — args: text; append kind=note ao JSONL
@@ -254,7 +277,7 @@ proibido: shell, HTTP, write fora do path de memória
 }
 
 /// Ferramenta `calc`: avalia expressão aritmética sandboxed; registra kind `tool`.
-fn tool_calc(memory: &Path, expr: &str) -> Result<f64, String> {
+pub(crate) fn tool_calc(memory: &Path, expr: &str) -> Result<f64, String> {
     let value = calc::eval_expr(expr)?;
     let summary = format!("calc: {expr} = {value}");
     append_memory_line(memory, "tool", &summary)?;
@@ -430,7 +453,15 @@ fn main() -> ExitCode {
         Err(_) => return ExitCode::from(2),
     };
 
-    match run(&config) {
+    let result = if let Some(script) = &config.repl_script {
+        repl::run_repl_scripted(&config.memory, script)
+    } else if config.repl {
+        repl::run_repl_interactive(&config.memory)
+    } else {
+        run(&config)
+    };
+
+    match result {
         Ok(()) => ExitCode::SUCCESS,
         Err(e) => {
             eprintln!("erro: {e}");

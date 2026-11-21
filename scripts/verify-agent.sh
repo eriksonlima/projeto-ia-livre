@@ -126,5 +126,40 @@ if (( fail )); then
   exit 1
 fi
 
-echo "GATE_OK: autonomia v1+calc — $(grep -E 'IA_LIVRE_(TOOL_OK|MEMORY_OK|AGENT_OK|MEMORY_POLICY_OK|TOOLS_USED=|RUNTIME_USED=|TOOL_SANDBOX_OK|TOOL=calc)' "$COMBINED" | tr '\n' ' ')"
+echo "GATE_OK (prova): autonomia v1+calc"
+
+# Etapa 53 — REPL scripted (sem inferência; allowlist only)
+REPL_MEM="${MEMORY_DIR}/repl-memory.jsonl"
+REPL_LOG="$(mktemp)"
+trap 'rm -f "$LOG" "$LOG.err" "$COMBINED" "$REPL_LOG"' EXIT
+echo "Running agent --repl-script (Etapa 53)…"
+set +e
+"$AGENT_BIN" \
+  --memory "$REPL_MEM" \
+  --repl-script agent/fixtures/repl-smoke.txt \
+  >"$REPL_LOG" 2>&1
+repl_rc=$?
+set -e
+if (( repl_rc != 0 )); then
+  echo "GATE_FAIL: REPL scripted exit $repl_rc"
+  cat "$REPL_LOG" || true
+  exit 1
+fi
+if ! grep -q 'IA_LIVRE_REPL_MODE=scripted' "$REPL_LOG"; then
+  echo "GATE_FAIL: IA_LIVRE_REPL_MODE=scripted ausente"
+  cat "$REPL_LOG" || true
+  exit 1
+fi
+if ! grep -q 'IA_LIVRE_REPL_OK' "$REPL_LOG"; then
+  echo "GATE_FAIL: IA_LIVRE_REPL_OK ausente"
+  cat "$REPL_LOG" || true
+  exit 1
+fi
+if ! grep -q 'IA_LIVRE_TOOL=calc' "$REPL_LOG"; then
+  echo "GATE_FAIL: REPL sem TOOL=calc"
+  cat "$REPL_LOG" || true
+  exit 1
+fi
+
+echo "GATE_OK: autonomia v1+calc+REPL — prova + REPL_OK"
 exit 0

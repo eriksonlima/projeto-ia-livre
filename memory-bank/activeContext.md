@@ -2,14 +2,14 @@
 
 ## Foco atual
 
-- Etapas 1–52 **feitas**
-- E52: bridge Rede UEFI↔host (`NET_BRIDGE_*`; ADR 0019)
-- Topo Abertas: **B47** (REPL sandboxed)
+- Etapas 1–53 **feitas**
+- E53: REPL sandboxed (`--repl` / `--repl-script` + `REPL_OK`)
+- Topo Abertas: **B48** (`read_local` allowlisted)
 
 ## Próximo passo
 
-- Promover B47 → Etapa 53 ou continuar
+- Promover B48 → Etapa 54 ou continuar
 
 ## Notas
 
-- Lease: liberar após push E52
+- Lease: liberar após push E53

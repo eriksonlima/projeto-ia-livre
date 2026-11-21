@@ -30,7 +30,7 @@ Veja `AGENTS.md` → **Como verificar**.
 - Harness A vs B: `docs/harness-linha-a-b.md` · comparável: `docs/harness-a-b-comparavel.md` (veja `AGENTS.md` → gates)
 - Boot/imagem hardware real (ESP/USB): `docs/boot-hardware-real.md` — `make verify-baremetal` (artefato; ≠ QEMU); gravar pendrive: `./scripts/write-usb-esp.sh` / `make verify-write-usb`; path metal SFS: `make verify-metal-infer` (`B_BLOCK_METAL`; ≠ METAL_OK)
 - Rede (v1 + TASK + bootstrap + mDNS): `docs/rede-ia-livre-v1.md` · `docs/rede-descoberta-wan.md` — `make verify-node` (mDNS: `VERIFY_NODE_MDNS_SKIP=0`) · bridge caminho B: `docs/rede-bridge-nativo.md` / `make verify-rede-bridge`
-- Autonomia (`calc`): `docs/autonomia-alem-v1.md` · bridge host↔nativo: `docs/autonomia-bridge-nativo.md` / `make verify-autonomia-bridge`
+- Autonomia (`calc` + REPL): `docs/autonomia-alem-v1.md` · `docs/autonomia-repl.md` · bridge host↔nativo: `docs/autonomia-bridge-nativo.md` / `make verify-autonomia-bridge`
 - GPU host shard: `docs/shard-multi-gpu-host.md` — `make verify-gpu-shard-host`
 - ADRs: `docs/adr/`
 - Contrato nativo: `docs/runtime-contrato-nativo.md`

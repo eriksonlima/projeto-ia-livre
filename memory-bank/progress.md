@@ -2,13 +2,13 @@
 
 ## Funciona
 
-- Etapas 1–52
-- Bridge Rede (`NET_BRIDGE_OK`); TASK/mDNS; bridge autonomia; metal-infer SFS; Linha B TOKENS subset
+- Etapas 1–53
+- REPL sandboxed; bridge Rede/autonomia; TASK/mDNS; metal-infer SFS; Linha B TOKENS subset
 
 ## Residual
 
-- TCP nativo no guest (adiado); REPL/read_local; GGUF full SFS; METAL_OK com log PC
+- `read_local` (B48); TCP nativo guest; GGUF full SFS; METAL_OK com log PC; B52 checklist meta
 
 ## Roadmap
 
-- Sem `em_andamento` após E52; próxima: B47
+- Sem `em_andamento` após E53; próxima: B48
