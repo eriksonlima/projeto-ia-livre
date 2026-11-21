@@ -242,7 +242,15 @@ Pronto quando: `verify-harness-comparable` quieto com `COMPROVA`/`REFUTA` **ou**
 
 ## Etapa 34 — Baseline Linha A otimizada (CPU) no gate comparável
 
-Status: em_andamento  
+Status: feita  
 Issue: [#33](https://github.com/eriksonlima/projeto-ia-livre/issues/33)  
 Spec: specs/baseline-a-otimizada/  
-Pronto quando: perfil `A_otimizada` documentado + corrida verificável lado a lado; ideal após geração B, mas pode avançar baseline A independentemente.
+Pronto quando: perfil `A_otimizada` documentado + corrida verificável lado a lado; ideal após geração B, mas pode avançar baseline A independentemente.  
+**Desfecho:** `run-harness-line-a-optimized.sh` + `make verify-harness-a-otimizada`; comparable opt-in `IA_LIVRE_HARNESS_A_PROFILE=A_otimizada`.
+
+## Etapa 35 — Boot UEFI em hardware real (evidência serial)
+
+Status: em_andamento  
+Issue: [#34](https://github.com/eriksonlima/projeto-ia-livre/issues/34)  
+Spec: (a definir — `especificador`)  
+Pronto quando: evidência em PC real com ≥ `BOOT_OK` (ideal `EXIT_BOOT_OK`) via serial; sem fingir CI de metal.
