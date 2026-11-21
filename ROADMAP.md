@@ -236,5 +236,5 @@ Pronto quando: geração canônica no guest com `LOAD_KIND=gguf` + `TOKENS_PER_S
 
 Status: em_andamento  
 Issue: [#32](https://github.com/eriksonlima/projeto-ia-livre/issues/32)  
-Spec: (a definir — `especificador`)  
+Spec: `specs/recorrida-harness-geracao-b/`  
 Pronto quando: `verify-harness-comparable` quieto com `COMPROVA`/`REFUTA` **ou** `INCONCLUSIVO` só com motivo ≠ ausência de tokens B; depende de geração real em B (além de `no_gguf_decode`) **ou** bloqueio honesto documentado se tokens ainda inviáveis sem fraude.
