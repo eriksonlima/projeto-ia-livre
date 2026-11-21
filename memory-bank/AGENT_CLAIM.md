@@ -5,12 +5,12 @@ Regra: `.cursor/rules/agentes-em-paralelo.mdc`.
 
 ## Estado atual
 
-- **holder:** _(nenhum)_
-- **etapa:** —
-- **issue:** —
-- **paths:** —
-- **since:** —
-- **expires:** —
+- **holder:** agente-principal-integracao-b17-b19
+- **etapa:** 24
+- **issue:** #24
+- **paths:** agent/, specs/autonomia-v1-impl/, docs/desenho-autonomia-v1.md, docs/ambiente-autonomia-prototipo.md, AGENTS.md, ROADMAP.md, memory-bank/, scripts/verify-agent.sh
+- **since:** 2026-11-21T00:56:47Z
+- **expires:** 2026-11-21T02:56:47Z
 
 ## Como usar
 
