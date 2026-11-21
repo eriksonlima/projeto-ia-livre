@@ -344,3 +344,10 @@ Spec: specs/evidencia-boot-metal-real/
 Pronto quando: log serial de PC real em `docs/evidence/boot-metal/` + `IA_LIVRE_BAREMETAL_METAL_OK` no gate; Secure Boot/checklist documentados.  
 **Desfecho:** caminho B — sem PC/log neste host; `SKIP=1` + `STATUS-SKIP.txt`; checklist A/B documentado; `METAL_OK` pendente de evidência real.
 
+## Etapa 47 — One-shot gravar pendrive UEFI (script + doc)
+
+Status: em_andamento  
+Issue: [#47](https://github.com/eriksonlima/projeto-ia-livre/issues/47)  
+Spec: (a gerar)  
+Pronto quando: script ou procedimento único (detecta device com confirmação, grava ESP/FAT ou `.img`) + README/AGENTS; **sem** gravar `/dev/sdX` sem confirmação explícita.
+

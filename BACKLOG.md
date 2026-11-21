@@ -13,12 +13,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 
 
-### B41 — One-shot gravar pendrive UEFI (script + doc contribuidores)
-- Issue: [#47](https://github.com/eriksonlima/projeto-ia-livre/issues/47)
-
-- Origem: “colocar SO no pendrive” — hoje manual/`dd`
-- Pronto quando: script ou procedimento único (detecta device com confirmação, grava ESP/FAT ou `.img`) + README/AGENTS; **sem** gravar `/dev/sdX` sem confirmação explícita
-- Deps: E30
 
 ### B42 — Inferência mínima no metal (GGUF ESP → geração ou bloqueio honesto)
 - Issue: [#48](https://github.com/eriksonlima/projeto-ia-livre/issues/48)
@@ -98,6 +92,16 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: B39 + B40 + B42 (mínimo sugerido)
 
 ## Promovidas / arquivadas
+
+### B41 — One-shot gravar pendrive UEFI (script + doc contribuidores)
+- Issue: [#47](https://github.com/eriksonlima/projeto-ia-livre/issues/47)
+
+- Origem: “colocar SO no pendrive” — hoje manual/`dd`
+- Pronto quando: script ou procedimento único (detecta device com confirmação, grava ESP/FAT ou `.img`) + README/AGENTS; **sem** gravar `/dev/sdX` sem confirmação explícita
+- Deps: E30
+
+- Promovido para Etapa 47 do roadmap (promoção autônoma após “continuar”).
+- Etapa: [Etapa 47 — One-shot gravar pendrive UEFI](ROADMAP.md)
 
 ### B40 — Evidência de boot metal real (serial ≥ `BOOT_OK` em PC)
 - Issue: [#46](https://github.com/eriksonlima/projeto-ia-livre/issues/46)
