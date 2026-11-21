@@ -1,6 +1,6 @@
 # ADR 0004 — Stack candidata do protocolo Rede IA Livre (v1)
 
-- Status: aceita (nível **desenho**; implementação = etapa/backlog futuro)
+- Status: aceita (nível **desenho**; implementação mínima = Etapa 23 em `node/` — [`docs/rede-ia-livre-v1.md`](../rede-ia-livre-v1.md))
 - Data: 2026-11-20
 
 ## Contexto
@@ -9,7 +9,7 @@ A Rede IA Livre tem protótipo mínimo (Etapa 6): TCP com `MSG`/`ACK` em linhas 
 
 Sem escolha documentada, o próximo código em `node/` arrisca ou inflar a superfície (ex.: puxar libp2p cedo) ou continuar com `node_id` livre como âncora de confiança. ADR 0001 permanece: P2P **independente** do SO; participar **não exige** o IA Livre.
 
-Esta ADR **não** implementa o protocolo em `node/`. Detalhe operacional: doc de desenho da Etapa 14 (Task 2).
+Esta ADR fixou a stack no nível desenho (Etapa 14). A implementação mínima do v1 no host está na **Etapa 23** (`node/` + gate). Detalhe operacional do desenho: [`desenho-protocolo-rede-ia-livre.md`](../desenho-protocolo-rede-ia-livre.md).
 
 ## Decisão
 
@@ -52,7 +52,8 @@ Esta ADR **não** implementa o protocolo em `node/`. Detalhe operacional: doc de
 |------|--------|
 | ADR 0001 | Independência SO × P2P — intacta |
 | Etapa 6 | Protótipo HELLO/MSG/ACK — continua válido até etapa de implementação do v1 |
-| Etapa 14 | Esta ADR + doc de desenho — **sem** código `node/` |
-| Futuro | Implementar v1 mínimo (IDENT + HELLO assinado + PeerId) no host |
+| Etapa 14 | Esta ADR + doc de desenho |
+| Etapa 23 | Implementação v1 mínima em `node/` (IDENT + HELLO assinado + PeerId + PING/PONG) |
+| Futuro | NAT/DHT/relay; reavaliar libp2p só com ADR nova |
 
 Doc de desenho (Task 2): [`docs/desenho-protocolo-rede-ia-livre.md`](../desenho-protocolo-rede-ia-livre.md) (a criar).

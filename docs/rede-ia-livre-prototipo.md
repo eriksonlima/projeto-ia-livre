@@ -56,7 +56,7 @@ Mensagem de prova (gate): `MSG ola-rede-ia-livre` → receptor responde `ACK ola
 
 DHT, crypto de identidade, NAT traversal, marketplace, libp2p, integração com runtime/kernel.
 
-> **Etapa 14 (desenho ≠ código):** a stack candidata v1 (ed25519/`PeerId`, HELLO assinado, `IDENT`, TCP+UDP) está em [`desenho-protocolo-rede-ia-livre.md`](desenho-protocolo-rede-ia-livre.md) / ADR 0004. Este doc e o `node/` atual continuam sendo o **protótipo Etapa 6** até uma etapa de implementação.
+> **Etapa 23 (implementação v1):** o crate `node/` fala o protocolo **Rede IA Livre v1** (ed25519/`PeerId`, HELLO assinado, `IDENT`, `PING`/`PONG`). Contrato atual: [`rede-ia-livre-v1.md`](rede-ia-livre-v1.md). Este documento permanece como histórico do protótipo Etapa 6.
 
 ## Fluxo canônico (mesmo host)
 
