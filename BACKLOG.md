@@ -38,7 +38,7 @@ _(nenhuma — B15–B19 já promovidas às Etapas 21–25)_
 
 ### B19 — GPU manager / multi-GPU (protótipo mínimo)
 
-- Promovido para Etapa 25 do roadmap (`pendente`; trabalho em branch paralela — não duplicar).
+- Promovido para Etapa 25 do roadmap (`em_andamento`; integração em `main`).
 - Issue: [#25](https://github.com/eriksonlima/projeto-ia-livre/issues/25)
 - Etapa: Etapa 25
 

@@ -175,4 +175,4 @@ Pronto quando: implementação no host em `agent/` com `--prompt` one-shot, allo
 Status: em_andamento  
 Issue: [#25](https://github.com/eriksonlima/projeto-ia-livre/issues/25)  
 Spec: specs/gpu-manager-multi-gpu-prototipo/  
-Pronto quando: caminho verificável de manager/afinidade/placement e/ou shard documentado; skip/gate honesto; sem prova A vs B via multi-GPU.
+Pronto quando: primeiro protótipo mínimo alinhado ao desenho ADR 0006 (enum/afinidade/placement e/ou shard documentado), com fronteira clara host vs nativo; caminho verificável documentado; gate ou skip honesto (sem fingir aceleração); sem prova A vs B via multi-GPU; sem clusters/RDMA/tensor parallel completo.

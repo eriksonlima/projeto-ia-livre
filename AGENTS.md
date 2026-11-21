@@ -301,6 +301,23 @@ Com GPU: build com feature (`cuda` se `nvcc` existir, senão `vulkan`; override 
 
 **Skip (CI / sem GPU):** `VERIFY_RUNTIME_GPU_SKIP=1` **ou** `nvidia-smi` indetectável → imprime `IA_LIVRE_GPU_SKIP` e exit **0** (não finge aceleração). Force Vulkan-only sem nvidia-smi: `VERIFY_RUNTIME_GPU_FORCE=1`. Gates CPU/kernel/node/agent permanecem.
 
+### Gate do GPU manager stub host (Etapa 25 — adicional)
+
+Stub **host** (ADR 0006 / B19) — enum + placement hint + shard documentado. **Não** é manager nativo nem prova A vs B. **Não** usa QEMU/UEFI nem GGUF. Contrato: [`docs/gpu-manager-prototipo-host.md`](docs/gpu-manager-prototipo-host.md). Etapa 8 (`verify-runtime-gpu`) permanece intacta.
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+test -f scripts/gpu-manager-stub.sh && test -f scripts/verify-gpu-manager.sh
+test -f docs/gpu-manager-prototipo-host.md
+./scripts/gpu-manager-stub.sh   # emite IA_LIVRE_GPU_MGR=host_stub + DEVICES/PLACE_HINT/SHARD_DOC
+make verify-gpu-manager
+grep -q 'IA_LIVRE_GPU_MGR=host_stub' scripts/gpu-manager-stub.sh
+```
+
+Com GPU detectável: exige `IA_LIVRE_GPU_MGR=host_stub`, `IA_LIVRE_GPU_DEVICES=` ≥ 1, placement/shard doc, `IA_LIVRE_GPU_MGR_OK`.
+
+**Skip (CI / sem GPU):** `VERIFY_GPU_MANAGER_SKIP=1` **ou** `nvidia-smi` indetectável → imprime `IA_LIVRE_GPU_MGR_SKIP` e exit **0** (não finge multi-GPU). Force: `VERIFY_GPU_MANAGER_FORCE=1`.
+
 ### Gate do nó Rede IA Livre (Etapas 6 / 23 — adicional)
 
 Só Rust no host. **Não** usa QEMU, GGUF nem o runtime de inferência. Participar da Rede **não exige** o SO IA Livre. Gate estendido na Etapa 23: também `IDENT_OK` + `PING_OK`.
@@ -428,12 +445,15 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `docs/ambiente-autonomia-prototipo.md` — loop/memória/ferramenta do protótipo de autonomia (Etapa 7); ponte para v1
 - `docs/desenho-autonomia-v1.md` — escopo autonomia v1 (ADR 0005; **implementado** na Etapa 24 em `agent/`)
 - `docs/adr/0005-autonomia-v1-utilizavel.md` — ADR do escopo v1
-- `Makefile` — `build` / `esp` / `run` / `verify` / `verify-runtime` / `verify-runtime-gpu` / `verify-runtime-contract` / `verify-node` / `verify-agent` / `verify-harness` / `verify-harness-comparable` / `clean`
+- `Makefile` — `build` / `esp` / `run` / `verify` / `verify-runtime` / `verify-runtime-gpu` / `verify-runtime-contract` / `verify-gpu-manager` / `verify-node` / `verify-agent` / `verify-harness` / `verify-harness-comparable` / `clean`
 - `scripts/run-qemu.sh` — atalho para `make run`
 - `scripts/verify-boot.sh` — gate serial do kernel (`BOOT_OK` + mem/alloc + `EXIT_BOOT_OK` + `MEM_SCHED_OK` + `NATIVE_BENCH_OK`)
 - `scripts/verify-runtime.sh` — gate do runtime CPU (`IA_LIVRE_INFER_OK` + métricas)
 - `scripts/verify-runtime-gpu.sh` — gate GPU (`IA_LIVRE_ACCEL` ≠ `cpu`; skip `IA_LIVRE_GPU_SKIP`)
 - `scripts/verify-runtime-contract.sh` — gate shim host do contrato nativo (`RUNTIME_CONTRACT_OK`)
+- `scripts/gpu-manager-stub.sh` — stub host GPU manager (Etapa 25; `IA_LIVRE_GPU_MGR=host_stub`)
+- `scripts/verify-gpu-manager.sh` — gate do stub (`IA_LIVRE_GPU_MGR_OK`; skip `IA_LIVRE_GPU_MGR_SKIP`)
+- `docs/gpu-manager-prototipo-host.md` — contrato do stub host (≠ nativo; ≠ prova A vs B)
 - `docs/runtime-inferencia-gpu-metricas.md` — métricas do protótipo GPU no host
 - `docs/adr/0002-aceleracao-gpu-host-llama-cpp.md` — CUDA canônico / Vulkan alternativa
 - `scripts/verify-node.sh` — gate do nó Rede IA Livre v1 (`PEER_OK` + `MSG_OK` + `IDENT_OK` + `PING_OK`)
@@ -446,7 +466,7 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `docs/runtime-nativo-linha-b.md` — contrato Linha B mínima (proxy pós-ExitBoot)
 - `docs/desenho-memoria-scheduler-nativo.md` — desenho candidato Weights/KvCache + Prefill/Decode (ADR 0003)
 - `docs/adr/0003-memoria-model-aware-e-scheduler-fases.md` — ADR do desenho; impl. mínima = Etapa 19
-- `docs/desenho-gpu-manager-multi-gpu.md` — desenho GPU manager / multi-GPU (ADR 0006; não implementado)
+- `docs/desenho-gpu-manager-multi-gpu.md` — desenho GPU manager / multi-GPU (ADR 0006; stub host = Etapa 25)
 - `docs/adr/0006-gpu-manager-multi-gpu.md` — ADR do escopo candidato (host ≠ nativo)
 - `LICENSE` / `NOTICE` — Apache-2.0 (1ª parte); ADR [`0007`](docs/adr/0007-licencas-por-componente.md)
 - `docs/licencas-terceiros.md` — aviso de deps (llama.cpp, uefi, …)
