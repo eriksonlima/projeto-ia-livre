@@ -368,3 +368,10 @@ Spec: specs/autonomia-bridge-nativo/
 Pronto quando: agente one-shot (ou bridge verificável) consome runtime nativo/metal **ou** contrato explícito host↔nativo com gate; sem shell irrestrito; ADR 0001 preservada.  
 **Desfecho:** ADR 0018 (bridge B); `BRIDGE_MODE=host_native` + `blockio`/`metal_block` + `BRIDGE_OK`; `make verify-autonomia-bridge`; `verify-agent` independente do SO.
 
+## Etapa 50 — mDNS real na Rede IA Livre (além do skip)
+
+Status: em_andamento  
+Issue: [#50](https://github.com/eriksonlima/projeto-ia-livre/issues/50)  
+Spec: specs/mdns-rede-ia-livre/  
+Pronto quando: `--disc-mdns` anuncia/resolve `_ia-livre._tcp` em LAN com gate opt-in; skip honesto se multicast indisponível.
+

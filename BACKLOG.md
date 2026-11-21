@@ -16,13 +16,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 
 
-### B44 — mDNS real na Rede IA Livre (além do skip)
-- Issue: [#50](https://github.com/eriksonlima/projeto-ia-livre/issues/50)
-
-- Origem: E39 adiou mDNS (`VERIFY_NODE_MDNS_SKIP`)
-- Pronto quando: `--disc-mdns` anuncia/resolve `_ia-livre._tcp` em LAN com gate opt-in; skip honesto se multicast indisponível
-- Deps: E39
-
 ### B45 — Tarefa/conhecimento mínimo na Rede (além de PING)
 - Issue: [#51](https://github.com/eriksonlima/projeto-ia-livre/issues/51)
 
@@ -80,6 +73,16 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: B39 + B40 + B42 (mínimo sugerido)
 
 ## Promovidas / arquivadas
+
+### B44 — mDNS real na Rede IA Livre (além do skip)
+- Issue: [#50](https://github.com/eriksonlima/projeto-ia-livre/issues/50)
+
+- Origem: E39 adiou mDNS (`VERIFY_NODE_MDNS_SKIP`)
+- Pronto quando: `--disc-mdns` anuncia/resolve `_ia-livre._tcp` em LAN com gate opt-in; skip honesto se multicast indisponível
+- Deps: E39
+
+- Promovido para Etapa 50 do roadmap (promoção autônoma após E49).
+- Etapa: [Etapa 50 — mDNS real](ROADMAP.md)
 
 ### B43 — Autonomia mínima no caminho nativo (ou bridge SO↔host documentada)
 - Issue: [#49](https://github.com/eriksonlima/projeto-ia-livre/issues/49)
