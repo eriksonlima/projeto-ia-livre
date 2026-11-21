@@ -8,13 +8,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-### B14 — Runtime falando o contrato nativo (além do proxy Linha B)
-
-- Issue: [#20](https://github.com/eriksonlima/projeto-ia-livre/issues/20)
-- Origem: sequência ADR 0003 + limite da Etapa 12 (proxy ≠ carga real)
-- Notas: runtime exerce memória tipada/fases; harness B honesto. Depende de B13.
-- Pronto quando (candidato): evidência verificável do contrato; sem fingir `TOKENS_PER_S` GGUF se ainda não houver.
-
 ### B15 — Carga GGUF canônica na Linha B (mínimo honesto)
 
 - Issue: [#21](https://github.com/eriksonlima/projeto-ia-livre/issues/21)
@@ -51,6 +44,12 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Pronto quando (candidato): caminho verificável; skip/gate honesto; sem prova A vs B via multi-GPU.
 
 ## Promovidas / arquivadas
+
+### B14 — Runtime falando o contrato nativo (além do proxy Linha B)
+
+- Promovido para Etapa 20 do roadmap (`pendente`; Etapa 19 permanece `em_andamento` — trabalho em paralelo na branch `etapa-b14-runtime-contrato`).
+- Issue: [#20](https://github.com/eriksonlima/projeto-ia-livre/issues/20)
+- Etapa: [Etapa 20 — Runtime falando o contrato nativo (além do proxy Linha B)](ROADMAP.md)
 
 ### B13 — Memória model-aware + scheduler por fases (impl. mínima)
 
