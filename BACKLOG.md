@@ -32,7 +32,7 @@ _(nenhuma — B15–B19 já promovidas às Etapas 21–25)_
 
 ### B18 — Autonomia v1 utilizável (impl. em agent/)
 
-- Promovido para Etapa 24 do roadmap (`pendente`; trabalho em branch paralela — não duplicar).
+- Promovido para Etapa 24 do roadmap (`em_andamento`; integração em `main`).
 - Issue: [#24](https://github.com/eriksonlima/projeto-ia-livre/issues/24)
 - Etapa: Etapa 24
 
@@ -47,12 +47,6 @@ _(nenhuma — B15–B19 já promovidas às Etapas 21–25)_
 - Promovido para Etapa 20 do roadmap — **feita** (Tasks 1–4; harness B + shim host).
 - Issue: [#20](https://github.com/eriksonlima/projeto-ia-livre/issues/20)
 - Etapa: [Etapa 20 — Runtime falando o contrato nativo (além do proxy Linha B)](ROADMAP.md)
-
-### B17 — Protocolo Rede IA Livre v1 (impl. em node/)
-
-- Promovido para Etapa 23 do roadmap (paralelo a Etapa 19 `em_andamento`; Etapas 20–22 reservadas mentalmente a B14–B16 em branches paralelas).
-- Issue: [#23](https://github.com/eriksonlima/projeto-ia-livre/issues/23)
-- Etapa: [Etapa 23 — Protocolo Rede IA Livre v1 (impl. em node/)](ROADMAP.md)
 
 ### B13 — Memória model-aware + scheduler por fases (impl. mínima)
 

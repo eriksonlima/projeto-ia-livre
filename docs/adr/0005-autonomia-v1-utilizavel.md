@@ -1,6 +1,6 @@
 # ADR 0005 — Escopo da autonomia v1 utilizável (camada 3)
 
-- Status: aceita (nível **desenho**; implementação = etapa/backlog futuro)
+- Status: aceita (nível **desenho**; implementação = **Etapa 24** em `agent/`)
 - Data: 2026-11-20
 
 ## Contexto
@@ -56,6 +56,6 @@ Esta ADR **não** implementa a v1 em `agent/`. Detalhe: doc de desenho da Etapa 
 | ADR 0001 | Autonomia fora do kernel / sem exigir SO — intacta |
 | Etapa 7 | Protótipo `note` + JSONL — continua válido |
 | Etapa 15 | Esta ADR + doc de desenho — **sem** código `agent/` |
-| Futuro | Implementar v1 ( `--prompt`, `recall`/`help`, política N) + gate estendido |
+| Etapa 24 | Implementação v1 (`--prompt`, `recall`/`help`, política N=8) + gate estendido |
 
 Doc de desenho (Task 2): [`docs/desenho-autonomia-v1.md`](../desenho-autonomia-v1.md) (a criar).

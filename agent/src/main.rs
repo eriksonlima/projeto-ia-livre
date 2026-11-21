@@ -1,7 +1,8 @@
-//! CLI do protótipo do ambiente de autonomia (Etapa 7).
-//! Loop: prompt → runtime (subprocesso) → ferramenta `note` → memória re-lida.
-//! Marcadores: `IA_LIVRE_TOOL_OK`, `IA_LIVRE_MEMORY_OK`, `IA_LIVRE_AGENT_OK`.
-//! Ver docs/ambiente-autonomia-prototipo.md.
+//! CLI do ambiente de autonomia v1 (Etapa 24) — evolui o protótipo Etapa 7.
+//! Loop: memória (N=8) → prompt → runtime (subprocesso) → ferramentas allowlist → re-leitura.
+//! Marcadores E7: `IA_LIVRE_TOOL_OK`, `IA_LIVRE_MEMORY_OK`, `IA_LIVRE_AGENT_OK`.
+//! Marcadores v1: `IA_LIVRE_MEMORY_POLICY_OK` (+ evidência de tools na Task 2).
+//! Ver docs/desenho-autonomia-v1.md e docs/ambiente-autonomia-prototipo.md.
 
 use std::env;
 use std::fs::{self, OpenOptions};
@@ -11,26 +12,33 @@ use std::process::{Command, ExitCode, Stdio};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 const USAGE: &str = "\
-Uso: ia-livre-agent [--model <path>] [--memory <path>] [--n-predict <n>] [--runtime-bin <path>]
+Uso: ia-livre-agent [--model <path>] [--memory <path>] [--n-predict <n>] \\
+                    [--runtime-bin <path>] [--prompt <texto>]
 
-Protótipo da camada 3 (autonomia) no host Linux.
+Autonomia v1 (camada 3) no host Linux — one-shot.
 Consome o runtime CPU existente; não exige o SO IA Livre / QEMU / UEFI.
-Ver docs/ambiente-autonomia-prototipo.md.
+Sem --prompt: cenário de prova E7. Política de memória: últimas N=8 entradas no prompt.
+Allowlist: note / recall / help (recall+help na evolução v1).
+Ver docs/desenho-autonomia-v1.md.
 ";
 
 const DEFAULT_MODEL: &str = "models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf";
 const DEFAULT_MEMORY: &str = "build/agent-memory/memory.jsonl";
 const DEFAULT_N_PREDICT: u32 = 16;
-/// Prompt de prova alinhado ao runtime (Etapa 5).
+/// Prompt de prova alinhado ao runtime (Etapa 5 / E7).
 const PROOF_PROMPT: &str = "Complete em uma frase: O Projeto IA Livre é";
 /// Texto canônico gravado pela ferramenta `note` no cenário de prova.
 const PROOF_NOTE: &str = "prova-autonomia-ia-livre";
+/// Política de memória v1: últimas N entradas injetadas no prompt (fixado).
+const MEMORY_POLICY_N: usize = 8;
 
 struct Config {
     model: PathBuf,
     memory: PathBuf,
     n_predict: u32,
     runtime_bin: Option<PathBuf>,
+    /// `None` = cenário de prova E7 (PROOF_PROMPT).
+    prompt: Option<String>,
 }
 
 fn parse_args() -> Result<Config, i32> {
@@ -39,6 +47,7 @@ fn parse_args() -> Result<Config, i32> {
     let mut memory = PathBuf::from(DEFAULT_MEMORY);
     let mut n_predict = DEFAULT_N_PREDICT;
     let mut runtime_bin: Option<PathBuf> = None;
+    let mut prompt: Option<String> = None;
 
     let mut i = 0;
     while i < args.len() {
@@ -85,6 +94,14 @@ fn parse_args() -> Result<Config, i32> {
                 };
                 runtime_bin = Some(PathBuf::from(v));
             }
+            "--prompt" => {
+                i += 1;
+                let Some(v) = args.get(i) else {
+                    eprintln!("erro: --prompt exige um texto");
+                    return Err(2);
+                };
+                prompt = Some(v.clone());
+            }
             other => {
                 eprintln!("erro: argumento desconhecido: {other}");
                 eprint!("{USAGE}");
@@ -99,6 +116,7 @@ fn parse_args() -> Result<Config, i32> {
         memory,
         n_predict,
         runtime_bin,
+        prompt,
     })
 }
 
@@ -136,12 +154,56 @@ fn ensure_parent_dir(path: &Path) -> Result<(), String> {
     Ok(())
 }
 
-/// Ferramenta `note`: appenda uma linha JSONL ao store de memória.
-fn tool_note(memory: &Path, text: &str) -> Result<(), String> {
+/// Lê linhas JSONL não vazias do store (kinds: note / turn / tool).
+fn read_memory_lines(memory: &Path) -> Result<Vec<String>, String> {
+    if !memory.is_file() {
+        return Ok(Vec::new());
+    }
+    let raw = fs::read_to_string(memory)
+        .map_err(|e| format!("ler memória {}: {e}", memory.display()))?;
+    Ok(raw
+        .lines()
+        .map(str::trim)
+        .filter(|l| !l.is_empty())
+        .map(str::to_string)
+        .collect())
+}
+
+/// Últimas N entradas (política v1; N=8 fixo).
+fn last_n_entries(lines: &[String], n: usize) -> &[String] {
+    if lines.len() <= n {
+        lines
+    } else {
+        &lines[lines.len() - n..]
+    }
+}
+
+/// Monta o prompt enviado ao runtime: contexto (últimas N) + texto do usuário/prova.
+fn build_prompt_with_policy(user_text: &str, recent: &[String]) -> String {
+    let mut out = String::new();
+    out.push_str("Contexto (memória recente, até ");
+    out.push_str(&MEMORY_POLICY_N.to_string());
+    out.push_str(" entradas; kinds note/turn/tool):\n");
+    if recent.is_empty() {
+        out.push_str("(vazio)\n");
+    } else {
+        for (i, line) in recent.iter().enumerate() {
+            out.push_str(&format!("{}. {}\n", i + 1, line));
+        }
+    }
+    out.push('\n');
+    out.push_str("Pedido:\n");
+    out.push_str(user_text);
+    out
+}
+
+/// Append genérico ao JSONL (só no path de memória documentado).
+fn append_memory_line(memory: &Path, kind: &str, text: &str) -> Result<(), String> {
     ensure_parent_dir(memory)?;
     let line = format!(
-        "{{\"ts\":{},\"kind\":\"note\",\"text\":\"{}\"}}\n",
+        "{{\"ts\":{},\"kind\":\"{}\",\"text\":\"{}\"}}\n",
         unix_ts(),
+        json_escape(kind),
         json_escape(text)
     );
     let mut file = OpenOptions::new()
@@ -154,6 +216,35 @@ fn tool_note(memory: &Path, text: &str) -> Result<(), String> {
     Ok(())
 }
 
+/// Ferramenta `note`: appenda `{kind:"note", …}`.
+fn tool_note(memory: &Path, text: &str) -> Result<(), String> {
+    append_memory_line(memory, "note", text)
+}
+
+/// Ferramenta `recall`: lista até `n` entradas recentes (default N=8); registra kind `tool`.
+fn tool_recall(memory: &Path, n: Option<usize>) -> Result<Vec<String>, String> {
+    let limit = n.unwrap_or(MEMORY_POLICY_N);
+    let lines = read_memory_lines(memory)?;
+    let recent = last_n_entries(&lines, limit);
+    let listed: Vec<String> = recent.to_vec();
+    let summary = format!("recall n={} count={}", limit, listed.len());
+    append_memory_line(memory, "tool", &summary)?;
+    Ok(listed)
+}
+
+/// Ferramenta `help`: lista allowlist + contratos curtos; registra kind `tool`.
+fn tool_help(memory: &Path) -> Result<&'static str, String> {
+    const HELP: &str = "\
+allowlist:
+  note   — args: text; append kind=note ao JSONL
+  recall — args: n opcional; lista entradas recentes do JSONL
+  help   — lista ferramentas e contratos curtos
+proibido: shell, HTTP, write fora do path de memória
+";
+    append_memory_line(memory, "tool", "help")?;
+    Ok(HELP)
+}
+
 fn find_runtime_bin(explicit: Option<&Path>) -> Result<PathBuf, String> {
     if let Some(p) = explicit {
         if p.is_file() {
@@ -162,7 +253,6 @@ fn find_runtime_bin(explicit: Option<&Path>) -> Result<PathBuf, String> {
         return Err(format!("--runtime-bin não encontrado: {}", p.display()));
     }
 
-    // Preferir binário já buildado no target do workspace (Makefile fixa CARGO_TARGET_DIR).
     let candidates = [
         PathBuf::from("target/debug/ia-livre-runtime"),
         PathBuf::from("target/release/ia-livre-runtime"),
@@ -173,7 +263,6 @@ fn find_runtime_bin(explicit: Option<&Path>) -> Result<PathBuf, String> {
         }
     }
 
-    // Fallback: CARGO_TARGET_DIR herdado (sandbox/cache)
     if let Ok(dir) = env::var("CARGO_TARGET_DIR") {
         for profile in ["debug", "release"] {
             let p = PathBuf::from(&dir).join(profile).join("ia-livre-runtime");
@@ -189,7 +278,7 @@ fn find_runtime_bin(explicit: Option<&Path>) -> Result<PathBuf, String> {
     )
 }
 
-fn invoke_runtime(config: &Config) -> Result<String, String> {
+fn invoke_runtime(config: &Config, prompt: &str) -> Result<String, String> {
     let bin = find_runtime_bin(config.runtime_bin.as_deref())?;
     if !config.model.is_file() {
         return Err(format!(
@@ -202,7 +291,7 @@ fn invoke_runtime(config: &Config) -> Result<String, String> {
         .arg("--model")
         .arg(&config.model)
         .arg("--prompt")
-        .arg(PROOF_PROMPT)
+        .arg(prompt)
         .arg("--n-predict")
         .arg(config.n_predict.to_string())
         .stdout(Stdio::piped())
@@ -239,26 +328,53 @@ fn invoke_runtime(config: &Config) -> Result<String, String> {
 }
 
 fn run(config: &Config) -> Result<(), String> {
-    // 1) Carregar memória (existência; conteúdo pleno na Task 3)
-    if config.memory.is_file() {
-        let _ = fs::read_to_string(&config.memory);
-    }
+    // 1) Carregar memória e aplicar política N=8 no prompt montado
+    let lines = read_memory_lines(&config.memory)?;
+    let recent = last_n_entries(&lines, MEMORY_POLICY_N);
+    let user_text = config.prompt.as_deref().unwrap_or(PROOF_PROMPT);
+    let mounted = build_prompt_with_policy(user_text, recent);
+    println!("IA_LIVRE_MEMORY_POLICY_N={MEMORY_POLICY_N}");
+    println!("IA_LIVRE_MEMORY_POLICY_OK");
 
-    // 2–3) Prompt fixo + runtime
-    let generated = invoke_runtime(config)?;
+    // 2–3) Runtime com prompt montado (prova E7 ou --prompt do usuário)
+    let generated = invoke_runtime(config, &mounted)?;
     println!("IA_LIVRE_RUNTIME_USED=1");
-    // Ecoa trecho útil (sem poluir demais)
     for line in generated.lines().take(8) {
         println!("runtime: {line}");
     }
 
-    // 4–5) Cenário de prova: ferramenta garantida (não depende do SLM)
+    // 4–5) Prova v1 determinística: note + recall (≥2 tools; não depende do SLM)
+    let mut tools_used: u32 = 0;
+
     tool_note(&config.memory, PROOF_NOTE)?;
-    println!("IA_LIVRE_TOOL_OK");
+    tools_used += 1;
     println!("IA_LIVRE_TOOL=note");
+
+    let recalled = tool_recall(&config.memory, Some(MEMORY_POLICY_N))?;
+    tools_used += 1;
+    println!("IA_LIVRE_TOOL=recall");
+    println!("IA_LIVRE_RECALL_COUNT={}", recalled.len());
+    for (i, line) in recalled.iter().take(MEMORY_POLICY_N).enumerate() {
+        println!("recall[{i}]: {line}");
+    }
+
+    let help_text = tool_help(&config.memory)?;
+    tools_used += 1;
+    println!("IA_LIVRE_TOOL=help");
+    for line in help_text.lines().take(8) {
+        println!("help: {line}");
+    }
+
+    println!("IA_LIVRE_TOOLS_USED={tools_used}");
+    if tools_used < 2 {
+        return Err(format!(
+            "prova v1 exige ≥2 ferramentas; obtido {tools_used}"
+        ));
+    }
+    println!("IA_LIVRE_TOOL_OK");
     println!("IA_LIVRE_MEMORY_PATH={}", config.memory.display());
 
-    // 6) Persistência verificável: re-ler o arquivo e confirmar a nota de prova
+    // 6) Persistência verificável
     let stored = fs::read_to_string(&config.memory)
         .map_err(|e| format!("re-ler memória {}: {e}", config.memory.display()))?;
     if !stored.contains(PROOF_NOTE) {
@@ -268,7 +384,7 @@ fn run(config: &Config) -> Result<(), String> {
     }
     println!("IA_LIVRE_MEMORY_OK");
 
-    // 7) Loop do cenário de prova concluído
+    // 7) Loop concluído
     println!("IA_LIVRE_AGENT_OK");
 
     Ok(())
