@@ -6,11 +6,11 @@ Regra: `.cursor/rules/agentes-em-paralelo.mdc`.
 ## Estado atual
 
 - **holder:** cursor-agent-principal
-- **etapa:** 19 — Memória model-aware + scheduler por fases (impl. mínima)
-- **issue:** #19
-- **paths:** ROADMAP.md, BACKLOG.md, memory-bank/, specs/memoria-scheduler-impl-minima/, kernel/, docs/, AGENTS.md, Makefile, scripts/
-- **since:** 2026-11-21T00:00:49Z
-- **expires:** 2026-11-21T02:00:49Z
+- **etapa:** 21 — Carga GGUF canônica na Linha B (mínimo honesto)
+- **issue:** #21
+- **paths:** ROADMAP.md, BACKLOG.md, memory-bank/, specs/carga-gguf-linha-b/, docs/, AGENTS.md, Makefile, scripts/, kernel/ (só se carga GGUF real exigir)
+- **since:** 2026-11-21T00:37:00Z
+- **expires:** 2026-11-21T02:37:00Z
 
 ## Como usar
 

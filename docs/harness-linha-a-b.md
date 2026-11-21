@@ -57,21 +57,32 @@ Namespace distinto dos protótipos (`IA_LIVRE_INFER_OK`, `IA_LIVRE_LOAD_S`, etc.
 | `IA_LIVRE_HARNESS_PROXY=post_exit_microbench` | **Só B** — carga é proxy, não GGUF |
 | `IA_LIVRE_HARNESS_LOAD_KIND=proxy` | **Só B** |
 | `IA_LIVRE_HARNESS_PROXY_MS=` / `PROXY_OPS=` | **Só B** — métricas medidas do microbenchmark |
-| `IA_LIVRE_HARNESS_B_SKIP` | Legado do stub; **não** no caminho de sucesso da Etapa 12 |
+| `IA_LIVRE_HARNESS_CONTRACT_BACKEND=native_qemu` | **Só B (E20)** — serial E19 observado |
+| `IA_LIVRE_HARNESS_CONTRACT_MEM_SCHED=OK` | **Só B** — `MEM_SCHED_OK` no serial |
+| `IA_LIVRE_HARNESS_CONTRACT_TYPED_*=OK` / `PHASE_*=OK` | **Só B** — evidência tipada/fases |
+| `IA_LIVRE_HARNESS_B_SKIP` | Legado do stub; **não** no caminho de sucesso |
 
 Fora do mínimo v1: joules, p95 multi-request, VRAM multi-tenant (candidatos da architecture).
 
 ## Contrato do slot Linha B
 
-### Etapa 12 (atual) — proxy mínimo
+### Etapa 12 — proxy mínimo (+ Etapa 20 — evidência de contrato)
 
-1. Kernel emite `EXIT_BOOT_OK` + `NATIVE_BENCH_*` (COM1).
-2. `scripts/run-harness-line-b.sh` sobe QEMU, captura serial e reemite `HARNESS_LINE=B` + `HARNESS_OK` + marcadores proxy.
-3. **Não** declara hipótese comprovada; A e B **não** são lado a lado comparáveis até B rodar a carga canônica GGUF.
+1. Kernel emite `EXIT_BOOT_OK` + `MEM_SCHED_*` / `TYPED_*` (E19) + `NATIVE_BENCH_*` (COM1).
+2. `scripts/run-harness-line-b.sh` sobe QEMU, captura serial e reemite `HARNESS_LINE=B` + `HARNESS_OK` + marcadores **proxy** + `HARNESS_CONTRACT_*`.
+3. Proxy **permanece** (`LOAD_KIND=proxy`); evidência de contrato **≠** GGUF canônico.
+4. **Não** declara hipótese comprovada; A e B **não** são lado a lado comparáveis até B rodar a carga canônica GGUF.
+
+### Contrato nativo (Etapa 20) vs Linha B
+
+- **Shim host:** gate `make verify-runtime-contract` — **não** é Linha B.
+- **QEMU + E19:** evidência reemitida no harness B (`HARNESS_CONTRACT_*`) — ver [`runtime-contrato-nativo.md`](runtime-contrato-nativo.md).
+- **Proibido** `TOKENS_PER_S` / fingir GGUF em B.
 
 ### Etapa 21 — Carga GGUF canônica em B (mínimo honesto)
 
-Contrato: [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md) (seção Etapa 21) + [`../specs/carga-gguf-linha-b/spec.md`](../specs/carga-gguf-linha-b/spec.md).
+Contrato: [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md) (seção Etapa 21) + [`../specs/carga-gguf-linha-b/spec.md`](../specs/carga-gguf-linha-b/spec.md).  
+Deps 19/20 (MEM_SCHED + contrato) estão no caminho B; carga TinyLlama Q4_K_M em B ainda é o alvo desta etapa (**ou** bloqueio final honesto). Desenho: [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-scheduler-nativo.md) (ADR 0003) — **desenho ≠ prova**.
 
 | `LOAD_KIND` | Papel no slot B |
 |-------------|-----------------|
@@ -79,14 +90,14 @@ Contrato: [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md) (seção Etap
 | `blocked` | Bloqueio honesto (`B_BLOCK=…`, ex. `awaiting_b13_b14`) — **sem** inventar `TOKENS_PER_S`/`LOAD_S` |
 | `gguf` | Carga canônica real no QEMU/IA Livre (TinyLlama Q4_K_M, prompt, `n-predict=32`) com métricas **medidas** |
 
-**Deps:** Etapa 19 / B13 + Etapa 20 / B14. Sem eles → bloqueio `awaiting_b13_b14`; proxy permanece o instrumento mínimo.  
+**Deps:** Etapa 19 / B13 + Etapa 20 / B14 — **feitas** no main. Integração GGUF real em B (Tasks 3–4) ou bloqueio final (`no_gguf_path` / equivalente); proxy permanece o instrumento mínimo até `LOAD_KIND=gguf`.  
 Quando A e B tiverem `LOAD_KIND=gguf` com métricas em espécie, ainda assim a **prova/refutação** da hipótese fica para etapa posterior (B16) — esta etapa **não** declara vitória.
 
 ### Ainda falta para métricas em espécie em B
 
-1. B13 + B14 mergeados/verificáveis.  
-2. Caminho GGUF real no IA Livre (Etapa 21 Task 3–4).  
-Desenho dos mecanismos: [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-scheduler-nativo.md) (ADR 0003) — **desenho ≠ implementação ≠ prova**.
+1. ~~B13 + B14 mergeados/verificáveis~~ — Etapas 19/20 **feitas**.  
+2. Caminho GGUF real no IA Livre (Etapa 21 Tasks 3–4) **ou** bloqueio final honesto documentado.  
+Desenho dos mecanismos: [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-scheduler-nativo.md) (ADR 0003) — **desenho ≠ prova**.
 ## Como rodar
 
 ```bash
@@ -98,10 +109,10 @@ cargo build -p ia-livre-runtime
 # Linha A (host Linux + runtime)
 ./scripts/run-harness-line-a.sh
 
-# Linha B (QEMU — proxy pós-ExitBoot; não é TinyLlama)
+# Linha B (QEMU — proxy + evidência MEM_SCHED; não é TinyLlama)
 ./scripts/run-harness-line-b.sh
 
-# Gate
+# Gate (A GGUF + B proxy + HARNESS_CONTRACT_*)
 make verify-harness
 ```
 

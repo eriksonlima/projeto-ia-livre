@@ -73,12 +73,16 @@ make run      # serial: Etapa 10 → EXIT_BOOT_BEGIN → marcadores EXIT_* via C
 make verify   # exige BOOT/MEM/ALLOC + EXIT_BOOT_OK (e EXIT_MAP/MEM); VERIFY_TIMEOUT default 45s
 ```
 
-## Depois do EXIT (Etapa 12)
+## Depois do EXIT
 
-Após `IA_LIVRE_EXIT_BOOT_OK`, o kernel pode emitir o proxy Linha B (`IA_LIVRE_NATIVE_BENCH_*`).  
-Ver [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md).
+Após `IA_LIVRE_EXIT_BOOT_OK`:
+
+1. **Etapa 19** — demo memória model-aware / scheduler por fases (`TYPED_*`, `PHASE=`, `QUANTUM=`, `MEM_SCHED_OK`). Ver [`memoria-scheduler-impl-minima.md`](memoria-scheduler-impl-minima.md).
+2. **Etapa 12** — proxy Linha B (`IA_LIVRE_NATIVE_BENCH_*`). Ver [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md).
+
+Ordem canônica: `EXIT_BOOT_OK` → demo MEM_SCHED → `NATIVE_BENCH_*`.
 
 ## Fora de escopo
 
 - Inferência / GGUF / llama.cpp no UEFI
-- MMU completa, heap buddy/slab, filesystem, rede, GPU, scheduler
+- MMU completa, heap buddy/slab, filesystem, rede, GPU, scheduler maduro (preempt/APIC)

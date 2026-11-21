@@ -15,9 +15,11 @@ Pré-requisito kernel: [`kernel-pos-boot-services.md`](kernel-pos-boot-services.
 | GGUF TinyLlama | **Ausente** nesta etapa |
 | Hipótese | **Não** comprovada; métricas B **não** comparáveis a A |
 
-> O desenho candidato que *diferenciaria* B de A de forma model-aware (classes `Weights`/`KvCache` + fases Prefill/Decode) está em [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-scheduler-nativo.md) / ADR 0003 — **ainda não implementado**; este proxy **não** o realiza.
+> O desenho candidato que *diferenciaria* B de A de forma model-aware (classes `Weights`/`KvCache` + fases Prefill/Decode) está em [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-scheduler-nativo.md) / ADR 0003. A **implementação mínima** no kernel (Etapa 19) está em [`memoria-scheduler-impl-minima.md`](memoria-scheduler-impl-minima.md) (`MEM_SCHED_*` / `TYPED_*`). O **consumidor** (shim host / evidência de contrato) é a Etapa 20 — ver [`runtime-contrato-nativo.md`](runtime-contrato-nativo.md). Este proxy `NATIVE_BENCH_*` **não** realiza o contrato sozinho; o harness B (E20) **também** observa `MEM_SCHED_*` e reemite `HARNESS_CONTRACT_*`. Evidência de contrato **≠** carga GGUF canônica e **não** emite `TOKENS_PER_S`.
 
 ## Marcadores kernel (COM1, após `EXIT_BOOT_OK`)
+
+Ordem: `MEM_SCHED_*` / `TYPED_*` (E19) **antes** do proxy.
 
 | Marcador | Significado |
 |----------|-------------|
@@ -28,7 +30,7 @@ Pré-requisito kernel: [`kernel-pos-boot-services.md`](kernel-pos-boot-services.
 
 ## O que o harness B reemite
 
-`LINE=B`, `HARNESS_OK`, `PROXY=post_exit_microbench`, `LOAD_KIND=proxy`, `PROXY_MS=`, `PROXY_OPS=`, `MODEL=proxy-post-exit-v1`, `N_PREDICT=0`.
+`LINE=B`, `HARNESS_OK`, `PROXY=post_exit_microbench`, `LOAD_KIND=proxy`, `PROXY_MS=`, `PROXY_OPS=`, `MODEL=proxy-post-exit-v1`, `N_PREDICT=0`, mais `HARNESS_CONTRACT_BACKEND=native_qemu` + `HARNESS_CONTRACT_MEM_SCHED=OK` + tipados/fases (E20).
 
 **Proibido:** `TOKENS_PER_S`, `LOAD_S` como load GGUF, nome do modelo TinyLlama, inventar números.
 
@@ -70,7 +72,7 @@ Sem B13+B14 verificáveis, **não** há carga GGUF real em B. O proxy da Etapa 1
 | `LOAD_KIND` | Quando | Métricas |
 |-------------|--------|----------|
 | `proxy` | Etapa 12 — default atual do gate B | `PROXY_MS` / `PROXY_OPS` — **sem** `TOKENS_PER_S` |
-| `blocked` | Etapa 21 — GGUF ainda inviável | `B_BLOCK=<motivo>` (ex. `awaiting_b13_b14`); **sem** inventar load/tokens |
+| `blocked` | Etapa 21 — GGUF ainda inviável | `B_BLOCK=<motivo>` (ex. `no_gguf_path`; legado `awaiting_b13_b14`); **sem** inventar load/tokens |
 | `gguf` | Etapa 21 — só com carga real no QEMU/IA Livre | `LOAD_S` / `TOKENS_PER_S` **medidos**; `MODEL` = GGUF canônico; `N_PREDICT=32` |
 
 ### Marcadores — sucesso GGUF em B (futuro / condicionado)
@@ -87,17 +89,20 @@ Só após evidência real de carga no ambiente IA Livre:
 
 **Não** emitir `PROXY=…` neste caminho.
 
-### Marcadores — bloqueio honesto (default enquanto deps faltarem)
+### Marcadores — bloqueio honesto (default enquanto GGUF real ausente)
 
 Informativo / stub; **não** substitui o caminho proxy do gate mínimo:
 
 - `IA_LIVRE_HARNESS_LINE=B`
-- `IA_LIVRE_HARNESS_LOAD_KIND=blocked`
-- `IA_LIVRE_HARNESS_B_BLOCK=awaiting_b13_b14` (ou `no_gguf_path`)
+- `IA_LIVRE_HARNESS_LOAD_KIND=blocked` (via `LOAD_KIND_GGUF=blocked` no modo `block-status`)
+- `IA_LIVRE_HARNESS_B_BLOCK=no_gguf_path` (deps 19/20 ok; sem loader GGUF no QEMU)
+- `IA_LIVRE_HARNESS_GGUF_STATUS=blocked`
+- `IA_LIVRE_HARNESS_CONTRACT_READY=1` (MEM_SCHED + fases observados — Etapas 19/20)
 
 **Proibido** em `blocked` e em `proxy`: inventar `TOKENS_PER_S` / `LOAD_S` GGUF; apontar `MODEL=` TinyLlama sem carga real; declarar hipótese comprovada.
 
-### Estado atual (branch `etapa-b15-gguf-linha-b`)
+### Estado atual (após merge E19/E20)
 
-Bloqueio honesto: **awaiting_b13_b14** — B13 (`em_andamento`) e B14 (`pendente`/branch) ainda não mergeados como caminho GGUF.  
-Gate B continua = **proxy** Etapa 12. Hipótese A vs B **não** comprovada. GPU manager **fora**.
+- ~~`awaiting_b13_b14`~~ — Etapas 19 e 20 **feitas** e verificáveis no main; harness B observa `HARNESS_CONTRACT_*`.
+- Bloqueio honesto atual: **`no_gguf_path`** — não há loader GGUF / filesystem / llama.cpp no kernel UEFI pós-ExitBoot; o proxy E12 permanece o instrumento mínimo do gate.
+- Hipótese A vs B **não** comprovada. GPU manager **fora**.
