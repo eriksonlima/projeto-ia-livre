@@ -10,15 +10,9 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Meta do protótipo (objetivo do projeto):** um ecossistema verificável em que (1) a **hipótese A vs B** possa ser comprovada ou refutada com geração real na Linha B (`TOKENS_PER_S`), (2) o **SO IA Livre** boote de USB/ESP em hardware real com caminho de IA nativo mínimo honesto, (3) a **Rede** e a **autonomia** continuem utilizáveis **sem** exigir o SO. Ordem abaixo = prioridade sugerida (topo primeiro).
 >
-> **Análise pós-E60 (2026-11-21):** E59/0020 + E60/0021 — espécie canônica inviável no gate atual. Pilar 1 BLOQUEIO_FINAL (E61). E62 SKIP metal neste host. Topo: **B57** (I/O GGUF metal) ou B67 docs; B55 adiada.
+> **Análise pós-E62 (2026-11-21):** Pilar 1 BLOQUEIO_FINAL; E62 SKIP metal. Promovido **B57→E63**. Topo Abertas: **B55** (adiada) → efetivo **B59**/B67.
 
 
-
-### B57 — I/O GGUF no path metal (além de no_gguf_metal_io)
-- Issue: [#63](https://github.com/eriksonlima/projeto-ia-livre/issues/63)
-- Origem: E48/ADR 0017 — path metal ainda é bloqueio SFS
-- Pronto quando: geração mínima ou loader full no PC/ESP + marcadores; sem `TOKENS` fingidos; ≠ BlockIO como metal
-- Deps: E36; E48; B56 preferível
 
 ### B55 — Re-corrida harness A/B quieta pós-espécie canônica
 - Issue: [#61](https://github.com/eriksonlima/projeto-ia-livre/issues/61)
@@ -82,6 +76,14 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: E58
 
 ## Promovidas / arquivadas
+
+### B57 — I/O GGUF no path metal (além de no_gguf_metal_io)
+- Issue: [#63](https://github.com/eriksonlima/projeto-ia-livre/issues/63)
+- Origem: E48/ADR 0017 — path metal ainda é bloqueio SFS
+- Pronto quando: geração mínima ou loader full no PC/ESP + marcadores; sem `TOKENS` fingidos; ≠ BlockIO como metal
+- Deps: E36; E48; B56 preferível
+- Promovido para Etapa 63 do roadmap (promoção autônoma — “continuar”).
+- Etapa: [Etapa 63 — I/O GGUF path metal](ROADMAP.md)
 
 ### B56 — Evidência METAL_OK em PC real
 - Issue: [#62](https://github.com/eriksonlima/projeto-ia-livre/issues/62)

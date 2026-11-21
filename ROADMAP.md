@@ -472,3 +472,10 @@ Spec: specs/evidencia-metal-ok/
 Pronto quando: log real em `docs/evidence/boot-metal/` + `IA_LIVRE_BAREMETAL_SKIP=0` → `METAL_OK` (≥ `BOOT_OK`, sem QEMU/OVMF); **ou** bloqueio honesto documentado sem fabricar log.  
 **Desfecho:** bloqueio honesto — `STATUS-SKIP` (`no_pc_serial_log_on_this_host`); **sem** `METAL_OK` fabricado; operador pode reabrir com log real (`TEMPLATE.txt`).
 
+## Etapa 63 — I/O GGUF no path metal (além de no_gguf_metal_io)
+
+Status: em_andamento  
+Issue: [#63](https://github.com/eriksonlima/projeto-ia-livre/issues/63)  
+Spec: specs/io-gguf-path-metal/  
+Pronto quando: no path metal (SFS/ESP — QEMU FAT32 ou PC), loader full **ou** geração mínima com marcadores; **ou** bloqueio/ADR honesto se I/O full continuar inviável; sem `TOKENS` fingidos; ≠ tratar BlockIO como metal; ≠ `METAL_OK` fabricado.  
+
