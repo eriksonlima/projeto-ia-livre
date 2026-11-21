@@ -134,3 +134,12 @@ Status: em_andamento
 Issue: [#19](https://github.com/eriksonlima/projeto-ia-livre/issues/19)  
 Spec: specs/memoria-scheduler-impl-minima/  
 Pronto quando: contrato mínimo verificável no kernel pós-ExitBoot — allocator tipado `Weights`/`KvCache`, hints Prefill/Decode com política de quantum mínima e marcadores serial; `make verify` (ou extensão documentada) cobre o caminho; sem GGUF; sem prova da hipótese; sem ABI estável/multi-tenant/GPU manager.
+
+<!-- Etapas 20–24 = B14–B18 em branches/agentes paralelos (issues #20–#24). Não duplicar nem promover a em_andamento aqui. -->
+
+## Etapa 25 — GPU manager / multi-GPU (protótipo mínimo)
+
+Status: pendente  
+Issue: [#25](https://github.com/eriksonlima/projeto-ia-livre/issues/25)  
+Spec: specs/gpu-manager-multi-gpu-prototipo/  
+Pronto quando: primeiro protótipo mínimo alinhado ao desenho ADR 0006 (enum/afinidade/placement e/ou shard documentado), com fronteira clara host vs nativo; caminho verificável documentado; gate ou skip honesto (sem fingir aceleração); sem prova A vs B via multi-GPU; sem clusters/RDMA/tensor parallel completo.

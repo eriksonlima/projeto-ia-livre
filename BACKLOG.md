@@ -43,17 +43,15 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Notas: `--prompt`, allowlist `note`/`recall`/`help`, política N=8; host only.
 - Pronto quando (candidato): prova v1 com ≥2 ferramentas + marcadores de política; `verify-agent` preservado/estendido.
 
-### B19 — GPU manager / multi-GPU (protótipo mínimo)
-
-- Issue: [#25](https://github.com/eriksonlima/projeto-ia-livre/issues/25)
-- Origem: Etapa 16 / ADR 0006; E8 = host GPU ≠ manager nativo
-- Notas: enum/afinidade/placement e/ou shard documentado; posterior à trilha da hipótese.
-- Pronto quando (candidato): caminho verificável; skip/gate honesto; sem prova A vs B via multi-GPU.
-
 ## Promovidas / arquivadas
 
-### B13 — Memória model-aware + scheduler por fases (impl. mínima)
+### B19 — GPU manager / multi-GPU (protótipo mínimo)
 
+- Promovido para Etapa 25 do roadmap (paralelo a Etapa 19 `em_andamento`; Etapas 20–24 reservadas a B14–B18 em branches paralelas).
+- Issue: [#25](https://github.com/eriksonlima/projeto-ia-livre/issues/25)
+- Etapa: [Etapa 25 — GPU manager / multi-GPU (protótipo mínimo)](ROADMAP.md)
+
+### B13 — Memória model-aware + scheduler por fases (impl. mínima)
 - Promovido para Etapa 19 do roadmap (promoção autônoma após “continuar”; etapas 1–18 feitas).
 - Issue: [#19](https://github.com/eriksonlima/projeto-ia-livre/issues/19)
 - Etapa: [Etapa 19 — Memória model-aware + scheduler por fases (impl. mínima)](ROADMAP.md)
