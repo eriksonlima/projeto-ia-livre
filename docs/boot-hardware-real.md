@@ -5,7 +5,8 @@ Spec E35: [`../specs/boot-uefi-hardware-real/`](../specs/boot-uefi-hardware-real
 Evidências: [`evidence/boot-metal/`](evidence/boot-metal/).  
 **Guia onboarding (Etapa 57):** [`guia-primeiro-boot-usb.md`](guia-primeiro-boot-usb.md) · prepare release: `./scripts/prepare-baremetal-release.sh` · gate: `make verify-boot-guide-release`.
 
-> **QEMU ≠ bare-metal.** Este documento não prova a hipótese A vs B e **não** emite `TOKENS_PER_S`.
+> **QEMU ≠ bare-metal.** Este documento não prova a hipótese A vs B e **não** emite `TOKENS_PER_S`.  
+> **Canal padrão de evidência (Etapa 73):** relatório na ESP — [`baremetal-report.md`](baremetal-report.md) / ADR [`0025`](adr/0025-baremetal-report-esp.md). UART COM1 é opcional.
 
 ## Artefato (prova CI)
 
@@ -64,27 +65,28 @@ make baremetal-esp
 
 Se preferir à mão: montar FAT e `cp -a build/baremetal-esp/* /mnt/…`, ou `dd if=build/ia-livre-esp.img of=/dev/sdX bs=4M status=progress` **só** após confirmar o dispositivo.
 
-## Checklist hardware real (Etapa 46)
+## Checklist hardware real (Etapa 46 / 73)
 
 | Passo | Ok? |
 |-------|-----|
 | Secure Boot desligado / setup | |
 | Mídia aparece no Boot Menu | |
-| Serial USB-UART no COM1 (ou adaptador) a 115200 8N1 | |
-| Na serial: pelo menos `IA_LIVRE_BOOT_OK` (sucesso mínimo) | |
-| Ideal: `EXIT_BOOT_OK` se o fluxo completo rodar | |
-| Log **não** contém strings QEMU/OVMF/`SeaBIOS` | |
+| Boot até GOP / `EXIT_BOOT_BEGIN` | |
+| **Padrão:** remount Linux + `IA_LIVRE/baremetal-report.txt` com `BOOT_OK` + `OBS_OK` + `REPORT_OK` | |
+| Opcional: serial COM1 115200 8N1 | |
+| Evidência **não** contém strings QEMU/OVMF/`SeaBIOS` | |
 
-Sem serial: só confirmação visual de que o firmware carregou o EFI — **não** conta como gate CI.
+Só “pareceu bootar” sem report/serial → **não** conta como gate CI.
 
-### Caminhos Etapa 46 (ADR/spec)
+### Caminhos de evidência
 
 | Caminho | Quando | Resultado |
 |---------|--------|-----------|
-| **A — evidência** | Operador anexa log em `docs/evidence/boot-metal/` | `SKIP=0` + `METAL_OK` |
-| **B — bloqueio honesto** | Sem PC/log nesta máquina | `SKIP=1`; issue registra bloqueio; **proibido** fabricar log |
+| **A — report ESP (padrão)** | Operador copia `baremetal-report.txt` → `docs/evidence/boot-metal/` | `SKIP=0` + `METAL_OK` |
+| **A' — serial (legado)** | Lab com UART | Idem |
+| **B — bloqueio honesto** | Sem PC/report nesta máquina | `SKIP=1`; **proibido** fabricar evidência |
 
-Agente **não** inventa evidência serial.
+Agente **não** inventa evidência metal.
 
 ## Captura serial (Etapa 35)
 
@@ -118,12 +120,12 @@ IA_LIVRE_BOOT_OK
 |----------|-------|------|
 | QEMU | Serial + marcadores | `make verify` |
 | Artefato ESP/tar | Estrutura + MZ + checksum | `make verify-baremetal` (IMAGE_OK) |
-| PC real | Log serial ≥ `BOOT_OK` | `IA_LIVRE_BAREMETAL_SKIP=0` + `IA_LIVRE_BAREMETAL_EVIDENCE=…` → `METAL_OK` |
+| PC real | Report ESP (padrão) ou serial ≥ `BOOT_OK` (+ `OBS_OK` no path ESP) | `IA_LIVRE_BAREMETAL_SKIP=0` + `IA_LIVRE_BAREMETAL_EVIDENCE=…` → `METAL_OK` |
 
 ### Limites honestos
 
 - Path BlockIO/`gguf-canon` do QEMU **não** se aplica automaticamente ao PC; GGUF completo em metal é etapa futura.
-- Observação canônica do gate metal: **serial**. Etapa 37 adiciona GOP/input **mínimos** sob Boot Services (prova também na serial) — ver [`observabilidade-minima-so.md`](observabilidade-minima-so.md); **não** substitui UART nem exige screenshot.
+- Observação canônica do gate metal: **report ESP** (ADR 0025); serial secundário. GOP na tela é bônus — ver [`observabilidade-minima-so.md`](observabilidade-minima-so.md); vídeo/foto ≠ gate.
 - Skip de metal (`BAREMETAL_SKIP`) ≠ sucesso em hardware.
 
 ## Relação com outros gates

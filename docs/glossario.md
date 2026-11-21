@@ -20,7 +20,8 @@ Princípios: [`manifesto.md`](manifesto.md).
 | **bare-metal** | Boot/imagem em PC real ou artefato ESP/USB — **≠** QEMU | [`boot-hardware-real.md`](boot-hardware-real.md) |
 | **QEMU ≠ metal** | `make verify` (QEMU) ≠ evidência de PC físico | [`boot-hardware-real.md`](boot-hardware-real.md) |
 | **`BAREMETAL_SKIP`** | Skip honesto de prova metal no gate de artefato | [`boot-hardware-real.md`](boot-hardware-real.md) |
-| **`METAL_OK`** | Evidência serial de PC real aceita pelo gate | Etapa 35 / `verify-baremetal` |
+| **`METAL_OK`** | Evidência de PC real aceita pelo gate (report ESP **ou** serial) | Etapa 35/73 / `verify-baremetal` |
+| **`baremetal-report.txt`** | Canal padrão de evidências/métricas bare-metal na ESP (sem COM1) | [`baremetal-report.md`](baremetal-report.md) / ADR [`0025`](adr/0025-baremetal-report-esp.md) |
 | **`*_SKIP`** | Skip honesto em gates (GPU, shard, metal, mDNS) — exit 0 **sem** fingir sucesso | `AGENTS.md` (vários gates) |
 | **`host_stub`** | Stub GPU manager host (E25) | [`gpu-manager-prototipo-host.md`](gpu-manager-prototipo-host.md) |
 | **`native` (GPU_MGR)** | Mecanismos GPU no kernel (E38) | [`gpu-manager-nativo.md`](gpu-manager-nativo.md) |

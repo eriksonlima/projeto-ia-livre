@@ -95,13 +95,35 @@ fi
 
 echo "IA_LIVRE_BAREMETAL_SKIP=0"
 if [[ -z "$EVIDENCE" || ! -f "$EVIDENCE" ]]; then
-  echo "GATE_FAIL: SKIP=0 exige IA_LIVRE_BAREMETAL_EVIDENCE apontando para log de metal"
+  echo "GATE_FAIL: SKIP=0 exige IA_LIVRE_BAREMETAL_EVIDENCE apontando para report/log de metal"
   exit 1
 fi
 
 if ! grep -q 'IA_LIVRE_BOOT_OK' "$EVIDENCE"; then
   echo "GATE_FAIL: evidência sem IA_LIVRE_BOOT_OK"
   exit 1
+fi
+
+# Canal ESP (ADR 0025 / Etapa 73): report padrão exige OBS_OK + cabeçalho report/evidence
+esp_report=0
+if grep -q 'IA_LIVRE_BAREMETAL_REPORT_V1' "$EVIDENCE" \
+  || grep -q 'MEDIA=usb_esp_file' "$EVIDENCE" \
+  || grep -q 'IA_LIVRE_BAREMETAL_REPORT_OK' "$EVIDENCE"; then
+  esp_report=1
+fi
+# Alias legado EVIDENCE_V1 com MEDIA usb_esp_file
+if grep -q 'IA_LIVRE_BAREMETAL_EVIDENCE_V1' "$EVIDENCE" && grep -q 'MEDIA=usb_esp_file' "$EVIDENCE"; then
+  esp_report=1
+fi
+
+if [[ "$esp_report" -eq 1 ]]; then
+  grep -q 'IA_LIVRE_OBS_OK' "$EVIDENCE" \
+    || { echo "GATE_FAIL: report ESP sem IA_LIVRE_OBS_OK"; exit 1; }
+  grep -q 'IA_LIVRE_BAREMETAL_REPORT_OK' "$EVIDENCE" \
+    || { echo "GATE_FAIL: report ESP sem IA_LIVRE_BAREMETAL_REPORT_OK"; exit 1; }
+  echo "IA_LIVRE_BAREMETAL_EVIDENCE_SRC=esp_report"
+else
+  echo "IA_LIVRE_BAREMETAL_EVIDENCE_SRC=serial_or_legacy"
 fi
 
 # Rejeitar indicadores óbvios de QEMU/OVMF no log de metal
@@ -119,5 +141,5 @@ fi
 
 echo "IA_LIVRE_BAREMETAL_EVIDENCE=$EVIDENCE"
 echo "IA_LIVRE_BAREMETAL_METAL_OK"
-echo "GATE_OK: baremetal — artefato + evidência metal (≥ BOOT_OK)"
+echo "GATE_OK: baremetal — artefato + evidência metal (report ESP ou serial ≥ BOOT_OK)"
 exit 0

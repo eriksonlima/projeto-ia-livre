@@ -554,8 +554,9 @@ Pronto quando: architecture + product-context + glossário refletem E42–E71 e 
 
 ## Etapa 73 — Canal padrão bare-metal: relatório na ESP (sem COM1)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#74](https://github.com/eriksonlima/projeto-ia-livre/issues/74)  
 Spec: specs/baremetal-report-esp/  
-Pronto quando: `\\IA_LIVRE\\baremetal-report.txt` escrito pré-ExitBoot via SFS; `METAL_OK` via esse report sem UART; ADR canal padrão; serial permanece válido; vídeo fora do gate.
+Pronto quando: `\\IA_LIVRE\\baremetal-report.txt` escrito pré-ExitBoot via SFS; `METAL_OK` via esse report sem UART; ADR canal padrão; serial permanece válido; vídeo fora do gate.  
+**Desfecho:** ADR 0025; kernel flush SFS `baremetal-report.txt`; `verify-baremetal` aceita report ESP (`OBS_OK`+`REPORT_OK`); fixture CI; QEMU FAT32 persiste o arquivo; UART opcional.
 

@@ -37,9 +37,9 @@ Objetivo do protótipo = **os três** pilares no estado “atingido” (ou bloqu
 | Onboarding | Guia [`guia-primeiro-boot-usb.md`](guia-primeiro-boot-usb.md) + `make verify-boot-guide-release` |
 | Writer | `make verify-write-usb` → `WRITE_USB_OK` (gravação ≠ metal) |
 | Path IA mínimo | BlockIO (QEMU) e/ou path metal SFS com bloqueio honesto (`verify-metal-infer` / `B_BLOCK_METAL`) — sem `TOKENS` fingidos |
-| Metal real | `METAL_OK` **somente** com log em `docs/evidence/boot-metal/` sem QEMU/OVMF |
-| **Estado atual** | Artefato + guia + writer + path metal **honestos** verdes no CI; **`METAL_OK`** **pendente** — E62/`STATUS-SKIP` (`no_pc_serial_log_on_this_host`); sem fabricar log |
-| Não conta | Tratar QEMU como metal; inventar `METAL_OK` |
+| Metal real | `METAL_OK` com **report ESP** (padrão E73) ou serial legado em `docs/evidence/boot-metal/` sem QEMU/OVMF — [`baremetal-report.md`](baremetal-report.md) |
+| **Estado atual** | Artefato + guia + writer + path metal **honestos** verdes no CI; canal ESP disponível; **`METAL_OK`** **pendente** até o operador versionar um report de PC real (CI `SKIP=1`) |
+| Não conta | Tratar QEMU como metal; inventar `METAL_OK`; vídeo/foto como gate |
 
 ---
 
@@ -71,7 +71,7 @@ Objetivo do protótipo = **os três** pilares no estado “atingido” (ou bloqu
 | Pilar | Falta |
 |-------|--------|
 | 1 | — (bloqueio **final** ADR 0022; reabertura só com critérios da ADR) |
-| 2 | Evidência `METAL_OK` em PC (quando quiser fechar metal) — artefato/guia já ok |
+| 2 | Versionar `baremetal-report.txt` de PC real → `METAL_OK` (canal ESP; sem UART) — artefato/guia já ok |
 | 3 | — (critério host satisfeito) |
 
 ---

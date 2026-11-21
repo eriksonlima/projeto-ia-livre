@@ -10,7 +10,7 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Meta do protótipo (objetivo do projeto):** um ecossistema verificável em que (1) a **hipótese A vs B** possa ser comprovada ou refutada com geração real na Linha B (`TOKENS_PER_S`), (2) o **SO IA Livre** boote de USB/ESP em hardware real com caminho de IA nativo mínimo honesto, (3) a **Rede** e a **autonomia** continuem utilizáveis **sem** exigir o SO. Ordem abaixo = prioridade sugerida (topo primeiro).
 >
-> **Análise pós-promoção B68 (2026-11-21):** B68→E73 baremetal-report. Abertas: só **B55** (adiada).
+> **Análise pós-E73 (2026-11-21):** baremetal-report ESP. Abertas: só **B55** (adiada).
 
 
 

@@ -1,9 +1,11 @@
 #![no_main]
 #![no_std]
 
+mod baremetal_report;
 mod gpu_mgr;
 mod obs;
 
+use baremetal_report::ReportBuffer;
 use core::fmt::Write;
 use core::ptr::NonNull;
 use uefi::boot::{
@@ -84,10 +86,23 @@ const COM1: u16 = 0x3F8;
 
 pub(crate) struct LineSink<'a> {
     serial: Option<&'a mut Serial>,
+    /// Buffer do relatório ESP (Etapa 73); None = só console/UART.
+    pub(crate) report: Option<&'a mut ReportBuffer>,
 }
 
 impl LineSink<'_> {
     pub(crate) fn emit(&mut self, line: &str) {
+        if let Some(buf) = self.report.as_mut() {
+            buf.push_str(line);
+        }
+        if let Some(serial) = self.serial.as_mut() {
+            let _ = serial.write_str(line);
+        }
+        uefi::print!("{line}");
+    }
+
+    /// Emite só em console/UART (não entra no buffer do report).
+    pub(crate) fn emit_console_only(&mut self, line: &str) {
         if let Some(serial) = self.serial.as_mut() {
             let _ = serial.write_str(line);
         }
@@ -622,8 +637,10 @@ fn main() -> Status {
 
     let serial_handle = boot::get_handle_for_protocol::<Serial>().ok();
     let mut serial = serial_handle.and_then(|h| boot::open_protocol_exclusive::<Serial>(h).ok());
+    let mut report = ReportBuffer::new();
     let mut sink = LineSink {
         serial: serial.as_mut().map(|s| &mut **s),
+        report: Some(&mut report),
     };
 
     sink.emit(BOOT_OK);
@@ -674,9 +691,12 @@ fn main() -> Status {
     // Etapa 37 — observabilidade mínima (GOP ou input) antes do ExitBoot.
     obs::run_observability(&mut sink);
 
+    // Etapa 73 — canal padrão bare-metal: flush do report na ESP (antes do ExitBoot).
+    baremetal_report::flush_report(&mut sink);
+
     sink.emit(EXIT_BOOT_BEGIN);
 
-    // Soltar Serial UEFI antes do exit (protocolos invalidam).
+    // Soltar Serial UEFI / buffer antes do exit (protocolos invalidam).
     drop(sink);
     drop(serial);
 

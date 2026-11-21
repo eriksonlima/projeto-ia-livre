@@ -1,8 +1,8 @@
 # IA_LIVRE_BAREMETAL_STATUS
 # DATE_UTC=2026-11-21
 # PATH=B
-# REASON=no_pc_serial_log_on_this_host
-# ISSUE=62
-# NOTE=Etapa 62: bloqueio honesto — sem PC/serial neste host; METAL_OK só com log real do operador (TEMPLATE.txt). Não fabricar evidência.
-# PRIOR=E46/#46
+# REASON=no_operator_esp_report_versioned_yet
+# ISSUE=74
+# NOTE=Etapa 73: canal ESP disponível (baremetal-report.txt). CI default SKIP=1 até o operador versionar um report de PC real em docs/evidence/boot-metal/. UART não é obrigatório. Não fabricar evidência a partir de QEMU/vídeo.
+# PRIOR=E62/#62 E46/#46
 IA_LIVRE_BAREMETAL_SKIP=1

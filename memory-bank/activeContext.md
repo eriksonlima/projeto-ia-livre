@@ -2,13 +2,15 @@
 
 ## Foco atual
 
-- **Etapa 73** `em_andamento` — canal padrão baremetal-report na ESP
-- Issue #74
+- Etapas 1–73 **feitas**
+- E73: canal padrão `baremetal-report.txt` na ESP (ADR 0025); METAL_OK sem COM1
+- Abertas: só **B55** (adiada)
 
 ## Próximo passo
 
-- ADR + kernel flush + gate METAL_OK via report
+- Operador: regravar pendrive com EFI novo → copiar report → SKIP=0 verify-baremetal
+- Ou novo item de backlog
 
 ## Notas
 
-- Lease E73 / #74
+- Lease a liberar

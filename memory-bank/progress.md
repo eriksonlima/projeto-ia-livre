@@ -30,3 +30,8 @@
 - architecture/product/glossário pós-E71; verify-docs-consistency
 - Abertas: B55 adiada
 
+## Etapa 73 — baremetal-report ESP (feita)
+
+- ADR 0025; flush SFS pré-exit; METAL_OK via report; fixture + FAT32 persistência
+- Próximo operador: versionar report de PC real
+

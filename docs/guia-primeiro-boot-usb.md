@@ -12,14 +12,14 @@ Etapa 57 · contrato técnico: [`boot-hardware-real.md`](boot-hardware-real.md) 
 | QEMU + OVMF | Boot/serial no emulador | `make verify` |
 | Artefato ESP/tar | Imagem empacotável | `make verify-baremetal` |
 | Pendrive gravado | Mídia pronta | `write-usb-esp.sh` (≠ metal) |
-| PC físico + serial | Boot real | evidência → `METAL_OK` (opt-in) |
+| PC físico + report ESP | Boot real (sem COM1) | evidência → `METAL_OK` (opt-in) |
 
 ## Pré-requisitos
 
 - PC x86-64 com firmware UEFI
 - Pendrive (será **apagado**)
-- Cabo USB-UART (ou serial) no **COM1** do guest, **115200 8N1**
-- Host Linux com Rust, QEMU/OVMF (só se for buildar), `gh` opcional para Release
+- Host Linux com Rust (para buildar/gravar); `gh` opcional para Release
+- **Serial COM1:** opcional (lab); evidência padrão = report na ESP (Etapa 73)
 
 ## 1. Obter o artefato
 
@@ -58,37 +58,44 @@ Simulação: `--dry-run`. Prefere `build/ia-livre-esp.img` via `dd`; sem `.img`,
 2. Entre no Boot Menu (tecla do fabricante: F12 / Esc / F10…).
 3. Escolha o pendrive em modo **UEFI** (não Legacy/CSM, se evitável).
 
-## 4. Serial
+## 4. Evidência padrão (sem cabo serial) — Etapa 73
 
-- **115200 8N1**, UART COM1 (como no QEMU `-serial stdio`).
-- No host: `picocom -b 115200 /dev/ttyUSB0` (ajuste o device).
-- Sem serial: só confirmação visual de que o firmware carregou o EFI — **não** basta para `METAL_OK`.
+Canal canônico: arquivo na ESP [`baremetal-report.md`](baremetal-report.md) / ADR [`0025`](adr/0025-baremetal-report-esp.md).
 
-## 5. O que esperar na serial
+1. Boot até a tela azul (“IA Livre”) / `EXIT_BOOT_BEGIN`.
+2. Desligue; no Linux, monte o pendrive.
+3. Copie `IA_LIVRE/baremetal-report.txt` para `docs/evidence/boot-metal/YYYY-MM-DD-<host>.txt`.
+4. Valide:
+   ```bash
+   IA_LIVRE_BAREMETAL_SKIP=0 \
+   IA_LIVRE_BAREMETAL_EVIDENCE=docs/evidence/boot-metal/YYYY-MM-DD-<host>.txt \
+   make verify-baremetal
+   ```
+   Esperado: `IA_LIVRE_BAREMETAL_METAL_OK`.
 
-Mínimo de sucesso no metal (E46):
+**Serial (opcional):** lab com USB-UART COM1 115200 8N1 ainda funciona; **não** é obrigatório.
 
-- `IA_LIVRE_BOOT_OK`
+## 5. O que esperar na tela / no report
 
-Ideal (fluxo mais completo):
+Mínimo: `IA_LIVRE_BOOT_OK`, `IA_LIVRE_OBS_OK`, `IA_LIVRE_BAREMETAL_REPORT_OK` no arquivo da ESP.
 
-- `IA_LIVRE_EXIT_BOOT_OK` e marcadores posteriores, se o hardware/caminho permitir
-
-Path metal **sem** BlockIO (ESP-only): pode aparecer `B_BLOCK_METAL=no_gguf_metal_io` — bloqueio **honesto**, não geração fingida (E48).
+Path metal **sem** BlockIO (ESP-only): pode aparecer `B_BLOCK_METAL=no_gguf_metal_io` — bloqueio **honesto** (E48).
 
 ## 6. O que **não** esperar
 
 | Não espere | Por quê |
 |------------|---------|
-| Hipótese A vs B “comprovada” | Veredito ainda `INCONCLUSIVO` |
-| `METAL_OK` só por gravar USB | Precisa log real sem QEMU/OVMF |
+| Hipótese A vs B “comprovada” | Veredito ainda `INCONCLUSIVO` / `BLOQUEIO_FINAL` |
+| `METAL_OK` só por gravar USB | Precisa do **report** ESP (ou serial) sem QEMU/OVMF |
+| `METAL_OK` a partir de vídeo/foto | Fora do gate |
 | Desktop / Wi-Fi / apps | Fora do escopo do SO mínimo |
 | GGUF TinyLlama completo no stick default | Opt-in `FULL_GGUF` |
 | Rede/autonomia no guest | Continuam no **host** (ADR 0001) |
 
-## 7. Evidência (opcional)
+## 7. Evidência
 
-Se capturar serial em PC real: formate conforme [`boot-hardware-real.md`](boot-hardware-real.md) e deixe em `docs/evidence/boot-metal/`. Gate: `IA_LIVRE_BAREMETAL_SKIP=0` + `IA_LIVRE_BAREMETAL_EVIDENCE=… make verify-baremetal`.
+Padrão: report ESP — ver §4 e [`docs/evidence/boot-metal/`](evidence/boot-metal/).  
+Serial legado: [`boot-hardware-real.md`](boot-hardware-real.md).
 
 ## Release (mantenedores)
 
