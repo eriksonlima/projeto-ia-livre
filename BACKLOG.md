@@ -10,12 +10,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Produto (ADR 0027):** **Linux IA-nativo** (TTY, shell, qualquer GGUF, tuning/kernel Linux). Linha B UEFI **arquivada**. Ordem = prioridade (topo primeiro). Fila até o **produto final** (métricas em `docs/product-context.md`).
 
-### B78 — Gate smoke QEMU da imagem IA Livre
-- Issue: [#84](https://github.com/eriksonlima/projeto-ia-livre/issues/84)
-- Origem: plano backlog produto final / ADR 0027
-- Pronto quando: `verify-distro-smoke` (ou sucessor) exige boot da imagem B77 (`DISTRO_QEMU_OK` + comando no guest)
-- Deps: B77
-
 ### B79 — First-boot TTY
 - Issue: [#85](https://github.com/eriksonlima/projeto-ia-livre/issues/85)
 - Origem: plano backlog produto final / ADR 0027
@@ -95,6 +89,13 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: B78, B81, B84, B85, B90
 
 ## Promovidas / arquivadas
+
+### B78 — Gate smoke QEMU da imagem IA Livre
+- Issue: [#84](https://github.com/eriksonlima/projeto-ia-livre/issues/84)
+- Origem: plano backlog produto final / ADR 0027
+- Pronto quando: smoke exige boot Debian (`DISTRO_QEMU_OK`) ou skip need_*
+- Promovido para Etapa 83.
+- Etapa: [Etapa 83 — smoke QEMU Debian](ROADMAP.md)
 
 ### B77 — Rootfs Debian mínimo bootável em QEMU
 - Issue: [#83](https://github.com/eriksonlima/projeto-ia-livre/issues/83)

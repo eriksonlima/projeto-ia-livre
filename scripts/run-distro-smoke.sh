@@ -34,47 +34,26 @@ else
   echo "IA_LIVRE_DISTRO_SMOKE_INFER_SKIP=no_gguf"
 fi
 
-# --- QEMU (Alpine virt) best-effort ---
+# --- QEMU Debian (Etapa 83 / B78) — exige imagem E82; ≠ Alpine ---
 QEMU_SKIP="${VERIFY_DISTRO_QEMU_SKIP:-0}"
 if [[ "$QEMU_SKIP" == "1" ]]; then
   echo "IA_LIVRE_DISTRO_QEMU_SKIP=forced"
-elif ! command -v qemu-system-x86_64 >/dev/null 2>&1; then
-  echo "IA_LIVRE_DISTRO_QEMU_SKIP=need_qemu"
 else
-  CACHE=build/distro-smoke-cache
-  mkdir -p "$CACHE"
-  ALPINE_VER="${IA_LIVRE_ALPINE_VER:-3.20.3}"
-  BASE="https://dl-cdn.alpinelinux.org/alpine/v${ALPINE_VER%.*}/releases/x86_64"
-  KERNEL="$CACHE/vmlinuz-virt"
-  INITRD="$CACHE/initramfs-virt"
-  if [[ ! -f "$KERNEL" || ! -f "$INITRD" ]]; then
-    echo "distro-smoke: baixando Alpine virt kernel/initrd…"
-    if ! curl -fsSL -o "$KERNEL" "$BASE/netboot/vmlinuz-virt" \
-      || ! curl -fsSL -o "$INITRD" "$BASE/netboot/initramfs-virt"; then
-      echo "IA_LIVRE_DISTRO_QEMU_SKIP=need_net"
-      echo "IA_LIVRE_DISTRO_SMOKE_OK"
-      exit 0
-    fi
-  fi
-  # Boot curto só para provar QEMU+kernel (login Alpine netboot; não monta nosso rootfs completo ainda)
-  LOG=/tmp/distro-qemu-smoke.log
-  timeout 25 qemu-system-x86_64 \
-    -machine q35 \
-    -m 512M \
-    -nographic \
-    -kernel "$KERNEL" \
-    -initrd "$INITRD" \
-    -append "console=ttyS0 quiet" \
-    >"$LOG" 2>&1 || true
-  if grep -qiE 'Alpine|login:|Kernel panic' "$LOG"; then
-    # panic = ainda “subiu” o kernel; login/Alpine = ok
-    if grep -qi 'Kernel panic' "$LOG" && ! grep -qiE 'Alpine|login:' "$LOG"; then
-      echo "IA_LIVRE_DISTRO_QEMU_SKIP=boot_panic"
-    else
-      echo "IA_LIVRE_DISTRO_QEMU_OK"
-    fi
+  chmod +x scripts/run-distro-debian-qemu.sh
+  deb_out="$(./scripts/run-distro-debian-qemu.sh 2>&1)" || {
+    echo "$deb_out"
+    echo "GATE_FAIL: debian qemu no smoke"
+    exit 1
+  }
+  echo "$deb_out"
+  if echo "$deb_out" | grep -q 'IA_LIVRE_DISTRO_DEBIAN_QEMU_OK'; then
+    echo "IA_LIVRE_DISTRO_QEMU_OK"
+    echo "IA_LIVRE_DISTRO_QEMU_SRC=debian"
+  elif echo "$deb_out" | grep -q 'IA_LIVRE_DISTRO_DEBIAN_SKIP='; then
+    skip="$(echo "$deb_out" | grep -o 'IA_LIVRE_DISTRO_DEBIAN_SKIP=[^[:space:]]*' | head -1 | cut -d= -f2)"
+    echo "IA_LIVRE_DISTRO_QEMU_SKIP=${skip:-need_debian}"
   else
-    echo "IA_LIVRE_DISTRO_QEMU_SKIP=no_console"
+    echo "IA_LIVRE_DISTRO_QEMU_SKIP=no_debian_marker"
   fi
 fi
 

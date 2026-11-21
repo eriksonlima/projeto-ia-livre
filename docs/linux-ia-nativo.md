@@ -44,10 +44,11 @@ make stage-distro
 make verify-distro-scaffold
 make verify-distro-config-models
 make verify-distro-native-tune
-make verify-distro-smoke
+make verify-distro-smoke   # userspace + QEMU Debian (E83; ≠ Alpine)
 ```
 
 ## Debian rootfs bootável em QEMU (Etapa 82)
+
 
 Prova de produto: **Debian mínimo** + overlay, boot QEMU (9p) — **≠** Alpine netboot do smoke E80.
 

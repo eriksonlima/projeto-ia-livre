@@ -633,3 +633,12 @@ Pronto quando: boot QEMU até prompt/`ia-livre conf`; gate documentado; ≠ Alpi
 Project: https://github.com/users/eriksonlima/projects/1  
 **Desfecho:** `build-distro-debian-rootfs` (mmdebstrap host ou Docker) + QEMU 9p; `make verify-distro-debian-qemu` (`DISTRO_DEBIAN_QEMU_OK` + `GUEST_CONF_OK`); ≠ Alpine.
 
+## Etapa 83 — Gate smoke QEMU da imagem IA Livre
+
+Status: feita  
+Issue: [#84](https://github.com/eriksonlima/projeto-ia-livre/issues/84)  
+Spec: specs/linux-distro-smoke-debian/  
+Pronto quando: smoke exige boot Debian E82 (`DISTRO_QEMU_OK`) ou skip `need_*`; ≠ Alpine.  
+Project: https://github.com/users/eriksonlima/projects/1  
+**Desfecho:** `run-distro-smoke` chama Debian QEMU; `DISTRO_QEMU_OK` + `SRC=debian`; Alpine removido como prova.
+
