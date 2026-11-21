@@ -2,14 +2,13 @@
 
 ## O que funciona
 
-- Etapas 1–86; Linux IA-nativo até ISO live + writer USB
-- E82–84: Debian QEMU, smoke Debian, first-boot
-- E85–86: ISO híbrida UEFI + `dd` com confirmação
+- Etapas 1–88
+- ISO live + writer + release packaging + systemd units (disabled default)
 
 ## Bloqueios
 
-- Release packaging / systemd / smokes Rede-Autonomia-GPU / kernel custom = Abertas B82+
+- Smokes Rede/Autonomia/GPU na imagem; tuning avançado; kernel custom; checklist final = B84–B91
 
 ## Roadmap
 
-- Sem em_andamento; topo Abertas = B82
+- Sem em_andamento; topo Abertas = B84

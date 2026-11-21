@@ -1,0 +1,15 @@
+[Unit]
+Description=IA Livre agent (one-shot/exemplo) — opcional, disabled by default
+Documentation=file:///etc/ia-livre/SYSTEMD.md
+After=local-fs.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=-/etc/ia-livre/ia-livre.conf
+Environment=PATH=/opt/ia-livre/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+# Ajuste --prompt / memory conforme necessidade; default não deve rodar no boot
+ExecStart=/opt/ia-livre/bin/ia-livre agent --n-predict 16
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

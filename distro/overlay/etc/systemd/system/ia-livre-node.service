@@ -1,0 +1,15 @@
+[Unit]
+Description=IA Livre node (Rede P2P) — opcional, disabled by default
+Documentation=file:///etc/ia-livre/SYSTEMD.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+EnvironmentFile=-/etc/ia-livre/ia-livre.conf
+ExecStart=/opt/ia-livre/bin/ia-livre-node --tcp-port 7400 --node-id %H
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

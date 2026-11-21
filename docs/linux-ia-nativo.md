@@ -83,6 +83,11 @@ make verify-distro-iso
 Requer `mksquashfs`, `grub-mkrescue`, `xorriso`, `mformat` (mtools) (+ Docker para `live-boot` se preciso).  
 QEMU prova com **UEFI/OVMF** (`-cdrom`); SeaBIOS costuma falhar El Torito nesta ISO. Skip `need_*` / `boot_fail` honesto.
 
+## Systemd opcional (Etapa 88)
+
+Units `ia-livre-node.service` / `ia-livre-agent.service` no overlay — **disabled** por default.  
+Ver `/etc/ia-livre/SYSTEMD.md`. Gate: `make verify-distro-systemd`.
+
 ## Release packaging (Etapa 87)
 
 ```bash

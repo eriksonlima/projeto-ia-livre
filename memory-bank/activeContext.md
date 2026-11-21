@@ -2,14 +2,14 @@
 
 ## Foco atual
 
-- Etapas 1–86 **feitas**
-- Onda B: E85 ISO live + E86 writer `--mode iso`
-- Abertas: B82–B91 (topo **B82** release packaging)
+- Etapas 1–88 **feitas**
+- E87 release-linux; E88 systemd opcional
+- Abertas: B84–B91 (topo **B84** smoke Rede no SO)
 
 ## Próximo passo
 
-- Promover **B82** release packaging produto
+- Promover **B84** smoke Rede no SO (QEMU+net)
 
 ## Notas
 
-- ISO ~287 MiB sem GGUF; gravação real: `write-linux-usb.sh --mode iso --device … --confirm … --yes`
+- `make verify-linux-release` · `make verify-distro-systemd`

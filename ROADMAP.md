@@ -677,3 +677,12 @@ Pronto quando: SHA256SUMS + artefato sem GGUF default + guia release.
 Project: https://github.com/users/eriksonlima/projects/1  
 **Desfecho:** `prepare-linux-release` → `build/release-linux/`; ISO sem GGUF; `make verify-linux-release`.
 
+## Etapa 88 — Unidades systemd opcionais
+
+Status: feita  
+Issue: [#89](https://github.com/eriksonlima/projeto-ia-livre/issues/89)  
+Spec: specs/linux-systemd-units/  
+Pronto quando: units no overlay + docs enable/disable (default não força).  
+Project: https://github.com/users/eriksonlima/projects/1  
+**Desfecho:** `ia-livre-node`/`ia-livre-agent` units + SYSTEMD.md; `make verify-distro-systemd`.
+

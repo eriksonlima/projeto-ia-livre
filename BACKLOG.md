@@ -10,12 +10,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Produto (ADR 0027):** **Linux IA-nativo** (TTY, shell, qualquer GGUF, tuning/kernel Linux). Linha B UEFI **arquivada**. Ordem = prioridade (topo primeiro). Fila até o **produto final** (métricas em `docs/product-context.md`).
 
-### B83 — Unidades systemd opcionais
-- Issue: [#89](https://github.com/eriksonlima/projeto-ia-livre/issues/89)
-- Origem: plano backlog produto final / ADR 0027
-- Pronto quando: units runtime/agent/node no overlay + docs enable/disable (default não força)
-- Deps: B77
-
 ### B84 — Smoke Rede no SO
 - Issue: [#90](https://github.com/eriksonlima/projeto-ia-livre/issues/90)
 - Origem: plano backlog produto final / ADR 0027
@@ -65,6 +59,13 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: B78, B81, B84, B85, B90
 
 ## Promovidas / arquivadas
+
+### B83 — Unidades systemd opcionais
+- Issue: [#89](https://github.com/eriksonlima/projeto-ia-livre/issues/89)
+- Origem: plano backlog produto final / ADR 0027
+- Pronto quando: units + docs; default disabled
+- Promovido para Etapa 88.
+- Etapa: [Etapa 88 — systemd](ROADMAP.md)
 
 ### B82 — Release packaging produto
 - Issue: [#88](https://github.com/eriksonlima/projeto-ia-livre/issues/88)
