@@ -538,8 +538,9 @@ Pronto quando: one-shot que consome fonte nativa **ou** contrato “bridge = má
 
 ## Etapa 71 — ABI mínima estável kernel↔runtime-native
 
-Status: em_andamento  
+Status: feita  
 Issue: [#71](https://github.com/eriksonlima/projeto-ia-livre/issues/71)  
 Spec: specs/abi-runtime-native/  
-Pronto quando: contrato versionado documentado + consumidor nativo; sem puxar inferência pro kernel (ADR 0001/0003).
+Pronto quando: contrato versionado documentado + consumidor nativo; sem puxar inferência pro kernel (ADR 0001/0003).  
+**Desfecho:** A — ABI freestanding v1 (`ABI_VERSION=1`/`ABI_OK`); `runtime-native/src/abi.rs` + glue guest; `make verify-abi-runtime-native`; `make verify` exige ABI; ≠ syscall; motor fora do kernel.
 

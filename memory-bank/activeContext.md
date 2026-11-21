@@ -2,14 +2,14 @@
 
 ## Foco atual
 
-- Etapas 1–70 **feitas**; **Etapa 71** `em_andamento` (B66)
-- ABI mínima estável kernel↔runtime-native (contrato versionado + consumidor)
-- Sem puxar inferência pro kernel (ADR 0001/0003)
+- Etapas 1–71 **feitas**
+- E71: ABI mínima freestanding v1 (`ABI_VERSION`/`ABI_OK`)
+- Topo Abertas: **B67** (sync architecture/product)
 
 ## Próximo passo
 
-- Spec + tasks E71
+- “continuar” → B67
 
 ## Notas
 
-- Lease: Etapa 71 / #71
+- Lease a liberar após commit E71

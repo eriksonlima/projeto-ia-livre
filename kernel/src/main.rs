@@ -516,6 +516,14 @@ unsafe fn run_mem_sched_demo(
     uart_emit_kv("IA_LIVRE_QUANTUM=", phase.quantum());
 
     uart_write("IA_LIVRE_MEM_SCHED_OK\n");
+
+    // Etapa 71 — ABI mínima v1 (freestanding): version id da crate; motor permanece fora.
+    let abi = ia_livre_runtime_native::abi_handshake();
+    if !ia_livre_runtime_native::abi_surface_ok(&abi) {
+        return false;
+    }
+    uart_emit_kv("IA_LIVRE_ABI_VERSION=", abi.version as u64);
+    uart_write("IA_LIVRE_ABI_OK\n");
     true
 }
 

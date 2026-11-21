@@ -3,11 +3,13 @@
 //! + Prefill multi-token × N layers + KV (E43). Decode/sampling = B38.
 #![no_std]
 
+mod abi;
 mod attn;
 mod decode;
 mod ffn;
 mod kv;
 mod names;
+pub use abi::{abi_handshake, abi_surface_ok, AbiHandshake, AbiMemClass, AbiPhase, ABI_VERSION};
 pub use attn::{try_attn_layer0_single, AttnLayerReport, N_HEAD, N_KV_HEAD, HEAD_DIM};
 pub use decode::{
     try_decode_canonical_guest, try_decode_generate, DecodeReport, N_PREDICT_GUEST,

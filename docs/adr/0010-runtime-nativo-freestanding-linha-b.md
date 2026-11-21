@@ -28,3 +28,4 @@ Etapa 27 deixou o GGUF canônico na RAM do guest (`blockio_full` + stub) com `B_
 - Marcadores: `IA_LIVRE_NATIVE_INFER_*` / `RUNTIME_NATIVE_*` (ver desenho).
 - Gates passam a exigir layout/motor intermediário e o `B_BLOCK` atualizado (ou métricas reais se geração existir).
 - Hipótese só deixa `INCONCLUSIVO` com tokens B reais em espécie.
+- Etapa 71: superfície mínima versionada (`ABI_VERSION` / `ABI_OK`) — [`abi-runtime-native.md`](../abi-runtime-native.md).

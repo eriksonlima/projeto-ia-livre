@@ -118,6 +118,7 @@ Com Etapas 19/20 verificáveis no serial QEMU, `scripts/run-harness-line-b.sh`:
 
 - Loader E26/E27: GGUF completo via BlockIO (`blockio_full`).
 - **Motor:** `runtime-native/` — ADR [`0010`](adr/0010-runtime-nativo-freestanding-linha-b.md) … [`0015`](adr/0015-decode-tokens-linha-b.md).
+- **E71:** ABI mínima freestanding versionada (`ABI_VERSION` / `ABI_OK`) — [`abi-runtime-native.md`](abi-runtime-native.md); **≠** syscall; motor permanece na crate.
 - **E43:** Prefill subset `2L×2` + KV.
 - **E44:** Decode greedy `n_predict=1` + `DECODE_OK`/`SAMPLING_OK`/`RUNTIME_NATIVE_OK`; harness `LOAD_KIND=gguf` + `TOKENS_PER_S` **medidos**; kernel release opt-in (`IA_LIVRE_KERNEL_PROFILE=release`).
 - **Espécie:** ainda **subset** (≠ 22L × 32) → comparable **INCONCLUSIVO** (`E44_subset_generate_not_canonical_species_*`); **sem** `B_BLOCK` no sucesso Decode.

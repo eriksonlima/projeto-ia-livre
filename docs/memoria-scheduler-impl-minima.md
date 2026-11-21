@@ -6,7 +6,8 @@ Desenho (Etapa 13): [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-sche
 Base pós-exit: [`kernel-pos-boot-services.md`](kernel-pos-boot-services.md).  
 Proxy Linha B (≠ este contrato): [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md).
 
-**Não** é inferência / GGUF no kernel. **Não** prova a hipótese A vs B. **Não** é ABI estável.
+**Não** é inferência / GGUF no kernel. **Não** prova a hipótese A vs B.  
+ABI mínima versionada (E71): [`abi-runtime-native.md`](abi-runtime-native.md) — este doc = provedor E19; a versão da fronteira crate↔kernel vive lá.
 
 ## Objetivo
 

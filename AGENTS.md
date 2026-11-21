@@ -42,7 +42,7 @@ make verify   # gate automatizado do kernel (marcadores: ver docs/kernel-alem-do
 
 Equivalente interativo: `./scripts/run-qemu.sh`.
 
-Na serial: Etapa 10 (`BOOT_OK` … `ALLOC_OK`) + loader Etapas 26/27 (`GGUF_LOADER_*` / `GGUF_MAGIC_OK` / `GGUF_NATIVE_LOADER=blockio_full` / `GGUF_TENSORS_STUB_OK`) + obs Etapa 37 (`GOP_OK`/`INPUT_OK`/`OBS_OK`, ver [`docs/observabilidade-minima-so.md`](docs/observabilidade-minima-so.md)) + `IA_LIVRE_EXIT_BOOT_BEGIN`; após ExitBootServices (UART COM1): `EXIT_*` + reemissão GGUF + demo Etapa 19 (`TYPED_*` / `PHASE=` / `MEM_SCHED_OK`) + GPU manager nativo Etapa 38 (`GPU_MGR=native` / `GPU_MGR_OK`) + proxy Linha B (`NATIVE_BENCH_*`).  
+Na serial: Etapa 10 (`BOOT_OK` … `ALLOC_OK`) + loader Etapas 26/27 (`GGUF_LOADER_*` / `GGUF_MAGIC_OK` / `GGUF_NATIVE_LOADER=blockio_full` / `GGUF_TENSORS_STUB_OK`) + obs Etapa 37 (`GOP_OK`/`INPUT_OK`/`OBS_OK`, ver [`docs/observabilidade-minima-so.md`](docs/observabilidade-minima-so.md)) + `IA_LIVRE_EXIT_BOOT_BEGIN`; após ExitBootServices (UART COM1): `EXIT_*` + reemissão GGUF + demo Etapa 19 (`TYPED_*` / `PHASE=` / `MEM_SCHED_OK`) + ABI E71 (`ABI_VERSION` / `ABI_OK`) + GPU manager nativo Etapa 38 (`GPU_MGR=native` / `GPU_MGR_OK`) + proxy Linha B (`NATIVE_BENCH_*`).
 Contratos: kernel-alem-do-boot, kernel-pos-boot-services, memoria-scheduler-impl-minima, runtime-nativo-linha-b (BlockIO + Prefill/Decode subset). Geração guest: `TOKENS_PER_S` medidos (`LOAD_KIND=gguf`; espécie ainda subset).
 
 ### Runtime de inferência (host — Etapas 5 / 8)
@@ -268,6 +268,7 @@ grep -q 'IA_LIVRE_MEM_MAP_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_ALLOC_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_EXIT_BOOT_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_MEM_SCHED_OK' kernel/src/main.rs
+grep -q 'IA_LIVRE_ABI_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_TYPED_WEIGHTS_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_NATIVE_BENCH_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_OBS_OK' kernel/src/obs.rs
@@ -278,7 +279,7 @@ grep -q 'IA_LIVRE_GPU_MGR_OK' kernel/src/gpu_mgr.rs
 grep -q 'IA_LIVRE_GPU_MGR=native' scripts/verify-boot.sh
 ```
 
-`make verify` falha se faltarem BOOT/MEM/ALLOC/`OBS_OK` (Etapa 37; `OBS_MODE=gop|input` alinhado a `GOP_OK`/`INPUT_OK`) / EXIT_* / `GGUF_MAGIC_OK` + `GGUF_NATIVE_LOADER=blockio_full` / `RUNTIME_NATIVE_LAYOUT_OK` (Etapa 29) / `MEM_SCHED_OK` (Etapa 19) / `GPU_MGR=native` + `GPU_MGR_OK` (Etapa 38) / `NATIVE_BENCH_OK` (proxy Linha B). Timeout padrão 300s com GGUF (`VERIFY_TIMEOUT`). Stub host E25 permanece em `make verify-gpu-manager` (`GPU_MGR=host_stub`).
+`make verify` falha se faltarem BOOT/MEM/ALLOC/`OBS_OK` (Etapa 37; `OBS_MODE=gop|input` alinhado a `GOP_OK`/`INPUT_OK`) / EXIT_* / `GGUF_MAGIC_OK` + `GGUF_NATIVE_LOADER=blockio_full` / `RUNTIME_NATIVE_LAYOUT_OK` (Etapa 29) / `MEM_SCHED_OK` (Etapa 19) / `ABI_OK` (Etapa 71) / `GPU_MGR=native` + `GPU_MGR_OK` (Etapa 38) / `NATIVE_BENCH_OK` (proxy Linha B). Timeout padrão 300s com GGUF (`VERIFY_TIMEOUT`). Stub host E25 permanece em `make verify-gpu-manager` (`GPU_MGR=host_stub`).
 
 ### Gate do runtime (Etapa 5 — adicional)
 
@@ -497,6 +498,22 @@ grep -q 'IA_LIVRE_CONTRACT_BACKEND' runtime-contract/src/main.rs
 
 `make verify-runtime-contract` exige `CONTRACT_BACKEND=host_shim`, alloc Weights/KvCache, fases Prefill+Decode e `RUNTIME_CONTRACT_OK` (timeout padrão 30s; `VERIFY_RUNTIME_CONTRACT_TIMEOUT`). Gates existentes permanecem.
 
+### Gate ABI mínima kernel↔runtime-native (Etapa 71 — adicional)
+
+Contrato freestanding versionado (`ABI_VERSION=1` + `ABI_OK`). **Não** é syscall. **Não** puxa inferência para o kernel (ADR 0001). Shim E20 permanece distinto. Contrato: [`docs/abi-runtime-native.md`](docs/abi-runtime-native.md).
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+test -f scripts/verify-abi-runtime-native.sh
+test -f docs/abi-runtime-native.md
+test -f runtime-native/src/abi.rs
+make verify-abi-runtime-native
+grep -q 'ABI_VERSION' runtime-native/src/abi.rs
+grep -q 'IA_LIVRE_ABI_OK' kernel/src/main.rs
+```
+
+Esperado: `IA_LIVRE_ABI_VERSION=1` + `IA_LIVRE_ABI_OK` (teste freestanding). Guest: mesmos marcadores em `make verify` (pós-`MEM_SCHED`). Sem `COMPROVA` / `METAL_OK` / `TOKENS_PER_S` como prova de ABI.
+
 ### Gate do harness A vs B comparável (Etapa 22 — adicional)
 
 Requer GGUF para A e QEMU para B (proxy até B15). Emite veredito; **aceita** `INCONCLUSIVO` com B proxy. **Não** prova a hipótese sem GGUF comparável em B.
@@ -701,6 +718,8 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `scripts/run-autonomia-nativa.sh` / `scripts/verify-autonomia-nativa.sh` — consumo + gate Etapa 70
 - `models/` — pesos GGUF locais (gitignored); obter com `./scripts/fetch-model.sh`
 - `runtime-native/` — runtime freestanding Linha B (Etapa 29; layout GGUF; forward futuro; ≠ host `runtime/`)
+- `docs/abi-runtime-native.md` — ABI mínima v1 kernel↔runtime-native (Etapa 71; `ABI_VERSION`/`ABI_OK`)
+- `scripts/verify-abi-runtime-native.sh` — gate freestanding Etapa 71
 - `Cargo.toml` — workspace Cargo (membros `kernel`, `runtime`, `runtime-contract`, `runtime-native`, `node`, `agent`)
 - `docs/rede-ia-livre-v1.md` — contrato protocolo Rede IA Livre v1 (Etapa 23)
 - `docs/rede-ia-livre-prototipo.md` — histórico do protótipo P2P (Etapa 6)

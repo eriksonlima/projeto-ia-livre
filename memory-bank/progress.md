@@ -19,3 +19,9 @@
 - Gate `make verify-autonomia-nativa` (blockio fixture); ADR 0001 intacta
 - Próximo: B66 ABI
 
+## Etapa 71 — ABI runtime-native (feita)
+
+- Contrato `docs/abi-runtime-native.md`; `abi.rs` + glue guest; gate freestanding
+- `make verify` exige `ABI_OK`; ADR 0001 intacta
+- Próximo: B67 docs sync
+

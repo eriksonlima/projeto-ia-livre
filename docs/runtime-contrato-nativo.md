@@ -21,7 +21,10 @@ Esta etapa entrega:
 3. Gate host `make verify-runtime-contract`.
 4. **Integração QEMU** (Task 4): `scripts/run-harness-line-b.sh` observa o serial E19 e reemite evidência honesta no namespace `HARNESS_CONTRACT_*`, **preservando** o proxy E12.
 
-## Superfície (esboço — não ABI estável)
+## Superfície (esboço host — ≠ ABI nativa E71)
+
+Alinhado ao desenho / impl. E19; shim host **não** congela a ABI crate↔kernel.  
+ABI mínima freestanding versionada: [`abi-runtime-native.md`](abi-runtime-native.md) (Etapa 71).
 
 Alinhado ao desenho / impl. E19; **não** congela syscall:
 

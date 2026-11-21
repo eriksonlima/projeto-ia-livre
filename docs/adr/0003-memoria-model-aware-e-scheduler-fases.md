@@ -21,7 +21,8 @@ ADR 0001 permanece: inferência **fora** do kernel.
    - `Load` | `Prefill` | `Decode` | `Idle` (mínimo obrigatório no desenho: `Prefill` e `Decode`).
    - O kernel usa o hint para prioridade / quantum / afinidade **candidatas** — sem embutir tensores ou sampling.
 4. **Fronteira:** GGUF, tensores, sampling e lógica de KV ficam no **runtime**; páginas/regiões tipadas e escala por hint ficam no **kernel**.
-5. **Fora desta decisão:** ABI/syscalls estáveis, implementação no `kernel/`, GPU manager, multi-tenant completo, prova da hipótese, cópia de SLM-OS/TensorOS/AgentOS como blueprint.
+5. **Fora desta decisão (na data da ADR):** ABI/syscalls estáveis, implementação no `kernel/`, GPU manager, multi-tenant completo, prova da hipótese, cópia de SLM-OS/TensorOS/AgentOS como blueprint.  
+   **Atualização E71:** ABI mínima freestanding versionada (≠ syscall) — [`abi-runtime-native.md`](../abi-runtime-native.md).
 
 Doc de desenho: [`docs/desenho-memoria-scheduler-nativo.md`](../desenho-memoria-scheduler-nativo.md).
 
