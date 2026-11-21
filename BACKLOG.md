@@ -32,9 +32,9 @@ _(nenhuma — B15–B19 já promovidas às Etapas 21–25)_
 
 ### B18 — Autonomia v1 utilizável (impl. em agent/)
 
-- Promovido para Etapa 24 do roadmap (`em_andamento`; integração em `main`).
+- Promovido para Etapa 24 do roadmap — **feita** (Tasks 1–3; MEMORY_POLICY + ≥2 tools; `verify-agent` estendido).
 - Issue: [#24](https://github.com/eriksonlima/projeto-ia-livre/issues/24)
-- Etapa: Etapa 24
+- Etapa: [Etapa 24 — Autonomia v1 utilizável (impl. em agent/)](ROADMAP.md)
 
 ### B19 — GPU manager / multi-GPU (protótipo mínimo)
 

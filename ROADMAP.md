@@ -165,7 +165,7 @@ Pronto quando: contratos do desenho ADR 0004 cobertos em `node/` — ed25519/Pee
 
 ## Etapa 24 — Autonomia v1 utilizável (impl. em agent/)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#24](https://github.com/eriksonlima/projeto-ia-livre/issues/24)  
 Spec: specs/autonomia-v1-impl/  
 Pronto quando: implementação no host em `agent/` com `--prompt` one-shot, allowlist `note`/`recall`/`help`, política de memória N=8 no prompt, cenário de prova com ≥2 ferramentas e marcadores (`IA_LIVRE_MEMORY_POLICY_OK` + evidência de ferramentas); `make verify-agent` preservado ou estendido documentado; sem exigir SO IA Livre; sem shell/HTTP/REPL/RAG.

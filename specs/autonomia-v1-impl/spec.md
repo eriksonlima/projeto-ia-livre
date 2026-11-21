@@ -61,12 +61,12 @@ Implementação no **host** (`agent/` / `ia-livre-agent`) da autonomia v1 defini
 
 ## Critérios de aceite
 
-- [ ] `ia-livre-agent` aceita `--prompt` e monta prompt com últimas N=8 entradas do JSONL
-- [ ] Allowlist `note` / `recall` / `help` implementada; proibidos shell/HTTP/RAG
-- [ ] Cenário de prova emite marcadores E7 + `IA_LIVRE_MEMORY_POLICY_OK` + evidência de ≥2 ferramentas
-- [ ] `make verify-agent` preservado ou estendido documentado; exit 0 com GGUF; sem QEMU
-- [ ] Docs (ambiente-autonomia e/ou desenho + AGENTS) refletem a v1 implementada; README avaliado
-- [ ] Sem dependência do SO IA Livre
+- [x] `ia-livre-agent` aceita `--prompt` e monta prompt com últimas N=8 entradas do JSONL
+- [x] Allowlist `note` / `recall` / `help` implementada; proibidos shell/HTTP/RAG
+- [x] Cenário de prova emite marcadores E7 + `IA_LIVRE_MEMORY_POLICY_OK` + evidência de ≥2 ferramentas
+- [x] `make verify-agent` preservado ou estendido documentado; exit 0 com GGUF; sem QEMU
+- [x] Docs (ambiente-autonomia e/ou desenho + AGENTS) refletem a v1 implementada; README avaliado
+- [x] Sem dependência do SO IA Livre
 
 ## Riscos e rollback
 

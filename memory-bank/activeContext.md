@@ -2,22 +2,22 @@
 
 ## Foco atual
 
-- **Etapa 23** `feita` — Protocolo Rede IA Livre v1 em `node/` (ed25519/PeerId, HELLO assinado, IDENT, MSG/ACK, PING/PONG)
-- Lease: liberando após fechamento; próxima claim = Etapa 24
-- Próximas `pendente`: Etapas 24–25 (branches paralelas — uma de cada vez)
+- **Etapa 24** `feita` — Autonomia v1 em `agent/` (`--prompt`, allowlist, N=8, ≥2 tools)
+- Lease: liberando; próxima claim = Etapa 25
+- Próxima `pendente`: Etapa 25 (GPU manager stub)
 
 ## Mudanças recentes
 
-- Merge `etapa-b17-rede-v1` → `main` (conflitos AGENTS/BACKLOG/ROADMAP; E19–E22 preservadas)
-- `make verify-node` GATE_OK: PEER/MSG/IDENT/PING
-- Revisor: APROVADO
+- E23: Rede v1 integrada + `verify-node` OK
+- E24: merge `etapa-b18-autonomia-v1` → `main`; `verify-agent` GATE_OK (TOOLS_USED=3)
+- Revisores E23/E24: APROVADO
 
 ## Próximo passo
 
-- Claim Etapa 24 (B18 autonomia v1) → integrar `etapa-b18-autonomia-v1` → `verify-agent`
+- Claim Etapa 25 (B19 GPU manager) → integrar `etapa-b19-gpu-manager` → `make verify-gpu-manager`
 
 ## Notas
 
-- Hipótese A vs B **não** comprovada (INCONCLUSIVO)
+- Hipótese A vs B **não** comprovada
 - Backlog Abertas: vazio
-- README: considerado; operacional coberto por AGENTS.md + `docs/rede-ia-livre-v1.md`
+- README: considerado (AGENTS cobre operacional agent/node)

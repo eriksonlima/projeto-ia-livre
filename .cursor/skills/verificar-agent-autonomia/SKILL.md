@@ -1,17 +1,16 @@
 ---
 name: verificar-agent-autonomia
 description: >-
-  Roda o gate do ambiente de autonomia (make verify-agent /
-  IA_LIVRE_TOOL_OK + MEMORY_OK + AGENT_OK). Use ao validar mudanças em agent/
-  ou na Etapa 7+.
+  Roda o gate de autonomia E7+v1 (make verify-agent): TOOL/MEMORY/AGENT_OK
+  + MEMORY_POLICY_OK + TOOLS_USED≥2. Use ao validar agent/ ou Etapas 7/24.
 disable-model-invocation: true
 ---
 
-# Verificar ambiente de autonomia
+# Verificar autonomia (E7 + v1)
 
 ## Quando
 
-Após alterar `agent/`, `scripts/verify-agent.sh` ou o contrato em `docs/ambiente-autonomia-prototipo.md`; antes de declarar fatia da Etapa 7 pronta.
+Após alterar `agent/`, `scripts/verify-agent.sh` ou docs de autonomia; antes de declarar fatia pronta.
 
 ## Pré-requisitos
 
@@ -24,10 +23,14 @@ Após alterar `agent/`, `scripts/verify-agent.sh` ou o contrato em `docs/ambient
 
 ```bash
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+export LIBCLANG_PATH="${LIBCLANG_PATH:-/usr/lib/llvm-18/lib}"
+test -f docs/desenho-autonomia-v1.md
 make verify-agent
+grep -q 'IA_LIVRE_MEMORY_POLICY_OK' agent/src/main.rs
+grep -q 'IA_LIVRE_TOOLS_USED' agent/src/main.rs
 ```
 
-Sucesso: linha contendo `GATE_OK: autonomia` e marcadores `IA_LIVRE_TOOL_OK`, `IA_LIVRE_MEMORY_OK`, `IA_LIVRE_AGENT_OK`.
+Sucesso: `GATE_OK: autonomia v1` com `MEMORY_POLICY_OK`, `RUNTIME_USED=1`, `TOOLS_USED`≥2, `TOOL_OK`, `MEMORY_OK`, `AGENT_OK`.
 
 Timeout: `VERIFY_AGENT_TIMEOUT=600 make verify-agent`.
 
