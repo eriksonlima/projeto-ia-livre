@@ -4,7 +4,7 @@ Protocolo de **medição serial** para o instrumento comparável (`make verify-h
 
 Ponte: [`harness-a-b-comparavel.md`](harness-a-b-comparavel.md) · Linha B: [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md) · CPU serial: [`runtime-inferencia-cpu-metricas.md`](runtime-inferencia-cpu-metricas.md).
 
-> **Não prova a hipótese.** Enquanto `B_BLOCK=no_gguf_forward` (Etapa 29; layout ok, sem forward), o veredito válido é **`INCONCLUSIVO`**. Proibido inventar `TOKENS_PER_S` / `LOAD_S` em B.
+> **Não prova a hipótese.** Enquanto `B_BLOCK=no_gguf_generate` (Etapa 31; mapa/dequant/op ok, sem geração), o veredito válido é **`INCONCLUSIVO`**. Proibido inventar `TOKENS_PER_S` / `LOAD_S` em B.
 
 ## Por quê
 
@@ -59,12 +59,12 @@ Timeout: `VERIFY_HARNESS_COMPARABLE_TIMEOUT` (default = `VERIFY_HARNESS_TIMEOUT`
 - Tratar métricas E5/E8 (CPU/GPU host) como veredito A vs B
 - Converter `PROXY_MS` / microbench em tokens
 
-## Expectativa atual (pós-E29)
+## Expectativa atual (pós-E31)
 
 | Lado | Estado |
 |------|--------|
 | A | GGUF host real → load + tokens |
-| B | BlockIO full + **layout** (`runtime-native`); `LOAD_KIND=proxy`; `B_BLOCK=no_gguf_forward` |
+| B | mapa + dequant Q4_K + op; `LOAD_KIND=proxy`; `B_BLOCK=no_gguf_generate` |
 | Veredito | **`INCONCLUSIVO`** (obrigatório até tokens reais em B) |
 
 Quando existir motor GGUF real em B com `TOKENS_PER_S` medidos, este protocolo continua válido; só então `COMPROVA`/`REFUTA` podem entrar (checklist em `harness-a-b-comparavel.md`).

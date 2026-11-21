@@ -2,20 +2,19 @@
 
 ## Foco atual
 
-- Etapas **1–30 feitas**
-- Backlog **Abertas:** B25–B35 (topo = B25 forward GGUF / TOKENS em B)
+- Etapas **1–31 feitas**
+- Backlog Abertas: **B36** (geração canônica) → B26–B35
 - Lease: livre
-- Nenhuma `em_andamento`
+- Hipótese: **INCONCLUSIVO** (`no_gguf_generate`)
 
 ## Mudanças recentes
 
-- Análise pós-E30 → backlog B25–B35 (#31–#41)
-- Bloqueio crítico hipótese: `no_gguf_forward`
+- E31: mapa + dequant Q4_K + op; ainda sem geração de tokens
 
 ## Próximo passo
 
-- “continuar” promove **B25** → Etapa 31 (forward runtime-native)
+- “continuar” → promove **B36** (Prefill+Decode+sampling / TOKENS_PER_S)
 
 ## Notas
 
-- Ordem: hipótese (B25→B26) → SO metal (B28…) → host (B32/B33) → higiene (B35)
+- Para sair de INCONCLUSIVO de fato: Prefill+Decode+sampling canônico em `runtime-native`

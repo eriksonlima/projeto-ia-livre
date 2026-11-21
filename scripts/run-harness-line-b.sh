@@ -28,7 +28,10 @@ have_ready() {
     && grep -q 'IA_LIVRE_NATIVE_INFER_BEGIN' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_RUNTIME_NATIVE_LAYOUT_OK' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_GGUF_STATUS=layout_ok' "$LOG" 2>/dev/null \
-    && grep -q 'IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_impl' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_RUNTIME_NATIVE_TENSOR_MAP_OK' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_RUNTIME_NATIVE_Q4K_DEQUANT_OK' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_RUNTIME_NATIVE_FORWARD_OP_OK' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_generate' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_TYPED_WEIGHTS_OK' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_TYPED_KVCACHE_OK' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_PHASE=prefill' "$LOG" 2>/dev/null \
@@ -119,12 +122,21 @@ echo "IA_LIVRE_HARNESS_GGUF_NATIVE_LOADER=${LOADER}"
 if grep -q 'IA_LIVRE_RUNTIME_NATIVE_LAYOUT_OK' "$LOG"; then
   echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_LAYOUT=OK"
 fi
-if grep -q 'IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_impl' "$LOG"; then
-  echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_FORWARD_FAIL=no_impl"
+if grep -q 'IA_LIVRE_RUNTIME_NATIVE_TENSOR_MAP_OK' "$LOG"; then
+  echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_TENSOR_MAP=OK"
+fi
+if grep -q 'IA_LIVRE_RUNTIME_NATIVE_Q4K_DEQUANT_OK' "$LOG"; then
+  echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_Q4K_DEQUANT=OK"
+fi
+if grep -q 'IA_LIVRE_RUNTIME_NATIVE_FORWARD_OP_OK' "$LOG"; then
+  echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_FORWARD_OP=OK"
+fi
+if grep -q 'IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_generate' "$LOG"; then
+  echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_FORWARD_FAIL=no_generate"
 fi
 
 echo "IA_LIVRE_HARNESS_OK"
-B_BLOCK_REASON="${IA_LIVRE_HARNESS_B_BLOCK:-no_gguf_forward}"
+B_BLOCK_REASON="${IA_LIVRE_HARNESS_B_BLOCK:-no_gguf_generate}"
 echo "IA_LIVRE_HARNESS_B_BLOCK=${B_BLOCK_REASON}"
 echo "IA_LIVRE_HARNESS_GGUF_STATUS=${STATUS}"
 if [[ "${IA_LIVRE_HARNESS_B_MODE:-}" == "block-status" ]]; then

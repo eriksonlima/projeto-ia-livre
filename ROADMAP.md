@@ -215,3 +215,11 @@ Issue: [#30](https://github.com/eriksonlima/projeto-ia-livre/issues/30)
 Spec: specs/boot-hardware-real/  
 Pronto quando: caminho documentado e verificável para boot do kernel em hardware UEFI real (imagem USB/ESP ou equivalente) **ou** bloqueio honesto documentado; separado da hipótese A vs B / sem fingir `TOKENS_PER_S`; não exige motor de inferência em B.  
 **Desfecho:** artefato ESP+tar + `verify-baremetal` (`IMAGE_OK`); hardware = checklist + `BAREMETAL_SKIP`; QEMU ≠ metal.
+
+## Etapa 31 — Forward GGUF mínimo em runtime-native (TOKENS_PER_S na Linha B)
+
+Status: feita  
+Issue: [#31](https://github.com/eriksonlima/projeto-ia-livre/issues/31)  
+Spec: specs/forward-gguf-linha-b/  
+Pronto quando: geração canônica na Linha B (QEMU) com `LOAD_KIND=gguf` + `TOKENS_PER_S`/`LOAD_S` **medidos** (carga TinyLlama Q4_K_M, prompt/`n-predict` canônicos, CPU) **ou** bloqueio honesto novo documentado; ADR 0001; harness atualizado sem inventar números; depende do layout E29 (`no_gguf_forward`).  
+**Desfecho:** mapa + dequant Q4_K + op parcial; `B_BLOCK=no_gguf_generate` (sem Prefill/Decode/sampling); hipótese INCONCLUSIVO.

@@ -601,7 +601,7 @@ fn main() -> Status {
             // Etapa 19 — memória tipada + Prefill/Decode (≠ NATIVE_BENCH / ≠ geração GGUF).
             let _ = run_mem_sched_demo(proof_base, proof_cap, gguf_prefix);
 
-            // Etapa 29 — runtime-native (ADR 0010): layout + tentativa de forward.
+            // Etapa 29/31 — runtime-native: layout + mapa/dequant/op; geração ainda não.
             uart_write("IA_LIVRE_NATIVE_INFER_BEGIN\n");
             if let Some((p, n)) = gguf_prefix {
                 if n > GGUF_PREFIX_MAX {
@@ -622,13 +622,37 @@ fn main() -> Status {
                             );
                             uart_write("IA_LIVRE_RUNTIME_NATIVE_LAYOUT_OK\n");
                             uart_write("IA_LIVRE_GGUF_STATUS=layout_ok\n");
-                            match ia_livre_runtime_native::try_forward_canonical(&layout) {
+                            match ia_livre_runtime_native::try_forward_partial(slice, &layout) {
+                                Ok(partial) => {
+                                    uart_write("IA_LIVRE_RUNTIME_NATIVE_TENSOR_MAP_OK\n");
+                                    uart_emit_kv(
+                                        "IA_LIVRE_RUNTIME_NATIVE_DEQUANT_CS=",
+                                        partial.dequant_checksum_milli as u64,
+                                    );
+                                    uart_write("IA_LIVRE_RUNTIME_NATIVE_Q4K_DEQUANT_OK\n");
+                                    uart_emit_kv(
+                                        "IA_LIVRE_RUNTIME_NATIVE_OP_CS=",
+                                        partial.op_checksum_milli as u64,
+                                    );
+                                    uart_write("IA_LIVRE_RUNTIME_NATIVE_FORWARD_OP_OK\n");
+                                }
+                                Err(_) => {
+                                    uart_write("IA_LIVRE_RUNTIME_NATIVE_PARTIAL_FAIL\n");
+                                }
+                            }
+                            match ia_livre_runtime_native::try_forward_canonical(slice, &layout)
+                            {
                                 Ok(()) => {
                                     uart_write("IA_LIVRE_RUNTIME_NATIVE_OK\n");
                                 }
-                                Err(ia_livre_runtime_native::ForwardError::NoForwardImpl) => {
+                                Err(ia_livre_runtime_native::ForwardError::NoGenerate) => {
                                     uart_write(
-                                        "IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_impl\n",
+                                        "IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_generate\n",
+                                    );
+                                }
+                                Err(_) => {
+                                    uart_write(
+                                        "IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=other\n",
                                     );
                                 }
                             }

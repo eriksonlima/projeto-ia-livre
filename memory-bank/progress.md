@@ -2,15 +2,14 @@
 
 ## O que funciona
 
-- Etapas 1–30 (kernel QEMU, runtime/agent/node host, harness, ESP artefato)
-- Layout GGUF em B (`runtime-native`); sem forward
+- Etapas 1–31
+- E31: tensor map + Q4_K dequant + op parcial em `runtime-native`
 
-## Bloqueios / lacunas (ver BACKLOG)
+## Bloqueios
 
-- B25: forward / TOKENS_PER_S em B → hipótese INCONCLUSIVO
-- B28: boot metal ainda não evidenciado
-- GPU nativo / rede / autonomia além de v1 abertos
+- `B_BLOCK=no_gguf_generate` — sem Prefill/Decode/sampling
+- Topo backlog: **B36** geração canônica
 
 ## Por etapa
 
-- 1–30: feitas
+- 1–31: feitas

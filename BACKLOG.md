@@ -8,17 +8,17 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-### B25 — Forward GGUF mínimo em runtime-native (TOKENS_PER_S na Linha B)
+### B36 — Geração canônica Prefill+Decode+sampling na Linha B (TOKENS_PER_S)
 
-- Issue: [#31](https://github.com/eriksonlima/projeto-ia-livre/issues/31)
-- Origem: análise pós Etapas 1–30 — desbloquear `B_BLOCK=no_gguf_forward`
-- Notas: Prefill+Decode+sampling canônico no guest; ADR 0001; proibido inventar métricas
-- Pronto quando: `LOAD_KIND=gguf` + `TOKENS_PER_S`/`LOAD_S` medidos em B (ou bloqueio honesto novo)
+- Issue: [#42](https://github.com/eriksonlima/projeto-ia-livre/issues/42)
+- Origem: desfecho Etapa 31 — `no_gguf_generate` (mapa/dequant/op ok)
+- Notas: necessário para hipótese sair de INCONCLUSIVO; B26 depende disto
+- Pronto quando: `LOAD_KIND=gguf` + `TOKENS_PER_S`/`LOAD_S` medidos + `RUNTIME_NATIVE_OK`
 
 ### B26 — Re-corrida harness A vs B com geração real em B
 
 - Issue: [#32](https://github.com/eriksonlima/projeto-ia-livre/issues/32)
-- Origem: instrumento E22/E28; depende de B25
+- Origem: instrumento E22/E28; depende de B36 (geração)
 - Pronto quando: `verify-harness-comparable` quieto com `COMPROVA`/`REFUTA` **ou** `INCONCLUSIVO` só com motivo ≠ ausência de tokens B
 
 ### B27 — Baseline Linha A otimizada (CPU) no gate comparável
@@ -79,6 +79,12 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Pronto quando: `architecture.md` / README-AGENTS refletem estado atual sem ambiguidade
 
 ## Promovidas / arquivadas
+
+### B25 — Forward GGUF mínimo em runtime-native (TOKENS_PER_S na Linha B)
+
+- Promovido para Etapa 31 do roadmap (promoção autônoma — “continuar”).
+- Issue: [#31](https://github.com/eriksonlima/projeto-ia-livre/issues/31)
+- Etapa: [Etapa 31 — Forward GGUF mínimo em runtime-native](ROADMAP.md)
 
 ### B24 — Boot/imagem IA Livre em hardware real (USB/ESP)
 

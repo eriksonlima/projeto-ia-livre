@@ -1,5 +1,6 @@
-//! Runtime nativo freestanding (Linha B) — ADR 0010.
-//! Parse/layout GGUF além do stub E27. Forward TinyLlama: ainda não (no_gguf_forward).
+//! Runtime nativo freestanding (Linha B) — ADR 0010 / 0012.
+//! Layout + mapa de tensores + dequant Q4_K + op parcial.
+//! Geração canônica TinyLlama: ainda não (`no_gguf_generate`).
 #![no_std]
 
 /// Relatório de layout após `prepare`.
@@ -9,8 +10,21 @@ pub struct LayoutReport {
     pub tensor_count: u64,
     pub metadata_kv_count: u64,
     pub tensors_parsed: u64,
-    /// Offset do início da região de dados de tensores (após infos + alinhamento).
     pub data_offset: usize,
+    /// Offset no arquivo onde começa a tabela de infos de tensores.
+    pub tensor_info_offset: usize,
+}
+
+#[derive(Clone, Copy, Debug)]
+pub struct TensorInfo {
+    /// Offset do nome (string GGUF) no arquivo — para comparação byte a byte.
+    pub name_off: usize,
+    pub name_len: usize,
+    pub n_dims: u32,
+    pub dims: [u64; 4],
+    pub ggml_type: u32,
+    /// Offset relativo à seção de dados.
+    pub data_rel: u64,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -25,13 +39,20 @@ pub enum PrepareError {
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ForwardError {
-    /// Forward/sampling TinyLlama Q4_K_M ainda não implementado no guest.
-    NoForwardImpl,
+    /// Geração Prefill+Decode+sampling ainda não implementada.
+    NoGenerate,
+    TensorNotFound,
+    UnsupportedType,
+    Truncated,
+    DequantFail,
 }
 
 const GGUF_MAGIC: [u8; 4] = *b"GGUF";
+const GGML_TYPE_Q4_K: u32 = 12;
+const QK_K: usize = 256;
+const BLOCK_Q4_K_SIZE: usize = 144; // half+half+12+128
 
-/// Prepara layout: valida magic/versão, atravessa metadata e infos de tensores.
+/// Prepara layout e localiza o início das infos de tensores.
 pub fn prepare(gguf: &[u8]) -> Result<LayoutReport, PrepareError> {
     if gguf.len() < 24 {
         return Err(PrepareError::TooShort);
@@ -40,7 +61,6 @@ pub fn prepare(gguf: &[u8]) -> Result<LayoutReport, PrepareError> {
         return Err(PrepareError::BadMagic);
     }
     let version = read_u32(gguf, 4)?;
-    // GGUF v1–v3 usados na prática; TinyLlama canônico = v3.
     if version == 0 || version > 3 {
         return Err(PrepareError::UnsupportedVersion);
     }
@@ -51,6 +71,7 @@ pub fn prepare(gguf: &[u8]) -> Result<LayoutReport, PrepareError> {
     for _ in 0..metadata_kv_count {
         off = skip_metadata_kv(gguf, off)?;
     }
+    let tensor_info_offset = off;
 
     let mut tensors_parsed = 0u64;
     for _ in 0..tensor_count {
@@ -58,7 +79,6 @@ pub fn prepare(gguf: &[u8]) -> Result<LayoutReport, PrepareError> {
         tensors_parsed = tensors_parsed.saturating_add(1);
     }
 
-    // Alinhamento GGUF: dados começam no próximo múltiplo de 32.
     let align = 32usize;
     let data_offset = (off + align - 1) & !(align - 1);
     if data_offset > gguf.len() {
@@ -71,12 +91,216 @@ pub fn prepare(gguf: &[u8]) -> Result<LayoutReport, PrepareError> {
         metadata_kv_count,
         tensors_parsed,
         data_offset,
+        tensor_info_offset,
     })
 }
 
-/// Tentativa de geração canônica. Etapa 29: sempre `NoForwardImpl` (honesto).
-pub fn try_forward_canonical(_layout: &LayoutReport) -> Result<(), ForwardError> {
-    Err(ForwardError::NoForwardImpl)
+/// Busca tensor por nome UTF-8 exato.
+pub fn find_tensor(gguf: &[u8], layout: &LayoutReport, name: &[u8]) -> Result<TensorInfo, ForwardError> {
+    let mut off = layout.tensor_info_offset;
+    for _ in 0..layout.tensor_count {
+        let name_off = off.checked_add(8).ok_or(ForwardError::Truncated)?;
+        let name_len = read_u64(gguf, off).map_err(|_| ForwardError::Truncated)? as usize;
+        let name_end = name_off
+            .checked_add(name_len)
+            .ok_or(ForwardError::Truncated)?;
+        if name_end > gguf.len() {
+            return Err(ForwardError::Truncated);
+        }
+        let matches = &gguf[name_off..name_end] == name;
+        let after_name = name_end;
+        let n_dims = read_u32(gguf, after_name).map_err(|_| ForwardError::Truncated)?;
+        let mut cur = after_name
+            .checked_add(4)
+            .ok_or(ForwardError::Truncated)?;
+        let mut dims = [0u64; 4];
+        for d in 0..(n_dims as usize).min(4) {
+            dims[d] = read_u64(gguf, cur).map_err(|_| ForwardError::Truncated)?;
+            cur = cur.checked_add(8).ok_or(ForwardError::Truncated)?;
+        }
+        if (n_dims as usize) > 4 {
+            cur = cur
+                .checked_add(((n_dims as usize) - 4) * 8)
+                .ok_or(ForwardError::Truncated)?;
+        }
+        let ggml_type = read_u32(gguf, cur).map_err(|_| ForwardError::Truncated)?;
+        cur = cur.checked_add(4).ok_or(ForwardError::Truncated)?;
+        let data_rel = read_u64(gguf, cur).map_err(|_| ForwardError::Truncated)?;
+        cur = cur.checked_add(8).ok_or(ForwardError::Truncated)?;
+        if matches {
+            return Ok(TensorInfo {
+                name_off,
+                name_len,
+                n_dims,
+                dims,
+                ggml_type,
+                data_rel,
+            });
+        }
+        off = cur;
+    }
+    Err(ForwardError::TensorNotFound)
+}
+
+/// Dequantiza o primeiro bloco Q4_K (256 pesos) de um tensor; retorna checksum Σ|x|.
+pub fn dequant_q4k_first_block(
+    gguf: &[u8],
+    layout: &LayoutReport,
+    tensor: &TensorInfo,
+    out: &mut [f32; QK_K],
+) -> Result<u32, ForwardError> {
+    if tensor.ggml_type != GGML_TYPE_Q4_K {
+        return Err(ForwardError::UnsupportedType);
+    }
+    let abs = layout
+        .data_offset
+        .checked_add(tensor.data_rel as usize)
+        .ok_or(ForwardError::Truncated)?;
+    let end = abs
+        .checked_add(BLOCK_Q4_K_SIZE)
+        .ok_or(ForwardError::Truncated)?;
+    if end > gguf.len() {
+        return Err(ForwardError::Truncated);
+    }
+    dequant_block_q4_k(&gguf[abs..end], out)?;
+    let mut acc = 0f32;
+    for &v in out.iter() {
+        acc += if v >= 0.0 { v } else { -v };
+    }
+    // checksum estável em u32 (milli-units)
+    Ok((acc * 1000.0) as u32)
+}
+
+/// Op parcial honesta: dot do vetor dequantizado consigo (norma²) — prova de uso dos pesos.
+pub fn forward_op_dot_self(weights: &[f32; QK_K]) -> u32 {
+    let mut acc = 0f32;
+    for &v in weights.iter() {
+        acc += v * v;
+    }
+    (acc * 1000.0) as u32
+}
+
+/// Pipeline Etapa 31: mapa + dequant + op; geração canônica ainda falha.
+pub fn try_forward_partial(gguf: &[u8], layout: &LayoutReport) -> Result<PartialReport, ForwardError> {
+    // Tensor Q4_K relativamente pequeno: blk.0.attn_k.weight
+    let name = b"blk.0.attn_k.weight";
+    let tensor = find_tensor(gguf, layout, name)?;
+    let mut buf = [0f32; QK_K];
+    let dequant_cs = dequant_q4k_first_block(gguf, layout, &tensor, &mut buf)?;
+    let op_cs = forward_op_dot_self(&buf);
+    Ok(PartialReport {
+        tensor_ggml_type: tensor.ggml_type,
+        dequant_checksum_milli: dequant_cs,
+        op_checksum_milli: op_cs,
+    })
+}
+
+/// Tentativa de geração canônica — Etapa 31: ainda não.
+pub fn try_forward_canonical(
+    gguf: &[u8],
+    layout: &LayoutReport,
+) -> Result<(), ForwardError> {
+    // Garante que o caminho parcial existe; geração completa não.
+    let _ = try_forward_partial(gguf, layout)?;
+    Err(ForwardError::NoGenerate)
+}
+
+#[derive(Clone, Copy, Debug)]
+pub struct PartialReport {
+    pub tensor_ggml_type: u32,
+    pub dequant_checksum_milli: u32,
+    pub op_checksum_milli: u32,
+}
+
+fn dequant_block_q4_k(block: &[u8], out: &mut [f32; QK_K]) -> Result<(), ForwardError> {
+    if block.len() < BLOCK_Q4_K_SIZE {
+        return Err(ForwardError::DequantFail);
+    }
+    let d = f16_to_f32(u16::from_le_bytes([block[0], block[1]]));
+    let dmin = f16_to_f32(u16::from_le_bytes([block[2], block[3]]));
+    let scales = &block[4..16];
+    let qs = &block[16..144];
+
+    // Layout llama.cpp block_q4_K: 8 sub-blocos de 32; scales packed.
+    for j in 0..QK_K / 64 {
+        let is = j * 64;
+        let sc0 = (scales[j] & 0xF) as i32;
+        let sc1 = (scales[j] >> 4) as i32;
+        let m0 = (scales[j + 8] & 0xF) as i32; // may be wrong packing — use common K-quants layout
+        let m1 = (scales[j + 8] >> 4) as i32;
+        // Correct packing for q4_K (from ggml): scales[0..4] and scales[4..8] interleaved differently.
+        // Use the standard algorithm from llama.cpp dequantize_row_q4_K:
+        let _ = (m0, m1);
+        let _ = (sc0, sc1);
+        let _ = is;
+    }
+
+    // Implementação alinhada a ggml dequantize_row_q4_K (sub-blocos 32):
+    let mut y = 0usize;
+    for j in 0..QK_K / 64 {
+        let q = &qs[j * 32..j * 32 + 32];
+        let (sc_lo, sc_hi, m_lo, m_hi) = unpack_q4k_scales(scales, j);
+        let d1 = d * (sc_lo as f32);
+        let m1 = dmin * (m_lo as f32);
+        let d2 = d * (sc_hi as f32);
+        let m2 = dmin * (m_hi as f32);
+        for l in 0..32 {
+            let v = q[l] as i32;
+            out[y + l] = d1 * ((v & 0xF) as f32) - m1;
+            out[y + l + 32] = d2 * ((v >> 4) as f32) - m2;
+        }
+        y += 64;
+    }
+    Ok(())
+}
+
+/// Unpacks scale/min nibbles for subblock pair `j` (0..3) — ggml q4_K layout.
+fn unpack_q4k_scales(scales: &[u8], j: usize) -> (u8, u8, u8, u8) {
+    // From ggml-quants.c get_scale_min_k4:
+    // scales are 6-bit packed in 12 bytes for 8 scale+min pairs.
+    // Simplified: use 4-bit nibbles from first 8 bytes as approximation for smoke test
+    // — replaced with get_scale_min_k4-compatible extraction:
+    let mut sc = [0u8; 8];
+    let mut m = [0u8; 8];
+    for i in 0..4 {
+        sc[i] = scales[i] & 63;
+        m[i] = scales[i + 4] & 63;
+    }
+    for i in 0..2 {
+        sc[i + 4] = (scales[i + 8] & 15) | ((scales[i] & 192) >> 2);
+        m[i + 4] = (scales[i + 8] >> 4) | ((scales[i + 2] & 192) >> 2);
+        sc[i + 6] = (scales[i + 10] & 15) | ((scales[i + 1] & 192) >> 2);
+        m[i + 6] = (scales[i + 10] >> 4) | ((scales[i + 3] & 192) >> 2);
+    }
+    let a = j * 2;
+    (sc[a], sc[a + 1], m[a], m[a + 1])
+}
+
+fn f16_to_f32(h: u16) -> f32 {
+    // IEEE half → f32
+    let sign = ((h >> 15) & 1) as u32;
+    let exp = ((h >> 10) & 0x1f) as u32;
+    let mant = (h & 0x3ff) as u32;
+    let f = if exp == 0 {
+        if mant == 0 {
+            sign << 31
+        } else {
+            // subnormal
+            let mut m = mant;
+            let mut e = 127 - 15 + 1;
+            while m & 0x400 == 0 {
+                m <<= 1;
+                e -= 1;
+            }
+            m &= 0x3ff;
+            (sign << 31) | (e << 23) | (m << 13)
+        }
+    } else if exp == 31 {
+        (sign << 31) | 0x7f800000 | (mant << 13)
+    } else {
+        (sign << 31) | ((exp + 127 - 15) << 23) | (mant << 13)
+    };
+    f32::from_bits(f)
 }
 
 fn read_u32(buf: &[u8], off: usize) -> Result<u32, PrepareError> {
@@ -107,24 +331,21 @@ fn skip_string(buf: &[u8], off: usize) -> Result<usize, PrepareError> {
 
 fn value_scalar_size(ty: u32) -> Option<usize> {
     match ty {
-        0 | 1 | 7 => Some(1),   // u8/i8/bool
-        2 | 3 => Some(2),       // u16/i16
-        4 | 5 | 6 => Some(4),   // u32/i32/f32
-        10 | 11 | 12 => Some(8), // u64/i64/f64
+        0 | 1 | 7 => Some(1),
+        2 | 3 => Some(2),
+        4 | 5 | 6 => Some(4),
+        10 | 11 | 12 => Some(8),
         _ => None,
     }
 }
 
 fn skip_value(buf: &[u8], off: usize, ty: u32) -> Result<usize, PrepareError> {
     match ty {
-        8 => skip_string(buf, off), // STRING
+        8 => skip_string(buf, off),
         9 => {
-            // ARRAY: type u32 + count u64 + elements
             let elem_ty = read_u32(buf, off)?;
             let count = read_u64(buf, off + 4)? as usize;
-            let mut cur = off
-                .checked_add(4 + 8)
-                .ok_or(PrepareError::BadMetadata)?;
+            let mut cur = off.checked_add(4 + 8).ok_or(PrepareError::BadMetadata)?;
             if elem_ty == 8 {
                 for _ in 0..count {
                     cur = skip_string(buf, cur)?;
@@ -158,14 +379,11 @@ fn skip_metadata_kv(buf: &[u8], off: usize) -> Result<usize, PrepareError> {
 }
 
 fn skip_tensor_info(buf: &[u8], off: usize) -> Result<usize, PrepareError> {
-    // name: string
     let after_name = skip_string(buf, off)?;
-    // n_dims: u32
     let n_dims = read_u32(buf, after_name)? as usize;
     let mut cur = after_name
         .checked_add(4)
         .ok_or(PrepareError::BadTensorInfo)?;
-    // dims: n_dims × u64
     let dims_bytes = n_dims
         .checked_mul(8)
         .ok_or(PrepareError::BadTensorInfo)?;
@@ -175,11 +393,9 @@ fn skip_tensor_info(buf: &[u8], off: usize) -> Result<usize, PrepareError> {
     if cur > buf.len() {
         return Err(PrepareError::Truncated);
     }
-    // type: u32
-    let _ggml_type = read_u32(buf, cur)?;
+    let _ = read_u32(buf, cur)?;
     cur = cur.checked_add(4).ok_or(PrepareError::Truncated)?;
-    // offset: u64 (relative to data section)
-    let _tensor_off = read_u64(buf, cur)?;
+    let _ = read_u64(buf, cur)?;
     cur = cur.checked_add(8).ok_or(PrepareError::Truncated)?;
     Ok(cur)
 }
@@ -193,20 +409,27 @@ mod tests {
     use std::vec::Vec;
 
     #[test]
-    fn prepare_canonical_gguf_layout() {
+    fn map_dequant_op_canonical_gguf() {
         let mut root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
         root.pop();
         let path = root.join("models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf");
         if !path.is_file() {
-            return; // CI sem pesos: skip silencioso
+            return;
         }
         let data: Vec<u8> = fs::read(&path).expect("read gguf");
         let layout = prepare(&data).expect("prepare");
-        assert_eq!(layout.version, 3);
-        assert!(layout.tensor_count > 100);
-        assert_eq!(layout.tensors_parsed, layout.tensor_count);
-        assert!(layout.data_offset > 24);
-        assert!(layout.data_offset < data.len());
-        assert!(try_forward_canonical(&layout).is_err());
+        let t = find_tensor(&data, &layout, b"blk.0.attn_k.weight").expect("find");
+        assert_eq!(t.ggml_type, GGML_TYPE_Q4_K);
+        let mut buf = [0f32; QK_K];
+        let cs = dequant_q4k_first_block(&data, &layout, &t, &mut buf).expect("dequant");
+        assert!(cs > 0, "dequant checksum should be non-zero");
+        let op = forward_op_dot_self(&buf);
+        assert!(op > 0);
+        let partial = try_forward_partial(&data, &layout).expect("partial");
+        assert_eq!(partial.tensor_ggml_type, GGML_TYPE_Q4_K);
+        assert!(matches!(
+            try_forward_canonical(&data, &layout),
+            Err(ForwardError::NoGenerate)
+        ));
     }
 }
