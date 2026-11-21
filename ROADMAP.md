@@ -244,5 +244,5 @@ Pronto quando: `verify-harness-comparable` quieto com `COMPROVA`/`REFUTA` **ou**
 
 Status: em_andamento  
 Issue: [#33](https://github.com/eriksonlima/projeto-ia-livre/issues/33)  
-Spec: (a definir — `especificador`)  
+Spec: specs/baseline-a-otimizada/  
 Pronto quando: perfil `A_otimizada` documentado + corrida verificável lado a lado; ideal após geração B, mas pode avançar baseline A independentemente.
