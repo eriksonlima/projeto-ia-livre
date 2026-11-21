@@ -16,13 +16,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 
 
-### B45 — Tarefa/conhecimento mínimo na Rede (além de PING)
-- Issue: [#51](https://github.com/eriksonlima/projeto-ia-livre/issues/51)
-
-- Origem: manifesto — colaborar recursos/conhecimento
-- Pronto quando: tipo de mensagem v1 (ex. `TASK`/`KNOW` ou equivalente) + ACK + gate de dois nós; sem marketplace; sem exigir SO
-- Deps: E23
-
 ### B46 — Nó Rede no SO nativo (pós-ExitBoot ou bridge)
 - Issue: [#52](https://github.com/eriksonlima/projeto-ia-livre/issues/52)
 
@@ -73,6 +66,16 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: B39 + B40 + B42 (mínimo sugerido)
 
 ## Promovidas / arquivadas
+
+### B45 — Tarefa/conhecimento mínimo na Rede (além de PING)
+- Issue: [#51](https://github.com/eriksonlima/projeto-ia-livre/issues/51)
+
+- Origem: manifesto — colaborar recursos/conhecimento
+- Pronto quando: tipo de mensagem v1 (ex. `TASK`/`KNOW` ou equivalente) + ACK + gate de dois nós; sem marketplace; sem exigir SO
+- Deps: E23
+
+- Promovido para Etapa 51 do roadmap (promoção autônoma após E50).
+- Etapa: [Etapa 51 — TASK na Rede](ROADMAP.md)
 
 ### B44 — mDNS real na Rede IA Livre (além do skip)
 - Issue: [#50](https://github.com/eriksonlima/projeto-ia-livre/issues/50)

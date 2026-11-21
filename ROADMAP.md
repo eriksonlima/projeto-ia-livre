@@ -376,3 +376,10 @@ Spec: specs/mdns-rede-ia-livre/
 Pronto quando: `--disc-mdns` anuncia/resolve `_ia-livre._tcp` em LAN com gate opt-in; skip honesto se multicast indisponível.  
 **Desfecho:** `mdns-sd` + `_ia-livre._tcp`; `DISC_MODE=mdns` + `DISC_OK`; gate skip default / `VERIFY_NODE_MDNS_SKIP=0` prova; sem libp2p.
 
+## Etapa 51 — Tarefa/conhecimento mínimo na Rede (além de PING)
+
+Status: em_andamento  
+Issue: [#51](https://github.com/eriksonlima/projeto-ia-livre/issues/51)  
+Spec: specs/tarefa-conhecimento-rede/  
+Pronto quando: tipo de mensagem v1 (`TASK` + `TASK_ACK`) + ACK correspondente + gate de dois nós; sem marketplace; sem exigir SO.
+
