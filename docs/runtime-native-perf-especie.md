@@ -4,7 +4,7 @@ Contrato de **medição** para desbloquear (ou declarar inviável) o caminho at�
 
 - Spec: [`specs/otimizar-runtime-native-especie/`](../specs/otimizar-runtime-native-especie/)
 - Ponte teto histórico: ADR [`0016`](adr/0016-veredito-limpo-harness-a-b.md)
-- ADR **0020** reservada para desfecho **inviável pós-otimização** (só Task 3, se necessário)
+- ADR [`0020`](adr/0020-runtime-native-passo-intermediario-inviavel.md) — desfecho **B** (inviável no guest pós-otimização; E59)
 - Linha B: [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md) · comparable: [`harness-a-b-comparavel.md`](harness-a-b-comparavel.md)
 
 > **Hipótese A vs B permanece aberta.** Esta etapa **não** emite `COMPROVA` e **não** substitui B54 (espécie canônica no comparable).
@@ -104,11 +104,15 @@ IA_LIVRE_NATIVE_PERF_HOST_OK=1
 
 Host faz 8L×1 em ~2 s (~3,1× vs 2L). **Host ≠ guest.** Extrapolando o `make verify` ~267 s (2L guest) → 8L guest ~ordem **800 s** ≫ timeout 600 s. Ganho ~10% **não** é ordem de magnitude.
 
-## Verificação desta fatia (Task 1)
+## Desfecho E59
+
+**B — inviável no guest:** ADR [`0020`](adr/0020-runtime-native-passo-intermediario-inviavel.md).  
+Gate: `make verify-runtime-native-perf` → `IA_LIVRE_NATIVE_PERF_OK`.
+
+## Verificação
 
 ```bash
 test -f docs/runtime-native-perf-especie.md
-grep -q 'Passo intermediário' docs/runtime-native-perf-especie.md
-grep -q 'ADR \*\*0020\*\*\|ADR 0020' docs/runtime-native-perf-especie.md
-grep -q 'Etapa 59' docs/adr/0016-veredito-limpo-harness-a-b.md
+test -f docs/adr/0020-runtime-native-passo-intermediario-inviavel.md
+make verify-runtime-native-perf
 ```

@@ -536,6 +536,20 @@ grep -q 'IA_LIVRE_PROTOTIPO_OBJETIVO_OK' scripts/verify-prototipo-objetivo.sh
 
 Esperado: `IA_LIVRE_PROTOTIPO_OBJETIVO_OK`. Celebrar meta global só com evidência do checklist.
 
+### Gate runtime-native perf / espécie (Etapa 59 — adicional)
+
+Medição + otimização do teto Linha B; desfecho A (passo N≥8 no guest) **ou** B (ADR 0020 inviável). **Não** exige `COMPROVA`. Contrato: [`docs/runtime-native-perf-especie.md`](docs/runtime-native-perf-especie.md) / ADR [`0020`](docs/adr/0020-runtime-native-passo-intermediario-inviavel.md).
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+test -f docs/runtime-native-perf-especie.md
+test -f docs/adr/0020-runtime-native-passo-intermediario-inviavel.md
+make verify-runtime-native-perf
+grep -q 'IA_LIVRE_NATIVE_PERF_OK' scripts/verify-runtime-native-perf.sh
+```
+
+Esperado: `IA_LIVRE_NATIVE_PERF_OK` + `OUTCOME=adr_0020_inviable_guest_step` (ou progresso guest se A). Hipótese permanece aberta até B54.
+
 ### Gate inferência path metal / ESP-only (Etapa 48 — adicional)
 
 QEMU **sem** BlockIO: prova `GGUF_PATH=esp_sfs` + `B_BLOCK_METAL=no_gguf_metal_io` (ADR [`0017`](docs/adr/0017-path-metal-sfs-vs-blockio.md)). **≠** `METAL_OK`; **≠** geração BlockIO.

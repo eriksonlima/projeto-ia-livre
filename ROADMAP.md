@@ -442,8 +442,9 @@ Pronto quando: checklist em `docs/` (hipótese A/B decidível **ou** bloqueio ho
 
 ## Etapa 59 — Otimizar runtime-native (SIMD/teto) para espécie canônica
 
-Status: em_andamento  
+Status: feita  
 Issue: [#59](https://github.com/eriksonlima/projeto-ia-livre/issues/59)  
 Spec: specs/otimizar-runtime-native-especie/  
-Pronto quando: medição documentada (passo intermediário N≥8 / n_predict≥8 **ou** 22L×32 no timeout do gate) **ou** ADR nova pós-otimização declara inviável com evidência; sem fingir `COMPROVA`; hipótese permanece aberta até B54.
+Pronto quando: medição documentada (passo intermediário N≥8 / n_predict≥8 **ou** 22L×32 no timeout do gate) **ou** ADR nova pós-otimização declara inviável com evidência; sem fingir `COMPROVA`; hipótese permanece aberta até B54.  
+**Desfecho:** fused matvec Q4 + dispatch Q4/Q6 (~7–10% host); host N=8 ok (~2 s); guest passo intermediário **inviável** no gate 600 s → ADR [`0020`](docs/adr/0020-runtime-native-passo-intermediario-inviavel.md); `make verify-runtime-native-perf`; hipótese aberta (B54).
 

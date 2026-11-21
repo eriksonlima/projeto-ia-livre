@@ -2,16 +2,16 @@
 
 ## Funciona
 
-- Etapas 1–58
-- Checklist meta (E58) + gates host (node/agent/bridges/USB guia)
-- Geração B subset com `TOKENS_PER_S` medidos (≠ espécie canônica)
+- Etapas 1–59
+- E59: otimização runtime-native (~7–10% host) + ADR 0020 inviável passo N≥8 no guest 600 s
+- Checklist E58; geração B subset; Rede/autonomia host
 
-## Residual (Abertas B53–B67)
+## Residual
 
-- Pilar 1: SIMD/teto → espécie 22L×32 → re-corrida quieta (ou bloqueio final B58)
-- Pilar 2: `METAL_OK` PC + I/O GGUF metal
-- Depois: accel simétrica, GPU guest, TCP nativo, WAN, KNOW, multi-GPU, autonomia nativa, ABI, sync docs
+- B54 espécie canônica (bloqueada na prática até SIMD/GPU guest ou teto novo)
+- Alternativa: B58 bloqueio **terminal** da hipótese (após B54 inviável explícito)
+- Pilar 2: `METAL_OK` PC + I/O GGUF metal (B56/B57)
 
 ## Roadmap
 
-- Sem `em_andamento`; próxima candidata = topo Abertas (B53)
+- Sem `em_andamento` após E59; próxima candidata = B54
