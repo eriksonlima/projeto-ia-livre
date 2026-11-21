@@ -10,12 +10,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Produto (ADR 0027):** **Linux IA-nativo** (TTY, shell, qualquer GGUF, tuning/kernel Linux). Linha B UEFI **arquivada**. Ordem = prioridade (topo primeiro). Fila até o **produto final** (métricas em `docs/product-context.md`).
 
-### B77 — Rootfs Debian mínimo bootável em QEMU
-- Issue: [#83](https://github.com/eriksonlima/projeto-ia-livre/issues/83)
-- Origem: plano backlog produto final / ADR 0027
-- Pronto quando: boot QEMU até prompt/`ia-livre conf`; gate documentado; ≠ Alpine netboot skip
-- Deps: E81 / scaffold distro
-
 ### B78 — Gate smoke QEMU da imagem IA Livre
 - Issue: [#84](https://github.com/eriksonlima/projeto-ia-livre/issues/84)
 - Origem: plano backlog produto final / ADR 0027
@@ -101,6 +95,13 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: B78, B81, B84, B85, B90
 
 ## Promovidas / arquivadas
+
+### B77 — Rootfs Debian mínimo bootável em QEMU
+- Issue: [#83](https://github.com/eriksonlima/projeto-ia-livre/issues/83)
+- Origem: plano backlog produto final / ADR 0027
+- Pronto quando: boot QEMU até prompt/`ia-livre conf`; gate documentado; ≠ Alpine netboot skip
+- Promovido para Etapa 82.
+- Etapa: [Etapa 82 — Rootfs Debian QEMU](ROADMAP.md)
 
 ### B76 — USB Linux de uso (writer + guia)
 - Issue: [#82](https://github.com/eriksonlima/projeto-ia-livre/issues/82)

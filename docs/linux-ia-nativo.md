@@ -47,6 +47,20 @@ make verify-distro-native-tune
 make verify-distro-smoke
 ```
 
+## Debian rootfs bootável em QEMU (Etapa 82)
+
+Prova de produto: **Debian mínimo** + overlay, boot QEMU (9p) — **≠** Alpine netboot do smoke E80.
+
+```bash
+# Requer mmdebstrap no PATH **ou** Docker; + qemu-system-x86_64
+./scripts/build-distro-debian-rootfs.sh   # → build/distro-debian/rootfs + ROOTFS_OK
+./scripts/run-distro-debian-qemu.sh       # → DISTRO_DEBIAN_QEMU_OK (ou SKIP need_*)
+make verify-distro-debian-qemu
+```
+
+Skip honesto: `need_mmdebstrap` / `need_net` / `need_qemu` / `boot_fail` / `no_console` (exit 0).  
+Sucesso: `IA_LIVRE_DISTRO_DEBIAN_QEMU_OK` + conf guest ou prompt Debian.
+
 ## USB Linux
 
 Ver [`docs/guia-ia-livre-linux-usb.md`](guia-ia-livre-linux-usb.md) (imagem/rootfs — distinto do ESP UEFI).

@@ -2,18 +2,15 @@
 
 ## O que funciona
 
-- Etapas 1–81; produto = Linux IA-nativo (ADR 0027)
-- Stack host + overlay distro (`ia-livre model/infer`, `ia-livre-native-tune`)
-- Rootfs tar + smoke userspace (infer/agent); artefato USB Linux (tar+checksums)
-- Writer `write-linux-usb.sh` com confirmação (gravação real = operador)
-- Linha B UEFI = lab arquivado
+- Etapas 1–82; produto Linux IA-nativo
+- E82: rootfs Debian bookworm + overlay; QEMU 9p; `IA_LIVRE_DISTRO_DEBIAN_QEMU_OK`
+- Stack host + overlay + USB tarball (E77–81)
 
 ## Bloqueios
 
-- ISO Debian live completa ainda não
-- QEMU Alpine no smoke: best-effort (`QEMU_SKIP=no_console` neste host); userspace cobre o gate
-- Kernel Linux custom patches = depois
+- ISO live ainda não (B80+)
+- Autologin root no serial ainda falha auth (conf oneshot basta para E82)
 
 ## Roadmap
 
-- Sem `em_andamento` / `pendente`; Abertas vazio
+- E82 feita; Abertas B78–B91

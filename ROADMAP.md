@@ -624,3 +624,12 @@ Spec: specs/linux-ia-nativo-produto/
 Pronto quando: guia + prepare/write Linux USB; gate artefato sem device; ≠ ESP UEFI.  
 **Desfecho:** `docs/guia-ia-livre-linux-usb.md` + `prepare-linux-usb-artifact` / `write-linux-usb`; `make verify-linux-usb-artifact`.
 
+## Etapa 82 — Rootfs Debian mínimo bootável em QEMU
+
+Status: feita  
+Issue: [#83](https://github.com/eriksonlima/projeto-ia-livre/issues/83)  
+Spec: specs/linux-debian-rootfs-qemu/  
+Pronto quando: boot QEMU até prompt/`ia-livre conf`; gate documentado; ≠ Alpine netboot skip.  
+Project: https://github.com/users/eriksonlima/projects/1  
+**Desfecho:** `build-distro-debian-rootfs` (mmdebstrap host ou Docker) + QEMU 9p; `make verify-distro-debian-qemu` (`DISTRO_DEBIAN_QEMU_OK` + `GUEST_CONF_OK`); ≠ Alpine.
+

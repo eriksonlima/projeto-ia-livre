@@ -2,14 +2,15 @@
 
 ## Foco atual
 
-- Etapas 1–81 **feitas**; roadmap sem `em_andamento`/`pendente`
-- Abertas: **B77–B91** (fila até produto final Linux IA-nativo)
-- Topo: B77 rootfs Debian bootável em QEMU (#83)
+- Etapas 1–82 **feitas**
+- E82: Debian rootfs bootável em QEMU (`verify-distro-debian-qemu`)
+- Abertas: B78–B91 (topo B78 smoke QEMU exige imagem)
 
 ## Próximo passo
 
-- “continuar” → promover **B77** → especificar → implementar
+- Promover **B78** no próximo ciclo / após este push
 
 ## Notas
 
-- Sem promover nesta captura; issues backlog #83–#97
+- Build: mmdebstrap via Docker se host sem mmdebstrap
+- Boot: 9p + initrd com módulos 9p; evidência `ia-livre conf` no guest
