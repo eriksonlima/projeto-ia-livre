@@ -2,17 +2,17 @@
 
 ## O que funciona
 
-- Etapas 1–40
-- E40: `calc` sandboxed + gate agent
-- E39: bootstrap WAN
+- Etapas 1–41
+- E41: shard host `host_shard_exec` (EXEC ou SKIP honesto)
+- E40: calc sandboxed
 
 ## Bloqueios
 
 - Sem TOKENS_PER_S em B
 - Sem log metal real (SKIP)
-- Shard multi-GPU host ainda não executado (E41)
+- Shard EXEC_OK só com ≥2 GPUs (este host: skip)
 
 ## Por etapa
 
-- 1–40: feitas
-- 41: em_andamento (#40)
+- 1–41: feitas
+- 42: em_andamento (#41) — sync docs architecture

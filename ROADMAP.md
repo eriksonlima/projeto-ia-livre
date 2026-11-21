@@ -298,7 +298,15 @@ Pronto quando: REPL ou ≥1 tool nova sandboxed + gate; sem shell/HTTP irrestrit
 
 ## Etapa 41 — Shard multi-GPU host executado (além do stub)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#40](https://github.com/eriksonlima/projeto-ia-livre/issues/40)  
 Spec: specs/shard-multi-gpu-host/  
-Pronto quando: placement/shard mínimo real no host com evidência ou skip honesto; ≠ manager nativo.
+Pronto quando: placement/shard mínimo real no host com evidência ou skip honesto; ≠ manager nativo.  
+**Desfecho:** `host_shard_exec` + plano pipeline; skip `need_2_devices` honesto neste host; stub E25 intacto.
+
+## Etapa 42 — Sincronizar architecture/product + glossário pós-E30
+
+Status: em_andamento  
+Issue: [#41](https://github.com/eriksonlima/projeto-ia-livre/issues/41)  
+Spec: (a definir — `especificador`)  
+Pronto quando: `architecture.md` / README-AGENTS refletem estado atual sem ambiguidade.

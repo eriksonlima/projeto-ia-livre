@@ -8,13 +8,13 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-### B35 — Sincronizar architecture/product + glossário pós-E30
-
-- Issue: [#41](https://github.com/eriksonlima/projeto-ia-livre/issues/41)
-- Origem: pontes desatualizadas (`no_gguf_forward`, metal vs QEMU)
-- Pronto quando: `architecture.md` / README-AGENTS refletem estado atual sem ambiguidade
 
 ## Promovidas / arquivadas
+
+### B35 — Sincronizar architecture/product + glossário pós-E30
+
+- Promovido para Etapa 42 do roadmap (promoção autônoma após Etapa 41).
+- Issue: [#41](https://github.com/eriksonlima/projeto-ia-livre/issues/41)
 
 ### B34 — Shard multi-GPU host executado (além do stub)
 

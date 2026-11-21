@@ -47,7 +47,8 @@ Fora: tensor parallel, expert parallel, clusters/RDMA.
 - Integração no harness A vs B
 - ABI/syscalls; driver in-kernel
 
-Mecanismos nativos mínimos (enum/afinidade/placement) = **Etapa 38** — [`gpu-manager-nativo.md`](gpu-manager-nativo.md); **não** substituem este stub.
+Mecanismos nativos mínimos (enum/afinidade/placement) = **Etapa 38** — [`gpu-manager-nativo.md`](gpu-manager-nativo.md); **não** substituem este stub.  
+Shard **executado** no host (≥2 GPUs ou skip) = **Etapa 41** — [`shard-multi-gpu-host.md`](shard-multi-gpu-host.md) (`host_shard_exec`); este stub continua só `SHARD_DOC`.
 
 ## Como rodar / verificar
 

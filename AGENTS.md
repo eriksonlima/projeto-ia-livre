@@ -332,6 +332,22 @@ Com GPU detectável: exige `IA_LIVRE_GPU_MGR=host_stub`, `IA_LIVRE_GPU_DEVICES=`
 
 **Skip (CI / sem GPU):** `VERIFY_GPU_MANAGER_SKIP=1` **ou** `nvidia-smi` indetectável → imprime `IA_LIVRE_GPU_MGR_SKIP` e exit **0** (não finge multi-GPU). Force: `VERIFY_GPU_MANAGER_FORCE=1`.
 
+### Gate do shard multi-GPU host (Etapa 41 — adicional)
+
+Executor **host** `host_shard_exec` (além do stub E25). **Não** é manager nativo (E38). **Não** inventa `TOKENS_PER_S`. Contrato: [`docs/shard-multi-gpu-host.md`](docs/shard-multi-gpu-host.md).
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+test -f scripts/run-gpu-shard-host.sh && test -f scripts/verify-gpu-shard-host.sh
+test -f docs/shard-multi-gpu-host.md
+./scripts/run-gpu-shard-host.sh
+make verify-gpu-shard-host
+grep -q 'host_shard_exec' scripts/run-gpu-shard-host.sh
+```
+
+Com ≥2 GPUs: `IA_LIVRE_GPU_SHARD_EXEC_OK` + plano `0:0-10,1:11-21`.  
+Com &lt;2 GPUs / CI: `IA_LIVRE_GPU_SHARD_SKIP` (ex. `need_2_devices`) exit **0** — **sem** `EXEC_OK`. Force skip: `VERIFY_GPU_SHARD_SKIP=1`.
+
 ### Gate do nó Rede IA Livre (Etapas 6 / 23 / 39 — adicional)
 
 Só Rust no host. **Não** usa QEMU, GGUF nem o runtime de inferência. Participar da Rede **não exige** o SO IA Livre. Gate: regressão `--peer` + estágio `--bootstrap` (`DISC_OK`).
@@ -496,6 +512,8 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `scripts/verify-runtime-contract.sh` — gate shim host do contrato nativo (`RUNTIME_CONTRACT_OK`)
 - `scripts/gpu-manager-stub.sh` — stub host GPU manager (Etapa 25; `IA_LIVRE_GPU_MGR=host_stub`)
 - `scripts/verify-gpu-manager.sh` — gate do stub (`IA_LIVRE_GPU_MGR_OK`; skip `IA_LIVRE_GPU_MGR_SKIP`)
+- `scripts/run-gpu-shard-host.sh` / `scripts/verify-gpu-shard-host.sh` — shard host E41 (`host_shard_exec`; `EXEC_OK` ou `SHARD_SKIP`)
+- `docs/shard-multi-gpu-host.md` — contrato shard multi-GPU host executado
 - `docs/gpu-manager-prototipo-host.md` — contrato do stub host (≠ nativo; ≠ prova A vs B)
 - `docs/runtime-inferencia-gpu-metricas.md` — métricas do protótipo GPU no host
 - `docs/adr/0002-aceleracao-gpu-host-llama-cpp.md` — CUDA canônico / Vulkan alternativa
