@@ -1,19 +1,31 @@
 # Harness — Perfis A otimizada e GPU (metodologia)
 
-Evolução metodológica do harness v1 (Etapas 9/12). **Etapa 18.**  
+Evolução metodológica do harness v1 (Etapas 9/12). **Etapas 18 / 34 / 56.**  
 **Não** prova a hipótese Linha A vs Linha B. **Não** substitui o gate `make verify-harness`.
 
 Harness v1: [`harness-linha-a-b.md`](harness-linha-a-b.md).  
-Linha B proxy: [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md).
+Linha B: [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md).  
+Comparable: [`harness-a-b-comparavel.md`](harness-a-b-comparavel.md).
 
 ## A pragmática vs A otimizada
 
 | Perfil | O que é | Estado |
 |--------|---------|--------|
-| **A pragmática** (harness v1) | Ubuntu no host de referência + `ia-livre-runtime` CPU, **sem** campanha de tuning | **Gate** (`run-harness-line-a.sh`) |
-| **A otimizada** | Mesma carga canônica + checklist de isolamento/tuning do SO | **Executável** — `scripts/run-harness-line-a-optimized.sh` + `make verify-harness-a-otimizada` (Etapa 34); **não** substitui `verify-harness` |
+| **A pragmática** (harness v1) | Ubuntu no host + `ia-livre-runtime` CPU | **Gate** (`run-harness-line-a.sh`) |
+| **A otimizada** | Mesma carga + checklist isolamento/tuning | **Executável** — `make verify-harness-a-otimizada` (E34); **não** substitui `verify-harness` |
+| **A_gpu** (Etapa 56) | Mesma carga + accel host (`cuda`/`vulkan`, `--n-gpu-layers` > 0) | **Executável** — `make verify-harness-gpu` (opt-in); skip sem GPU |
 
 Otimizar A **melhora a referência**; **não** prova A≻B nem B≻A.
+
+### Checklist mínimo — perfil «Linux otimizado» (Linha A / E34)
+
+1. **Governor:** CPU em `performance` (ou equivalente) durante a corrida.
+2. **Afinidade:** pin do runtime (`taskset` / `isolcpus`) quando possível.
+3. **Ruído de SO:** sessão mínima; anotar thermal/turbo se afetar.
+4. **Runtime:** mesma carga canônica; `--n-gpu-layers 0` neste perfil (CPU).
+5. **Relatório:** `perfil=A_pragmatica` vs `A_otimizada`; `HARNESS_LOAD_S` / `TOKENS_PER_S`.
+
+Variáveis: `IA_LIVRE_HARNESS_N_THREADS`, `IA_LIVRE_HARNESS_TASKSET_CPUS`, `IA_LIVRE_HARNESS_GOVERNOR_SKIP=1`.
 
 ### Carga canônica (inalterada)
 
@@ -22,58 +34,38 @@ Otimizar A **melhora a referência**; **não** prova A≻B nem B≻A.
 | Modelo | TinyLlama 1.1B Chat v1.0 Q4_K_M |
 | Prompt | `Complete em uma frase: O Projeto IA Livre é` |
 | `--n-predict` | `32` |
-| Marcadores | namespace `IA_LIVRE_HARNESS_*` (não `IA_LIVRE_INFER_*`) |
+| Marcadores | namespace `IA_LIVRE_HARNESS_*` |
 
-### Checklist mínimo — perfil «Linux otimizado» (Linha A)
+## Perfil GPU espelhado A/B (Etapa 56)
 
-Repetível no host de medição (ajuste paths/núcleos ao hardware):
+### Linha A — `A_gpu` (host)
 
-1. **Governor:** CPU em `performance` (ou equivalente) durante a corrida.
-2. **Afinidade / isolamento:** pin do processo do runtime a núcleos dedicados (`taskset` / `isolcpus` / cgroup) quando possível; evitar núcleos ruidosos de IRQs se documentado no host.
-3. **Ruído de SO:** fechar cargas pesadas de desktop/background; preferir sessão mínima ou server.
-4. **Termal / turbo:** anotar se thermal throttling ou turboboost afetou a corrida (sem exigir laboratório).
-5. **Runtime:** mesmo binário/carga canônica; `--n-gpu-layers 0` neste perfil (CPU).
-6. **Relatório:** rotular claramente `perfil=A_pragmatica` vs `perfil=A_otimizada`; publicar `HARNESS_LOAD_S` / `HARNESS_TOKENS_PER_S` com a mesma carga.
+- Build com feature `cuda` (canônico se `nvcc`) ou `vulkan` (alternativa).
+- `--n-gpu-layers` > 0 (default `99`).
+- `IA_LIVRE_HARNESS_PROFILE=A_gpu`
+- `IA_LIVRE_HARNESS_ACCEL=cuda|vulkan` (**≠** `cpu`)
+- `IA_LIVRE_HARNESS_LOAD_S` / `TOKENS_PER_S` / `OK`
 
-Itens **fora** deste checklist mínimo: joules, p95 multi-request, campanha científica completa de kernel config.
+Script: `scripts/run-harness-line-a-gpu.sh`.
 
-## Perfil GPU espelhado A/B
+### Linha B — espelho honesto (assimétrico)
 
-### Linha A — host com offload (possível hoje)
+B **gera** tokens subset (E44) no QEMU **sem** acelerador guest.  
+**Proibido:** inventar `HARNESS_ACCEL=cuda|vulkan` em B; inventar espécie canônica.
 
-Mesma carga canônica + aceleração host (ADR 0002):
+Agregação: `scripts/run-harness-a-b-gpu.sh` — A_gpu + B existente; veredito permanece **INCONCLUSIVO** (subset + assimetria accel).
 
-- Build com feature `cuda` (canônico) ou `vulkan` (alternativa).
-- `--n-gpu-layers` > 0 (ex. `99` pragmático).
-- Marcadores sugeridos: `IA_LIVRE_HARNESS_ACCEL=cuda|vulkan` (além de `LINE=A`, `OK`, load/tokens).
-- **Não** confundir com [`runtime-inferencia-gpu-metricas.md`](runtime-inferencia-gpu-metricas.md) (Etapa 8 / `IA_LIVRE_INFER_*`) — namespace do harness é distinto, mesmo motor.
+### Skip
 
-### Linha B — espelho GPU (futuro)
-
-Espelho GPU em B **só** quando existir caminho de inferência GGUF (e acelerador) **real** no IA Livre.  
-Hoje B = proxy pós-ExitBoot → **proibido** inventar `TOKENS_PER_S` / load GGUF / ACCEL GPU no proxy.
-
-Até lá: GPU-B = **roadmap de medição**, não execução no gate.
-
-### Fronteiras
-
-| Doc / ADR | Papel |
-|------------|--------|
-| Etapa 8 / ADR 0002 | Prova de caminho GPU **host** (protótipo) |
-| ADR 0006 | GPU manager / multi-GPU nativo — **desenho**; não implementar aqui |
-| Este perfil | Metodologia de medição do **harness** |
+| Variável | Efeito |
+|----------|--------|
+| `VERIFY_HARNESS_GPU_SKIP=1` | Skip exit 0 |
+| Sem GPU / falha build feature | `IA_LIVRE_HARNESS_GPU_SKIP=…` exit 0 |
 
 ## Gate
 
-**Default:** `make verify-harness` (A CPU pragmática + B).  
-**A_otimizada (Etapa 34):** `make verify-harness-a-otimizada` — opt-in; exige `PROFILE=A_otimizada` + métricas honestas; governor/taskset podem ser `SKIP` sem fingir sucesso.
+**Default:** `make verify-harness` (A CPU + B).  
+**A_otimizada:** `make verify-harness-a-otimizada`.  
+**A_gpu + B (Etapa 56):** `make verify-harness-gpu` — opt-in; **não** substitui v1.
 
-Comparable com A otimizada:
-
-```bash
-IA_LIVRE_HARNESS_A_PROFILE=A_otimizada make verify-harness-comparable
-```
-
-Variáveis úteis: `IA_LIVRE_HARNESS_N_THREADS`, `IA_LIVRE_HARNESS_TASKSET_CPUS`, `IA_LIVRE_HARNESS_GOVERNOR_SKIP=1`.
-
-GPU A/B espelhado continua metodologia / roadmap — **sem** inventar `TOKENS_PER_S` em B.
+Anti-fraude: sem `COMPROVA`/`REFUTA` por este perfil; sem ACCEL GPU fingido em B.

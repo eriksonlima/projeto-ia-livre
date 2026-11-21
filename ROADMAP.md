@@ -416,3 +416,11 @@ Spec: specs/gpu-real-nativo/
 Pronto quando: detecção/placement com GPU real (PCI/pass-through ou host path documentado) **ou** skip `need_gpu` honesto; ≠ stub E25; sem fingir multi-GPU.  
 **Desfecho:** path B `SRC=host` + `GPU_REAL_OK` (ou `NEED_GPU`); `make verify-gpu-native-real`; ≠ synthetic/E25; E38 intacto.
 
+## Etapa 56 — Perfil harness GPU espelhado A/B (quando B gerar)
+
+Status: feita  
+Issue: [#56](https://github.com/eriksonlima/projeto-ia-livre/issues/56)  
+Spec: specs/harness-perfil-gpu-ab/  
+Pronto quando: corrida A/B com perfil GPU documentado e métricas honestas; skip se sem GPU; deps geração em B.  
+**Desfecho:** `A_gpu` (vulkan/cuda) + B subset → `INCONCLUSIVO`; `make verify-harness-gpu`; skip sem GPU; sem ACCEL fingido em B.
+

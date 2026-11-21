@@ -476,7 +476,7 @@ grep -q 'IA_LIVRE_HARNESS_VERDICT' scripts/run-harness-a-b-comparable.sh
 grep -q 'VERDICT_REASON' scripts/run-harness-a-b-comparable.sh
 ```
 
-`make verify-harness-comparable` exige `VERDICT=` ∈ {COMPROVA, REFUTA, INCONCLUSIVO} + `VERDICT_REASON=`; falha se `COMPROVA`/`REFUTA` com B proxy ou se o runner exit ≠ 0 (fraude/timeout). Timeout: `VERIFY_HARNESS_COMPARABLE_TIMEOUT` (default 300s). `make verify-harness` (v1) permanece. Perfil A otimizada: `make verify-harness-a-otimizada` (opt-in; não substitui o gate v1).
+`make verify-harness-comparable` exige `VERDICT=` ∈ {COMPROVA, REFUTA, INCONCLUSIVO} + `VERDICT_REASON=`; falha se `COMPROVA`/`REFUTA` com B proxy ou se o runner exit ≠ 0 (fraude/timeout). Timeout: `VERIFY_HARNESS_COMPARABLE_TIMEOUT` (default 300s). `make verify-harness` (v1) permanece. Perfil A otimizada: `make verify-harness-a-otimizada` (opt-in; não substitui o gate v1). Perfil A_gpu + B: `make verify-harness-gpu` (opt-in; skip sem GPU; veredito `INCONCLUSIVO` com assimetria).
 
 ### Gate da imagem ESP/USB (Etapa 30 — adicional)
 

@@ -18,12 +18,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 
 
-### B50 — Perfil harness GPU espelhado A/B (quando B gerar)
-- Issue: [#56](https://github.com/eriksonlima/projeto-ia-livre/issues/56)
-
-- Origem: E18 metodologia; prova hipótese com aceleração
-- Pronto quando: corrida A/B com perfil GPU documentado e métricas honestas; skip se sem GPU; deps geração em B
-- Deps: B39; E8/E18
 
 ### B51 — Guia “primeiro boot USB” + release de artefato
 - Issue: [#57](https://github.com/eriksonlima/projeto-ia-livre/issues/57)
@@ -40,6 +34,16 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: B39 + B40 + B42 (mínimo sugerido)
 
 ## Promovidas / arquivadas
+
+### B50 — Perfil harness GPU espelhado A/B (quando B gerar)
+- Issue: [#56](https://github.com/eriksonlima/projeto-ia-livre/issues/56)
+
+- Origem: E18 metodologia; prova hipótese com aceleração
+- Pronto quando: corrida A/B com perfil GPU documentado e métricas honestas; skip se sem GPU; deps geração em B
+- Deps: B39; E8/E18
+
+- Promovido para Etapa 56 do roadmap (promoção autônoma após E55).
+- Etapa: [Etapa 56 — harness GPU](ROADMAP.md)
 
 ### B49 — GPU real no caminho nativo (além de `synthetic`)
 - Issue: [#55](https://github.com/eriksonlima/projeto-ia-livre/issues/55)

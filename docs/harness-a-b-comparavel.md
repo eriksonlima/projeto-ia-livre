@@ -103,4 +103,6 @@ Com B = proxy + Prefill multi/KV subset (Etapa 43, `no_gguf_prefill_22l`): o ins
 
 **A_otimizada (opt-in, Etapa 34):** `IA_LIVRE_HARNESS_A_PROFILE=A_otimizada` usa `run-harness-line-a-optimized.sh` no lado A; veredito permanece honesto (ainda `INCONCLUSIVO` enquanto B não tiver tokens). Gate dedicado: `make verify-harness-a-otimizada`.
 
+**A_gpu (opt-in, Etapa 56):** perfil harness GPU — A com accel host + B subset assimétrico → `INCONCLUSIVO` (`E56_A_gpu_B_subset_accel_asymmetric`). Gate: `make verify-harness-gpu`. **Não** prova hipótese; sem ACCEL GPU fingido em B.
+
 Para medição sem contenção de benchmarks: seguir [`harness-corrida-quieta.md`](harness-corrida-quieta.md).
