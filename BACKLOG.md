@@ -12,11 +12,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 >
 > **Análise pós-E60 (2026-11-21):** E59/0020 + E60/0021 — espécie canônica inviável no gate atual. Ordem: **B58** (bloqueio final pilar 1) → metal (B56/B57) → resto. **B55** adiada (deps espécie canônica).
 
-### B58 — Bloqueio final documentado da hipótese A/B
-- Issue: [#64](https://github.com/eriksonlima/projeto-ia-livre/issues/64)
-- Origem: alternativa E58 se espécie canônica continuar inviável após B53; reforçado por ADR 0020/0021
-- Pronto quando: ADR/doc declara espécie **terminalmente** inviável (ou caminho reaberto); instrumento honesto; sem fingir `COMPROVA`; espelho checklist E58 pilar 1
-- Deps: E59/E60; ADR 0020/0021; E58
 
 ### B56 — Evidência METAL_OK em PC real
 - Issue: [#62](https://github.com/eriksonlima/projeto-ia-livre/issues/62)
@@ -92,6 +87,14 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: E58
 
 ## Promovidas / arquivadas
+
+### B58 — Bloqueio final documentado da hipótese A/B
+- Issue: [#64](https://github.com/eriksonlima/projeto-ia-livre/issues/64)
+- Origem: alternativa E58 se espécie canônica continuar inviável após B53; reforçado por ADR 0020/0021
+- Pronto quando: ADR/doc declara espécie **terminalmente** inviável (ou caminho reaberto); instrumento honesto; sem fingir `COMPROVA`; espelho checklist E58 pilar 1
+- Deps: E59/E60; ADR 0020/0021; E58
+- Promovido para Etapa 61 do roadmap (promoção autônoma após E60/ADR 0021).
+- Etapa: [Etapa 61 — bloqueio final hipótese A/B](ROADMAP.md)
 
 ### B54 — Espécie canônica Linha B (22L × n_predict=32)
 - Issue: [#60](https://github.com/eriksonlima/projeto-ia-livre/issues/60)

@@ -456,3 +456,10 @@ Spec: specs/especie-canonica-linha-b/
 Pronto quando: `make verify-harness-comparable` com B `PREFILL_LAYERS=22` + `N_PREDICT=32` + veredito ∈ {COMPROVA,REFUTA,INCONCLUSIVO} **sem** reason de teto/subset; **ou** ADR nova (0021) declara espécie canônica inviável no gate atual (pós-E59/0020) com ponte a B58; sem fingir `COMPROVA`.  
 **Desfecho:** ADR [`0021`](docs/adr/0021-especie-canonica-linha-b-inviavel.md) — canônico inviável no gate (pós 0020); comparable permanece teto/`INCONCLUSIVO`; ponte B58; sem `COMPROVA` fingido. README considerado (só docs/AGENTS).
 
+## Etapa 61 — Bloqueio final documentado da hipótese A/B
+
+Status: em_andamento  
+Issue: [#64](https://github.com/eriksonlima/projeto-ia-livre/issues/64)  
+Spec: specs/bloqueio-final-hipotese-ab/  
+Pronto quando: ADR/doc declara espécie/hipótese **terminalmente** inviável no gate atual (ou caminho reaberto explícito); instrumento comparable honesto; checklist E58 pilar 1 atualizado; sem fingir COMPROVA.
+
