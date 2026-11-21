@@ -114,12 +114,13 @@ Com Etapas 19/20 verificáveis no serial QEMU, `scripts/run-harness-line-b.sh`:
 
 `HARNESS_MODEL=` permanece `proxy-post-exit-v1`. Rodar `ia-livre-runtime` no host continua sendo **Linha A**.
 
-### Estado atual (após Etapa 27 — BlockIO full + stub)
+### Estado atual (após Etapa 29 — runtime-native + layout)
 
-- ~~`no_gguf_path` / `esp_header`~~ — Etapa 26+27: prefixo no ESP + **GGUF completo** via disco raw QEMU (`build/gguf-canon.gguf`) + BlockIO (ADR [`0009`](adr/0009-inferencia-linha-b-fatia-minima.md)). Motivo do pivô: `fat:rw` QEMU = FAT16 ~516 MiB < ~638 MiB.
-- **Loader:** `GGUF_NATIVE_LOADER=blockio_full`; `GGUF_STATUS=tensors_stub_ok`; `GGUF_TENSORS_STUB_OK`.
-- **Bloqueio residual:** `B_BLOCK=no_gguf_infer_engine` — arquivo+parse stub ok; **sem** motor / `TOKENS_PER_S` em B.
-- QEMU: `-m 1536M`. Proxy E12 permanece. Hipótese **não** comprovada.
+- Loader E26/E27: GGUF completo via BlockIO (`blockio_full`) — ADR [`0009`](adr/0009-inferencia-linha-b-fatia-minima.md).
+- **Motor:** crate `ia-livre-runtime-native` (`runtime-native/`) — ADR [`0010`](adr/0010-runtime-nativo-freestanding-linha-b.md) / [`desenho-motor-inferencia-linha-b.md`](desenho-motor-inferencia-linha-b.md).
+- **Layout:** parse avançado → `GGUF_STATUS=layout_ok` / `RUNTIME_NATIVE_LAYOUT_OK` (além do stub E27).
+- **Bloqueio residual:** `B_BLOCK=no_gguf_forward` — layout ok; **sem** forward/sampling TinyLlama → **sem** `TOKENS_PER_S` em B.
+- QEMU: `-m 1536M`. Proxy E12 permanece (`LOAD_KIND=proxy`). Hipótese **não** comprovada.
 
 ### Loader GGUF nativo mínimo (Etapa 26)
 

@@ -32,9 +32,9 @@ make verify-harness
 make verify-harness-comparable
 ```
 
-Sucesso `verify-harness`: `GATE_OK` com B `GGUF_NATIVE_LOADER=blockio_full`, `GGUF_STATUS=tensors_stub_ok`, `B_BLOCK=no_gguf_infer_engine`, `LOAD_KIND=proxy` — **sem** `TOKENS_PER_S` / `LOAD_S` em B.
+Sucesso `verify-harness`: `GATE_OK` com B `GGUF_NATIVE_LOADER=blockio_full`, `GGUF_STATUS=layout_ok`, `B_BLOCK=no_gguf_forward`, `LOAD_KIND=proxy` — **sem** `TOKENS_PER_S` / `LOAD_S` em B.
 
-Sucesso `verify-harness-comparable` (estado atual): `VERDICT=INCONCLUSIVO` + reason `…E27_no_gguf_infer_engine`.
+Sucesso `verify-harness-comparable` (estado atual): `VERDICT=INCONCLUSIVO` + reason `…E29_no_gguf_forward`.
 
 Preflight quieto: aviso se QEMU/`verify-*` concorrente; `IA_LIVRE_HARNESS_QUIET_STRICT=1` falha; `IA_LIVRE_HARNESS_QUIET_FORCE=1` override.
 

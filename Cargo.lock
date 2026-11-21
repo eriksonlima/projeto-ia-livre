@@ -307,6 +307,7 @@ version = "0.1.0"
 name = "ia-livre-kernel"
 version = "0.1.0"
 dependencies = [
+ "ia-livre-runtime-native",
  "log",
  "uefi",
 ]
@@ -331,6 +332,10 @@ dependencies = [
 
 [[package]]
 name = "ia-livre-runtime-contract"
+version = "0.1.0"
+
+[[package]]
+name = "ia-livre-runtime-native"
 version = "0.1.0"
 
 [[package]]

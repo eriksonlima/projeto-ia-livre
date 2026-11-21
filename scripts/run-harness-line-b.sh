@@ -25,6 +25,10 @@ have_ready() {
     && grep -q 'IA_LIVRE_GGUF_HEADER_OK' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_GGUF_NATIVE_LOADER=blockio_full' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_GGUF_TENSORS_STUB_OK' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_NATIVE_INFER_BEGIN' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_RUNTIME_NATIVE_LAYOUT_OK' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_GGUF_STATUS=layout_ok' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_impl' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_TYPED_WEIGHTS_OK' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_TYPED_KVCACHE_OK' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_PHASE=prefill' "$LOG" 2>/dev/null \
@@ -51,7 +55,7 @@ wait "$QEMU_PID" 2>/dev/null || true
 QEMU_PID=
 
 if ! have_ready; then
-  echo "HARNESS_FAIL: Linha B — serial sem EXIT_BOOT_OK + GGUF blockio_full + MEM_SCHED_* + NATIVE_BENCH_*" >&2
+  echo "HARNESS_FAIL: Linha B — serial sem EXIT_BOOT_OK + blockio_full + LAYOUT_OK + MEM_SCHED_* + NATIVE_BENCH_*" >&2
   echo "---- serial (últimas 40 linhas) ----" >&2
   tail -n 40 "$LOG" >&2 || true
   exit 1
@@ -102,15 +106,25 @@ if [[ -f "$GGUF_HOST_PATH" ]]; then
 else
   echo "IA_LIVRE_HARNESS_GGUF_HOST_FILE=absent"
 fi
-# Etapa 27: loader ESP arquivo completo + stub tensores; ainda sem motor/geração.
+# Etapa 29: layout via runtime-native; forward ainda ausente → no_gguf_forward.
 LOADER="$(grep -oE 'IA_LIVRE_GGUF_NATIVE_LOADER=[a-z0-9_]+' "$LOG" | head -1 | cut -d= -f2)"
 LOADER="${LOADER:-blockio_full}"
-STATUS="$(grep -oE 'IA_LIVRE_GGUF_STATUS=[a-z0-9_]+' "$LOG" | head -1 | cut -d= -f2)"
-STATUS="${STATUS:-tensors_stub_ok}"
+# Preferir status pós-layout (layout_ok); senão último GGUF_STATUS do serial.
+STATUS="$(grep -oE 'IA_LIVRE_GGUF_STATUS=layout_ok' "$LOG" | head -1 | cut -d= -f2)"
+if [[ -z "$STATUS" ]]; then
+  STATUS="$(grep -oE 'IA_LIVRE_GGUF_STATUS=[a-z0-9_]+' "$LOG" | tail -1 | cut -d= -f2)"
+fi
+STATUS="${STATUS:-layout_ok}"
 echo "IA_LIVRE_HARNESS_GGUF_NATIVE_LOADER=${LOADER}"
+if grep -q 'IA_LIVRE_RUNTIME_NATIVE_LAYOUT_OK' "$LOG"; then
+  echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_LAYOUT=OK"
+fi
+if grep -q 'IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_impl' "$LOG"; then
+  echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_FORWARD_FAIL=no_impl"
+fi
 
 echo "IA_LIVRE_HARNESS_OK"
-B_BLOCK_REASON="${IA_LIVRE_HARNESS_B_BLOCK:-no_gguf_infer_engine}"
+B_BLOCK_REASON="${IA_LIVRE_HARNESS_B_BLOCK:-no_gguf_forward}"
 echo "IA_LIVRE_HARNESS_B_BLOCK=${B_BLOCK_REASON}"
 echo "IA_LIVRE_HARNESS_GGUF_STATUS=${STATUS}"
 if [[ "${IA_LIVRE_HARNESS_B_MODE:-}" == "block-status" ]]; then

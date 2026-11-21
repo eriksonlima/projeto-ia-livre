@@ -9,3 +9,4 @@ description = "Kernel mínimo do IA Livre (bootstrap UEFI)"
 [dependencies]
 uefi = { version = "0.33", features = ["panic_handler", "logger"] }
 log = "0.4"
+ia-livre-runtime-native = { path = "../runtime-native" }

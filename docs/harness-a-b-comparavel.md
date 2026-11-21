@@ -99,6 +99,6 @@ Detalhes: `AGENTS.md` → Como rodar / Como verificar (Etapa 22).
 
 ## Estado atual (host de referência)
 
-Com B = proxy + BlockIO stub (Etapa 27, `no_gguf_infer_engine`): o instrumento **deve** emitir `INCONCLUSIVO` (reason `…E27_no_gguf_infer_engine`). Hipótese **não** comprovada nem refutada.
+Com B = proxy + layout (Etapa 29, `no_gguf_forward`): o instrumento **deve** emitir `INCONCLUSIVO` (reason apontando ausência de `TOKENS_PER_S` / `no_gguf_forward`). Hipótese **não** comprovada nem refutada.
 
 Para medição sem contenção de benchmarks: seguir [`harness-corrida-quieta.md`](harness-corrida-quieta.md).

@@ -181,7 +181,7 @@ Gate automatizado: `make verify-agent` (não exige QEMU/UEFI nem o nó P2P; requ
 Metodologia: [`docs/harness-linha-a-b.md`](docs/harness-linha-a-b.md); caminho B mínimo: [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md); contrato: [`docs/runtime-contrato-nativo.md`](docs/runtime-contrato-nativo.md).  
 **Não** confundir com métricas dos protótipos CPU/GPU. Linha A = host + GGUF; Linha B = proxy pós-ExitBoot no QEMU **+** evidência `MEM_SCHED` (E19) reemitida como `HARNESS_CONTRACT_*` (**não** TinyLlama).  
 **Etapa 21:** deps 19/20 ok (`CONTRACT_READY=1`); bloqueio histórico `no_gguf_path`.  
-**Etapa 26/27:** loader ESP → BlockIO full (`GGUF_NATIVE_LOADER=blockio_full`, `GGUF_STATUS=tensors_stub_ok`, `B_BLOCK=no_gguf_infer_engine`) — GGUF completo + stub; **ainda sem** `TOKENS_PER_S` em B. Specs: `specs/loader-gguf-nativo-linha-b/`, `specs/inferencia-minima-linha-b/`. Hipótese **não** comprovada.
+**Etapa 26/27/29:** loader BlockIO full + crate `runtime-native` (`GGUF_NATIVE_LOADER=blockio_full`, `GGUF_STATUS=layout_ok`, `B_BLOCK=no_gguf_forward`) — layout além do stub; **ainda sem** forward/`TOKENS_PER_S` em B. Spec: `specs/motor-inferencia-linha-b/`. Hipótese **não** comprovada.
 
 Pré-requisitos: runtime CPU (GGUF) para A; QEMU/OVMF para B. Sem GPU no harness v1.
 
@@ -199,8 +199,8 @@ cargo build -p ia-livre-runtime
 ./scripts/run-harness-line-b.sh
 ```
 
-Linha B: proxy E12 **preservado** (`LOAD_KIND=proxy`) + contrato E19 (`HARNESS_CONTRACT_*`, `CONTRACT_READY=1`) + loader BlockIO (`GGUF_NATIVE_LOADER=blockio_full`, `GGUF_STATUS=tensors_stub_ok`, `B_BLOCK=no_gguf_infer_engine`).  
-**Proibido** `TOKENS_PER_S` / `LOAD_KIND=gguf` / `MODEL=` TinyLlama sem motor real. Opcional: `IA_LIVRE_HARNESS_B_MODE=block-status` → `LOAD_KIND_GGUF=blocked`. Ver [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md). Hipótese **não** comprovada.
+Linha B: proxy E12 **preservado** (`LOAD_KIND=proxy`) + contrato E19 (`HARNESS_CONTRACT_*`, `CONTRACT_READY=1`) + loader BlockIO + layout (`GGUF_NATIVE_LOADER=blockio_full`, `GGUF_STATUS=layout_ok`, `B_BLOCK=no_gguf_forward`).  
+**Proibido** `TOKENS_PER_S` / `LOAD_KIND=gguf` / `MODEL=` TinyLlama sem forward real. Opcional: `IA_LIVRE_HARNESS_B_MODE=block-status` → `LOAD_KIND_GGUF=blocked`. Ver [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md). Hipótese **não** comprovada.
 
 Gate automatizado: `make verify-harness` (A = GGUF; B = proxy + contrato + bloqueio GGUF; requer GGUF para A).
 
@@ -262,7 +262,7 @@ grep -q 'IA_LIVRE_TYPED_WEIGHTS_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_NATIVE_BENCH_OK' kernel/src/main.rs
 ```
 
-`make verify` falha se faltarem BOOT/MEM/ALLOC/EXIT_* / `GGUF_MAGIC_OK` + `GGUF_NATIVE_LOADER=blockio_full` (Etapa 27) / `MEM_SCHED_OK` (Etapa 19) / `NATIVE_BENCH_OK` (proxy Linha B). Timeout padrão 45s; `VERIFY_TIMEOUT`.
+`make verify` falha se faltarem BOOT/MEM/ALLOC/EXIT_* / `GGUF_MAGIC_OK` + `GGUF_NATIVE_LOADER=blockio_full` / `RUNTIME_NATIVE_LAYOUT_OK` (Etapa 29) / `MEM_SCHED_OK` (Etapa 19) / `NATIVE_BENCH_OK` (proxy Linha B). Timeout padrão 45s (GGUF: use `VERIFY_TIMEOUT` maior); `VERIFY_TIMEOUT`.
 
 ### Gate do runtime (Etapa 5 — adicional)
 
@@ -378,7 +378,7 @@ grep -q 'post_exit_microbench' scripts/run-harness-line-b.sh
 grep -q 'HARNESS_CONTRACT_BACKEND=native_qemu' scripts/run-harness-line-b.sh
 ```
 
-`make verify-harness` exige A (`LINE=A`, `OK`, load/tokens) **e** B (`LINE=B`, `OK`, `PROXY=*`, `HARNESS_CONTRACT_MEM_SCHED=OK`, `CONTRACT_READY=1`, `GGUF_TARGET_*`, `GGUF_NATIVE_LOADER=blockio_full`, `GGUF_STATUS=tensors_stub_ok`, `B_BLOCK=no_gguf_infer_engine`, sem `TOKENS_PER_S` / sem `LOAD_S` / sem `B_SKIP` / sem `LOAD_KIND=gguf` fingido). Timeout padrão 300s; `VERIFY_HARNESS_TIMEOUT`. Gates existentes permanecem.
+`make verify-harness` exige A (`LINE=A`, `OK`, load/tokens) **e** B (`LINE=B`, `OK`, `PROXY=*`, `HARNESS_CONTRACT_MEM_SCHED=OK`, `CONTRACT_READY=1`, `GGUF_TARGET_*`, `GGUF_NATIVE_LOADER=blockio_full`, `GGUF_STATUS=layout_ok`, `B_BLOCK=no_gguf_forward`, sem `TOKENS_PER_S` / sem `LOAD_S` / sem `B_SKIP` / sem `LOAD_KIND=gguf` fingido). Timeout padrão 300s; `VERIFY_HARNESS_TIMEOUT`. Gates existentes permanecem.
 
 ### Gate do contrato nativo host (Etapa 20 — adicional)
 
@@ -439,7 +439,8 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `node/` — nó Rede IA Livre v1 (host; ed25519/PeerId; independente do SO)
 - `agent/` — autonomia v1 (host; `--prompt`, allowlist note/recall/help, política N=8; consome runtime; independente do SO)
 - `models/` — pesos GGUF locais (gitignored); obter com `./scripts/fetch-model.sh`
-- `Cargo.toml` — workspace Cargo (membros `kernel`, `runtime`, `runtime-contract`, `node`, `agent`)
+- `runtime-native/` — runtime freestanding Linha B (Etapa 29; layout GGUF; forward futuro; ≠ host `runtime/`)
+- `Cargo.toml` — workspace Cargo (membros `kernel`, `runtime`, `runtime-contract`, `runtime-native`, `node`, `agent`)
 - `docs/rede-ia-livre-v1.md` — contrato protocolo Rede IA Livre v1 (Etapa 23)
 - `docs/rede-ia-livre-prototipo.md` — histórico do protótipo P2P (Etapa 6)
 - `docs/desenho-protocolo-rede-ia-livre.md` — desenho Rede IA Livre v1 (ADR 0004; checklist mínimo implementado na E23)

@@ -601,6 +601,50 @@ fn main() -> Status {
             // Etapa 19 — memória tipada + Prefill/Decode (≠ NATIVE_BENCH / ≠ geração GGUF).
             let _ = run_mem_sched_demo(proof_base, proof_cap, gguf_prefix);
 
+            // Etapa 29 — runtime-native (ADR 0010): layout + tentativa de forward.
+            uart_write("IA_LIVRE_NATIVE_INFER_BEGIN\n");
+            if let Some((p, n)) = gguf_prefix {
+                if n > GGUF_PREFIX_MAX {
+                    let slice = core::slice::from_raw_parts(p.as_ptr(), n);
+                    match ia_livre_runtime_native::prepare(slice) {
+                        Ok(layout) => {
+                            uart_emit_kv(
+                                "IA_LIVRE_GGUF_TENSOR_COUNT=",
+                                layout.tensor_count,
+                            );
+                            uart_emit_kv(
+                                "IA_LIVRE_RUNTIME_NATIVE_TENSORS_PARSED=",
+                                layout.tensors_parsed,
+                            );
+                            uart_emit_kv(
+                                "IA_LIVRE_RUNTIME_NATIVE_DATA_OFF=",
+                                layout.data_offset as u64,
+                            );
+                            uart_write("IA_LIVRE_RUNTIME_NATIVE_LAYOUT_OK\n");
+                            uart_write("IA_LIVRE_GGUF_STATUS=layout_ok\n");
+                            match ia_livre_runtime_native::try_forward_canonical(&layout) {
+                                Ok(()) => {
+                                    uart_write("IA_LIVRE_RUNTIME_NATIVE_OK\n");
+                                }
+                                Err(ia_livre_runtime_native::ForwardError::NoForwardImpl) => {
+                                    uart_write(
+                                        "IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_impl\n",
+                                    );
+                                }
+                            }
+                        }
+                        Err(_) => {
+                            uart_write("IA_LIVRE_RUNTIME_NATIVE_LAYOUT_FAIL\n");
+                            uart_write("IA_LIVRE_GGUF_STATUS=tensors_stub_ok\n");
+                        }
+                    }
+                } else {
+                    uart_write("IA_LIVRE_RUNTIME_NATIVE_SKIP=esp_header_only\n");
+                }
+            } else {
+                uart_write("IA_LIVRE_RUNTIME_NATIVE_SKIP=no_gguf\n");
+            }
+
             // Etapa 12 — proxy Linha B (não é inferência / TinyLlama).
             uart_write("IA_LIVRE_NATIVE_BENCH_BEGIN\n");
             let (ops, ms) = run_native_bench(proof_base, proof_cap);

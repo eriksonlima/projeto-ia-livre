@@ -2,22 +2,21 @@
 
 ## Foco atual
 
-- Etapas **1–28 feitas**
-- Backlog **Abertas vazio**
+- Etapas **1–29 feitas**
+- Backlog Abertas: **B24** (boot hardware real) — não promovido
 - Lease: livre
-- Hipótese A vs B: ainda **INCONCLUSIVO** (`no_gguf_infer_engine`)
+- Hipótese: **INCONCLUSIVO** (`B_BLOCK=no_gguf_forward`)
 
 ## Mudanças recentes
 
-- E27: BlockIO full + stub tensores
-- E28: protocolo corrida quieta + evidência + preflight
-- Métricas A quietas: ~15.4 tok/s nesta corrida E28
+- E29: crate `runtime-native`, layout GGUF, forward ainda `no_impl`
+- ADR 0010
 
 ## Próximo passo
 
-- Pedido explícito ou novo item em `BACKLOG.md` — tipicamente **motor de inferência em B** para sair de `no_gguf_infer_engine`
-- Não inventar etapa
+- Promover B24 **ou** novo item **forward TinyLlama / TOKENS_PER_S em B** (sair de `no_gguf_forward`)
+- Pedido explícito / “continuar” promove o topo (B24) — se a prioridade for motor, reordenar backlog antes
 
 ## Notas
 
-- Um gate por vez (`docs/harness-corrida-quieta.md`)
+- Um gate por vez (`harness-corrida-quieta.md`)

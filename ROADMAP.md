@@ -199,3 +199,11 @@ Issue: [#28](https://github.com/eriksonlima/projeto-ia-livre/issues/28)
 Spec: specs/recorrida-harness-quieta/  
 Pronto quando: procedimento de medição serial/quieto documentado; corrida A+B verificável sob esse protocolo; `VERDICT` honesto (`COMPROVA`/`REFUTA`/`INCONCLUSIVO`) sem contenção de benchmarks concorrentes; sem inventar `TOKENS_PER_S` em B enquanto `no_gguf_infer_engine`.  
 **Desfecho:** protocolo + preflight + evidência quieta; `VERDICT=INCONCLUSIVO` (sem motor B).
+
+## Etapa 29 — Motor de inferência GGUF mínimo na Linha B
+
+Status: feita  
+Issue: [#29](https://github.com/eriksonlima/projeto-ia-livre/issues/29)  
+Spec: specs/motor-inferencia-linha-b/  
+Pronto quando: geração mínima na Linha B (QEMU/IA Livre) com a carga canônica emitindo `TOKENS_PER_S` / `LOAD_S` **medidos** comparáveis em espécie aos de A; harness B + comparable atualizados sem inventar números; ADR 0001 respeitado (runtime nativo fora do kernel); ou bloqueio honesto novo documentado; depende do loader E26/E27.  
+**Desfecho:** crate `runtime-native` + layout GGUF verificável; `B_BLOCK=no_gguf_forward` (sem forward/TOKENS); hipótese INCONCLUSIVO.

@@ -100,14 +100,16 @@ for marker in \
   'IA_LIVRE_HARNESS_GGUF_TARGET_MODEL=' \
   'IA_LIVRE_HARNESS_GGUF_TARGET_N_PREDICT=32' \
   'IA_LIVRE_HARNESS_GGUF_NATIVE_LOADER=blockio_full' \
-  'IA_LIVRE_HARNESS_GGUF_STATUS=tensors_stub_ok'; do
+  'IA_LIVRE_HARNESS_GGUF_STATUS=layout_ok' \
+  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_LAYOUT=OK' \
+  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_FORWARD_FAIL=no_impl'; do
   if ! grep -q "$marker" "$LOG_B"; then
     echo "GATE_FAIL: marcador ausente na Linha B: $marker"
     fail=1
   fi
 done
 if ! grep -q 'IA_LIVRE_HARNESS_GGUF_NATIVE_LOADER=blockio_full' "$LOG_B"; then
-  echo "GATE_FAIL: Etapa 27 exige GGUF_NATIVE_LOADER=blockio_full (disco raw + stub)"
+  echo "GATE_FAIL: Etapa 29 exige GGUF_NATIVE_LOADER=blockio_full"
   fail=1
 fi
 
@@ -133,17 +135,17 @@ if grep -qE 'IA_LIVRE_HARNESS_LOAD_KIND=gguf' "$LOG_B"; then
   echo "GATE_FAIL: B emitiu LOAD_KIND=gguf sem caminho GGUF real implementado"
   fail=1
 fi
-# Bloqueio residual honesto: path existe; inferência ainda não (Etapa 26)
+# Bloqueio residual honesto: layout ok; forward ainda não (Etapa 29)
 if ! grep -q 'IA_LIVRE_HARNESS_B_BLOCK=' "$LOG_B"; then
-  echo "GATE_FAIL: B deve declarar B_BLOCK= (estado honesto; ex. no_gguf_infer)"
+  echo "GATE_FAIL: B deve declarar B_BLOCK= (estado honesto)"
   fail=1
 fi
-if grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=(no_gguf_path|awaiting_b13_b14|no_gguf_infer)$' "$LOG_B"; then
-  echo "GATE_FAIL: B_BLOCK legado — Etapa 27 exige no_gguf_infer_engine"
+if grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=(no_gguf_path|awaiting_b13_b14|no_gguf_infer|no_gguf_infer_engine)$' "$LOG_B"; then
+  echo "GATE_FAIL: B_BLOCK legado — Etapa 29 exige no_gguf_forward"
   fail=1
 fi
-if ! grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=no_gguf_infer_engine' "$LOG_B"; then
-  echo "GATE_FAIL: B_BLOCK deve ser no_gguf_infer_engine (arquivo/stub ok; sem motor)"
+if ! grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=no_gguf_forward' "$LOG_B"; then
+  echo "GATE_FAIL: B_BLOCK deve ser no_gguf_forward (layout ok; sem forward)"
   fail=1
 fi
 
@@ -152,5 +154,5 @@ if (( fail )); then
   exit 1
 fi
 
-echo "GATE_OK: harness — A (GGUF) ok + B (proxy + CONTRACT_READY + loader blockio_full + stub) ok — hipótese NÃO comprovada"
+echo "GATE_OK: harness — A (GGUF) ok + B (proxy + layout runtime-native + no_gguf_forward) ok — hipótese NÃO comprovada"
 exit 0

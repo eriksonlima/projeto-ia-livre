@@ -16,6 +16,10 @@ MARKERS=(
   "IA_LIVRE_GGUF_HEADER_OK"
   "IA_LIVRE_GGUF_NATIVE_LOADER=blockio_full"
   "IA_LIVRE_GGUF_TENSORS_STUB_OK"
+  "IA_LIVRE_NATIVE_INFER_BEGIN"
+  "IA_LIVRE_RUNTIME_NATIVE_LAYOUT_OK"
+  "IA_LIVRE_GGUF_STATUS=layout_ok"
+  "IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_impl"
   "IA_LIVRE_TYPED_WEIGHTS_OK"
   "IA_LIVRE_TYPED_KVCACHE_OK"
   "IA_LIVRE_PHASE=prefill"
@@ -59,7 +63,7 @@ while (( SECONDS < deadline )); do
     kill -KILL "$QEMU_PID" 2>/dev/null || true
     wait "$QEMU_PID" 2>/dev/null || true
     QEMU_PID=
-    echo "GATE_OK: kernel — BOOT_OK … EXIT_BOOT_OK + GGUF blockio_full + MEM_SCHED_OK + NATIVE_BENCH_OK"
+    echo "GATE_OK: kernel — BOOT_OK … EXIT_BOOT_OK + GGUF blockio_full + LAYOUT_OK + MEM_SCHED_OK + NATIVE_BENCH_OK"
     exit 0
   fi
   if ! kill -0 "$QEMU_PID" 2>/dev/null; then

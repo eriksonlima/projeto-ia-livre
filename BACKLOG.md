@@ -8,13 +8,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-### B23 — Motor de inferência GGUF mínimo na Linha B
-
-- Issue: [#29](https://github.com/eriksonlima/projeto-ia-livre/issues/29)
-- Origem: plano «Estado do projeto e caminho à frente» — desbloquear `B_BLOCK=no_gguf_infer_engine`
-- Notas: ADR 0001 (runtime nativo fora do kernel); mesma carga canônica que A; proibido inventar `TOKENS_PER_S`
-- Pronto quando (candidato): geração mínima em B com `TOKENS_PER_S`/`LOAD_S` medidos comparáveis em espécie aos de A; harness/comparable atualizados; ou bloqueio honesto novo sem fraude
-
 ### B24 — Boot/imagem IA Livre em hardware real (USB/ESP)
 
 - Issue: [#30](https://github.com/eriksonlima/projeto-ia-livre/issues/30)
@@ -23,6 +16,12 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Pronto quando (candidato): boot documentado/verificável em hardware UEFI real (ou bloqueio honesto)
 
 ## Promovidas / arquivadas
+
+### B23 — Motor de inferência GGUF mínimo na Linha B
+
+- Promovido para Etapa 29 do roadmap (promoção autônoma — plano caminho à frente).
+- Issue: [#29](https://github.com/eriksonlima/projeto-ia-livre/issues/29)
+- Etapa: [Etapa 29 — Motor de inferência GGUF mínimo na Linha B](ROADMAP.md)
 
 ### B22 — Re-corrida harness A vs B quieta (COMPROVA/REFUTA ou INCONCLUSIVO limpo)
 
