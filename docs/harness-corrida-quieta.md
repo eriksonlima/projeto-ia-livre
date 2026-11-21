@@ -4,7 +4,7 @@ Protocolo de **medição serial** para o instrumento comparável (`make verify-h
 
 Ponte: [`harness-a-b-comparavel.md`](harness-a-b-comparavel.md) · Linha B: [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md) · CPU serial: [`runtime-inferencia-cpu-metricas.md`](runtime-inferencia-cpu-metricas.md).
 
-> **Não prova a hipótese.** Enquanto `B_BLOCK=no_gguf_decode` (E32; tokenize/embed/camada ok, sem Prefill/Decode — ADR [`0013`](adr/0013-geracao-canonica-fatiada-linha-b.md)), o veredito válido é **`INCONCLUSIVO`**. Proibido inventar métricas em B.
+> **Não prova a hipótese.** Enquanto `B_BLOCK=no_gguf_full_prefill` (E33; attn+FFN layer0 ok, sem 22L/KV/decode — ADR [`0013`](adr/0013-geracao-canonica-fatiada-linha-b.md)), o veredito válido é **`INCONCLUSIVO`** com reason estrutural (`…22L_kv_inviable`). Proibido inventar métricas em B.
 
 ## Por quê
 
@@ -47,25 +47,25 @@ Timeout: `VERIFY_HARNESS_COMPARABLE_TIMEOUT` (default = `VERIFY_HARNESS_TIMEOUT`
 | Host / loadavg | `0.12 0.34 0.50` |
 | Timeout | `300` |
 | `VERDICT` | `INCONCLUSIVO` |
-| `VERDICT_REASON` | `…E32_no_gguf_decode` |
+| `VERDICT_REASON` | `E33_no_gguf_full_prefill_22L_kv_inviable` |
 | Métricas A | `HARNESS_LOAD_S=` / `HARNESS_TOKENS_PER_S=` |
-| B | `LOADER=blockio_full`, `B_BLOCK=no_gguf_decode` — **sem** `TOKENS_PER_S` |
+| B | `LOADER=blockio_full`, `B_BLOCK=no_gguf_full_prefill` — **sem** `TOKENS_PER_S` |
 
 ## O que NÃO fazer
 
 - Rodar gates/QEMU/runtime em paralelo “para ir mais rápido”
 - Inventar `TOKENS_PER_S` em B (proxy + stub ≠ geração)
-- Declarar `COMPROVA` / `REFUTA` sob `no_gguf_decode`
+- Declarar `COMPROVA` / `REFUTA` sob `no_gguf_full_prefill`
 - Tratar métricas E5/E8 (CPU/GPU host) como veredito A vs B
 - Converter `PROXY_MS` / microbench em tokens
 
-## Expectativa atual (pós-E32)
+## Expectativa atual (pós-E33)
 
 | Lado | Estado |
 |------|--------|
 | A | GGUF host real → load + tokens |
-| B | tokenize + embed + camada parcial; `LOAD_KIND=proxy`; `B_BLOCK=no_gguf_decode` |
-| Veredito | **`INCONCLUSIVO`** (obrigatório até tokens reais em B) |
+| B | attn+FFN+prefill layer0; `LOAD_KIND=proxy`; `B_BLOCK=no_gguf_full_prefill` |
+| Veredito | **`INCONCLUSIVO`** (`E33_…_22L_kv_inviable`) até tokens reais em B |
 
 Quando existir motor GGUF real em B com `TOKENS_PER_S` medidos, este protocolo continua válido; só então `COMPROVA`/`REFUTA` podem entrar (checklist em `harness-a-b-comparavel.md`).
 

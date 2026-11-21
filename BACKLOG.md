@@ -8,13 +8,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-### B27 — Baseline Linha A otimizada (CPU) no gate comparável
-
-- Issue: [#33](https://github.com/eriksonlima/projeto-ia-livre/issues/33)
-- Origem: metodologia E18; referência A ainda fraca
-- Pronto quando: perfil `A_otimizada` documentado + corrida verificável lado a lado
-- Deps: ideal após B25/B26
-
 ### B28 — Boot UEFI em hardware real (evidência serial)
 
 - Issue: [#34](https://github.com/eriksonlima/projeto-ia-livre/issues/34)
@@ -66,6 +59,11 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Pronto quando: `architecture.md` / README-AGENTS refletem estado atual sem ambiguidade
 
 ## Promovidas / arquivadas
+
+### B27 — Baseline Linha A otimizada (CPU) no gate comparável
+
+- Promovido para Etapa 34 do roadmap (promoção autônoma após Etapa 33).
+- Issue: [#33](https://github.com/eriksonlima/projeto-ia-livre/issues/33)
 
 ### B26 — Re-corrida harness A vs B com geração real em B
 

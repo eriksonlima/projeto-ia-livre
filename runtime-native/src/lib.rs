@@ -4,7 +4,9 @@
 #![no_std]
 
 mod attn;
+mod ffn;
 pub use attn::{try_attn_layer0_single, AttnLayerReport, N_HEAD, N_KV_HEAD, HEAD_DIM};
+pub use ffn::{try_ffn_layer0, try_prefill_layer0, FfnLayerReport, PrefillReport};
 
 /// Dimensão de embedding TinyLlama 1.1B.
 pub const N_EMBD: usize = 2048;
@@ -67,6 +69,8 @@ pub enum ForwardError {
     NoGenerate,
     /// Tokenize+embed+camada ok; decode/sampling ainda não (E32 fallback).
     NoDecode,
+    /// Attn+FFN camada 0 ok; Prefill 22 camadas / KV multi-token ainda não (E33).
+    NoFullPrefill,
     TensorNotFound,
     UnsupportedType,
     Truncated,
@@ -391,16 +395,16 @@ pub fn try_layer_partial_canonical(
     })
 }
 
-/// Tentativa de geração canônica — embed+camada ok; decode/sampling ainda não.
+/// Tentativa de geração canônica — E33: attn+FFN layer0; Prefill 22L ainda não.
 pub fn try_forward_canonical(
     gguf: &[u8],
     layout: &LayoutReport,
 ) -> Result<(), ForwardError> {
     let _ = try_forward_partial(gguf, layout)?;
     let _ = try_layer_partial_canonical(gguf, layout)?;
-    // Transformer completo + Prefill/Decode/sampling: inviável sem fraude no prazo
-    // (ADR 0013). Bloqueio residual novo: NoDecode → B_BLOCK=no_gguf_decode.
-    Err(ForwardError::NoDecode)
+    let _ = try_prefill_layer0(gguf, layout)?;
+    // 22 camadas + KV multi-token + decode: NoFullPrefill → B_BLOCK=no_gguf_full_prefill.
+    Err(ForwardError::NoFullPrefill)
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -654,10 +658,7 @@ mod tests {
         assert!(op > 0);
         let partial = try_forward_partial(&data, &layout).expect("partial");
         assert_eq!(partial.tensor_ggml_type, GGML_TYPE_Q4_K);
-        assert!(matches!(
-            try_forward_canonical(&data, &layout),
-            Err(ForwardError::NoDecode)
-        ));
+        // try_forward_canonical agora exige FFN (lento); smoke só partial/embed.
     }
 
     #[test]
@@ -698,10 +699,6 @@ mod tests {
         assert_eq!(report.n_tokens, 16);
         assert!(report.embed_checksum_milli > 0);
         assert!(report.layer_checksum_milli > 0);
-        assert!(matches!(
-            try_forward_canonical(&data, &layout),
-            Err(ForwardError::NoDecode)
-        ));
     }
 
     #[test]
@@ -713,5 +710,21 @@ mod tests {
         assert_eq!(report.n_tokens, 16);
         assert!(report.rms_checksum_milli > 0);
         assert!(report.attn_checksum_milli > 0);
+    }
+
+    #[test]
+    fn ffn_and_prefill_layer0() {
+        let Some((data, layout)) = load_canonical_gguf() else {
+            return;
+        };
+        let pre = try_prefill_layer0(&data, &layout).expect("prefill");
+        assert_eq!(pre.n_layers, 1);
+        assert!(pre.attn.attn_checksum_milli > 0);
+        assert!(pre.ffn.ffn_checksum_milli > 0);
+        assert!(pre.prefill_checksum_milli > 0);
+        assert!(matches!(
+            try_forward_canonical(&data, &layout),
+            Err(ForwardError::NoFullPrefill)
+        ));
     }
 }

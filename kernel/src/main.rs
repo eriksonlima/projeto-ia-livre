@@ -678,10 +678,32 @@ fn main() -> Status {
                                     uart_write("IA_LIVRE_RUNTIME_NATIVE_ATTN_LAYER_FAIL\n");
                                 }
                             }
+                            match ia_livre_runtime_native::try_prefill_layer0(slice, &layout) {
+                                Ok(pre) => {
+                                    uart_emit_kv(
+                                        "IA_LIVRE_RUNTIME_NATIVE_FFN_CS=",
+                                        pre.ffn.ffn_checksum_milli as u64,
+                                    );
+                                    uart_write("IA_LIVRE_RUNTIME_NATIVE_FFN_LAYER_OK\n");
+                                    uart_emit_kv(
+                                        "IA_LIVRE_RUNTIME_NATIVE_PREFILL_LAYERS=",
+                                        pre.n_layers as u64,
+                                    );
+                                    uart_write("IA_LIVRE_RUNTIME_NATIVE_PREFILL_OK\n");
+                                }
+                                Err(_) => {
+                                    uart_write("IA_LIVRE_RUNTIME_NATIVE_PREFILL_FAIL\n");
+                                }
+                            }
                             match ia_livre_runtime_native::try_forward_canonical(slice, &layout)
                             {
                                 Ok(()) => {
                                     uart_write("IA_LIVRE_RUNTIME_NATIVE_OK\n");
+                                }
+                                Err(ia_livre_runtime_native::ForwardError::NoFullPrefill) => {
+                                    uart_write(
+                                        "IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_full_prefill\n",
+                                    );
                                 }
                                 Err(ia_livre_runtime_native::ForwardError::NoDecode) => {
                                     uart_write(

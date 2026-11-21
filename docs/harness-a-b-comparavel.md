@@ -99,6 +99,6 @@ Detalhes: `AGENTS.md` → Como rodar / Como verificar (Etapa 22).
 
 ## Estado atual (host de referência)
 
-Com B = proxy + tokenize/embed/camada (Etapa 32, `no_gguf_decode`): o instrumento **deve** emitir `INCONCLUSIVO` (reason `…E32_no_gguf_decode`). Hipótese **não** comprovada nem refutada. ADR [`0013`](adr/0013-geracao-canonica-fatiada-linha-b.md).
+Com B = proxy + attn/FFN/prefill layer0 (Etapa 33, `no_gguf_full_prefill`): o instrumento **deve** emitir `INCONCLUSIVO` com reason `E33_no_gguf_full_prefill_22L_kv_inviable` (bloqueio estrutural 22L/KV — ≠ ausência genérica de tokens). Hipótese **não** comprovada nem refutada. ADR [`0013`](adr/0013-geracao-canonica-fatiada-linha-b.md).
 
 Para medição sem contenção de benchmarks: seguir [`harness-corrida-quieta.md`](harness-corrida-quieta.md).

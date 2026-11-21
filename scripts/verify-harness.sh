@@ -108,7 +108,10 @@ for marker in \
   'IA_LIVRE_HARNESS_RUNTIME_NATIVE_TOKENIZE=OK' \
   'IA_LIVRE_HARNESS_RUNTIME_NATIVE_EMBED=OK' \
   'IA_LIVRE_HARNESS_RUNTIME_NATIVE_LAYER_PARTIAL=OK' \
-  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_FORWARD_FAIL=no_decode'; do
+  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_ATTN_LAYER=OK' \
+  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_FFN_LAYER=OK' \
+  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_PREFILL=OK' \
+  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_FORWARD_FAIL=no_full_prefill'; do
   if ! grep -q "$marker" "$LOG_B"; then
     echo "GATE_FAIL: marcador ausente na Linha B: $marker"
     fail=1
@@ -141,17 +144,17 @@ if grep -qE 'IA_LIVRE_HARNESS_LOAD_KIND=gguf' "$LOG_B"; then
   echo "GATE_FAIL: B emitiu LOAD_KIND=gguf sem caminho GGUF real implementado"
   fail=1
 fi
-# Bloqueio residual E32: tokenize+embed+camada ok; decode ainda não
+# Bloqueio residual E33 Task 2: attn+FFN layer0/prefill; 22L/KV ainda não
 if ! grep -q 'IA_LIVRE_HARNESS_B_BLOCK=' "$LOG_B"; then
   echo "GATE_FAIL: B deve declarar B_BLOCK= (estado honesto)"
   fail=1
 fi
-if grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=(no_gguf_path|awaiting_b13_b14|no_gguf_infer|no_gguf_infer_engine|no_gguf_forward|no_gguf_generate)$' "$LOG_B"; then
-  echo "GATE_FAIL: B_BLOCK legado — Etapa 32 exige no_gguf_decode"
+if grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=(no_gguf_path|awaiting_b13_b14|no_gguf_infer|no_gguf_infer_engine|no_gguf_forward|no_gguf_generate|no_gguf_decode)$' "$LOG_B"; then
+  echo "GATE_FAIL: B_BLOCK legado — Etapa 33 exige no_gguf_full_prefill"
   fail=1
 fi
-if ! grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=no_gguf_decode' "$LOG_B"; then
-  echo "GATE_FAIL: B_BLOCK deve ser no_gguf_decode (tokenize/embed/camada ok; sem decode)"
+if ! grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=no_gguf_full_prefill' "$LOG_B"; then
+  echo "GATE_FAIL: B_BLOCK deve ser no_gguf_full_prefill (attn+ffn layer0 ok; sem 22L/KV)"
   fail=1
 fi
 
@@ -160,5 +163,5 @@ if (( fail )); then
   exit 1
 fi
 
-echo "GATE_OK: harness — A (GGUF) ok + B (proxy + tokenize/embed/camada + no_gguf_decode) ok — hipótese NÃO comprovada"
+echo "GATE_OK: harness — A (GGUF) ok + B (proxy + attn/ffn/prefill layer0 + no_gguf_full_prefill) ok — hipótese NÃO comprovada"
 exit 0

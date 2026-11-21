@@ -114,14 +114,14 @@ Com Etapas 19/20 verificáveis no serial QEMU, `scripts/run-harness-line-b.sh`:
 
 `HARNESS_MODEL=` permanece `proxy-post-exit-v1`. Rodar `ia-livre-runtime` no host continua sendo **Linha A**.
 
-### Estado atual (após Etapa 32 — tokenize + embed + camada parcial)
+### Estado atual (após Etapa 33 — attn+FFN layer0 / prefill parcial)
 
 - Loader E26/E27: GGUF completo via BlockIO (`blockio_full`).
 - **Motor:** `runtime-native/` — ADR [`0010`](adr/0010-runtime-nativo-freestanding-linha-b.md) / [`0012`](adr/0012-forward-gguf-fatiado-linha-b.md) / [`0013`](adr/0013-geracao-canonica-fatiada-linha-b.md).
-- **Avanço E31:** `TENSOR_MAP_OK` + `Q4K_DEQUANT_OK` + `FORWARD_OP_OK`.
-- **Avanço E32:** `TOKENIZE_OK` + `EMBED_OK` + `LAYER_PARTIAL_OK` (matvec parcial `blk.0.attn_output`); `FORWARD_FAIL=no_decode`.
-- **Bloqueio residual:** `B_BLOCK=no_gguf_decode` (≠ `no_gguf_generate`) — sem Prefill/Decode/sampling → **sem** `TOKENS_PER_S`.
-- Proxy E12 permanece (`LOAD_KIND=proxy`). Hipótese **não** comprovada.
+- **Avanço E32:** tokenize + embed + camada parcial.
+- **Avanço E33:** `ATTN_LAYER_OK` (GQA blk.0) + `FFN_LAYER_OK` (SwiGLU) + `PREFILL_OK` (1 token × camada 0); `FORWARD_FAIL=no_full_prefill`.
+- **Bloqueio residual:** `B_BLOCK=no_gguf_full_prefill` — 22 camadas + KV multi-token + decode inviáveis no prazo sem fraude → **sem** `TOKENS_PER_S`.
+- Proxy E12 permanece (`LOAD_KIND=proxy`). Hipótese **não** comprovada. Comparable: `VERDICT_REASON=E33_no_gguf_full_prefill_22L_kv_inviable` (≠ ausência genérica de tokens).
 
 ### Loader GGUF nativo mínimo (Etapa 26)
 

@@ -31,6 +31,69 @@ pub struct AttnLayerReport {
     pub attn_checksum_milli: u32,
 }
 
+/// Workspace: entrada = embedding (ou residual); saída = residual pós-atenção.
+pub fn attn_layer0_on(
+    gguf: &[u8],
+    layout: &LayoutReport,
+    x: &[f32; N_EMBD],
+    out: &mut [f32; N_EMBD],
+) -> Result<AttnLayerReport, ForwardError> {
+    let tok = tokenize_canonical();
+    let mut wn = [0f32; N_EMBD];
+    load_f32_vec(gguf, layout, ATTN_NORM, &mut wn)?;
+    let mut xn = [0f32; N_EMBD];
+    rms_norm(x, &wn, &mut xn);
+    let mut rms_cs = 0f32;
+    for &v in xn.iter() {
+        rms_cs += if v >= 0.0 { v } else { -v };
+    }
+
+    let tq = find_tensor(gguf, layout, ATTN_Q)?;
+    let tk = find_tensor(gguf, layout, ATTN_K)?;
+    let tv = find_tensor(gguf, layout, ATTN_V)?;
+    let to = find_tensor(gguf, layout, ATTN_O)?;
+
+    let mut q = [0f32; N_EMBD];
+    let mut k = [0f32; N_KV_DIM];
+    let mut v = [0f32; N_KV_DIM];
+    matvec_q4k(gguf, layout, &tq, &xn, &mut q)?;
+    matvec_q4k(gguf, layout, &tk, &xn, &mut k)?;
+    matvec_q6k(gguf, layout, &tv, &xn, &mut v)?;
+
+    let mut attn_out = [0f32; N_EMBD];
+    let scale = 1.0 / libm_sqrt(HEAD_DIM as f32);
+    for h in 0..N_HEAD {
+        let kv_h = h / (N_HEAD / N_KV_HEAD);
+        let q_off = h * HEAD_DIM;
+        let kv_off = kv_h * HEAD_DIM;
+        let mut score = 0f32;
+        for d in 0..HEAD_DIM {
+            score += q[q_off + d] * k[kv_off + d];
+        }
+        score *= scale;
+        let _w = libm_exp(score);
+        for d in 0..HEAD_DIM {
+            attn_out[q_off + d] = v[kv_off + d];
+        }
+    }
+
+    let mut projected = [0f32; N_EMBD];
+    matvec_q4k(gguf, layout, &to, &attn_out, &mut projected)?;
+
+    let mut acc = 0f32;
+    for i in 0..N_EMBD {
+        out[i] = x[i] + projected[i];
+        let y = out[i];
+        acc += if y >= 0.0 { y } else { -y };
+    }
+
+    Ok(AttnLayerReport {
+        n_tokens: tok.n_tokens,
+        rms_checksum_milli: (rms_cs * 1000.0) as u32,
+        attn_checksum_milli: (acc * 1000.0) as u32,
+    })
+}
+
 /// RMSNorm: out = (x / rms) * weight; rms = sqrt(mean(x²)+eps).
 pub fn rms_norm(x: &[f32; N_EMBD], weight: &[f32; N_EMBD], out: &mut [f32; N_EMBD]) {
     let mut ss = 0f32;
@@ -246,68 +309,11 @@ pub fn try_attn_layer0_single(
     gguf: &[u8],
     layout: &LayoutReport,
 ) -> Result<AttnLayerReport, ForwardError> {
-    let tok = tokenize_canonical();
     let last = *CANONICAL_PROMPT_TOKEN_IDS
         .last()
         .ok_or(ForwardError::BadToken)?;
-
     let mut x = [0f32; N_EMBD];
     let _ = embed_token(gguf, layout, last, &mut x)?;
-
-    let mut wn = [0f32; N_EMBD];
-    load_f32_vec(gguf, layout, ATTN_NORM, &mut wn)?;
-    let mut xn = [0f32; N_EMBD];
-    rms_norm(&x, &wn, &mut xn);
-    let mut rms_cs = 0f32;
-    for &v in xn.iter() {
-        rms_cs += if v >= 0.0 { v } else { -v };
-    }
-
-    let tq = find_tensor(gguf, layout, ATTN_Q)?;
-    let tk = find_tensor(gguf, layout, ATTN_K)?;
-    let tv = find_tensor(gguf, layout, ATTN_V)?;
-    let to = find_tensor(gguf, layout, ATTN_O)?;
-
-    let mut q = [0f32; N_EMBD];
-    let mut k = [0f32; N_KV_DIM];
-    let mut v = [0f32; N_KV_DIM];
-    matvec_q4k(gguf, layout, &tq, &xn, &mut q)?;
-    matvec_q4k(gguf, layout, &tk, &xn, &mut k)?;
-    matvec_q6k(gguf, layout, &tv, &xn, &mut v)?;
-
-    // GQA: seq_len=1 → softmax trivial; out_head = V_kv_head
-    let mut attn_out = [0f32; N_EMBD];
-    let scale = 1.0 / libm_sqrt(HEAD_DIM as f32);
-    let _ = (scale, libm_exp); // scale used if seq>1; keep for honesty of API
-    for h in 0..N_HEAD {
-        let kv_h = h / (N_HEAD / N_KV_HEAD);
-        let q_off = h * HEAD_DIM;
-        let kv_off = kv_h * HEAD_DIM;
-        // score = q·k * scale; seq=1 → weight=1
-        let mut score = 0f32;
-        for d in 0..HEAD_DIM {
-            score += q[q_off + d] * k[kv_off + d];
-        }
-        score *= scale;
-        let _w = libm_exp(score); // numeric path exercised; weight unused (seq=1 ⇒ 1.0)
-        for d in 0..HEAD_DIM {
-            attn_out[q_off + d] = v[kv_off + d];
-        }
-    }
-
-    let mut projected = [0f32; N_EMBD];
-    matvec_q4k(gguf, layout, &to, &attn_out, &mut projected)?;
-
-    // residual: x + projected
-    let mut acc = 0f32;
-    for i in 0..N_EMBD {
-        let y = x[i] + projected[i];
-        acc += if y >= 0.0 { y } else { -y };
-    }
-
-    Ok(AttnLayerReport {
-        n_tokens: tok.n_tokens,
-        rms_checksum_milli: (rms_cs * 1000.0) as u32,
-        attn_checksum_milli: (acc * 1000.0) as u32,
-    })
+    let mut out = [0f32; N_EMBD];
+    attn_layer0_on(gguf, layout, &x, &mut out)
 }

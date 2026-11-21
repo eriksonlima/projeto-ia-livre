@@ -234,7 +234,15 @@ Pronto quando: geração canônica no guest com `LOAD_KIND=gguf` + `TOKENS_PER_S
 
 ## Etapa 33 — Re-corrida harness A vs B com geração real em B
 
-Status: em_andamento  
+Status: feita  
 Issue: [#32](https://github.com/eriksonlima/projeto-ia-livre/issues/32)  
 Spec: `specs/recorrida-harness-geracao-b/`  
-Pronto quando: `verify-harness-comparable` quieto com `COMPROVA`/`REFUTA` **ou** `INCONCLUSIVO` só com motivo ≠ ausência de tokens B; depende de geração real em B (além de `no_gguf_decode`) **ou** bloqueio honesto documentado se tokens ainda inviáveis sem fraude.
+Pronto quando: `verify-harness-comparable` quieto com `COMPROVA`/`REFUTA` **ou** `INCONCLUSIVO` só com motivo ≠ ausência de tokens B; depende de geração real em B (além de `no_gguf_decode`) **ou** bloqueio honesto documentado se tokens ainda inviáveis sem fraude.  
+**Desfecho:** attn+FFN+prefill layer0; `B_BLOCK=no_gguf_full_prefill`; comparable `INCONCLUSIVO` / `E33_no_gguf_full_prefill_22L_kv_inviable`.
+
+## Etapa 34 — Baseline Linha A otimizada (CPU) no gate comparável
+
+Status: em_andamento  
+Issue: [#33](https://github.com/eriksonlima/projeto-ia-livre/issues/33)  
+Spec: (a definir — `especificador`)  
+Pronto quando: perfil `A_otimizada` documentado + corrida verificável lado a lado; ideal após geração B, mas pode avançar baseline A independentemente.
