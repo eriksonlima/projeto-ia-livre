@@ -2,12 +2,12 @@
 
 ## Estado atual
 
-- **holder:** cursor-agent-main
-- **etapa:** 62
-- **issue:** #62
-- **paths:** ROADMAP.md, BACKLOG.md, specs/, docs/, scripts/, memory-bank/, AGENTS.md
-- **since:** 2026-11-21T16:20:00Z
-- **expires:** 2026-11-21T20:20:00Z
+- **holder:** _(livre)_
+- **etapa:** —
+- **issue:** —
+- **paths:** —
+- **since:** —
+- **expires:** —
 
 ## Protocolo
 

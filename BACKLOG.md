@@ -10,14 +10,9 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Meta do protótipo (objetivo do projeto):** um ecossistema verificável em que (1) a **hipótese A vs B** possa ser comprovada ou refutada com geração real na Linha B (`TOKENS_PER_S`), (2) o **SO IA Livre** boote de USB/ESP em hardware real com caminho de IA nativo mínimo honesto, (3) a **Rede** e a **autonomia** continuem utilizáveis **sem** exigir o SO. Ordem abaixo = prioridade sugerida (topo primeiro).
 >
-> **Análise pós-E60 (2026-11-21):** E59/0020 + E60/0021 — espécie canônica inviável no gate atual. Ordem: **B58** (bloqueio final pilar 1) → metal (B56/B57) → resto. **B55** adiada (deps espécie canônica).
+> **Análise pós-E60 (2026-11-21):** E59/0020 + E60/0021 — espécie canônica inviável no gate atual. Pilar 1 BLOQUEIO_FINAL (E61). E62 SKIP metal neste host. Topo: **B57** (I/O GGUF metal) ou B67 docs; B55 adiada.
 
 
-### B56 — Evidência METAL_OK em PC real
-- Issue: [#62](https://github.com/eriksonlima/projeto-ia-livre/issues/62)
-- Origem: pilar 2 — `docs/evidence/boot-metal/` só `STATUS-SKIP`
-- Pronto quando: log real + `IA_LIVRE_BAREMETAL_SKIP=0` → `METAL_OK` (≥ `BOOT_OK`, sem QEMU/OVMF)
-- Deps: E35/E46/E47/E57
 
 ### B57 — I/O GGUF no path metal (além de no_gguf_metal_io)
 - Issue: [#63](https://github.com/eriksonlima/projeto-ia-livre/issues/63)
@@ -87,6 +82,14 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: E58
 
 ## Promovidas / arquivadas
+
+### B56 — Evidência METAL_OK em PC real
+- Issue: [#62](https://github.com/eriksonlima/projeto-ia-livre/issues/62)
+- Origem: pilar 2 — `docs/evidence/boot-metal/` só `STATUS-SKIP`
+- Pronto quando: log real + `IA_LIVRE_BAREMETAL_SKIP=0` → `METAL_OK` (≥ `BOOT_OK`, sem QEMU/OVMF)
+- Deps: E35/E46/E47/E57
+- Promovido para Etapa 62 do roadmap (promoção autônoma após E61).
+- Etapa: [Etapa 62 — METAL_OK](ROADMAP.md)
 
 ### B58 — Bloqueio final documentado da hipótese A/B
 - Issue: [#64](https://github.com/eriksonlima/projeto-ia-livre/issues/64)

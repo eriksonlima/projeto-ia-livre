@@ -38,7 +38,7 @@ Objetivo do protótipo = **os três** pilares no estado “atingido” (ou bloqu
 | Writer | `make verify-write-usb` → `WRITE_USB_OK` (gravação ≠ metal) |
 | Path IA mínimo | BlockIO (QEMU) e/ou path metal SFS com bloqueio honesto (`verify-metal-infer` / `B_BLOCK_METAL`) — sem `TOKENS` fingidos |
 | Metal real | `METAL_OK` **somente** com log em `docs/evidence/boot-metal/` sem QEMU/OVMF |
-| **Estado atual** | Artefato + guia + writer + path metal **honestos** verdes no CI; **`METAL_OK`** depende de evidência de PC (opt-in; default skip) |
+| **Estado atual** | Artefato + guia + writer + path metal **honestos** verdes no CI; **`METAL_OK`** **pendente** — E62/`STATUS-SKIP` (`no_pc_serial_log_on_this_host`); sem fabricar log |
 | Não conta | Tratar QEMU como metal; inventar `METAL_OK` |
 
 ---

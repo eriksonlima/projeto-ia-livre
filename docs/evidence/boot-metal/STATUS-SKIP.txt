@@ -2,6 +2,7 @@
 # DATE_UTC=2026-11-21
 # PATH=B
 # REASON=no_pc_serial_log_on_this_host
-# ISSUE=46
-# NOTE=Etapa 46 fechada com SKIP honesto; METAL_OK pendente de log real do operador.
+# ISSUE=62
+# NOTE=Etapa 62: bloqueio honesto — sem PC/serial neste host; METAL_OK só com log real do operador (TEMPLATE.txt). Não fabricar evidência.
+# PRIOR=E46/#46
 IA_LIVRE_BAREMETAL_SKIP=1

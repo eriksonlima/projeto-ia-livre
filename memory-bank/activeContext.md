@@ -2,14 +2,17 @@
 
 ## Foco atual
 
-- Etapas 1–61 **feitas**
-- Pilar 1: **`BLOQUEIO_FINAL`** (ADR 0022); comparable `INCONCLUSIVO`/teto
-- Topo Abertas: **B56** (`METAL_OK` em PC real)
+- Etapas 1–62 **feitas**
+- Pilar 1: `BLOQUEIO_FINAL` (ADR 0022)
+- Pilar 2: artefato ok; **`METAL_OK`** bloqueado neste host (`STATUS-SKIP`)
+- Pilar 3: verde
+- Topo Abertas: **B57** (I/O GGUF metal) — deps B56 preferível; ou B67 sync docs
 
 ## Próximo passo
 
-- Promover B56 (pilar 2) — requer evidência serial de PC **ou** bloqueio honesto sem fabricar log
+- Operador: log PC → `METAL_OK`; ou promover B67/B57 com caminho honesto
+- Pedido “continuar” → promover topo Abertas
 
 ## Notas
 
-- Lease liberado após push E61
+- Lease livre

@@ -464,3 +464,11 @@ Spec: specs/bloqueio-final-hipotese-ab/
 Pronto quando: ADR/doc declara espécie/hipótese **terminalmente** inviável no gate atual (ou caminho reaberto explícito); instrumento comparable honesto; checklist E58 pilar 1 atualizado; sem fingir COMPROVA.  
 **Desfecho:** ADR [`0022`](docs/adr/0022-bloqueio-final-hipotese-ab.md) — pilar 1 = `BLOQUEIO_FINAL`; comparable permanece teto/`INCONCLUSIVO`; `make verify-prototipo-objetivo` exige 0022; reabertura documentada; sem `COMPROVA`.
 
+## Etapa 62 — Evidência METAL_OK em PC real
+
+Status: feita  
+Issue: [#62](https://github.com/eriksonlima/projeto-ia-livre/issues/62)  
+Spec: specs/evidencia-metal-ok/  
+Pronto quando: log real em `docs/evidence/boot-metal/` + `IA_LIVRE_BAREMETAL_SKIP=0` → `METAL_OK` (≥ `BOOT_OK`, sem QEMU/OVMF); **ou** bloqueio honesto documentado sem fabricar log.  
+**Desfecho:** bloqueio honesto — `STATUS-SKIP` (`no_pc_serial_log_on_this_host`); **sem** `METAL_OK` fabricado; operador pode reabrir com log real (`TEMPLATE.txt`).
+
