@@ -17,3 +17,9 @@
 
 - 1–18: feitas
 - Próxima candidata (topo Abertas): B13 — memória model-aware + scheduler (impl. mínima) → #19
+
+## Etapa 19 — Memória model-aware + scheduler (impl. mínima)
+
+- **Status:** feita
+- **Funciona:** typed Weights/KvCache + Prefill/Decode quantum + `make verify` (MEM_SCHED_OK)
+- **Não:** GGUF em B; prova da hipótese; ABI; runtime falando contrato (B14)

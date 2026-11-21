@@ -15,7 +15,7 @@ Pré-requisito kernel: [`kernel-pos-boot-services.md`](kernel-pos-boot-services.
 | GGUF TinyLlama | **Ausente** nesta etapa |
 | Hipótese | **Não** comprovada; métricas B **não** comparáveis a A |
 
-> O desenho candidato que *diferenciaria* B de A de forma model-aware (classes `Weights`/`KvCache` + fases Prefill/Decode) está em [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-scheduler-nativo.md) / ADR 0003 — **ainda não implementado**; este proxy **não** o realiza.
+> O desenho candidato que *diferenciaria* B de A de forma model-aware (classes `Weights`/`KvCache` + fases Prefill/Decode) está em [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-scheduler-nativo.md) / ADR 0003. A **implementação mínima** no kernel (Etapa 19) está em [`memoria-scheduler-impl-minima.md`](memoria-scheduler-impl-minima.md) (`MEM_SCHED_*` / `TYPED_*`). Este proxy `NATIVE_BENCH_*` **não** realiza esse contrato — namespaces distintos; hipótese **ainda não** comprovada.
 
 ## Marcadores kernel (COM1, após `EXIT_BOOT_OK`)
 

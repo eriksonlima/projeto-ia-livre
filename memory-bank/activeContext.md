@@ -2,21 +2,20 @@
 
 ## Foco atual
 
-- **Etapa 19** `em_andamento` — Memória model-aware + scheduler por fases (impl. mínima)
-- Issue [#19](https://github.com/eriksonlima/projeto-ia-livre/issues/19); Project: https://github.com/users/eriksonlima/projects/1
-- Spec alvo: `specs/memoria-scheduler-impl-minima/` (a gerar)
-- Lease: `cursor-agent-principal` em `AGENT_CLAIM.md`
+- **Etapa 19 feita** — memória model-aware + scheduler por fases (impl. mínima)
+- Lease a liberar após push/espelho GitHub
+- Backlog Abertas: B14+ (topo após promoção)
 
 ## Mudanças recentes
 
-- Promovido B13 → Etapa 19 (promoção autônoma após “continuar”)
-- Labels issue #19: `roadmap` + `status:em_andamento` (removido `backlog`); item no Project V2
+- Allocator tipado Weights/KvCache + Prefill/Decode + quantum (8>2) + `MEM_SCHED_OK`
+- Doc `docs/memoria-scheduler-impl-minima.md`; gate `make verify` estendido
+- Worktree isolado `projeto-ia-livre-e19` (agentes paralelos disputavam `main`)
 
 ## Próximo passo
 
-- Especificar + fatiar Etapa 19; implementar tasks uma a uma com gate `make verify`
+- Liberar lease; promover topo do backlog (B14) se Abertas não vazio — ou relato + spec da próxima
 
 ## Notas
 
-- Sem GGUF; sem prova da hipótese; sem ABI estável/multi-tenant/GPU manager
-- ADR 0003 + `docs/desenho-memoria-scheduler-nativo.md`
+- Hipótese A vs B **não** comprovada; sem GGUF no kernel

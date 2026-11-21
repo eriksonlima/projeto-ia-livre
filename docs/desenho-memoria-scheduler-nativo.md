@@ -66,9 +66,15 @@ O kernel **não** decide tokens, temperatura nem layout de tensores.
 - Implementação no `kernel/` ou medição A vs B com este contrato
 - Declarar hipótese comprovada
 
-## Implementação futura (backlog — sem auto-promover)
+## Implementação mínima (Etapa 19)
 
-1. Allocator tipado pós-ExitBoot (`Weights` / `KvCache`)
-2. Hints de fase + política mínima de quantum
-3. Runtime host/nativo falando o contrato
+Primeira implementação verificável no kernel pós-ExitBoot: allocator tipado + Prefill/Decode + quantum mínimo + gate serial.  
+Contrato: [`memoria-scheduler-impl-minima.md`](memoria-scheduler-impl-minima.md).  
+**Não** prova a hipótese; **não** carrega GGUF; **não** congela ABI.
+
+## Próximos passos (após Etapa 19)
+
+1. ~~Allocator tipado pós-ExitBoot (`Weights` / `KvCache`)~~ — Etapa 19
+2. ~~Hints de fase + política mínima de quantum~~ — Etapa 19
+3. Runtime host/nativo falando o contrato (B14)
 4. Só então: carga GGUF canônica em B e comparação justa no harness

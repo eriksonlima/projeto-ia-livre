@@ -42,8 +42,8 @@ make verify   # gate automatizado do kernel (marcadores: ver docs/kernel-alem-do
 
 Equivalente interativo: `./scripts/run-qemu.sh`.
 
-Na serial: Etapa 10 (`BOOT_OK` … `ALLOC_OK`) + `IA_LIVRE_EXIT_BOOT_BEGIN`; após ExitBootServices (UART COM1): `EXIT_MAP_PAGES=` / `EXIT_MAP_OK` / `EXIT_MEM_OK` / `EXIT_BOOT_OK`.  
-Contratos: [`docs/kernel-alem-do-boot.md`](docs/kernel-alem-do-boot.md), [`docs/kernel-pos-boot-services.md`](docs/kernel-pos-boot-services.md). Ainda **sem** inferência no kernel.
+Na serial: Etapa 10 (`BOOT_OK` … `ALLOC_OK`) + `IA_LIVRE_EXIT_BOOT_BEGIN`; após ExitBootServices (UART COM1): `EXIT_MAP_PAGES=` / `EXIT_MAP_OK` / `EXIT_MEM_OK` / `EXIT_BOOT_OK`; em seguida demo Etapa 19 (`TYPED_*` / `PHASE=` / `QUANTUM=` / `MEM_SCHED_OK` — ver [`docs/memoria-scheduler-impl-minima.md`](docs/memoria-scheduler-impl-minima.md)); depois proxy Linha B (`NATIVE_BENCH_*`).  
+Contratos: [`docs/kernel-alem-do-boot.md`](docs/kernel-alem-do-boot.md), [`docs/kernel-pos-boot-services.md`](docs/kernel-pos-boot-services.md), [`docs/memoria-scheduler-impl-minima.md`](docs/memoria-scheduler-impl-minima.md). Ainda **sem** inferência / GGUF no kernel.
 
 ### Runtime de inferência (host — Etapas 5 / 8)
 
@@ -198,7 +198,7 @@ Gate automatizado: `make verify-harness` (A = GGUF no host; B = QEMU/kernel prox
 
 ## Como verificar
 
-### Gate do kernel (Etapas 4 / 10 / 11)
+### Gate do kernel (Etapas 4 / 10 / 11 / 12 / 19)
 
 ```bash
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
@@ -207,6 +207,7 @@ test -d kernel && test -f kernel/Cargo.toml && test -f kernel/src/main.rs
 test -f Makefile && test -f Cargo.toml
 test -f docs/kernel-alem-do-boot.md
 test -f docs/kernel-pos-boot-services.md
+test -f docs/memoria-scheduler-impl-minima.md
 make build
 test -f target/x86_64-unknown-uefi/debug/ia-livre-kernel.efi
 make verify
@@ -214,10 +215,12 @@ grep -q 'IA_LIVRE_BOOT_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_MEM_MAP_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_ALLOC_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_EXIT_BOOT_OK' kernel/src/main.rs
+grep -q 'IA_LIVRE_MEM_SCHED_OK' kernel/src/main.rs
+grep -q 'IA_LIVRE_TYPED_WEIGHTS_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_NATIVE_BENCH_OK' kernel/src/main.rs
 ```
 
-`make verify` falha se faltarem BOOT/MEM/ALLOC/EXIT_* ou `NATIVE_BENCH_OK` (proxy Linha B). Timeout padrão 45s; `VERIFY_TIMEOUT`. Contratos: kernel-alem-do-boot, kernel-pos-boot-services, runtime-nativo-linha-b.
+`make verify` falha se faltarem BOOT/MEM/ALLOC/EXIT_* / `MEM_SCHED_OK` (Etapa 19) / `NATIVE_BENCH_OK` (proxy Linha B). Timeout padrão 45s; `VERIFY_TIMEOUT`. Contratos: kernel-alem-do-boot, kernel-pos-boot-services, memoria-scheduler-impl-minima, runtime-nativo-linha-b.
 
 ### Gate do runtime (Etapa 5 — adicional)
 
@@ -330,6 +333,7 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `kernel/` — crate do kernel IA Livre (`Cargo.toml`, `src/main.rs`), target UEFI
 - `docs/kernel-alem-do-boot.md` — contrato Etapa 10 (mapa UEFI + alloc/bump; marcadores serial)
 - `docs/kernel-pos-boot-services.md` — contrato Etapa 11 (ExitBoot + UART COM1; marcadores `EXIT_*`)
+- `docs/memoria-scheduler-impl-minima.md` — contrato Etapa 19 (allocator tipado Weights/KvCache + Prefill/Decode; `MEM_SCHED_OK`)
 - `runtime/` — protótipo de runtime de inferência (host, llama-cpp-2; CPU default + features `cuda`/`vulkan`)
 - `node/` — protótipo do nó Rede IA Livre (host; independente do SO)
 - `agent/` — protótipo do ambiente de autonomia (host; consome runtime; independente do SO)
@@ -343,7 +347,7 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `docs/adr/0005-autonomia-v1-utilizavel.md` — ADR do escopo v1
 - `Makefile` — `build` / `esp` / `run` / `verify` / `verify-runtime` / `verify-runtime-gpu` / `verify-node` / `verify-agent` / `verify-harness` / `clean`
 - `scripts/run-qemu.sh` — atalho para `make run`
-- `scripts/verify-boot.sh` — gate serial do kernel (`BOOT_OK` + mem/alloc + `EXIT_BOOT_OK`)
+- `scripts/verify-boot.sh` — gate serial do kernel (`BOOT_OK` + mem/alloc + `EXIT_BOOT_OK` + `MEM_SCHED_OK` + `NATIVE_BENCH_OK`)
 - `scripts/verify-runtime.sh` — gate do runtime CPU (`IA_LIVRE_INFER_OK` + métricas)
 - `scripts/verify-runtime-gpu.sh` — gate GPU (`IA_LIVRE_ACCEL` ≠ `cpu`; skip `IA_LIVRE_GPU_SKIP`)
 - `docs/runtime-inferencia-gpu-metricas.md` — métricas do protótipo GPU no host
@@ -356,7 +360,7 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `docs/harness-perfis-a-otimizada-gpu.md` — perfis A otimizada / GPU (Etapa 18; gate permanece `verify-harness`)
 - `docs/runtime-nativo-linha-b.md` — contrato Linha B mínima (proxy pós-ExitBoot)
 - `docs/desenho-memoria-scheduler-nativo.md` — desenho candidato Weights/KvCache + Prefill/Decode (ADR 0003)
-- `docs/adr/0003-memoria-model-aware-e-scheduler-fases.md` — ADR do desenho (sem implementação)
+- `docs/adr/0003-memoria-model-aware-e-scheduler-fases.md` — ADR do desenho; impl. mínima = Etapa 19
 - `docs/desenho-gpu-manager-multi-gpu.md` — desenho GPU manager / multi-GPU (ADR 0006; não implementado)
 - `docs/adr/0006-gpu-manager-multi-gpu.md` — ADR do escopo candidato (host ≠ nativo)
 - `LICENSE` / `NOTICE` — Apache-2.0 (1ª parte); ADR [`0007`](docs/adr/0007-licencas-por-componente.md)
