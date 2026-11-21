@@ -161,7 +161,7 @@ Pronto quando: corrida lado a lado documentada (mesmo modelo/quantização/carga
 Status: em_andamento  
 Issue: [#23](https://github.com/eriksonlima/projeto-ia-livre/issues/23)  
 Spec: specs/protocolo-rede-v1/  
-Pronto quando: contratos do desenho Rede v1 em `node/` + gate `verify-node` (ou extensão); sem marketplace; independente do SO.
+Pronto quando: contratos do desenho ADR 0004 cobertos em `node/` — ed25519/PeerId, HELLO UDP assinado, IDENT no TCP, MSG/ACK, PING/PONG, dial `--peer`; `make verify-node` (ou extensão documentada) verde; participação **sem** exigir o SO IA Livre; sem libp2p/NAT/DHT/marketplace.
 
 ## Etapa 24 — Autonomia v1 utilizável (impl. em agent/)
 

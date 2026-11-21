@@ -1,7 +1,7 @@
 # Desenho — Protocolo Rede IA Livre v1
 
 Stack candidata além do protótipo HELLO/MSG/ACK.  
-**Nível:** desenho (Etapa 14). **Não** implementação. O crate `node/` atual **não** fala v1.
+**Nível:** desenho (Etapa 14) + **implementação mínima** na Etapa 23 (`node/` — ver [`rede-ia-livre-v1.md`](rede-ia-livre-v1.md)).
 
 ADR: [`docs/adr/0004-stack-protocolo-rede-ia-livre.md`](adr/0004-stack-protocolo-rede-ia-livre.md).  
 Protótipo Etapa 6: [`docs/rede-ia-livre-prototipo.md`](rede-ia-livre-prototipo.md).  
@@ -45,14 +45,14 @@ PING / PONG           →  opcional
 
 ## Descoberta — fronteira do próximo protótipo
 
-**Entra no próximo protótipo (implementação futura):**
+**Entra no próximo protótipo (implementação — Etapa 23):**
 
-- [ ] Chaves ed25519 + PeerId
-- [ ] HELLO UDP assinado + versão de protocolo
-- [ ] IDENT no TCP
-- [ ] MSG/ACK compatível (gate atual ou evolução documentada)
-- [ ] PING/PONG
-- [ ] Dial `--peer` / lista de peers conhecidos
+- [x] Chaves ed25519 + PeerId
+- [x] HELLO UDP assinado + versão de protocolo
+- [x] IDENT no TCP
+- [x] MSG/ACK compatível (gate atual ou evolução documentada)
+- [x] PING/PONG
+- [x] Dial `--peer` / lista de peers conhecidos
 
 **Continua fora (só nomeado):**
 
@@ -76,8 +76,8 @@ PING / PONG           →  opcional
 - Obsolecer o protótipo E6 sem etapa de implementação
 - Amarrar participação ao SO IA Livre
 
-## Implementação futura
+## Implementação
 
-1. Etapa/backlog: implementar v1 em `node/` + gate
+1. **Etapa 23:** v1 mínimo em `node/` + gate `make verify-node` — feito (contrato [`rede-ia-livre-v1.md`](rede-ia-livre-v1.md))
 2. Depois: descoberta WAN (NAT/DHT) se a comunidade exigir
 3. Reavaliar libp2p só com ADR nova
