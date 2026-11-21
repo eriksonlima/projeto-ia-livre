@@ -103,7 +103,9 @@ Com B = proxy + Prefill multi/KV subset (Etapa 43, `no_gguf_prefill_22l`): o ins
 
 **A_otimizada (opt-in, Etapa 34):** `IA_LIVRE_HARNESS_A_PROFILE=A_otimizada` usa `run-harness-line-a-optimized.sh` no lado A; veredito permanece honesto (ainda `INCONCLUSIVO` enquanto B não tiver tokens). Gate dedicado: `make verify-harness-a-otimizada`.
 
-**A_gpu (opt-in, Etapa 56):** perfil harness GPU — A com accel host + B subset assimétrico → `INCONCLUSIVO` (`E56_A_gpu_B_subset_accel_asymmetric`). Gate: `make verify-harness-gpu`. **Não** prova hipótese; sem ACCEL GPU fingido em B.
+**A_gpu (opt-in, Etapa 56):** perfil harness GPU — A com accel host + B subset **assimétrico** → `INCONCLUSIVO` (`E56_A_gpu_B_subset_accel_asymmetric`). Gate: `make verify-harness-gpu`. **Não** é simetria GPU (ADR [`0023`](adr/0023-simetria-gpu-harness-inviavel.md)); sem ACCEL GPU fingido em B.
+
+**sym_cpu (opt-in, Etapa 64):** A+B com `HARNESS_ACCEL=cpu` (mesmo perfil). Gate: `make verify-harness-sym-cpu`. Veredito tipicamente `INCONCLUSIVO` (espécie/ADR 0022) — **não** por assimetria accel. Simetria GPU só após B60.
 
 **Espécie canônica (Etapa 60 / ADR [`0021`](adr/0021-especie-canonica-linha-b-inviavel.md)):** 22L×32 no guest **inviável** no gate atual (pós E59/ADR 0020). Comparable permanece `INCONCLUSIVO` / teto; **proibido** `COMPROVA` com subset.  
 **Bloqueio final (Etapa 61 / ADR [`0022`](adr/0022-bloqueio-final-hipotese-ab.md)):** pilar 1 do checklist = `BLOQUEIO_FINAL` (terminal no escopo atual; reabertura documentada na 0022).

@@ -36,7 +36,22 @@ Variáveis: `IA_LIVRE_HARNESS_N_THREADS`, `IA_LIVRE_HARNESS_TASKSET_CPUS`, `IA_L
 | `--n-predict` | `32` |
 | Marcadores | namespace `IA_LIVRE_HARNESS_*` |
 
-## Perfil GPU espelhado A/B (Etapa 56)
+## Perfil simétrico CPU — `sym_cpu` (Etapa 64)
+
+| Peça | Valor |
+|------|--------|
+| Accel | A **e** B com `HARNESS_ACCEL=cpu` |
+| Perfil | `IA_LIVRE_HARNESS_PROFILE=sym_cpu` |
+| Par | `IA_LIVRE_HARNESS_ACCEL_PAIR=cpu+cpu` |
+| Veredito | `INCONCLUSIVO` (espécie subset / ADR 0022) — **≠** assimetria accel |
+| Gate | `make verify-harness-sym-cpu` |
+| ADR | [`0023`](adr/0023-simetria-gpu-harness-inviavel.md) — simetria **GPU** inviável até B60 |
+
+Scripts: `run-harness-a-b-sym-cpu.sh` / `verify-harness-sym-cpu.sh`.
+
+## Perfil GPU espelhado A/B (Etapa 56) — **assimétrico**
+
+> **Não** é simetria GPU. Ver ADR [`0023`](adr/0023-simetria-gpu-harness-inviavel.md).
 
 ### Linha A — `A_gpu` (host)
 
@@ -53,7 +68,7 @@ Script: `scripts/run-harness-line-a-gpu.sh`.
 B **gera** tokens subset (E44) no QEMU **sem** acelerador guest.  
 **Proibido:** inventar `HARNESS_ACCEL=cuda|vulkan` em B; inventar espécie canônica.
 
-Agregação: `scripts/run-harness-a-b-gpu.sh` — A_gpu + B existente; veredito permanece **INCONCLUSIVO** (subset + assimetria accel).
+Agregação: `scripts/run-harness-a-b-gpu.sh` — A_gpu + B existente; veredito permanece **INCONCLUSIVO** (`E56_A_gpu_B_subset_accel_asymmetric`).
 
 ### Skip
 
@@ -66,6 +81,7 @@ Agregação: `scripts/run-harness-a-b-gpu.sh` — A_gpu + B existente; veredito 
 
 **Default:** `make verify-harness` (A CPU + B).  
 **A_otimizada:** `make verify-harness-a-otimizada`.  
-**A_gpu + B (Etapa 56):** `make verify-harness-gpu` — opt-in; **não** substitui v1.
+**sym_cpu (Etapa 64):** `make verify-harness-sym-cpu` — mesmo accel CPU; opt-in.  
+**A_gpu + B (Etapa 56):** `make verify-harness-gpu` — opt-in **assimétrico**; **não** substitui v1 nem `sym_cpu`.
 
-Anti-fraude: sem `COMPROVA`/`REFUTA` por este perfil; sem ACCEL GPU fingido em B.
+Anti-fraude: sem `COMPROVA`/`REFUTA` por estes perfis GPU; sem ACCEL GPU fingido em B.

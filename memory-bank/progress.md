@@ -2,17 +2,15 @@
 
 ## O que funciona
 
-- Kernel UEFI QEMU + BlockIO Linha B (subset) + gates principais
-- Runtime/node/agent host; harness comparable `INCONCLUSIVO` / pilar 1 `BLOQUEIO_FINAL` (ADR 0022)
-- Bare-metal artefato + guia USB; `METAL_OK` SKIP neste host (E62)
-- **E63:** I/O GGUF path metal — `esp_sfs_full` (FAT32 + SFS); `make verify-metal-infer` full
+- Gates principais + E63 `esp_sfs_full` + E64 `sym_cpu` / ADR 0023
+- Pilar 1 BLOQUEIO_FINAL; path metal SFS full; METAL_OK SKIP sem PC
 
 ## Bloqueios
 
-- Espécie canônica / COMPROVA — ADR 0020–0022
-- `METAL_OK` — precisa log PC real
-- B55 adiada enquanto 0021 vigorar
+- COMPROVA / espécie canônica (0020–0022)
+- Simetria GPU até B60 (0023)
+- METAL_OK precisa log PC
 
 ## Roadmap
 
-- 1–63 feitas; sem `em_andamento` até promoção
+- 1–64 feitas

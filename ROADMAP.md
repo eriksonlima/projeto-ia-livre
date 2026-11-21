@@ -482,8 +482,9 @@ Pronto quando: no path metal (SFS/ESP — QEMU FAT32 ou PC), loader full **ou** 
 
 ## Etapa 64 — Accel GPU simétrica A/B no harness
 
-Status: em_andamento  
+Status: feita  
 Issue: [#73](https://github.com/eriksonlima/projeto-ia-livre/issues/73)  
 Spec: specs/harness-accel-simetrico-ab/  
 Pronto quando: corrida A/B com o **mesmo** perfil de aceleração (ambos GPU ou ambos CPU documentado); skip sem GPU; **proibido** `ACCEL` fingido em B; veredito honesto (tipicamente `INCONCLUSIVO` até espécie/GPU guest); ≠ `COMPROVA` fabricado.  
+**Desfecho:** perfil `sym_cpu` + `make verify-harness-sym-cpu`; ADR [`0023`](docs/adr/0023-simetria-gpu-harness-inviavel.md) (simetria GPU inviável até B60); E56 permanece assimétrico; sem ACCEL fingido em B; sem `COMPROVA`.  
 

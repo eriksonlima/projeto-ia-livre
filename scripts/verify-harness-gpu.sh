@@ -37,6 +37,10 @@ grep -qE 'IA_LIVRE_HARNESS_ACCEL=(cuda|vulkan)' <<<"$out" || fail=1
 grep -q 'IA_LIVRE_HARNESS_OK' <<<"$out" || fail=1
 grep -q 'IA_LIVRE_HARNESS_LINE=B' <<<"$out" || fail=1
 grep -q 'IA_LIVRE_HARNESS_VERDICT=INCONCLUSIVO' <<<"$out" || fail=1
+grep -q 'accel_asymmetric' <<<"$out" || {
+  echo "GATE_FAIL: reason de assimetria accel ausente (E56/E64)"
+  fail=1
+}
 grep -q 'IA_LIVRE_HARNESS_GPU_OK' <<<"$out" || fail=1
 
 # Anti-fraude

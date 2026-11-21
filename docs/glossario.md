@@ -37,3 +37,5 @@ Princípios: [`manifesto.md`](manifesto.md).
 | **`esp_sfs` / path metal** | GGUF via SimpleFileSystem/ESP — **≠** BlockIO | ADR [`0017`](adr/0017-path-metal-sfs-vs-blockio.md) |
 | **`esp_sfs_full`** | Loader SFS full (E63); ≠ `blockio_full` / ≠ só `esp_header` | [`gguf-path-metal-io.md`](gguf-path-metal-io.md) |
 | **`B_BLOCK_METAL`** | Bloqueio honesto no path metal (ex. `no_gguf_metal_io` E48) | [`gguf-path-metal-io.md`](gguf-path-metal-io.md) / E48 |
+| **`sym_cpu`** | Harness A+B com `ACCEL=cpu` (mesmo perfil; E64) | [`harness-perfis-a-otimizada-gpu.md`](harness-perfis-a-otimizada-gpu.md) / ADR [`0023`](adr/0023-simetria-gpu-harness-inviavel.md) |
+| **ADR 0023** | Simetria GPU A/B inviável até passthrough (B60); E56 = assimétrico | [`adr/0023-simetria-gpu-harness-inviavel.md`](adr/0023-simetria-gpu-harness-inviavel.md) |
