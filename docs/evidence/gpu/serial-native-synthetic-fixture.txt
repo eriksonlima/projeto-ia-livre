@@ -1,0 +1,6 @@
+# IA_LIVRE_GPU_REAL_ANCHOR_E38
+# NOTE=Âncora contrato E38 (synthetic no QEMU) — NÃO é prova E55 de GPU real
+IA_LIVRE_GPU_MGR=native
+IA_LIVRE_GPU_DEVICES=1
+IA_LIVRE_GPU_DEV0_KIND=synthetic
+IA_LIVRE_GPU_MGR_OK

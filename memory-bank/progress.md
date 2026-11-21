@@ -2,13 +2,13 @@
 
 ## Funciona
 
-- Etapas 1–54
-- read_local/REPL; bridges Rede/autonomia; TASK/mDNS; metal-infer; Linha B TOKENS subset
+- Etapas 1–55
+- GPU real host (GTX 1050 neste host) ou skip; read_local/REPL; bridges; TASK/mDNS; Linha B TOKENS subset
 
 ## Residual
 
-- GPU real nativo (B49); GGUF full SFS; METAL_OK com log PC; B52 checklist meta
+- Perfil harness GPU A/B (B50); guia USB release (B51); checklist meta (B52); PCI passthrough guest opt-in
 
 ## Roadmap
 
-- Sem `em_andamento` após E54; próxima: B49
+- Sem `em_andamento` após E55; próxima: B50

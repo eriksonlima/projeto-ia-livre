@@ -410,8 +410,9 @@ Pronto quando: leitura só sob allowlist de paths; rejeição honesta fora; gate
 
 ## Etapa 55 — GPU real no caminho nativo (além de `synthetic`)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#55](https://github.com/eriksonlima/projeto-ia-livre/issues/55)  
 Spec: specs/gpu-real-nativo/  
-Pronto quando: detecção/placement com GPU real (PCI/pass-through ou host path documentado) **ou** skip `need_gpu` honesto; ≠ stub E25; sem fingir multi-GPU.
+Pronto quando: detecção/placement com GPU real (PCI/pass-through ou host path documentado) **ou** skip `need_gpu` honesto; ≠ stub E25; sem fingir multi-GPU.  
+**Desfecho:** path B `SRC=host` + `GPU_REAL_OK` (ou `NEED_GPU`); `make verify-gpu-native-real`; ≠ synthetic/E25; E38 intacto.
 

@@ -352,6 +352,23 @@ grep -q 'host_shard_exec' scripts/run-gpu-shard-host.sh
 Com ≥2 GPUs: `IA_LIVRE_GPU_SHARD_EXEC_OK` + plano `0:0-10,1:11-21`.  
 Com &lt;2 GPUs / CI: `IA_LIVRE_GPU_SHARD_SKIP` (ex. `need_2_devices`) exit **0** — **sem** `EXEC_OK`. Force skip: `VERIFY_GPU_SHARD_SKIP=1`.
 
+### Gate GPU real no caminho nativo (Etapa 55 — adicional)
+
+Além de `synthetic` (E38). Path **host** com `SRC=host` + âncora contrato nativo **ou** skip `need_gpu`. **≠** stub E25. **≠** multi-GPU fingido. Contrato: [`docs/gpu-real-nativo.md`](docs/gpu-real-nativo.md).
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+test -f scripts/verify-gpu-native-real.sh
+test -f docs/gpu-real-nativo.md
+make verify-gpu-native-real
+grep -q 'IA_LIVRE_GPU_REAL_OK' scripts/run-gpu-native-real.sh
+grep -q 'IA_LIVRE_GPU_NEED_GPU' scripts/run-gpu-native-real.sh
+```
+
+Com GPU: `IA_LIVRE_GPU_REAL_SRC=host` + `GPU_REAL_OK` + `DEVICES`≥1.  
+Sem GPU / CI: `IA_LIVRE_GPU_NEED_GPU=need_gpu` exit **0** — **sem** `REAL_OK`. Force skip: `VERIFY_GPU_REAL_SKIP=1`.  
+`make verify` (E38 synthetic) permanece independente.
+
 ### Gate do nó Rede IA Livre (Etapas 6 / 23 / 39 / 50 — adicional)
 
 Só Rust no host. **Não** usa QEMU, GGUF nem o runtime de inferência. Participar da Rede **não exige** o SO IA Livre. Gate: regressão `--peer` + estágio `--bootstrap` (`DISC_OK`) + mDNS opt-in (Etapa 50).

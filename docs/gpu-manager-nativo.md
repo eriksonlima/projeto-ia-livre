@@ -52,6 +52,7 @@ Anti-fraude: gate exige `GPU_MGR=native` + `GPU_DEVICES=` + afinidade/placement 
 ## Limites
 
 - Sem driver vendor, PCI pass-through, multi-GPU executado, offload GGUF real.
+- GPU **real** (além de `synthetic`) = Etapa 55 — [`gpu-real-nativo.md`](gpu-real-nativo.md) (`GPU_REAL_*` / `NEED_GPU`); E38 synthetic permanece no `make verify`.
 - Sem mudança de semântica do stub E25 / Etapa 8.
 - Hipótese A vs B e harness comparable **intocados**.
 
