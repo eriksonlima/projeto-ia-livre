@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Harness Linha B (Etapa 12): QEMU/IA Livre — proxy pós-ExitBoot (NÃO é TinyLlama / Linha A).
-# Reemite IA_LIVRE_HARNESS_* honestos; proibido TOKENS_PER_S / inventar GGUF.
+# Harness Linha B (Etapas 12 / 20): QEMU/IA Livre — proxy pós-ExitBoot + evidência do contrato E19.
+# NÃO é TinyLlama / Linha A. Reemite IA_LIVRE_HARNESS_* honestos.
+# Proibido: TOKENS_PER_S / inventar GGUF / declarar hipótese comprovada.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 export PATH="${HOME}/.cargo/bin:${HOME}/.local/bin:${PATH}"
@@ -14,8 +15,13 @@ make esp >/dev/null
 make run >"$LOG" 2>&1 &
 QEMU_PID=$!
 
-have_bench() {
+have_ready() {
   grep -q 'IA_LIVRE_EXIT_BOOT_OK' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_TYPED_WEIGHTS_OK' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_TYPED_KVCACHE_OK' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_PHASE=prefill' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_PHASE=decode' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_MEM_SCHED_OK' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_NATIVE_BENCH_OK' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_NATIVE_BENCH_OPS=' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_NATIVE_BENCH_MS=' "$LOG" 2>/dev/null
@@ -23,7 +29,7 @@ have_bench() {
 
 deadline=$((SECONDS + TIMEOUT_SEC))
 while (( SECONDS < deadline )); do
-  if have_bench; then
+  if have_ready; then
     break
   fi
   if ! kill -0 "$QEMU_PID" 2>/dev/null; then
@@ -36,8 +42,8 @@ kill -KILL "$QEMU_PID" 2>/dev/null || true
 wait "$QEMU_PID" 2>/dev/null || true
 QEMU_PID=
 
-if ! have_bench; then
-  echo "HARNESS_FAIL: Linha B — serial sem EXIT_BOOT_OK + NATIVE_BENCH_*" >&2
+if ! have_ready; then
+  echo "HARNESS_FAIL: Linha B — serial sem EXIT_BOOT_OK + MEM_SCHED_* + NATIVE_BENCH_*" >&2
   echo "---- serial (últimas 40 linhas) ----" >&2
   tail -n 40 "$LOG" >&2 || true
   exit 1
@@ -45,12 +51,15 @@ fi
 
 OPS="$(grep -oE 'IA_LIVRE_NATIVE_BENCH_OPS=[0-9]+' "$LOG" | head -1 | cut -d= -f2)"
 MS="$(grep -oE 'IA_LIVRE_NATIVE_BENCH_MS=[0-9]+' "$LOG" | head -1 | cut -d= -f2)"
+QW="$(grep -oE 'IA_LIVRE_TYPED_WEIGHTS_BYTES=[0-9]+' "$LOG" | head -1 | cut -d= -f2)"
+QK="$(grep -oE 'IA_LIVRE_TYPED_KVCACHE_BYTES=[0-9]+' "$LOG" | head -1 | cut -d= -f2)"
 
 if [[ -z "$OPS" || -z "$MS" ]]; then
   echo "HARNESS_FAIL: não parseou OPS/MS do bench" >&2
   exit 1
 fi
 
+# Proxy E12 (preservado — ainda não é GGUF canônico em B)
 echo "IA_LIVRE_HARNESS_LINE=B"
 echo "IA_LIVRE_HARNESS_PROXY=post_exit_microbench"
 echo "IA_LIVRE_HARNESS_LOAD_KIND=proxy"
@@ -59,6 +68,21 @@ echo "IA_LIVRE_HARNESS_PROXY_OPS=${OPS}"
 echo "IA_LIVRE_HARNESS_MODEL=proxy-post-exit-v1"
 echo "IA_LIVRE_HARNESS_N_PREDICT=0"
 echo "IA_LIVRE_HARNESS_ACCEL=cpu"
+
+# Evidência honesta do contrato E19 (Etapa 20 Task 4) — namespace harness; ≠ TOKENS_PER_S
+echo "IA_LIVRE_HARNESS_CONTRACT_BACKEND=native_qemu"
+echo "IA_LIVRE_HARNESS_CONTRACT_MEM_SCHED=OK"
+echo "IA_LIVRE_HARNESS_CONTRACT_TYPED_WEIGHTS=OK"
+echo "IA_LIVRE_HARNESS_CONTRACT_TYPED_KVCACHE=OK"
+echo "IA_LIVRE_HARNESS_CONTRACT_PHASE_PREFILL=OK"
+echo "IA_LIVRE_HARNESS_CONTRACT_PHASE_DECODE=OK"
+if [[ -n "$QW" ]]; then
+  echo "IA_LIVRE_HARNESS_CONTRACT_WEIGHTS_BYTES=${QW}"
+fi
+if [[ -n "$QK" ]]; then
+  echo "IA_LIVRE_HARNESS_CONTRACT_KVCACHE_BYTES=${QK}"
+fi
+
 echo "IA_LIVRE_HARNESS_OK"
-echo "nota: hipótese A vs B NÃO comprovada — B é proxy, não carga TinyLlama canônica."
+echo "nota: hipótese A vs B NÃO comprovada — B é proxy + evidência MEM_SCHED, não carga TinyLlama canônica."
 exit 0

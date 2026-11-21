@@ -57,22 +57,27 @@ Namespace distinto dos protótipos (`IA_LIVRE_INFER_OK`, `IA_LIVRE_LOAD_S`, etc.
 | `IA_LIVRE_HARNESS_PROXY=post_exit_microbench` | **Só B** — carga é proxy, não GGUF |
 | `IA_LIVRE_HARNESS_LOAD_KIND=proxy` | **Só B** |
 | `IA_LIVRE_HARNESS_PROXY_MS=` / `PROXY_OPS=` | **Só B** — métricas medidas do microbenchmark |
-| `IA_LIVRE_HARNESS_B_SKIP` | Legado do stub; **não** no caminho de sucesso da Etapa 12 |
+| `IA_LIVRE_HARNESS_CONTRACT_BACKEND=native_qemu` | **Só B (E20)** — serial E19 observado |
+| `IA_LIVRE_HARNESS_CONTRACT_MEM_SCHED=OK` | **Só B** — `MEM_SCHED_OK` no serial |
+| `IA_LIVRE_HARNESS_CONTRACT_TYPED_*=OK` / `PHASE_*=OK` | **Só B** — evidência tipada/fases |
+| `IA_LIVRE_HARNESS_B_SKIP` | Legado do stub; **não** no caminho de sucesso |
 
 Fora do mínimo v1: joules, p95 multi-request, VRAM multi-tenant (candidatos da architecture).
 
 ## Contrato do slot Linha B
 
-### Etapa 12 (atual) — proxy mínimo
+### Etapa 12 — proxy mínimo (+ Etapa 20 — evidência de contrato)
 
-1. Kernel emite `EXIT_BOOT_OK` + `NATIVE_BENCH_*` (COM1).
-2. `scripts/run-harness-line-b.sh` sobe QEMU, captura serial e reemite `HARNESS_LINE=B` + `HARNESS_OK` + marcadores proxy.
-3. **Não** declara hipótese comprovada; A e B **não** são lado a lado comparáveis até B rodar a carga canônica GGUF.
+1. Kernel emite `EXIT_BOOT_OK` + `MEM_SCHED_*` / `TYPED_*` (E19) + `NATIVE_BENCH_*` (COM1).
+2. `scripts/run-harness-line-b.sh` sobe QEMU, captura serial e reemite `HARNESS_LINE=B` + `HARNESS_OK` + marcadores **proxy** + `HARNESS_CONTRACT_*`.
+3. Proxy **permanece** (`LOAD_KIND=proxy`); evidência de contrato **≠** GGUF canônico.
+4. **Não** declara hipótese comprovada; A e B **não** são lado a lado comparáveis até B rodar a carga canônica GGUF.
 
 ### Contrato nativo (Etapa 20) vs Linha B
 
-Evidência de uso do contrato ADR 0003 (shim host ou, depois, QEMU+E19) documentada em [`runtime-contrato-nativo.md`](runtime-contrato-nativo.md).  
-**Não** substitui a Linha B no harness v1; **não** conta como carga canônica; **proibido** `TOKENS_PER_S` nesse caminho. Gate separado: `make verify-runtime-contract`.
+- **Shim host:** gate `make verify-runtime-contract` — **não** é Linha B.
+- **QEMU + E19:** evidência reemitida no harness B (`HARNESS_CONTRACT_*`) — ver [`runtime-contrato-nativo.md`](runtime-contrato-nativo.md).
+- **Proibido** `TOKENS_PER_S` / fingir GGUF em B.
 
 ### Ainda falta (carga canônica em B)
 
@@ -90,10 +95,10 @@ cargo build -p ia-livre-runtime
 # Linha A (host Linux + runtime)
 ./scripts/run-harness-line-a.sh
 
-# Linha B (QEMU — proxy pós-ExitBoot; não é TinyLlama)
+# Linha B (QEMU — proxy + evidência MEM_SCHED; não é TinyLlama)
 ./scripts/run-harness-line-b.sh
 
-# Gate
+# Gate (A GGUF + B proxy + HARNESS_CONTRACT_*)
 make verify-harness
 ```
 

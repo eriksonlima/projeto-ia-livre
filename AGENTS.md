@@ -171,10 +171,10 @@ Saída esperada: `IA_LIVRE_RUNTIME_USED=1`, `IA_LIVRE_TOOL_OK`, `IA_LIVRE_MEMORY
 
 Gate automatizado: `make verify-agent` (não exige QEMU/UEFI nem o nó P2P; requer GGUF).
 
-### Harness Linha A vs Linha B (Etapas 9 / 12)
+### Harness Linha A vs Linha B (Etapas 9 / 12 / 20)
 
-Metodologia: [`docs/harness-linha-a-b.md`](docs/harness-linha-a-b.md); caminho B mínimo: [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md).  
-**Não** confundir com métricas dos protótipos CPU/GPU. Linha A = host + GGUF; Linha B = proxy pós-ExitBoot no QEMU (**não** TinyLlama). Hipótese **não** comprovada.
+Metodologia: [`docs/harness-linha-a-b.md`](docs/harness-linha-a-b.md); caminho B mínimo: [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md); contrato: [`docs/runtime-contrato-nativo.md`](docs/runtime-contrato-nativo.md).  
+**Não** confundir com métricas dos protótipos CPU/GPU. Linha A = host + GGUF; Linha B = proxy pós-ExitBoot no QEMU **+** evidência `MEM_SCHED` (E19) reemitida como `HARNESS_CONTRACT_*` (**não** TinyLlama). Hipótese **não** comprovada.
 
 Pré-requisitos: runtime CPU (GGUF) para A; QEMU/OVMF para B. Sem GPU no harness v1.
 
@@ -188,17 +188,17 @@ cargo build -p ia-livre-runtime
 # Linha A — emite IA_LIVRE_HARNESS_LINE=A + IA_LIVRE_HARNESS_OK + load/tokens
 ./scripts/run-harness-line-a.sh
 
-# Linha B — QEMU proxy pós-ExitBoot (não TinyLlama; hipótese não comprovada)
+# Linha B — QEMU proxy + HARNESS_CONTRACT_* (não TinyLlama; hipótese não comprovada)
 ./scripts/run-harness-line-b.sh
 ```
 
-Linha B (Etapa 12): proxy pós-ExitBoot no QEMU — **não** é TinyLlama; ver [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md). Hipótese **não** comprovada.
+Linha B: proxy E12 **preservado** (`LOAD_KIND=proxy`) + evidência contrato E19 (`HARNESS_CONTRACT_BACKEND=native_qemu`, `MEM_SCHED=OK`, tipados/fases). **Proibido** `TOKENS_PER_S` / fingir GGUF. Ver [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md).
 
-Gate automatizado: `make verify-harness` (A = GGUF no host; B = QEMU/kernel proxy; requer GGUF para A).
+Gate automatizado: `make verify-harness` (A = GGUF; B = proxy + contrato; requer GGUF para A).
 
 ### Contrato nativo — consumidor / shim host (Etapa 20)
 
-Consumidor do contrato ADR 0003 no **host** (stub/shim) — **não** é Linha B, **não** exige QEMU nem kernel E19 mergeado. Doc: [`docs/runtime-contrato-nativo.md`](docs/runtime-contrato-nativo.md). Hipótese **não** comprovada; **proibido** `TOKENS_PER_S`.
+Consumidor do contrato ADR 0003: (1) **shim host** — sem QEMU; (2) **harness B** observa serial E19. Doc: [`docs/runtime-contrato-nativo.md`](docs/runtime-contrato-nativo.md). Hipótese **não** comprovada; **proibido** `TOKENS_PER_S`. Shim host **≠** Linha B.
 
 ```bash
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
@@ -206,9 +206,8 @@ cargo build -p ia-livre-runtime-contract
 cargo run -p ia-livre-runtime-contract
 # Esperado: IA_LIVRE_CONTRACT_* + IA_LIVRE_RUNTIME_CONTRACT_OK
 make verify-runtime-contract
+# Evidência nativa: ./scripts/run-harness-line-b.sh (HARNESS_CONTRACT_*)
 ```
-
-Integração QEMU contra marcadores reais da Etapa 19 (`MEM_SCHED_OK` / `TYPED_*`) fica para a Task 4 (bloqueada até E19).
 
 ## Como verificar
 
@@ -308,9 +307,9 @@ grep -q 'IA_LIVRE_AGENT_OK' agent/src/main.rs
 
 `make verify-agent` falha se o modelo estiver ausente ou se faltarem `IA_LIVRE_TOOL_OK` / `IA_LIVRE_MEMORY_OK` / `IA_LIVRE_AGENT_OK` (timeout padrão 300s; `VERIFY_AGENT_TIMEOUT`). Gates do kernel, runtime e nó permanecem.
 
-### Gate do harness Linha A vs Linha B (Etapas 9 / 12 — adicional)
+### Gate do harness Linha A vs Linha B (Etapas 9 / 12 / 20 — adicional)
 
-Requer GGUF local para A e QEMU/UEFI para B. **Não** prova a hipótese — A = carga canônica; B = proxy pós-ExitBoot.
+Requer GGUF local para A e QEMU/UEFI para B. **Não** prova a hipótese — A = carga canônica; B = proxy + evidência `MEM_SCHED` (sem `TOKENS_PER_S`).
 
 ```bash
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
@@ -324,13 +323,14 @@ test -f docs/runtime-nativo-linha-b.md
 make verify-harness
 grep -q 'IA_LIVRE_HARNESS_OK' scripts/run-harness-line-a.sh
 grep -q 'post_exit_microbench' scripts/run-harness-line-b.sh
+grep -q 'HARNESS_CONTRACT_BACKEND=native_qemu' scripts/run-harness-line-b.sh
 ```
 
-`make verify-harness` exige A (`LINE=A`, `OK`, load/tokens) **e** B (`LINE=B`, `OK`, `PROXY=*`, sem `TOKENS_PER_S` / sem `B_SKIP`). Timeout padrão 300s; `VERIFY_HARNESS_TIMEOUT`. Gates existentes permanecem.
+`make verify-harness` exige A (`LINE=A`, `OK`, load/tokens) **e** B (`LINE=B`, `OK`, `PROXY=*`, `HARNESS_CONTRACT_MEM_SCHED=OK`, tipados/fases, sem `TOKENS_PER_S` / sem `LOAD_S` / sem `B_SKIP` / sem `LOAD_KIND=gguf`). Timeout padrão 300s; `VERIFY_HARNESS_TIMEOUT`. Gates existentes permanecem.
 
 ### Gate do contrato nativo host (Etapa 20 — adicional)
 
-Só Rust no host. **Não** usa QEMU, GGUF nem o kernel E19. Shim ≠ Linha B. Hipótese **não** comprovada.
+Só Rust no host. **Não** usa QEMU nem GGUF. Shim ≠ Linha B. Hipótese **não** comprovada. Evidência QEMU do contrato fica em `verify-harness` (B).
 
 ```bash
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
@@ -341,7 +341,7 @@ grep -q 'IA_LIVRE_RUNTIME_CONTRACT_OK' runtime-contract/src/main.rs
 grep -q 'IA_LIVRE_CONTRACT_BACKEND' runtime-contract/src/main.rs
 ```
 
-`make verify-runtime-contract` exige `CONTRACT_BACKEND=host_shim`, alloc Weights/KvCache, fases Prefill+Decode e `RUNTIME_CONTRACT_OK` (timeout padrão 30s; `VERIFY_RUNTIME_CONTRACT_TIMEOUT`). **Não** exige `MEM_SCHED_OK` (provedor E19). Gates existentes permanecem; `verify-harness` continua A+B proxy.
+`make verify-runtime-contract` exige `CONTRACT_BACKEND=host_shim`, alloc Weights/KvCache, fases Prefill+Decode e `RUNTIME_CONTRACT_OK` (timeout padrão 30s; `VERIFY_RUNTIME_CONTRACT_TIMEOUT`). Gates existentes permanecem.
 
 ## PATH
 
@@ -398,8 +398,9 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `LICENSE` / `NOTICE` — Apache-2.0 (1ª parte); ADR [`0007`](docs/adr/0007-licencas-por-componente.md)
 - `docs/licencas-terceiros.md` — aviso de deps (llama.cpp, uefi, …)
 - `scripts/run-harness-line-a.sh` — corrida Linha A (wrapper do runtime, marcadores `HARNESS_`)
-- `scripts/run-harness-line-b.sh` — Linha B via QEMU (proxy; `HARNESS_OK` + `PROXY_*`)
-- `scripts/verify-harness.sh` — gate A (GGUF) + B (proxy QEMU)
+- `scripts/run-harness-line-b.sh` — Linha B via QEMU (proxy + `HARNESS_CONTRACT_*`; `HARNESS_OK`)
+- `scripts/verify-harness.sh` — gate A (GGUF) + B (proxy QEMU + evidência MEM_SCHED)
+
 - `build/esp/` — ESP gerada (gitignored via `build/`)
 
 ## Fora de escopo do agente

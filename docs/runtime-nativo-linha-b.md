@@ -15,9 +15,11 @@ Pré-requisito kernel: [`kernel-pos-boot-services.md`](kernel-pos-boot-services.
 | GGUF TinyLlama | **Ausente** nesta etapa |
 | Hipótese | **Não** comprovada; métricas B **não** comparáveis a A |
 
-> O desenho candidato que *diferenciaria* B de A de forma model-aware (classes `Weights`/`KvCache` + fases Prefill/Decode) está em [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-scheduler-nativo.md) / ADR 0003. A **implementação mínima** no kernel (Etapa 19) está em [`memoria-scheduler-impl-minima.md`](memoria-scheduler-impl-minima.md) (`MEM_SCHED_*` / `TYPED_*`). O **consumidor** (shim host / evidência de contrato) é a Etapa 20 — ver [`runtime-contrato-nativo.md`](runtime-contrato-nativo.md). Este proxy `NATIVE_BENCH_*` **não** realiza o contrato; evidência de contrato **≠** Linha B GGUF e **não** emite `TOKENS_PER_S`.
+> O desenho candidato que *diferenciaria* B de A de forma model-aware (classes `Weights`/`KvCache` + fases Prefill/Decode) está em [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-scheduler-nativo.md) / ADR 0003. A **implementação mínima** no kernel (Etapa 19) está em [`memoria-scheduler-impl-minima.md`](memoria-scheduler-impl-minima.md) (`MEM_SCHED_*` / `TYPED_*`). O **consumidor** (shim host / evidência de contrato) é a Etapa 20 — ver [`runtime-contrato-nativo.md`](runtime-contrato-nativo.md). Este proxy `NATIVE_BENCH_*` **não** realiza o contrato sozinho; o harness B (E20) **também** observa `MEM_SCHED_*` e reemite `HARNESS_CONTRACT_*`. Evidência de contrato **≠** carga GGUF canônica e **não** emite `TOKENS_PER_S`.
 
 ## Marcadores kernel (COM1, após `EXIT_BOOT_OK`)
+
+Ordem: `MEM_SCHED_*` / `TYPED_*` (E19) **antes** do proxy.
 
 | Marcador | Significado |
 |----------|-------------|
@@ -28,7 +30,7 @@ Pré-requisito kernel: [`kernel-pos-boot-services.md`](kernel-pos-boot-services.
 
 ## O que o harness B reemite
 
-`LINE=B`, `HARNESS_OK`, `PROXY=post_exit_microbench`, `LOAD_KIND=proxy`, `PROXY_MS=`, `PROXY_OPS=`, `MODEL=proxy-post-exit-v1`, `N_PREDICT=0`.
+`LINE=B`, `HARNESS_OK`, `PROXY=post_exit_microbench`, `LOAD_KIND=proxy`, `PROXY_MS=`, `PROXY_OPS=`, `MODEL=proxy-post-exit-v1`, `N_PREDICT=0`, mais `HARNESS_CONTRACT_BACKEND=native_qemu` + `HARNESS_CONTRACT_MEM_SCHED=OK` + tipados/fases (E20).
 
 **Proibido:** `TOKENS_PER_S`, `LOAD_S` como load GGUF, nome do modelo TinyLlama, inventar números.
 

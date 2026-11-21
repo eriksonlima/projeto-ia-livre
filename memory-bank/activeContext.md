@@ -2,20 +2,20 @@
 
 ## Foco atual
 
-- **Etapa 20** `em_andamento` — Runtime falando o contrato nativo (B14)
-- Issue [#20](https://github.com/eriksonlima/projeto-ia-livre/issues/20); Spec: `specs/runtime-contrato-nativo/`
-- Lease: `cursor-agent-principal-e20` (worktree `projeto-ia-livre-b14`)
-- Tasks 1–3 feitas; **Task 4** (QEMU + contrato E19) em implementação
+- **Etapa 20** — Runtime falando o contrato nativo (B14) — Task 4 concluída; fechando etapa
+- Issue [#20](https://github.com/eriksonlima/projeto-ia-livre/issues/20)
+- Spec: `specs/runtime-contrato-nativo/` (Tasks 1–4 feitas)
 
 ## Mudanças recentes
 
-- Merge `origin/main` (E19 feita) na branch B14
-- Claim Etapa 20; status → `em_andamento`
+- Task 4: harness B observa `MEM_SCHED_*`/`TYPED_*`, reemite `HARNESS_CONTRACT_*`, preserva proxy
+- Gates: `make verify`, `make verify-runtime-contract`, `make verify-harness` OK
+- Hipótese **não** comprovada
 
 ## Próximo passo
 
-- Task 4: harness B observa `MEM_SCHED_*`/`TYPED_*`, reemite evidência de contrato, preserva proxy; gates
+- Marcar Etapa 20 `feita`, liberar lease, merge em `main`; não duplicar promoções B15+ (paralelo)
 
 ## Notas
 
-- Shim host ≠ Linha B; sem `TOKENS_PER_S`; hipótese **não** comprovada
+- Shim host ≠ Linha B; B = proxy + evidência contrato; sem `TOKENS_PER_S`

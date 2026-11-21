@@ -89,7 +89,13 @@ for marker in \
   'IA_LIVRE_HARNESS_PROXY_MS=' \
   'IA_LIVRE_HARNESS_PROXY_OPS=' \
   'IA_LIVRE_HARNESS_MODEL=proxy-post-exit-v1' \
-  'IA_LIVRE_HARNESS_N_PREDICT=0'; do
+  'IA_LIVRE_HARNESS_N_PREDICT=0' \
+  'IA_LIVRE_HARNESS_CONTRACT_BACKEND=native_qemu' \
+  'IA_LIVRE_HARNESS_CONTRACT_MEM_SCHED=OK' \
+  'IA_LIVRE_HARNESS_CONTRACT_TYPED_WEIGHTS=OK' \
+  'IA_LIVRE_HARNESS_CONTRACT_TYPED_KVCACHE=OK' \
+  'IA_LIVRE_HARNESS_CONTRACT_PHASE_PREFILL=OK' \
+  'IA_LIVRE_HARNESS_CONTRACT_PHASE_DECODE=OK'; do
   if ! grep -q "$marker" "$LOG_B"; then
     echo "GATE_FAIL: marcador ausente na Linha B: $marker"
     fail=1
@@ -105,8 +111,16 @@ if grep -qE 'IA_LIVRE_HARNESS_TOKENS_PER_S=' "$LOG_B"; then
   echo "GATE_FAIL: B não deve emitir TOKENS_PER_S (fraude / não-proxy)"
   fail=1
 fi
+if grep -qE 'IA_LIVRE_HARNESS_LOAD_S=' "$LOG_B"; then
+  echo "GATE_FAIL: B não deve emitir LOAD_S (load GGUF falso)"
+  fail=1
+fi
 if grep -qiE 'IA_LIVRE_HARNESS_MODEL=.*tinyllama|IA_LIVRE_HARNESS_MODEL=.*\.gguf' "$LOG_B"; then
   echo "GATE_FAIL: B não deve fingir modelo GGUF TinyLlama"
+  fail=1
+fi
+if grep -qE 'IA_LIVRE_HARNESS_LOAD_KIND=gguf' "$LOG_B"; then
+  echo "GATE_FAIL: B não deve fingir LOAD_KIND=gguf"
   fail=1
 fi
 
@@ -115,5 +129,5 @@ if (( fail )); then
   exit 1
 fi
 
-echo "GATE_OK: harness — A (GGUF) ok + B (proxy QEMU) ok — hipótese NÃO comprovada"
+echo "GATE_OK: harness — A (GGUF) ok + B (proxy QEMU + contrato MEM_SCHED) ok — hipótese NÃO comprovada"
 exit 0

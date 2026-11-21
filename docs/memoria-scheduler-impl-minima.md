@@ -16,7 +16,7 @@ Demonstrar no próprio kernel (demo pós-`EXIT_BOOT_OK`) o mecanismo nativo cand
 2. Aplicar hints `Prefill` e `Decode` com política de quantum mínima (Prefill > Decode).
 3. Emitir marcadores serial observáveis; gate `make verify` cobre `IA_LIVRE_MEM_SCHED_OK`.
 
-Quem “fala” o contrato nesta etapa é o **kernel** (prova de mecanismo). Runtime host falando o contrato = etapa futura (B14).
+Quem “fala” o contrato nesta etapa é o **kernel** (prova de mecanismo). Runtime/harness falando o contrato = Etapa 20 ([`runtime-contrato-nativo.md`](runtime-contrato-nativo.md)).
 
 ## Constantes
 
@@ -47,7 +47,7 @@ Quanta são unidades arbitrárias (slots/ticks de política) — **não** timer/
 ```
 
 Regressão obrigatória: marcadores Etapas 4/10/11 + `IA_LIVRE_NATIVE_BENCH_OK`.  
-Harness B continua a depender de `NATIVE_BENCH_OK`, **não** de `MEM_SCHED_OK`.
+Harness B (Etapa 20) exige `NATIVE_BENCH_OK` **e** `MEM_SCHED_OK` / `TYPED_*` (reemite `HARNESS_CONTRACT_*`); proxy permanece `LOAD_KIND=proxy`.
 
 ## Marcadores serial (COM1)
 
@@ -98,7 +98,7 @@ make verify    # VERIFY_TIMEOUT default 45s
 - ABI estável / syscalls finais
 - Multi-tenant; resize/free sofisticados; MMU completa; preempt real
 - GPU manager / multi-GPU (ADR 0006)
-- Runtime host falando o contrato (B14)
+- Runtime host falando o contrato (Etapa 20 / B14 — fora desta etapa)
 - Confundir este contrato com o proxy `NATIVE_BENCH_*`
 
 ## Spec

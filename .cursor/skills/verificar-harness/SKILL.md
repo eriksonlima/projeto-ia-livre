@@ -2,8 +2,9 @@
 name: verificar-harness
 description: >-
   Roda o gate do harness Linha A vs B (make verify-harness): A = GGUF no host;
-  B = proxy QEMU pós-ExitBoot. Use ao validar harness, run-harness-line-*.sh
-  ou docs runtime-nativo-linha-b / harness-linha-a-b. Não prova a hipótese.
+  B = proxy QEMU + evidência HARNESS_CONTRACT_* (MEM_SCHED E19). Use ao validar
+  harness, run-harness-line-*.sh ou docs runtime-nativo / harness / contrato.
+  Não prova a hipótese.
 disable-model-invocation: true
 ---
 
@@ -11,7 +12,7 @@ disable-model-invocation: true
 
 ## Quando
 
-Após alterar `scripts/run-harness-line-a.sh`, `scripts/run-harness-line-b.sh`, `scripts/verify-harness.sh`, `docs/harness-linha-a-b.md`, `docs/runtime-nativo-linha-b.md` ou o microbenchmark `NATIVE_BENCH_*` no kernel.
+Após alterar `scripts/run-harness-line-a.sh`, `scripts/run-harness-line-b.sh`, `scripts/verify-harness.sh`, `docs/harness-linha-a-b.md`, `docs/runtime-nativo-linha-b.md`, `docs/runtime-contrato-nativo.md` ou marcadores `NATIVE_BENCH_*` / `MEM_SCHED_*` no kernel.
 
 ## Pré-requisitos
 
@@ -27,12 +28,13 @@ export LIBCLANG_PATH="${LIBCLANG_PATH:-/usr/lib/llvm-18/lib}"
 make verify-harness
 ```
 
-Sucesso: `GATE_OK: harness — A (GGUF) ok + B (proxy QEMU) ok — hipótese NÃO comprovada`.
+Sucesso: `GATE_OK: harness — A (GGUF) ok + B (proxy QEMU + contrato MEM_SCHED) ok — hipótese NÃO comprovada`.
 
 Timeout: `VERIFY_HARNESS_TIMEOUT=600 make verify-harness`.
 
 ## Não fazer
 
-- Não tratar B como TinyLlama / emitir `TOKENS_PER_S` em B
+- Não tratar B como TinyLlama / emitir `TOKENS_PER_S` ou `LOAD_S` em B
+- Não fingir `LOAD_KIND=gguf` em B
 - Não declarar hipótese comprovada
-- Não confundir com `make verify` (só kernel) ou `make verify-runtime`
+- Não confundir com `make verify` (só kernel) ou `make verify-runtime` / `verify-runtime-contract` (shim host)

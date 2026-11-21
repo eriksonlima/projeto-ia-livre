@@ -4,49 +4,50 @@ Consumidor do contrato candidato ADR 0003 (`Weights` / `KvCache` + fases Prefill
 
 Desenho: [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-scheduler-nativo.md).  
 ADR: [`adr/0003-memoria-model-aware-e-scheduler-fases.md`](adr/0003-memoria-model-aware-e-scheduler-fases.md).  
-Proxy B (não é este contrato): [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md).  
+Provedor kernel (Etapa 19): [`memoria-scheduler-impl-minima.md`](memoria-scheduler-impl-minima.md).  
+Proxy B (não é este contrato sozinho): [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md).  
 Harness: [`harness-linha-a-b.md`](harness-linha-a-b.md).
 
 > **Hipótese A vs B: não comprovada.** Evidência de contrato ≠ carga GGUF canônica em B ≠ prova.
 
 ## Dependência da Etapa 19
 
-O **provedor** do contrato no kernel (allocator tipado + política de quantum + marcadores serial pós-ExitBoot) é a Etapa 19. Enquanto E19 estiver `em_andamento` / ausente em `main`, esta etapa avança com:
+O **provedor** do contrato no kernel (allocator tipado + política de quantum + marcadores serial pós-ExitBoot) é a Etapa 19 — **feita** em `main` (`MEM_SCHED_OK` / `TYPED_*`).
+
+Esta etapa entrega:
 
 1. Documentação desta superfície (este doc).
 2. **Shim host** (`ia-livre-runtime-contract`) — stub alinhado ao desenho, **sem** QEMU.
 3. Gate host `make verify-runtime-contract`.
-
-Integração nativa QEMU contra marcadores reais E19 fica **bloqueada** até E19 mergear o caminho verificável.
+4. **Integração QEMU** (Task 4): `scripts/run-harness-line-b.sh` observa o serial E19 e reemite evidência honesta no namespace `HARNESS_CONTRACT_*`, **preservando** o proxy E12.
 
 ## Superfície (esboço — não ABI estável)
 
-Alinhado ao desenho; **não** congela syscall:
+Alinhado ao desenho / impl. E19; **não** congela syscall:
 
 ```
-Runtime / shim                         Kernel (E19) ou stub host
-──────────────                         ─────────────────────────
+Runtime / shim / harness B             Kernel (E19) ou stub host
+──────────────────────────             ─────────────────────────
 mem_alloc(class=Weights|KvCache, n) →  região tipada
-sched_set_phase(Prefill|Decode|…)   →  hint / quantum candidato
+sched_set_phase(Prefill|Decode|…)   →  hint / quantum
 ```
 
 Classes mínimas: `Weights`, `KvCache`.  
-Fases mínimas exercidas nesta etapa: `Prefill` → `Decode` (Load/Idle candidatas no desenho).
+Fases mínimas: Prefill → Decode (serial E19: `prefill` / `decode`).
 
-## Marcadores do provedor (Etapa 19 — candidatos)
+## Marcadores do provedor (Etapa 19 — canônicos)
 
-Nomes esperados pelo Pronto quando da E19 / desenho — **não inventados aqui como ABI final**. Se E19 publicar nomes diferentes no merge, este doc e o consumidor nativo alinham-se na Task 4.
+Contrato: [`memoria-scheduler-impl-minima.md`](memoria-scheduler-impl-minima.md).
 
-| Marcador (candidato) | Significado |
-|----------------------|-------------|
-| `IA_LIVRE_TYPED_WEIGHTS_OK` (e `TYPED_*` irmãos) | Região Weights alocada/tipada |
-| `IA_LIVRE_TYPED_KVCACHE_OK` (candidato / irmão) | Região KvCache alocada/tipada |
-| `IA_LIVRE_PHASE=Prefill` \| `Decode` | Hint de fase ativo |
-| `IA_LIVRE_QUANTUM=…` | Quantum/política mínima aplicada |
+| Marcador | Significado |
+|----------|-------------|
+| `IA_LIVRE_TYPED_WEIGHTS_BYTES=` / `TYPED_WEIGHTS_OK` | Região Weights |
+| `IA_LIVRE_TYPED_KVCACHE_BYTES=` / `TYPED_KVCACHE_OK` | Região KvCache |
+| `IA_LIVRE_PHASE=prefill` \| `decode` | Hint de fase |
+| `IA_LIVRE_QUANTUM=` | Quantum da fase (Prefill=8, Decode=2) |
 | `IA_LIVRE_MEM_SCHED_OK` | Caminho memória+scheduler mínimo OK |
 
-Se a Etapa 19 publicar nomes finais ligeiramente diferentes no merge, a Task 4 alinha o consumidor nativo — **sem** inventar ABI paralela.  
-Até E19 publicar em `main`, estes **não** são exigidos por `make verify-runtime-contract` (gate host).
+Gate: `make verify` (inclui estes + `NATIVE_BENCH_OK`).
 
 ## Marcadores do consumidor / shim host (canônicos — Etapa 20)
 
@@ -61,29 +62,49 @@ Namespace distinto do harness (`HARNESS_*`) e do proxy (`NATIVE_BENCH_*`).
 | `IA_LIVRE_CONTRACT_PHASE=Decode` | Fase Decode anunciada (após Prefill) |
 | `IA_LIVRE_RUNTIME_CONTRACT_OK` | Sequência mínima do consumidor concluída |
 
-Backend futuro (Task 4): `IA_LIVRE_CONTRACT_BACKEND=native_qemu` (ou equivalente documentado) quando houver evidência serial E19 — **sem** fingir GGUF.
+## Marcadores harness B — evidência nativa (Task 4)
+
+Observados no serial QEMU e **reemitidos** por `run-harness-line-b.sh` (namespace `HARNESS_CONTRACT_*`).  
+Proxy E12 **permanece** (`PROXY=*`, `LOAD_KIND=proxy`).
+
+| Marcador | Significado |
+|----------|-------------|
+| `IA_LIVRE_HARNESS_CONTRACT_BACKEND=native_qemu` | Evidência veio do kernel E19 via QEMU |
+| `IA_LIVRE_HARNESS_CONTRACT_MEM_SCHED=OK` | `MEM_SCHED_OK` visto no serial |
+| `IA_LIVRE_HARNESS_CONTRACT_TYPED_WEIGHTS=OK` | `TYPED_WEIGHTS_OK` visto |
+| `IA_LIVRE_HARNESS_CONTRACT_TYPED_KVCACHE=OK` | `TYPED_KVCACHE_OK` visto |
+| `IA_LIVRE_HARNESS_CONTRACT_PHASE_PREFILL=OK` | `PHASE=prefill` visto |
+| `IA_LIVRE_HARNESS_CONTRACT_PHASE_DECODE=OK` | `PHASE=decode` visto |
+| `IA_LIVRE_HARNESS_CONTRACT_*_BYTES=` | Espelha bytes tipados (opcional) |
+
+**Proibido** neste caminho: `TOKENS_PER_S`, `LOAD_S`, `LOAD_KIND=gguf`, modelo TinyLlama.
 
 ## Harness B: PROXY vs contrato
 
 | Caminho | O que é | Marcadores | `TOKENS_PER_S` |
 |---------|---------|------------|----------------|
 | Linha A | Host + GGUF | `HARNESS_LINE=A`, load/tokens | Permitido (A) |
-| Linha B (E12) | QEMU + proxy microbench | `HARNESS_LINE=B`, `PROXY=*`, `NATIVE_BENCH_*` | **Proibido** |
-| Contrato host (E20) | Shim no Linux | `CONTRACT_*`, `RUNTIME_CONTRACT_OK` | **Proibido** (não é inferência) |
-| Contrato nativo (E20 T4) | QEMU + E19 | serial `MEM_SCHED`/`TYPED_*` + reemissão honesta | **Proibido** até GGUF real em B |
+| Linha B (E12+E20) | QEMU + proxy **e** evidência MEM_SCHED | `PROXY=*`, `HARNESS_CONTRACT_*` | **Proibido** |
+| Contrato host (E20) | Shim no Linux | `CONTRACT_*`, `RUNTIME_CONTRACT_OK` | **Proibido** |
 
 - Shim host **não** conta como Linha B.
-- Evidência de contrato **não** substitui o proxy no `verify-harness` até a Task 4 decidir pontes explícitas.
-- **Proibido** emitir `TOKENS_PER_S` / fingir load GGUF em qualquer caminho B ou de contrato desta etapa.
+- Evidência de contrato **não** é carga GGUF canônica em B (B15+).
+- Hipótese **não** comprovada.
 
-## Como rodar (shim host)
+## Como rodar
 
 ```bash
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+
+# Shim host (sem QEMU)
 cargo build -p ia-livre-runtime-contract
 cargo run -p ia-livre-runtime-contract
-# Esperado: CONTRACT_* + IA_LIVRE_RUNTIME_CONTRACT_OK
 make verify-runtime-contract
+
+# Evidência nativa via harness B (QEMU + E19 + proxy)
+./scripts/run-harness-line-b.sh
+make verify-harness   # A GGUF + B proxy+contrato
+make verify           # serial kernel incl. MEM_SCHED_OK
 ```
 
 ## O que esta etapa **não** faz
@@ -91,4 +112,4 @@ make verify-runtime-contract
 - Não prova a hipótese A vs B
 - Não carrega TinyLlama no IA Livre
 - Não implementa GPU manager
-- Não edita o mecanismo E19 no `kernel/` enquanto outro agente o detém
+- Não altera o mecanismo E19 no `kernel/` (só observa/reemite)
