@@ -2,14 +2,14 @@
 
 ## Foco atual
 
-- Etapas 1–49 **feitas**
-- E49: bridge host↔nativo (`BRIDGE_*`; ADR 0018); gate `verify-autonomia-bridge`
-- Topo Abertas: **B44** (mDNS real)
+- Etapa **50** `em_andamento` (B44 → mDNS) · Issue #50 · Spec `specs/mdns-rede-ia-livre/`
+- Task 1 feita (contrato docs); Task 2 = impl `node/` com `mdns-sd`
+- Lease: cursor-agent-main · etapa 50
 
 ## Próximo passo
 
-- Promover B44 → Etapa 50 (mDNS) ou continuar
+- Task 2: anúncio/resolução `_ia-livre._tcp` + `DISC_MODE=mdns` / `DISC_OK`
 
 ## Notas
 
-- Lease: liberar após push E49; claim antes da próxima `em_andamento`
+- E49 bridge feita; `verify-agent` independente do SO

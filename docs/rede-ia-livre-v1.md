@@ -93,9 +93,10 @@ make verify-node
 ```
 
 Exige regressão `--peer` **e** estágio bootstrap (`IA_LIVRE_DISC_OK` + marcadores v1).  
+mDNS real (Etapa 50): opt-in no gate (`VERIFY_NODE_MDNS_SKIP=0`) ou skip honesto — ver [`rede-descoberta-wan.md`](rede-descoberta-wan.md).  
 Timeout: `VERIFY_NODE_TIMEOUT` (default 45s **por estágio**).
 
 ## Fora deste v1 (núcleo framing)
 
 DHT, relay executável, NAT traversal, marketplace, integração runtime/kernel, libp2p/Iroh, QUIC obrigatório.  
-mDNS = opt-in / skip no gate (Etapa 39).
+mDNS = serviço `_ia-livre._tcp` implementado na Etapa 50 (opt-in / skip CI); **não** substitui IDENT.
