@@ -134,12 +134,12 @@ if ! grep -qE 'IA_LIVRE_HARNESS_TOKENS_PER_S=[0-9]' "$LOG_B" \
   exit 0
 fi
 
-# Espécie canônica A: 22L + n_predict=32. Subset E44 (2L×1) → INCONCLUSIVO (≠ REFUTA).
+# Espécie canônica: 22L + n_predict=32. Abaixo do teto → INCONCLUSIVO limpo (ADR 0016).
 PL="$(grep -oE 'IA_LIVRE_HARNESS_RUNTIME_NATIVE_PREFILL_LAYERS=[0-9]+' "$LOG_B" | head -1 | cut -d= -f2 || true)"
 NP="$(grep -oE 'IA_LIVRE_HARNESS_N_PREDICT=[0-9]+' "$LOG_B" | head -1 | cut -d= -f2 || true)"
 if [[ "${PL:-0}" != "22" || "${NP:-0}" != "32" ]]; then
   echo "IA_LIVRE_HARNESS_VERDICT=INCONCLUSIVO"
-  echo "IA_LIVRE_HARNESS_VERDICT_REASON=E44_subset_generate_not_canonical_species_layers=${PL:-?}_npredict=${NP:-?}"
+  echo "IA_LIVRE_HARNESS_VERDICT_REASON=E45_perf_ceiling_below_canonical_layers=${PL:-?}_npredict=${NP:-?}"
   exit 0
 fi
 

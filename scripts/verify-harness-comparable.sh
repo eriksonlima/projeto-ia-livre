@@ -75,12 +75,17 @@ if ! grep -q 'IA_LIVRE_HARNESS_LOAD_KIND=gguf' "$LOG"; then
     fail=1
   fi
 fi
-# Subset generate: COMPROVA/REFUTA ilegais (espécie ≠ A)
-if grep -q 'E44_subset_generate_not_canonical_species' "$LOG"; then
+# Teto abaixo do canônico: COMPROVA/REFUTA ilegais
+if grep -q 'E45_perf_ceiling_below_canonical' "$LOG"; then
   if [[ "$verdict" == "COMPROVA" || "$verdict" == "REFUTA" ]]; then
-    echo "GATE_FAIL: VERDICT=$verdict ilegal com geração subset (exige INCONCLUSIVO)"
+    echo "GATE_FAIL: VERDICT=$verdict ilegal com teto abaixo do canônico (exige INCONCLUSIVO)"
     fail=1
   fi
+fi
+# Reasons proibidos (legado / subset E44)
+if grep -qE 'E44_subset_generate|E43_no_gguf_full_prefill|no_gguf_full_prefill_22L|E44_b_proxy_sem_gguf' "$LOG"; then
+  echo "GATE_FAIL: VERDICT_REASON legado/proibido na Etapa 45 (ADR 0016)"
+  fail=1
 fi
 if grep -qE 'fraude_tokens' "$LOG"; then
   echo "GATE_FAIL: fraude de tokens detectada no runner"

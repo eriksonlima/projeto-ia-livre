@@ -330,8 +330,9 @@ Pronto quando: geração canônica em B emite `TOKENS_PER_S` (e marcadores Decod
 
 ## Etapa 45 — Re-corrida harness A vs B com geração real (veredito limpo)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#45](https://github.com/eriksonlima/projeto-ia-livre/issues/45)  
 Spec: specs/recorrida-harness-veredito-limpo/  
-Pronto quando: `make verify-harness-comparable` com B gerando; veredito ∈ {COMPROVA, REFUTA, INCONCLUSIVO} **sem** reason de proxy/`no_gguf_full_prefill`/subset-espécie; metodologia quieta preservada.
+Pronto quando: `make verify-harness-comparable` com B gerando; veredito ∈ {COMPROVA, REFUTA, INCONCLUSIVO} **sem** reason de proxy/`no_gguf_full_prefill`/subset-espécie; metodologia quieta preservada.  
+**Desfecho:** ADR 0016; B gera; comparable `INCONCLUSIVO` / `E45_perf_ceiling_below_canonical_layers=2_npredict=1` (22L×32 inviável no gate); sem COMPROVA forçado.
 

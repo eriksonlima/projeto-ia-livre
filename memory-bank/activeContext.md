@@ -2,20 +2,18 @@
 
 ## Foco atual
 
-- Etapas 43–44 **feitas** (Prefill subset + Decode/`TOKENS_PER_S` subset)
-- Hipótese A vs B: ainda **INCONCLUSIVO** (espécie B ≠ A plena)
-- Próximo backlog: **B39** (re-corrida comparável com geração “limpa”) — pode exigir Prefill 22L / n_predict=32
+- Etapas 1–45 **feitas**
+- Hipótese A vs B: **INCONCLUSIVO** (`E45_perf_ceiling_below_canonical`) — B gera, espécie &lt; 22L×32
+- Backlog Abertas: topo **B40** (evidência boot metal)
 
 ## Mudanças recentes
 
-- E43: ADR 0014, KV + Prefill 2×2 guest
-- E44: ADR 0015, Decode greedy, `LOAD_KIND=gguf`, release UEFI, comparable subset INCONCLUSIVO
+- E43 Prefill/KV subset; E44 Decode+TOKENS_PER_S; E45 veredito limpo (teto perf)
 
 ## Próximo passo
 
-- Promover B39 ou B40 conforme ordem sensata (hipótese vs USB)
-- Lease liberar após push E44
+- Promover B40 (USB/metal) ou pedido explícito de otimização 22L
 
 ## Notas
 
-- README capa: sem mudança necessária (AGENTS cobre)
+- Lease livre após push E45

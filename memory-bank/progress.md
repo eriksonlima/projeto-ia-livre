@@ -2,15 +2,15 @@
 
 ## Funciona
 
-- Etapas 1–44 feitas
-- Linha B: Prefill subset + Decode + `TOKENS_PER_S` medidos (`n_predict=1`, 2 layers)
-- Gates: verify / verify-harness / verify-harness-comparable / verify-docs-consistency
+- Etapas 1–45
+- Linha B: geração real (`TOKENS_PER_S`) subset 2L×1 + release UEFI
+- Comparable limpo: `E45_perf_ceiling_below_canonical_*`
 
 ## Residual
 
-- Prefill 22L pleno + n_predict=32 canônico ainda não (comparable INCONCLUSIVO)
-- Boot metal real: B40
+- 22L × n_predict=32 (teto perf / otimização futura)
+- Boot metal: B40
 
 ## Roadmap
 
-- Ver `ROADMAP.md` — próxima promoção: B39 (topo Abertas após arquivar B38)
+- Sem `em_andamento` após fechar E45; próxima promoção: B40
