@@ -8,12 +8,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-### B36 — Geração canônica Prefill+Decode+sampling na Linha B (TOKENS_PER_S)
-
-- Issue: [#42](https://github.com/eriksonlima/projeto-ia-livre/issues/42)
-- Origem: desfecho Etapa 31 — `no_gguf_generate` (mapa/dequant/op ok)
-- Notas: necessário para hipótese sair de INCONCLUSIVO; B26 depende disto
-- Pronto quando: `LOAD_KIND=gguf` + `TOKENS_PER_S`/`LOAD_S` medidos + `RUNTIME_NATIVE_OK`
 
 ### B26 — Re-corrida harness A vs B com geração real em B
 
@@ -79,6 +73,12 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Pronto quando: `architecture.md` / README-AGENTS refletem estado atual sem ambiguidade
 
 ## Promovidas / arquivadas
+
+### B36 — Geração canônica Prefill+Decode+sampling na Linha B (TOKENS_PER_S)
+
+- Promovido para Etapa 32 do roadmap (promoção autônoma após Etapa 31).
+- Issue: [#42](https://github.com/eriksonlima/projeto-ia-livre/issues/42)
+- Etapa: [Etapa 32 — Geração canônica na Linha B](ROADMAP.md)
 
 ### B25 — Forward GGUF mínimo em runtime-native (TOKENS_PER_S na Linha B)
 

@@ -223,3 +223,10 @@ Issue: [#31](https://github.com/eriksonlima/projeto-ia-livre/issues/31)
 Spec: specs/forward-gguf-linha-b/  
 Pronto quando: geração canônica na Linha B (QEMU) com `LOAD_KIND=gguf` + `TOKENS_PER_S`/`LOAD_S` **medidos** (carga TinyLlama Q4_K_M, prompt/`n-predict` canônicos, CPU) **ou** bloqueio honesto novo documentado; ADR 0001; harness atualizado sem inventar números; depende do layout E29 (`no_gguf_forward`).  
 **Desfecho:** mapa + dequant Q4_K + op parcial; `B_BLOCK=no_gguf_generate` (sem Prefill/Decode/sampling); hipótese INCONCLUSIVO.
+
+## Etapa 32 — Geração canônica Prefill+Decode+sampling na Linha B (TOKENS_PER_S)
+
+Status: em_andamento  
+Issue: [#42](https://github.com/eriksonlima/projeto-ia-livre/issues/42)  
+Spec: specs/geracao-canonica-linha-b/  
+Pronto quando: geração canônica no guest com `LOAD_KIND=gguf` + `TOKENS_PER_S`/`LOAD_S` medidos (TinyLlama Q4_K_M, prompt/`n-predict=32`, CPU) + `RUNTIME_NATIVE_OK`; harness atualizado; **ou** bloqueio honesto novo com avanço além de `no_gguf_generate`; ADR 0001; depende Etapa 31.
