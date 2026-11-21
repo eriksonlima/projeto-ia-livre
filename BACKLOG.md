@@ -16,12 +16,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 
 
-### B48 — Tool `read_local` allowlisted
-- Issue: [#54](https://github.com/eriksonlima/projeto-ia-livre/issues/54)
-
-- Origem: E40 adioud FS
-- Pronto quando: leitura só sob allowlist de paths; rejeição honesta fora; gate; sem write arbitrário
-- Deps: E40
 
 ### B49 — GPU real no caminho nativo (além de `synthetic`)
 - Issue: [#55](https://github.com/eriksonlima/projeto-ia-livre/issues/55)
@@ -52,6 +46,16 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: B39 + B40 + B42 (mínimo sugerido)
 
 ## Promovidas / arquivadas
+
+### B48 — Tool `read_local` allowlisted
+- Issue: [#54](https://github.com/eriksonlima/projeto-ia-livre/issues/54)
+
+- Origem: E40 adioud FS
+- Pronto quando: leitura só sob allowlist de paths; rejeição honesta fora; gate; sem write arbitrário
+- Deps: E40
+
+- Promovido para Etapa 54 do roadmap (promoção autônoma após E53).
+- Etapa: [Etapa 54 — read_local](ROADMAP.md)
 
 ### B47 — REPL sandboxed no agente (host)
 - Issue: [#53](https://github.com/eriksonlima/projeto-ia-livre/issues/53)

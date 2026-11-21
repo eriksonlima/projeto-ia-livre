@@ -400,3 +400,10 @@ Spec: specs/repl-sandboxed-agente/
 Pronto quando: `--repl` com allowlist; modo scripted para `verify-agent`; sem shell/HTTP.  
 **Desfecho:** `--repl` / `--repl-script`; `REPL_MODE=scripted` + `REPL_OK`; `make verify-agent` estágio fixture; sem shell/HTTP.
 
+## Etapa 54 — Tool `read_local` allowlisted (host)
+
+Status: em_andamento  
+Issue: [#54](https://github.com/eriksonlima/projeto-ia-livre/issues/54)  
+Spec: specs/read-local-allowlisted/  
+Pronto quando: leitura só sob allowlist de paths; rejeição honesta fora; gate; sem write arbitrário.
+
