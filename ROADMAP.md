@@ -424,3 +424,10 @@ Spec: specs/harness-perfil-gpu-ab/
 Pronto quando: corrida A/B com perfil GPU documentado e métricas honestas; skip se sem GPU; deps geração em B.  
 **Desfecho:** `A_gpu` (vulkan/cuda) + B subset → `INCONCLUSIVO`; `make verify-harness-gpu`; skip sem GPU; sem ACCEL fingido em B.
 
+## Etapa 57 — Guia “primeiro boot USB” + release de artefato
+
+Status: em_andamento  
+Issue: [#57](https://github.com/eriksonlima/projeto-ia-livre/issues/57)  
+Spec: specs/guia-primeiro-boot-usb-release/  
+Pronto quando: guia passo a passo (Secure Boot, serial, o que esperar) + tag/release com ESP/tar/checksums; sem declarar hipótese comprovada.
+

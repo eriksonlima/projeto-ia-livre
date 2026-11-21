@@ -19,13 +19,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 
 
-### B51 — Guia “primeiro boot USB” + release de artefato
-- Issue: [#57](https://github.com/eriksonlima/projeto-ia-livre/issues/57)
-
-- Origem: onboarding comunitário / sustentabilidade humana do manifesto
-- Pronto quando: guia passo a passo (Secure Boot, serial, o que esperar) + tag/release com ESP/tar/checksums; sem declarar hipótese comprovada
-- Deps: B40; B41
-
 ### B52 — Definição verificável de “protótipo objetivo atingido”
 - Issue: [#58](https://github.com/eriksonlima/projeto-ia-livre/issues/58)
 
@@ -34,6 +27,16 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: B39 + B40 + B42 (mínimo sugerido)
 
 ## Promovidas / arquivadas
+
+### B51 — Guia “primeiro boot USB” + release de artefato
+- Issue: [#57](https://github.com/eriksonlima/projeto-ia-livre/issues/57)
+
+- Origem: onboarding comunitário / sustentabilidade humana do manifesto
+- Pronto quando: guia passo a passo (Secure Boot, serial, o que esperar) + tag/release com ESP/tar/checksums; sem declarar hipótese comprovada
+- Deps: B40; B41
+
+- Promovido para Etapa 57 do roadmap (promoção + spec).
+- Etapa: [Etapa 57 — guia primeiro boot USB + release](ROADMAP.md)
 
 ### B50 — Perfil harness GPU espelhado A/B (quando B gerar)
 - Issue: [#56](https://github.com/eriksonlima/projeto-ia-livre/issues/56)
