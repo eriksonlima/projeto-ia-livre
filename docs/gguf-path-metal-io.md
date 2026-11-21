@@ -73,6 +73,18 @@ Critérios medidos mínimos para aceitar B:
 2. Corrida QEMU ESP-only **sem** BlockIO raw.
 3. Log/serial + nota de falha (tamanho, `LOADER_FAIL`, OOM, timeout) anexada ao ADR.
 
+## Evidência de implementação (Task 2)
+
+| Item | Estado |
+|------|--------|
+| Kernel | `try_load_gguf_sfs_full` → `GGUF_NATIVE_LOADER=esp_sfs_full` + `GGUF_PATH=esp_sfs` |
+| Runner | `scripts/run-qemu-esp-fat32.sh` — FAT32 `.img` + USB-storage QEMU (`FULL_GGUF=1`) |
+| Medido | QEMU: `GGUF_FILE_BYTES=668788096`, magic/header/tensors stub, `LAYOUT_OK` no path SFS |
+| ≠ BlockIO | Sem disco raw; sem `PATH=blockio` |
+| Geração | Decode pode ultrapassar timeout curto do smoke; **loader full** basta para desfecho A |
+
+`mtools` (`mcopy`/`mmd`) no `PATH` (apt ou extract user-local) é necessário para gerar a `.img`.
+
 ## Relação com gates
 
 | Gate | Papel |

@@ -10,22 +10,22 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Meta do protótipo (objetivo do projeto):** um ecossistema verificável em que (1) a **hipótese A vs B** possa ser comprovada ou refutada com geração real na Linha B (`TOKENS_PER_S`), (2) o **SO IA Livre** boote de USB/ESP em hardware real com caminho de IA nativo mínimo honesto, (3) a **Rede** e a **autonomia** continuem utilizáveis **sem** exigir o SO. Ordem abaixo = prioridade sugerida (topo primeiro).
 >
-> **Análise pós-E62 (2026-11-21):** Pilar 1 BLOQUEIO_FINAL; E62 SKIP metal. Promovido **B57→E63**. Topo Abertas: **B55** (adiada) → efetivo **B59**/B67.
+> **Análise pós-E63 (2026-11-21):** E63 A = `esp_sfs_full`. Topo acionável: **B59**. B55 permanece adiada (ADR 0021).
 
 
-
-### B55 — Re-corrida harness A/B quieta pós-espécie canônica
-- Issue: [#61](https://github.com/eriksonlima/projeto-ia-livre/issues/61)
-- Origem: instrumento E22/E28 existe; falta corrida decisiva
-- Pronto quando: `VERDICT` + `REASON` limpos; quieto; comprovada/refutada **ou** `INCONCLUSIVO` numérico (não teto de espécie)
-- Deps: B54 — **adiada** enquanto ADR 0021 (canônico inviável) vigorar sem caminho novo
-- Nota: prioridade abaixo de B58/metal até haver espécie canônica ou B58 fechar pilar 1
 
 ### B59 — Accel GPU simétrica A/B no harness
 - Issue: [#73](https://github.com/eriksonlima/projeto-ia-livre/issues/73)
 - Origem: E56 — `INCONCLUSIVO` por assimetria A GPU vs B CPU
 - Pronto quando: corrida mesmo perfil accel; skip sem GPU; **proibido** ACCEL fingido em B
 - Deps: B54 (ou subset simétrico); E8/E56
+
+### B55 — Re-corrida harness A/B quieta pós-espécie canônica
+- Issue: [#61](https://github.com/eriksonlima/projeto-ia-livre/issues/61)
+- Origem: instrumento E22/E28 existe; falta corrida decisiva
+- Pronto quando: `VERDICT` + `REASON` limpos; quieto; comprovada/refutada **ou** `INCONCLUSIVO` numérico (não teto de espécie)
+- Deps: B54 — **adiada** enquanto ADR 0021 (canônico inviável) vigorar sem caminho novo
+- Nota: reordenada abaixo de B59; não promover enquanto 0021/0022 sem caminho novo
 
 ### B60 — GPU real no guest (PCI/pass-through)
 - Issue: [#65](https://github.com/eriksonlima/projeto-ia-livre/issues/65)

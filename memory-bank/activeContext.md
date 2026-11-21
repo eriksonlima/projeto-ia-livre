@@ -2,16 +2,16 @@
 
 ## Foco atual
 
-- Etapa **63** `em_andamento` (B57 / #63) — I/O GGUF path metal
-- Spec: `specs/io-gguf-path-metal/`
-- Task 1 **feita** (contrato `docs/gguf-path-metal-io.md`)
-- Próxima: Task 2 — FAT32 `.img` + loader `esp_sfs_full` **ou** ADR 0023
+- Etapas 1–63 **feitas**
+- E63: path metal SFS full (`esp_sfs_full`) via FAT32 `.img` + QEMU USB
+- Pilar 1: `BLOQUEIO_FINAL` · Pilar 2: artefato + path IA SFS full; `METAL_OK` ainda SKIP sem PC · Pilar 3: verde
 
 ## Próximo passo
 
-- Implementar ramo A (preferido): SFS full via FAT32 img; runner ESP-only sem `fat:rw:`
+- Promover próximo Abertas acionável (**B59**; B55 adiada sob ADR 0021)
+- Ou log PC → `METAL_OK`
 
 ## Notas
 
-- Lease: cursor-agent-a326036c · E63
-- ≠ METAL_OK; ≠ BlockIO-as-metal
+- Lease a liberar após push E63
+- `mtools` user-local ok para gate full

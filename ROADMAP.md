@@ -474,8 +474,9 @@ Pronto quando: log real em `docs/evidence/boot-metal/` + `IA_LIVRE_BAREMETAL_SKI
 
 ## Etapa 63 — I/O GGUF no path metal (além de no_gguf_metal_io)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#63](https://github.com/eriksonlima/projeto-ia-livre/issues/63)  
 Spec: specs/io-gguf-path-metal/  
 Pronto quando: no path metal (SFS/ESP — QEMU FAT32 ou PC), loader full **ou** geração mínima com marcadores; **ou** bloqueio/ADR honesto se I/O full continuar inviável; sem `TOKENS` fingidos; ≠ tratar BlockIO como metal; ≠ `METAL_OK` fabricado.  
+**Desfecho:** ramo **A** — FAT32 `.img` + `run-qemu-esp-fat32.sh` + loader `esp_sfs_full` (GGUF ~638 MiB via SFS); `make verify-metal-infer` (auto/full); `make verify` BlockIO intacto; ≠ `METAL_OK`; bridge E49 força legacy para `metal_block`.  
 

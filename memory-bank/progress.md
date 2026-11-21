@@ -1,17 +1,18 @@
 # Progress
 
-## Funciona
+## O que funciona
 
-- Etapas 1–62
-- Runtime-native fused matvec; ADRs 0020–0022 (pilar 1 terminal)
-- E62: SKIP metal honesto (sem PC)
+- Kernel UEFI QEMU + BlockIO Linha B (subset) + gates principais
+- Runtime/node/agent host; harness comparable `INCONCLUSIVO` / pilar 1 `BLOQUEIO_FINAL` (ADR 0022)
+- Bare-metal artefato + guia USB; `METAL_OK` SKIP neste host (E62)
+- **E63:** I/O GGUF path metal — `esp_sfs_full` (FAT32 + SFS); `make verify-metal-infer` full
 
-## Residual
+## Bloqueios
 
-- `METAL_OK` com log real; B57 I/O GGUF metal
-- B67 sync architecture; Rede/GPU avançada
-- Reabertura pilar 1 só via ADR 0022
+- Espécie canônica / COMPROVA — ADR 0020–0022
+- `METAL_OK` — precisa log PC real
+- B55 adiada enquanto 0021 vigorar
 
 ## Roadmap
 
-- Sem `em_andamento`; topo Abertas = B57
+- 1–63 feitas; sem `em_andamento` até promoção

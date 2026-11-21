@@ -12,7 +12,7 @@ Script host que **consome evidência** do runtime nativo (serial QEMU / log) e e
 | `BRIDGE_NATIVE_SRC` | Evidência | Esperado |
 |---------------------|-----------|----------|
 | `blockio` | Serial Linha B / BlockIO (`DECODE_OK` / `RUNTIME_NATIVE_OK`) | Geração nativa subset (E44) |
-| `metal_block` | ESP-only (`B_BLOCK_METAL=no_gguf_metal_io`) | Bloqueio path metal (E48) |
+| `metal_block` | ESP-only legado (`B_BLOCK_METAL=no_gguf_metal_io`; bridge força `METAL_INFER_MODE=legacy`) | Bloqueio path metal (E48); E63 `esp_sfs_full` é outro desfecho (gate metal-infer full) |
 
 ## Marcadores
 

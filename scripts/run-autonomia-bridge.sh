@@ -36,11 +36,13 @@ trap cleanup EXIT
 
 case "$SRC" in
   metal_block)
+    # E63: verify-metal-infer default=full (esp_sfs_full). Bridge E49 prova o
+    # bloqueio legado — força MODE=legacy (≠ confundir com I/O full).
     if [[ -z "$LOG" ]]; then
       TMP="$(mktemp)"
       LOG="$TMP"
       set +e
-      ./scripts/verify-metal-infer.sh >"$LOG" 2>&1
+      IA_LIVRE_METAL_INFER_MODE=legacy ./scripts/verify-metal-infer.sh >"$LOG" 2>&1
       metal_rc=$?
       set -e
       [[ "$metal_rc" -eq 0 ]] || {

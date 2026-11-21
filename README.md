@@ -28,7 +28,7 @@ Veja `AGENTS.md` → **Como verificar**.
 - Produto: `docs/product-context.md` · meta do protótipo: [`docs/prototipo-objetivo-atingido.md`](docs/prototipo-objetivo-atingido.md) / `make verify-prototipo-objetivo`
 - Arquitetura: `docs/architecture.md` · Glossário: `docs/glossario.md`
 - Harness A vs B: `docs/harness-linha-a-b.md` · comparável: `docs/harness-a-b-comparavel.md` · perfil GPU: `make verify-harness-gpu` (veja `AGENTS.md` → gates)
-- Boot/imagem hardware real (ESP/USB): [`docs/guia-primeiro-boot-usb.md`](docs/guia-primeiro-boot-usb.md) · `docs/boot-hardware-real.md` — `make verify-baremetal` / `verify-write-usb` / `verify-boot-guide-release`; path metal SFS: `make verify-metal-infer` (`B_BLOCK_METAL`; ≠ METAL_OK)
+- Boot/imagem hardware real (ESP/USB): [`docs/guia-primeiro-boot-usb.md`](docs/guia-primeiro-boot-usb.md) · `docs/boot-hardware-real.md` — `make verify-baremetal` / `verify-write-usb` / `verify-boot-guide-release`; path metal SFS: `make verify-metal-infer` (`esp_sfs_full` FAT32 ou legacy `B_BLOCK_METAL`; ≠ METAL_OK) — [`docs/gguf-path-metal-io.md`](docs/gguf-path-metal-io.md)
 - Rede (v1 + TASK + bootstrap + mDNS): `docs/rede-ia-livre-v1.md` · `docs/rede-descoberta-wan.md` — `make verify-node` (mDNS: `VERIFY_NODE_MDNS_SKIP=0`) · bridge caminho B: `docs/rede-bridge-nativo.md` / `make verify-rede-bridge`
 - Autonomia (`calc` + REPL + read_local): `docs/autonomia-alem-v1.md` · `docs/autonomia-repl.md` · bridge host↔nativo: `docs/autonomia-bridge-nativo.md` / `make verify-autonomia-bridge`
 - GPU host shard: `docs/shard-multi-gpu-host.md` — `make verify-gpu-shard-host` · GPU real (caminho nativo): `docs/gpu-real-nativo.md` / `make verify-gpu-native-real`

@@ -551,14 +551,22 @@ grep -q 'IA_LIVRE_NATIVE_PERF_OK' scripts/verify-runtime-native-perf.sh
 Esperado: `IA_LIVRE_NATIVE_PERF_OK` + `OUTCOME=adr_0020_inviable_guest_step` (ou progresso guest se A).  
 E60: ADR [`0021`](docs/adr/0021-especie-canonica-linha-b-inviavel.md) — espécie canônica inviável no gate atual; hipótese aberta até B58 (bloqueio final) ou novo caminho de perf.
 
-### Gate inferência path metal / ESP-only (Etapa 48 — adicional)
+### Gate inferência path metal / ESP-only (Etapas 48 / 63 — adicional)
 
-QEMU **sem** BlockIO: prova `GGUF_PATH=esp_sfs` + `B_BLOCK_METAL=no_gguf_metal_io` (ADR [`0017`](docs/adr/0017-path-metal-sfs-vs-blockio.md)). **≠** `METAL_OK`; **≠** geração BlockIO.
+Path metal = SimpleFileSystem/ESP (**≠** BlockIO; **≠** `METAL_OK`). Contrato E63: [`docs/gguf-path-metal-io.md`](docs/gguf-path-metal-io.md) · ADR [`0017`](docs/adr/0017-path-metal-sfs-vs-blockio.md).
+
+| Modo | Quando | Esperado |
+|------|--------|----------|
+| **full** (default `auto` se GGUF+`mtools`) | FAT32 `.img` + `model.gguf` | `GGUF_PATH=esp_sfs` + `GGUF_NATIVE_LOADER=esp_sfs_full` |
+| **legacy** | sem GGUF/mtools ou `IA_LIVRE_METAL_INFER_MODE=legacy` | `B_BLOCK_METAL=no_gguf_metal_io` (E48) |
 
 ```bash
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+# Preferir mtools no PATH (apt ou extract user-local)
 make verify-metal-infer
+grep -q 'esp_sfs_full' scripts/verify-metal-infer.sh
 grep -q 'IA_LIVRE_B_BLOCK_METAL=no_gguf_metal_io' scripts/verify-metal-infer.sh
+# Runner FAT32: ./scripts/run-qemu-esp-fat32.sh
 ```
 
 ### Gate bridge host↔nativo (Etapa 49 — adicional)
@@ -574,7 +582,7 @@ grep -q 'IA_LIVRE_BRIDGE_OK' scripts/run-autonomia-bridge.sh
 grep -q 'IA_LIVRE_BRIDGE_NATIVE_SRC' scripts/run-autonomia-bridge.sh
 ```
 
-Esperado: `IA_LIVRE_BRIDGE_MODE=host_native` + `BRIDGE_NATIVE_SRC=metal_block|blockio` + `BRIDGE_OK` (metal via `verify-metal-infer`; blockio via fixture/log). Sem `METAL_OK` / `TOKENS_PER_S` inventados. `verify-agent` permanece independente.
+Esperado: `IA_LIVRE_BRIDGE_MODE=host_native` + `BRIDGE_NATIVE_SRC=metal_block|blockio` + `BRIDGE_OK` (metal_block força `METAL_INFER_MODE=legacy` → `no_gguf_metal_io`; blockio via fixture/log). Sem `METAL_OK` / `TOKENS_PER_S` inventados. `verify-agent` permanece independente.
 
 ### Gate bridge Rede UEFI↔host (Etapa 52 — adicional)
 
