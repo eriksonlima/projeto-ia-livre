@@ -77,6 +77,33 @@ Ordem sugerida de ataque em `runtime-native/`:
 3. Cópias e buffers temporários
 4. SIMD/`target_feature` onde o alvo permitir (documentar assimetria host vs UEFI freestanding)
 
+## Otimização aplicada (Task 2) — evidência
+
+| Mudança | Onde |
+|---------|------|
+| `dot_block_q4_k` — dequant+dot fundidos | `runtime-native/src/lib.rs` |
+| `matvec_q4k` / `matvec_q4k_to_ff` sem `wrow` completo | `attn.rs`, `ffn.rs` |
+| Dispatch Q4/Q6 por tensor (Q4_K_M mistura tipos entre camadas) | `attn.rs`, `ffn.rs` |
+| Microbench host | `tests::e59_host_perf_step_layers` |
+
+### Antes / depois (host release, wall do teste `decode_guest_one_token`)
+
+| Momento | Wall aproximado |
+|---------|-----------------|
+| Baseline Task 1 | ~1,91 s |
+| Pós fused matvec | ~1,78 s (~**7%** ganho) |
+| Prefill multi 2L | ~3,88 s → ~3,48 s (~**10%**) |
+
+### Passo N=8 no host (pós-otimização)
+
+```
+IA_LIVRE_NATIVE_PERF_HOST_MS_2L1=646
+IA_LIVRE_NATIVE_PERF_HOST_MS_8L1=2031
+IA_LIVRE_NATIVE_PERF_HOST_OK=1
+```
+
+Host faz 8L×1 em ~2 s (~3,1× vs 2L). **Host ≠ guest.** Extrapolando o `make verify` ~267 s (2L guest) → 8L guest ~ordem **800 s** ≫ timeout 600 s. Ganho ~10% **não** é ordem de magnitude.
+
 ## Verificação desta fatia (Task 1)
 
 ```bash

@@ -4,7 +4,7 @@
 use crate::kv::KvCache;
 use crate::names::blk_name;
 use crate::{
-    dequant_block_q4_k, embed_token, find_tensor, f16_to_f32, tokenize_canonical, ForwardError,
+    dot_block_q4_k, embed_token, find_tensor, f16_to_f32, tokenize_canonical, ForwardError,
     LayoutReport, N_EMBD, QK_K, BLOCK_Q4_K_SIZE, CANONICAL_PROMPT_TOKEN_IDS,
 };
 
@@ -74,7 +74,8 @@ pub fn attn_layer_on(
     let mut v = [0f32; N_KV_DIM];
     matvec_q4k(gguf, layout, &tq, &xn, &mut q)?;
     matvec_q4k(gguf, layout, &tk, &xn, &mut k)?;
-    matvec_q6k(gguf, layout, &tv, &xn, &mut v)?;
+    // Q4_K_M: attn_v pode ser Q4_K ou Q6_K conforme camada (importance matrix).
+    matvec_q4_or_q6(gguf, layout, &tv, &xn, &mut v)?;
 
     // RoPE em Q (por head) e K (por kv head).
     for h in 0..N_HEAD {
@@ -125,7 +126,7 @@ pub fn attn_layer_on(
     }
 
     let mut projected = [0f32; N_EMBD];
-    matvec_q4k(gguf, layout, &to, &attn_out, &mut projected)?;
+    matvec_q4_or_q6(gguf, layout, &to, &attn_out, &mut projected)?;
 
     let mut acc = 0f32;
     for i in 0..N_EMBD {
@@ -278,6 +279,22 @@ fn libm_cos_sin(x: f32) -> (f32, f32) {
     (cos, sin)
 }
 
+fn matvec_q4_or_q6(
+    gguf: &[u8],
+    layout: &LayoutReport,
+    tensor: &crate::TensorInfo,
+    x: &[f32],
+    out: &mut [f32],
+) -> Result<(), ForwardError> {
+    if tensor.ggml_type == GGML_TYPE_Q4_K {
+        matvec_q4k(gguf, layout, tensor, x, out)
+    } else if tensor.ggml_type == GGML_TYPE_Q6_K {
+        matvec_q6k(gguf, layout, tensor, x, out)
+    } else {
+        Err(ForwardError::UnsupportedType)
+    }
+}
+
 fn matvec_q4k(
     gguf: &[u8],
     layout: &LayoutReport,
@@ -301,28 +318,22 @@ fn matvec_q4k(
         .data_offset
         .checked_add(tensor.data_rel as usize)
         .ok_or(ForwardError::Truncated)?;
-    let mut wrow = [0f32; N_EMBD];
     if n_in > N_EMBD {
         return Err(ForwardError::BadDims);
     }
+    // E59: fused dequant+dot — sem materializar wrow[N_EMBD] por saída.
     for o in 0..n_out {
         let abs = base
             .checked_add(o.checked_mul(row_bytes).ok_or(ForwardError::Truncated)?)
             .ok_or(ForwardError::Truncated)?;
+        let mut acc = 0f32;
         for b in 0..blocks_per_row {
             let boff = abs + b * BLOCK_Q4_K_SIZE;
             let end = boff + BLOCK_Q4_K_SIZE;
             if end > gguf.len() {
                 return Err(ForwardError::Truncated);
             }
-            let mut block = [0f32; QK_K];
-            dequant_block_q4_k(&gguf[boff..end], &mut block)?;
-            let dst = b * QK_K;
-            wrow[dst..dst + QK_K].copy_from_slice(&block);
-        }
-        let mut acc = 0f32;
-        for i in 0..n_in {
-            acc += wrow[i] * x[i];
+            acc += dot_block_q4_k(&gguf[boff..end], x, b * QK_K)?;
         }
         out[o] = acc;
     }
@@ -388,14 +399,15 @@ fn matvec_q6k(
         .data_offset
         .checked_add(tensor.data_rel as usize)
         .ok_or(ForwardError::Truncated)?;
-    let mut wrow = [0f32; N_EMBD];
     if n_in > N_EMBD {
         return Err(ForwardError::BadDims);
     }
+    // E59: fused Q6_K dequant+dot (sem wrow completo).
     for o in 0..n_out {
         let abs = base
             .checked_add(o.checked_mul(row_bytes).ok_or(ForwardError::Truncated)?)
             .ok_or(ForwardError::Truncated)?;
+        let mut acc = 0f32;
         for b in 0..blocks_per_row {
             let boff = abs + b * BLOCK_Q6_K_SIZE;
             if boff + BLOCK_Q6_K_SIZE > gguf.len() {
@@ -403,12 +415,10 @@ fn matvec_q6k(
             }
             let mut block = [0f32; QK_K];
             dequant_block_q6_k(&gguf[boff..boff + BLOCK_Q6_K_SIZE], &mut block)?;
-            let dst = b * QK_K;
-            wrow[dst..dst + QK_K].copy_from_slice(&block);
-        }
-        let mut acc = 0f32;
-        for i in 0..n_in {
-            acc += wrow[i] * x[i];
+            let x_off = b * QK_K;
+            for i in 0..QK_K {
+                acc += block[i] * x[x_off + i];
+            }
         }
         out[o] = acc;
     }

@@ -5,7 +5,7 @@ use crate::attn::{attn_layer0_on, attn_layer_on, load_f32_vec, rms_norm, AttnLay
 use crate::kv::{KvCache, PREFILL_LAYERS_GUEST, PREFILL_LAYERS_TARGET, PREFILL_POS_GUEST};
 use crate::names::blk_name;
 use crate::{
-    dequant_block_q4_k, embed_token, find_tensor, f16_to_f32, ForwardError, LayoutReport,
+    dot_block_q4_k, embed_token, find_tensor, f16_to_f32, ForwardError, LayoutReport,
     TensorInfo, N_EMBD, QK_K, BLOCK_Q4_K_SIZE, CANONICAL_PROMPT_TOKEN_IDS,
 };
 
@@ -65,6 +65,22 @@ fn libm_exp(x: f32) -> f32 {
     sum
 }
 
+fn matvec_q4_or_q6_to_ff(
+    gguf: &[u8],
+    layout: &LayoutReport,
+    tensor: &TensorInfo,
+    x: &[f32; N_EMBD],
+    out: &mut [f32; N_FF],
+) -> Result<(), ForwardError> {
+    if tensor.ggml_type == GGML_TYPE_Q4_K {
+        matvec_q4k_to_ff(gguf, layout, tensor, x, out)
+    } else if tensor.ggml_type == GGML_TYPE_Q6_K {
+        matvec_q6k_to_ff(gguf, layout, tensor, x, out)
+    } else {
+        Err(ForwardError::UnsupportedType)
+    }
+}
+
 fn matvec_q4k_to_ff(
     gguf: &[u8],
     layout: &LayoutReport,
@@ -81,22 +97,52 @@ fn matvec_q4k_to_ff(
     let blocks_per_row = N_EMBD / QK_K;
     let row_bytes = blocks_per_row * BLOCK_Q4_K_SIZE;
     let base = layout.data_offset + tensor.data_rel as usize;
-    let mut wrow = [0f32; N_EMBD];
+    // E59: fused dequant+dot (mesmo contrato numérico; menos tráfego de memória).
     for o in 0..N_FF {
         let abs = base + o * row_bytes;
+        let mut acc = 0f32;
         for b in 0..blocks_per_row {
             let boff = abs + b * BLOCK_Q4_K_SIZE;
             if boff + BLOCK_Q4_K_SIZE > gguf.len() {
                 return Err(ForwardError::Truncated);
             }
-            let mut block = [0f32; QK_K];
-            dequant_block_q4_k(&gguf[boff..boff + BLOCK_Q4_K_SIZE], &mut block)?;
-            let dst = b * QK_K;
-            wrow[dst..dst + QK_K].copy_from_slice(&block);
+            acc += dot_block_q4_k(&gguf[boff..boff + BLOCK_Q4_K_SIZE], x.as_slice(), b * QK_K)?;
         }
+        out[o] = acc;
+    }
+    Ok(())
+}
+
+fn matvec_q6k_to_ff(
+    gguf: &[u8],
+    layout: &LayoutReport,
+    tensor: &TensorInfo,
+    x: &[f32; N_EMBD],
+    out: &mut [f32; N_FF],
+) -> Result<(), ForwardError> {
+    if tensor.ggml_type != GGML_TYPE_Q6_K {
+        return Err(ForwardError::UnsupportedType);
+    }
+    if tensor.dims[0] != N_EMBD as u64 || tensor.dims[1] != N_FF as u64 {
+        return Err(ForwardError::BadDims);
+    }
+    let blocks_per_row = N_EMBD / QK_K;
+    let row_bytes = blocks_per_row * BLOCK_Q6_K_SIZE;
+    let base = layout.data_offset + tensor.data_rel as usize;
+    for o in 0..N_FF {
+        let abs = base + o * row_bytes;
         let mut acc = 0f32;
-        for i in 0..N_EMBD {
-            acc += wrow[i] * x[i];
+        for b in 0..blocks_per_row {
+            let boff = abs + b * BLOCK_Q6_K_SIZE;
+            if boff + BLOCK_Q6_K_SIZE > gguf.len() {
+                return Err(ForwardError::Truncated);
+            }
+            let mut block = [0f32; QK_K];
+            dequant_block_q6_k(&gguf[boff..boff + BLOCK_Q6_K_SIZE], &mut block)?;
+            let x_off = b * QK_K;
+            for i in 0..QK_K {
+                acc += block[i] * x[x_off + i];
+            }
         }
         out[o] = acc;
     }
@@ -135,6 +181,53 @@ fn dequant_block_q6_k(block: &[u8], out: &mut [f32; QK_K]) -> Result<(), Forward
         ql_off += 64;
         qh_off += 32;
         sc_off += 8;
+    }
+    Ok(())
+}
+
+fn matvec_q4_or_q6_ffn_down(
+    gguf: &[u8],
+    layout: &LayoutReport,
+    tensor: &TensorInfo,
+    x: &[f32; N_FF],
+    out: &mut [f32; N_EMBD],
+) -> Result<(), ForwardError> {
+    if tensor.ggml_type == GGML_TYPE_Q6_K {
+        matvec_q6k_ffn_down(gguf, layout, tensor, x, out)
+    } else if tensor.ggml_type == GGML_TYPE_Q4_K {
+        matvec_q4k_ffn_down(gguf, layout, tensor, x, out)
+    } else {
+        Err(ForwardError::UnsupportedType)
+    }
+}
+
+fn matvec_q4k_ffn_down(
+    gguf: &[u8],
+    layout: &LayoutReport,
+    tensor: &TensorInfo,
+    x: &[f32; N_FF],
+    out: &mut [f32; N_EMBD],
+) -> Result<(), ForwardError> {
+    if tensor.ggml_type != GGML_TYPE_Q4_K {
+        return Err(ForwardError::UnsupportedType);
+    }
+    if tensor.dims[0] != N_FF as u64 || tensor.dims[1] != N_EMBD as u64 {
+        return Err(ForwardError::BadDims);
+    }
+    let blocks_per_row = N_FF / QK_K;
+    let row_bytes = blocks_per_row * BLOCK_Q4_K_SIZE;
+    let base = layout.data_offset + tensor.data_rel as usize;
+    for o in 0..N_EMBD {
+        let abs = base + o * row_bytes;
+        let mut acc = 0f32;
+        for b in 0..blocks_per_row {
+            let boff = abs + b * BLOCK_Q4_K_SIZE;
+            if boff + BLOCK_Q4_K_SIZE > gguf.len() {
+                return Err(ForwardError::Truncated);
+            }
+            acc += dot_block_q4_k(&gguf[boff..boff + BLOCK_Q4_K_SIZE], x.as_slice(), b * QK_K)?;
+        }
+        out[o] = acc;
     }
     Ok(())
 }
@@ -212,14 +305,15 @@ pub fn try_ffn_layer(
             &mut *core::ptr::addr_of_mut!(WS_UP),
         )
     };
-    matvec_q4k_to_ff(gguf, layout, &tg, &xn, gate)?;
-    matvec_q4k_to_ff(gguf, layout, &tu, &xn, up)?;
+    // Q4_K_M: gate/up/down podem misturar Q4_K e Q6_K entre camadas.
+    matvec_q4_or_q6_to_ff(gguf, layout, &tg, &xn, gate)?;
+    matvec_q4_or_q6_to_ff(gguf, layout, &tu, &xn, up)?;
     for i in 0..N_FF {
         gate[i] = silu(gate[i]) * up[i];
     }
 
     let mut down = [0f32; N_EMBD];
-    matvec_q6k_ffn_down(gguf, layout, &td, gate, &mut down)?;
+    matvec_q4_or_q6_ffn_down(gguf, layout, &td, gate, &mut down)?;
 
     let mut acc = 0f32;
     for i in 0..N_EMBD {

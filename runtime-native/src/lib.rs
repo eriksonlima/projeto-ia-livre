@@ -457,21 +457,7 @@ pub(crate) fn dequant_block_q4_k(block: &[u8], out: &mut [f32; QK_K]) -> Result<
     let scales = &block[4..16];
     let qs = &block[16..144];
 
-    // Layout llama.cpp block_q4_K: 8 sub-blocos de 32; scales packed.
-    for j in 0..QK_K / 64 {
-        let is = j * 64;
-        let sc0 = (scales[j] & 0xF) as i32;
-        let sc1 = (scales[j] >> 4) as i32;
-        let m0 = (scales[j + 8] & 0xF) as i32; // may be wrong packing — use common K-quants layout
-        let m1 = (scales[j + 8] >> 4) as i32;
-        // Correct packing for q4_K (from ggml): scales[0..4] and scales[4..8] interleaved differently.
-        // Use the standard algorithm from llama.cpp dequantize_row_q4_K:
-        let _ = (m0, m1);
-        let _ = (sc0, sc1);
-        let _ = is;
-    }
-
-    // Implementação alinhada a ggml dequantize_row_q4_K (sub-blocos 32):
+    // ggml dequantize_row_q4_K (sub-blocos 32):
     let mut y = 0usize;
     for j in 0..QK_K / 64 {
         let q = &qs[j * 32..j * 32 + 32];
@@ -488,6 +474,39 @@ pub(crate) fn dequant_block_q4_k(block: &[u8], out: &mut [f32; QK_K]) -> Result<
         y += 64;
     }
     Ok(())
+}
+
+/// Dot de um bloco Q4_K com `x[x_off..x_off+256]` sem materializar f32[256] (E59).
+pub(crate) fn dot_block_q4_k(block: &[u8], x: &[f32], x_off: usize) -> Result<f32, ForwardError> {
+    if block.len() < BLOCK_Q4_K_SIZE {
+        return Err(ForwardError::DequantFail);
+    }
+    if x.len() < x_off.saturating_add(QK_K) {
+        return Err(ForwardError::BadDims);
+    }
+    let d = f16_to_f32(u16::from_le_bytes([block[0], block[1]]));
+    let dmin = f16_to_f32(u16::from_le_bytes([block[2], block[3]]));
+    let scales = &block[4..16];
+    let qs = &block[16..144];
+    let mut acc = 0f32;
+    let mut y = 0usize;
+    for j in 0..QK_K / 64 {
+        let q = &qs[j * 32..j * 32 + 32];
+        let (sc_lo, sc_hi, m_lo, m_hi) = unpack_q4k_scales(scales, j);
+        let d1 = d * (sc_lo as f32);
+        let m1 = dmin * (m_lo as f32);
+        let d2 = d * (sc_hi as f32);
+        let m2 = dmin * (m_hi as f32);
+        for l in 0..32 {
+            let v = q[l] as i32;
+            let w0 = d1 * ((v & 0xF) as f32) - m1;
+            let w1 = d2 * ((v >> 4) as f32) - m2;
+            acc += w0 * x[x_off + y + l];
+            acc += w1 * x[x_off + y + l + 32];
+        }
+        y += 64;
+    }
+    Ok(acc)
 }
 
 /// Unpacks scale/min nibbles for subblock pair `j` (0..3) — ggml q4_K layout.
@@ -788,5 +807,33 @@ mod tests {
         assert_eq!(dec.n_predict, N_PREDICT_GUEST as u32);
         assert!(dec.last_token_id > 0 || dec.decode_checksum_milli > 0);
         assert!(try_forward_canonical(&data, &layout).is_ok());
+    }
+
+    /// E59 Task 2/3 — microbench host (não prova guest): 2L×1 vs passo N=8.
+    /// Imprime `IA_LIVRE_NATIVE_PERF_HOST_*` para evidência antes/depois.
+    #[test]
+    fn e59_host_perf_step_layers() {
+        let Some((data, layout)) = load_canonical_gguf() else {
+            return;
+        };
+        // Warm
+        let _ = try_decode_generate(&data, &layout, 2, 2, 1).expect("warm");
+
+        let t0 = std::time::Instant::now();
+        let d2 = try_decode_generate(&data, &layout, 2, 2, 1).expect("2l");
+        let ms2 = t0.elapsed().as_millis();
+
+        let t1 = std::time::Instant::now();
+        let d8 = try_decode_generate(&data, &layout, 8, 2, 1).expect("8l");
+        let ms8 = t1.elapsed().as_millis();
+
+        assert_eq!(d2.n_layers, 2);
+        assert_eq!(d8.n_layers, 8);
+        assert_eq!(d2.n_predict, 1);
+        assert_eq!(d8.n_predict, 1);
+        // Marcadores de evidência (capturados no gate documental / logs locais).
+        std::println!("IA_LIVRE_NATIVE_PERF_HOST_MS_2L1={ms2}");
+        std::println!("IA_LIVRE_NATIVE_PERF_HOST_MS_8L1={ms8}");
+        std::println!("IA_LIVRE_NATIVE_PERF_HOST_OK=1");
     }
 }
