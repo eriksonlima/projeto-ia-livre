@@ -124,14 +124,14 @@ Namespace `IA_LIVRE_HARNESS_*` (reemitido pelo script B a partir da evidência r
 
 ## Critérios de aceite
 
-- [ ] Docs descrevem caminho GGUF canônico em B, deps B13/B14, marcadores de sucesso vs bloqueio, e que proxy Etapa 12 ≠ GGUF
-- [ ] Hipótese A vs B **não** declarada comprovada em docs/gate/scripts
-- [ ] Nenhum caminho emite `TOKENS_PER_S` / `LOAD_S` GGUF inventados ou sem carga real
-- [ ] Gate harness atualizado: aceita GGUF real em B **ou** bloqueio honesto (proxy mínimo pode permanecer); rejeita fraude de métricas
-- [ ] Se B13+B14 permitirem e a carga for viável: corrida B com TinyLlama Q4_K_M, prompt canônico, `n-predict=32` e métricas medidas em espécie
-- [ ] Se não permitirem / inviável: bloqueio documentado com marcadores honestos e gate coerente
-- [ ] `AGENTS.md` cobre o cenário; README avaliado
-- [ ] Etapa 21 **não** marcada `feita` nesta spec (só após gate + revisão pelo agente principal)
+- [x] Docs descrevem caminho GGUF canônico em B, deps B13/B14, marcadores de sucesso vs bloqueio, e que proxy Etapa 12 ≠ GGUF
+- [x] Hipótese A vs B **não** declarada comprovada em docs/gate/scripts
+- [x] Nenhum caminho emite `TOKENS_PER_S` / `LOAD_S` GGUF inventados ou sem carga real
+- [x] Gate harness atualizado: aceita GGUF real em B **ou** bloqueio honesto (proxy mínimo pode permanecer); rejeita fraude de métricas
+- [ ] Se B13+B14 permitirem e a carga for viável: corrida B com TinyLlama Q4_K_M, prompt canônico, `n-predict=32` e métricas medidas em espécie — **N/A** nesta etapa (inviável no QEMU mínimo)
+- [x] Se não permitirem / inviável: bloqueio documentado com marcadores honestos e gate coerente (`B_BLOCK=no_gguf_path`)
+- [x] `AGENTS.md` cobre o cenário; README avaliado (sem mudança)
+- [x] Etapa 21 pronta para o agente principal marcar `feita` após gate + revisor (desfecho bloqueio)
 
 ## Riscos e rollback
 

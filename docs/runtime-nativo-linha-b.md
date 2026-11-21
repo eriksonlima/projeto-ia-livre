@@ -101,8 +101,20 @@ Informativo / stub; **não** substitui o caminho proxy do gate mínimo:
 
 **Proibido** em `blocked` e em `proxy`: inventar `TOKENS_PER_S` / `LOAD_S` GGUF; apontar `MODEL=` TinyLlama sem carga real; declarar hipótese comprovada.
 
-### Estado atual (após merge E19/E20)
+### Integração harness ↔ contrato (Etapa 21 Task 3)
 
-- ~~`awaiting_b13_b14`~~ — Etapas 19 e 20 **feitas** e verificáveis no main; harness B observa `HARNESS_CONTRACT_*`.
-- Bloqueio honesto atual: **`no_gguf_path`** — não há loader GGUF / filesystem / llama.cpp no kernel UEFI pós-ExitBoot; o proxy E12 permanece o instrumento mínimo do gate.
-- Hipótese A vs B **não** comprovada. GPU manager **fora**.
+Com Etapas 19/20 verificáveis no serial QEMU, `scripts/run-harness-line-b.sh`:
+
+1. Exige `MEM_SCHED_OK` + tipados + fases Prefill/Decode + `NATIVE_BENCH_*` (contrato + proxy).
+2. Reemite `HARNESS_CONTRACT_*` e **`HARNESS_CONTRACT_READY=1`** (deps nativas ok para *preparar* a carga).
+3. Declara o **alvo** canônico sem fingir carga: `GGUF_TARGET_MODEL=`, `GGUF_TARGET_N_PREDICT=32`, `GGUF_TARGET_PROMPT=canonical_v1`.
+4. Declara `GGUF_NATIVE_LOADER=absent` + `GGUF_STATUS=blocked` + `B_BLOCK=no_gguf_path`.
+5. **Não** emite `TOKENS_PER_S` / `LOAD_S` / `LOAD_KIND=gguf` / `MODEL=` TinyLlama.
+
+`HARNESS_MODEL=` permanece `proxy-post-exit-v1`. Rodar `ia-livre-runtime` no host continua sendo **Linha A**.
+
+### Estado atual (após merge E19/E20 + Tasks 3–4)
+
+- ~~`awaiting_b13_b14`~~ — Etapas 19 e 20 **feitas**; `CONTRACT_READY=1` no harness B.
+- Bloqueio final honesto: **`no_gguf_path`** — sem loader GGUF / FS maduro / motor de inferência no kernel UEFI pós-ExitBoot; proxy E12 = instrumento mínimo do gate.
+- Hipótese A vs B **não** comprovada. GPU manager **fora**. Métricas em espécie em B ficam para quando existir loader real (fora do mínimo desta etapa).

@@ -10,9 +10,11 @@ Uma task = uma fatia.
   - README: avaliado; sem mudança (capa aponta AGENTS; não enganosa).
   - **Pronto quando:** `scripts/run-harness-line-b.sh` e `scripts/verify-harness.sh` (e ponte AGENTS) distinguem honestamente: proxy Etapa 12 (default de sucesso mínimo atual) **e/ou** caminho de bloqueio documentado (`B_BLOCK` / `LOAD_KIND=blocked`); **falham** se aparecerem `TOKENS_PER_S` / `LOAD_S` GGUF / `MODEL` TinyLlama em B **sem** evidência de carga real; mensagem de gate deixa claro “hipótese não comprovada”; `make verify-harness` continua verde no cenário proxy (ou proxy+bloqueio documentado) **sem** fingir GGUF no QEMU. README reavaliado. Integração profunda com B13/B14 **não** obrigatória nesta fatia.
 
-- [ ] Task 3 — Integração harness ↔ contrato nativo (condicionada a B13 + B14)
-  - **Condição:** só avançar implementação de ligação quando B13 e B14 estiverem verificáveis no branch/main adotado; caso contrário, registrar bloqueio honesto (docs + marcadores da Task 1/2) e **não** inventar carga — a fatia pode concluir como “bloqueio documentado / adiamento da ligação” com evidência.
-  - **Pronto quando (se deps OK):** harness B (e, se necessário, ponto de entrada documentado no caminho nativo) consome o contrato de memória/scheduler + runtime nativo para preparar a carga canônica, com marcadores intermediários honestos; ainda **sem** emitir `TOKENS_PER_S` se a inferência GGUF não tiver corrido de ponta a ponta. **Pronto quando (se deps ausentes):** bloqueio `awaiting_b13_b14` (ou equivalente) documentado + gate coerente; sem métricas GGUF inventadas. README reavaliado.
+- [x] Task 3 — Integração harness ↔ contrato nativo (condicionada a B13 + B14)
+  - **Deps:** Etapas 19/20 **feitas** no main (merge em `etapa-b15`).
+  - README: avaliado; sem mudança (capa aponta AGENTS; não enganosa).
+  - **Pronto quando:** harness B exige serial MEM_SCHED + fases + proxy; emite `CONTRACT_READY=1`, `GGUF_TARGET_MODEL=` / `N_PREDICT=32` / `PROMPT=canonical_v1`, `GGUF_NATIVE_LOADER=absent`; **sem** `TOKENS_PER_S`/`LOAD_S`/`LOAD_KIND=gguf`. Docs + `verify-harness` alinhados.
 
-- [ ] Task 4 — Carga GGUF real em B com métricas em espécie **ou** bloqueio final honesto
-  - **Pronto quando:** um dos dois desfechos, ambos válidos para a Etapa 21: (a) corrida Linha B com TinyLlama Q4_K_M, prompt canônico, `n-predict=32`, emitindo `HARNESS_OK` + `LOAD_KIND=gguf` + `LOAD_S=` / `TOKENS_PER_S=` **medidos**, gate atualizado aceitando esse caminho; **ou** (b) inviabilidade confirmada → bloqueio final documentado, gate sem números inventados, proxy Etapa 12 permanece o instrumento mínimo. Em ambos: hipótese **não** comprovada; sem GPU manager; `AGENTS.md` / docs alinhados; README reavaliado; etapa pronta para revisão (não marcar `feita` aqui).
+- [x] Task 4 — Carga GGUF real em B com métricas em espécie **ou** bloqueio final honesto
+  - README: avaliado; sem mudança.
+  - **Desfecho (b):** inviabilidade confirmada no QEMU/IA Livre — sem loader GGUF / FS / motor de inferência pós-ExitBoot; `B_BLOCK=no_gguf_path`, `GGUF_STATUS=blocked`; proxy E12 permanece instrumento mínimo; gate sem números inventados. Hipótese **não** comprovada; sem GPU manager; docs/`AGENTS.md` alinhados. Etapa pronta para revisão pelo agente principal (marcar `feita` após gate + revisor).

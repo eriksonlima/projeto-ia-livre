@@ -175,7 +175,7 @@ Gate automatizado: `make verify-agent` (não exige QEMU/UEFI nem o nó P2P; requ
 
 Metodologia: [`docs/harness-linha-a-b.md`](docs/harness-linha-a-b.md); caminho B mínimo: [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md); contrato: [`docs/runtime-contrato-nativo.md`](docs/runtime-contrato-nativo.md).  
 **Não** confundir com métricas dos protótipos CPU/GPU. Linha A = host + GGUF; Linha B = proxy pós-ExitBoot no QEMU **+** evidência `MEM_SCHED` (E19) reemitida como `HARNESS_CONTRACT_*` (**não** TinyLlama).  
-**Etapa 21:** carga GGUF canônica em B **ou** bloqueio honesto (`B_BLOCK=` / `GGUF_STATUS=blocked` / `LOAD_KIND=blocked`) — **sem** inventar `TOKENS_PER_S`. Spec: `specs/carga-gguf-linha-b/`. Hipótese **não** comprovada.
+**Etapa 21:** deps 19/20 ok (`CONTRACT_READY=1`); carga GGUF real em B **bloqueada** (`B_BLOCK=no_gguf_path`, `GGUF_STATUS=blocked`, `GGUF_NATIVE_LOADER=absent`) — **sem** inventar `TOKENS_PER_S`. Spec: `specs/carga-gguf-linha-b/`. Hipótese **não** comprovada.
 
 Pré-requisitos: runtime CPU (GGUF) para A; QEMU/OVMF para B. Sem GPU no harness v1.
 
@@ -189,14 +189,14 @@ cargo build -p ia-livre-runtime
 # Linha A — emite IA_LIVRE_HARNESS_LINE=A + IA_LIVRE_HARNESS_OK + load/tokens
 ./scripts/run-harness-line-a.sh
 
-# Linha B — QEMU proxy + HARNESS_CONTRACT_* (não TinyLlama; hipótese não comprovada)
+# Linha B — QEMU proxy + HARNESS_CONTRACT_* + bloqueio GGUF honesto (não TinyLlama)
 ./scripts/run-harness-line-b.sh
 ```
 
-Linha B: proxy E12 **preservado** (`LOAD_KIND=proxy`) + evidência contrato E19 (`HARNESS_CONTRACT_BACKEND=native_qemu`, `MEM_SCHED=OK`, tipados/fases).  
-Etapa 21: o script B emite `B_BLOCK=` + `GGUF_STATUS=blocked` junto do proxy (estado honesto do caminho GGUF; **não** inventa `TOKENS_PER_S`). Opcional: `IA_LIVRE_HARNESS_B_MODE=block-status` acrescenta `LOAD_KIND_GGUF=blocked`. **Proibido** fingir GGUF. Ver [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md). Hipótese **não** comprovada.
+Linha B: proxy E12 **preservado** (`LOAD_KIND=proxy`) + contrato E19 (`HARNESS_CONTRACT_*`, `CONTRACT_READY=1`) + alvos `GGUF_TARGET_*` + `B_BLOCK=no_gguf_path` / `GGUF_STATUS=blocked`.  
+**Proibido** `TOKENS_PER_S` / `LOAD_KIND=gguf` / `MODEL=` TinyLlama sem carga real. Opcional: `IA_LIVRE_HARNESS_B_MODE=block-status` → `LOAD_KIND_GGUF=blocked`. Ver [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md). Hipótese **não** comprovada.
 
-Gate automatizado: `make verify-harness` (A = GGUF; B = proxy + contrato; requer GGUF para A).
+Gate automatizado: `make verify-harness` (A = GGUF; B = proxy + contrato + bloqueio GGUF; requer GGUF para A).
 
 ### Contrato nativo — consumidor / shim host (Etapa 20)
 
@@ -328,7 +328,7 @@ grep -q 'post_exit_microbench' scripts/run-harness-line-b.sh
 grep -q 'HARNESS_CONTRACT_BACKEND=native_qemu' scripts/run-harness-line-b.sh
 ```
 
-`make verify-harness` exige A (`LINE=A`, `OK`, load/tokens) **e** B (`LINE=B`, `OK`, `PROXY=*`, `HARNESS_CONTRACT_MEM_SCHED=OK`, tipados/fases, `B_BLOCK=`, `GGUF_STATUS=blocked`, sem `TOKENS_PER_S` / sem `LOAD_S` / sem `B_SKIP` / sem `LOAD_KIND=gguf` fingido). Timeout padrão 300s; `VERIFY_HARNESS_TIMEOUT`. Gates existentes permanecem.
+`make verify-harness` exige A (`LINE=A`, `OK`, load/tokens) **e** B (`LINE=B`, `OK`, `PROXY=*`, `HARNESS_CONTRACT_MEM_SCHED=OK`, `CONTRACT_READY=1`, `GGUF_TARGET_*`, `GGUF_NATIVE_LOADER=absent`, `B_BLOCK=no_gguf_path` (ou legado), `GGUF_STATUS=blocked`, sem `TOKENS_PER_S` / sem `LOAD_S` / sem `B_SKIP` / sem `LOAD_KIND=gguf` fingido). Timeout padrão 300s; `VERIFY_HARNESS_TIMEOUT`. Gates existentes permanecem.
 
 ### Gate do contrato nativo host (Etapa 20 — adicional)
 
