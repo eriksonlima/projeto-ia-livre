@@ -2,15 +2,13 @@
 
 ## O que funciona
 
-- Gates principais + E63 `esp_sfs_full` + E64 `sym_cpu` / ADR 0023
-- Pilar 1 BLOQUEIO_FINAL; path metal SFS full; METAL_OK SKIP sem PC
+- 1–66 feitas; E63 SFS full; E64 sym_cpu; E65 need_vfio; E66 NET_GUEST_BLOCK
+- Rede/autonomia host verdes; pilar 1 BLOQUEIO_FINAL
 
 ## Bloqueios
 
-- COMPROVA / espécie canônica (0020–0022)
-- Simetria GPU até B60 (0023)
-- METAL_OK precisa log PC
+- COMPROVA / espécie; METAL_OK (PC); simetria GPU (VFIO); TCP guest (virtio+stack)
 
 ## Roadmap
 
-- 1–64 feitas
+- Sem em_andamento; topo Abertas B62

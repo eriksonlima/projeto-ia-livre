@@ -496,3 +496,11 @@ Spec: specs/gpu-guest-passthrough/
 Pronto quando: `GPU_REAL_SRC=pci_passthrough` (ou equiv.) + `GPU_REAL_OK` **ou** skip `need_gpu`/`need_vfio`; ≠ só enum host.  
 **Desfecho:** contrato [`docs/gpu-guest-passthrough.md`](docs/gpu-guest-passthrough.md) + `make verify-gpu-guest-passthrough`; neste host tipicamente `need_vfio`/`need_gpu` (sem inventar passthrough); E55 `SRC=host` intacto; ADR 0023 permanece até VFIO real.  
 
+## Etapa 66 — Stack TCP Rede nativa no guest
+
+Status: feita  
+Issue: [#66](https://github.com/eriksonlima/projeto-ia-livre/issues/66)  
+Spec: specs/tcp-rede-guest/  
+Pronto quando: sessão Rede no caminho B + marcadores; `verify-node` host intacto (ADR 0001).  
+**Desfecho:** ADR [`0024`](docs/adr/0024-tcp-rede-guest-inviavel.md) — TCP guest inviável (UART-only); `NET_GUEST_BLOCK=no_tcp_post_exit` + bridge E52; `make verify-rede-guest`; sem `NET_NATIVE_OK` fingido.  
+

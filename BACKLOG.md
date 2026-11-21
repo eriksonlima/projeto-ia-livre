@@ -10,15 +10,9 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Meta do protótipo (objetivo do projeto):** um ecossistema verificável em que (1) a **hipótese A vs B** possa ser comprovada ou refutada com geração real na Linha B (`TOKENS_PER_S`), (2) o **SO IA Livre** boote de USB/ESP em hardware real com caminho de IA nativo mínimo honesto, (3) a **Rede** e a **autonomia** continuem utilizáveis **sem** exigir o SO. Ordem abaixo = prioridade sugerida (topo primeiro).
 >
-> **Análise pós-E65 (2026-11-21):** E63 SFS full; E64 sym_cpu; E65 skip VFIO. Topo: **B61** (TCP guest) ou B67 docs; B55 adiada (não promover).
+> **Análise pós-E66 (2026-11-21):** E66 ADR 0024 TCP guest inviável. Topo: **B62** (WAN) ou B67 docs; B55 adiada.
 
 
-
-### B61 — Stack TCP Rede nativa no guest
-- Issue: [#66](https://github.com/eriksonlima/projeto-ia-livre/issues/66)
-- Origem: E52 = bridge only; ADR 0019 adia TCP pós-Exit
-- Pronto quando: sessão Rede no caminho B + marcadores; `verify-node` host intacto (ADR 0001)
-- Deps: E11; E52
 
 ### B62 — Descoberta WAN (NAT/DHT/relay)
 - Issue: [#67](https://github.com/eriksonlima/projeto-ia-livre/issues/67)
@@ -64,6 +58,14 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Nota: não promover enquanto BLOQUEIO_FINAL / canônico inviável sem reabertura
 
 ## Promovidas / arquivadas
+
+### B61 — Stack TCP Rede nativa no guest
+- Issue: [#66](https://github.com/eriksonlima/projeto-ia-livre/issues/66)
+- Origem: E52 = bridge only; ADR 0019 adia TCP pós-Exit
+- Pronto quando: sessão Rede no caminho B + marcadores; `verify-node` host intacto (ADR 0001)
+- Deps: E11; E52
+- Promovido para Etapa 66; desfecho ADR 0024 + `NET_GUEST_BLOCK`.
+- Etapa: [Etapa 66 — TCP Rede guest](ROADMAP.md)
 
 ### B60 — GPU real no guest (PCI/pass-through)
 - Issue: [#65](https://github.com/eriksonlima/projeto-ia-livre/issues/65)

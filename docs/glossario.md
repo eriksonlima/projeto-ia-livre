@@ -39,3 +39,5 @@ Princípios: [`manifesto.md`](manifesto.md).
 | **`B_BLOCK_METAL`** | Bloqueio honesto no path metal (ex. `no_gguf_metal_io` E48) | [`gguf-path-metal-io.md`](gguf-path-metal-io.md) / E48 |
 | **`sym_cpu`** | Harness A+B com `ACCEL=cpu` (mesmo perfil; E64) | [`harness-perfis-a-otimizada-gpu.md`](harness-perfis-a-otimizada-gpu.md) / ADR [`0023`](adr/0023-simetria-gpu-harness-inviavel.md) |
 | **ADR 0023** | Simetria GPU A/B inviável até passthrough (B60); E56 = assimétrico | [`adr/0023-simetria-gpu-harness-inviavel.md`](adr/0023-simetria-gpu-harness-inviavel.md) |
+| **`NET_GUEST_BLOCK`** | Bloqueio TCP Rede no guest (E66: `no_tcp_post_exit`) | [`rede-tcp-guest.md`](rede-tcp-guest.md) / ADR [`0024`](adr/0024-tcp-rede-guest-inviavel.md) |
+| **ADR 0024** | TCP Rede guest pós-Exit inviável (UART-only); bridge E52 canônica | [`adr/0024-tcp-rede-guest-inviavel.md`](adr/0024-tcp-rede-guest-inviavel.md) |

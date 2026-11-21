@@ -12,7 +12,8 @@ Script host que:
 2. Ancora participação Rede via `ia-livre-node` (prova com `TASK_OK`).
 3. Emite `IA_LIVRE_NET_BRIDGE_*`.
 
-**Não** é TCP no guest. **Não** substitui `verify-node`.
+**Não** é TCP no guest. **Não** substitui `verify-node`.  
+Etapa 66 / ADR [`0024`](adr/0024-tcp-rede-guest-inviavel.md): bloqueio explícito `NET_GUEST_BLOCK=no_tcp_post_exit` — [`rede-tcp-guest.md`](rede-tcp-guest.md) / `make verify-rede-guest`.
 
 ## Marcadores
 

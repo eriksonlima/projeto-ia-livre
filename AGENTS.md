@@ -615,6 +615,21 @@ grep -q 'IA_LIVRE_NET_BRIDGE_OK' scripts/run-rede-bridge.sh
 
 Esperado: `NET_BRIDGE_MODE=host_uefi` + `NATIVE_SRC=serial_exit` + `NET_BRIDGE_OK`. Sem `NET_NATIVE_OK` fingido. `verify-node` permanece independente do SO.
 
+### Gate TCP Rede no guest / bloqueio (Etapa 66 — adicional)
+
+Além da bridge E52: inventário UART-only + `NET_GUEST_BLOCK=no_tcp_post_exit` (ADR [`0024`](docs/adr/0024-tcp-rede-guest-inviavel.md)). **Não** é TCP no guest. **Não** substitui `verify-node`. Contrato: [`docs/rede-tcp-guest.md`](docs/rede-tcp-guest.md).
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+test -f scripts/verify-rede-guest.sh
+test -f docs/rede-tcp-guest.md
+make verify-rede-guest
+grep -q 'no_tcp_post_exit' scripts/run-rede-guest.sh
+! grep -q 'NET_NATIVE_OK' scripts/run-rede-guest.sh
+```
+
+Esperado: `NET_GUEST_BLOCK=no_tcp_post_exit` + `NET_BRIDGE_OK` + `NET_GUEST_OK`. Sem `NET_NATIVE_OK`. `verify-node` / `verify-rede-bridge` permanecem.
+
 ## PATH
 
 Sempre inclua o GitHub CLI e o Cargo locais:

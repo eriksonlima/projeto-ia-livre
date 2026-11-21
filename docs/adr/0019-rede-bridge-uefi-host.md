@@ -12,8 +12,13 @@ B46 pediu nó Rede no SO nativo (TCP pós-Exit) **ou** bridge documentada. O ker
 
 **Bridge host** (`IA_LIVRE_NET_BRIDGE_*`): valida evidência serial do caminho B (pós-Exit) e ancora sessão `ia-livre-node` no host (preferir `TASK_OK`). TCP nativo no guest fica **adiado**.
 
+## Ponte Etapa 66
+
+O adiamento foi **confirmado** como inviabilidade no kernel atual (ADR [`0024`](0024-tcp-rede-guest-inviavel.md)): `NET_GUEST_BLOCK=no_tcp_post_exit` + gate `verify-rede-guest`. Bridge permanece o caminho B canônico até reabertura (virtio-net + TCP).
+
 ## Consequências
 
 - `make verify-node` permanece independente de QEMU/SO.
 - Namespace distinto de E49 (`BRIDGE_*` autonomia ≠ `NET_BRIDGE_*`).
 - Sem stub teatral `NET_NATIVE_OK` sem stack.
+- E66: [`../rede-tcp-guest.md`](../rede-tcp-guest.md).
