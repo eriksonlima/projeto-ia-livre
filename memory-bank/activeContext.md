@@ -2,22 +2,22 @@
 
 ## Foco atual
 
-- **Etapa 24** `feita` — Autonomia v1 em `agent/` (`--prompt`, allowlist, N=8, ≥2 tools)
-- Lease: liberando; próxima claim = Etapa 25
-- Próxima `pendente`: Etapa 25 (GPU manager stub)
+- **Etapas 1–25** `feita` — roadmap atual esgotado
+- Lease: livre
+- Backlog Abertas: vazio
 
 ## Mudanças recentes
 
-- E23: Rede v1 integrada + `verify-node` OK
-- E24: merge `etapa-b18-autonomia-v1` → `main`; `verify-agent` GATE_OK (TOOLS_USED=3)
-- Revisores E23/E24: APROVADO
+- E23: Rede v1 (`verify-node` IDENT/PING)
+- E24: Autonomia v1 (`verify-agent` MEMORY_POLICY + TOOLS_USED≥2)
+- E25: GPU manager stub host (`verify-gpu-manager` GATE_OK / skip honesto)
 
 ## Próximo passo
 
-- Claim Etapa 25 (B19 GPU manager) → integrar `etapa-b19-gpu-manager` → `make verify-gpu-manager`
+- Aguardar novo item no backlog ou pedido explícito de etapa
+- Hipótese A vs B permanece **não** comprovada (INCONCLUSIVO / sem GGUF em B)
 
 ## Notas
 
-- Hipótese A vs B **não** comprovada
-- Backlog Abertas: vazio
-- README: considerado (AGENTS cobre operacional agent/node)
+- README considerado nas integrações; operacional em AGENTS.md
+- Skills atualizadas: `verificar-node-peer`, `verificar-agent-autonomia`; skill `verificar-gpu-manager` veio da branch

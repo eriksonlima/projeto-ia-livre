@@ -5,12 +5,12 @@ Regra: `.cursor/rules/agentes-em-paralelo.mdc`.
 
 ## Estado atual
 
-- **holder:** agente-principal-integracao-b17-b19
-- **etapa:** 25
-- **issue:** #25
-- **paths:** gpu-manager/, specs/gpu-manager-prototipo/, docs/desenho-gpu-manager-multi-gpu.md, AGENTS.md, ROADMAP.md, memory-bank/, scripts/verify-gpu-manager.sh, Makefile, Cargo.toml
-- **since:** 2026-11-21T01:00:17Z
-- **expires:** 2026-11-21T03:00:17Z
+- **holder:** _(nenhum)_
+- **etapa:** —
+- **issue:** —
+- **paths:** —
+- **since:** —
+- **expires:** —
 
 ## Como usar
 
