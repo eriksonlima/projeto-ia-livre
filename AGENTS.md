@@ -24,7 +24,7 @@ make stage-distro
 ```
 
 Contrato: [`docs/linux-ia-nativo.md`](docs/linux-ia-nativo.md) · USB: [`docs/guia-ia-livre-linux-usb.md`](docs/guia-ia-livre-linux-usb.md) · ADR [`0027`](docs/adr/0027-produto-linux-ia-nativo.md).  
-Gates: `make verify-distro-scaffold` · `verify-distro-config-models` · `verify-distro-native-tune` · `verify-distro-smoke` · `verify-linux-usb-artifact` · `verify-distro-debian-qemu` · `verify-distro-first-boot` · `verify-distro-iso` (ISO live UEFI).
+Gates: `verify-distro-*` · `verify-linux-usb-artifact` · `verify-distro-iso` · `verify-linux-release` · `verify-produto-linux` (aceite). Guia: [`docs/guia-usuario-ia-livre-linux.md`](docs/guia-usuario-ia-livre-linux.md).
 
 ### Pré-requisitos (host)
 

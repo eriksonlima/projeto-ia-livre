@@ -2,14 +2,15 @@
 
 ## Foco atual
 
-- Etapas 1–88 **feitas**
-- E87 release-linux; E88 systemd opcional
-- Abertas: B84–B91 (topo **B84** smoke Rede no SO)
+- Etapas 1–96 **feitas**
+- Fila produto Linux (B77–B91) **concluída**; Abertas vazio
+- Aceite: `make verify-produto-linux` → `PRODUTO_LINUX_OK`
 
 ## Próximo passo
 
-- Promover **B84** smoke Rede no SO (QEMU+net)
+- Sem item em Abertas — aguardar novo pedido / backlog
 
 ## Notas
 
-- `make verify-linux-release` · `make verify-distro-systemd`
+- Guia: docs/guia-usuario-ia-livre-linux.md
+- Kernel custom: ADR 0028 deferred (stock Debian)

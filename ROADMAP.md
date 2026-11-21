@@ -686,3 +686,67 @@ Pronto quando: units no overlay + docs enable/disable (default não força).
 Project: https://github.com/users/eriksonlima/projects/1  
 **Desfecho:** `ia-livre-node`/`ia-livre-agent` units + SYSTEMD.md; `make verify-distro-systemd`.
 
+## Etapa 89 — Smoke Rede no SO
+
+Status: feita  
+Issue: [#90](https://github.com/eriksonlima/projeto-ia-livre/issues/90)  
+Spec: specs/linux-produto-fechamento/  
+Pronto quando: `ia-livre node` na stack do SO; gate; ≠ guest UEFI.  
+**Desfecho:** `verify-distro-net` (overlay host peer/TASK).
+
+## Etapa 90 — Smoke autonomia no SO
+
+Status: feita  
+Issue: [#91](https://github.com/eriksonlima/projeto-ia-livre/issues/91)  
+Spec: specs/linux-produto-fechamento/  
+Pronto quando: agent na stack do SO; gate.  
+**Desfecho:** `verify-distro-agent`.
+
+## Etapa 91 — GPU opcional na imagem
+
+Status: feita  
+Issue: [#92](https://github.com/eriksonlima/projeto-ia-livre/issues/92)  
+Spec: specs/linux-produto-fechamento/  
+Pronto quando: docs + skip honesto sem GPU.  
+**Desfecho:** `docs/linux-ia-nativo-gpu.md` + `verify-distro-gpu-optional`.
+
+## Etapa 92 — Tuning avançado na imagem
+
+Status: feita  
+Issue: [#93](https://github.com/eriksonlima/projeto-ia-livre/issues/93)  
+Spec: specs/linux-produto-fechamento/  
+Pronto quando: isolcpus/cgroups/hugepages hints + evidência.  
+**Desfecho:** tune estendido + `verify-distro-tune-advanced`.
+
+## Etapa 93 — ADR + defconfig kernel Linux IA-nativo
+
+Status: feita  
+Issue: [#94](https://github.com/eriksonlima/projeto-ia-livre/issues/94)  
+Spec: specs/linux-produto-fechamento/  
+Pronto quando: ADR + defconfig mínimos documentados.  
+**Desfecho:** ADR [`0028`](docs/adr/0028-kernel-linux-ia-nativo.md).
+
+## Etapa 94 — Gate boot kernel custom
+
+Status: feita  
+Issue: [#95](https://github.com/eriksonlima/projeto-ia-livre/issues/95)  
+Spec: specs/linux-produto-fechamento/  
+Pronto quando: gate custom **ou** inviável/deferred honesto.  
+**Desfecho:** `verify-kernel-linux-ia` → `OUTCOME=adr_0028_deferred_stock_kernel`.
+
+## Etapa 95 — Guia usuário final
+
+Status: feita  
+Issue: [#96](https://github.com/eriksonlima/projeto-ia-livre/issues/96)  
+Spec: specs/linux-produto-fechamento/  
+Pronto quando: guia QEMU+USB+sessão; product-context alinhado.  
+**Desfecho:** `docs/guia-usuario-ia-livre-linux.md`.
+
+## Etapa 96 — Checklist + gate verify-produto-linux
+
+Status: feita  
+Issue: [#97](https://github.com/eriksonlima/projeto-ia-livre/issues/97)  
+Spec: specs/linux-produto-fechamento/  
+Pronto quando: 4 métricas + `make verify-produto-linux`.  
+**Desfecho:** `docs/produto-linux-checklist.md` + `verify-produto-linux` → `PRODUTO_LINUX_OK`.
+

@@ -59,8 +59,9 @@ Lab histórico (ADR 0026 / 0022). Instrumentos A/B no repo ≠ meta de produto. 
 ## Estado atual (produto)
 
 - Direção: **Linux IA-nativo** (ADR 0027); Linha B **arquivada**
-- Stack host + scaffold distro (E77–81): config/GGUF, tune, smoke userspace, USB tarball
-- **Próximo (Abertas):** B77 rootfs Debian bootável em QEMU → … → B91 checklist `verify-produto-linux` (ver [`BACKLOG.md`](../BACKLOG.md))
+- Etapas 77–96: imagem Debian/ISO/USB, release, systemd, smokes Rede/agent, GPU/tune docs, ADR 0028 kernel stock, checklist
+- Guia: [`guia-usuario-ia-livre-linux.md`](guia-usuario-ia-livre-linux.md) · Aceite: `make verify-produto-linux`
+- Abertas: **vazio** (fila produto final concluída)
 - Artefatos UEFI/bare-metal = lab histórico (gates podem permanecer)
 
 Glossário: [`glossario.md`](glossario.md). Detalhe técnico: [`architecture.md`](architecture.md). Operacional: `AGENTS.md`.

@@ -1,5 +1,5 @@
 # Projeto IA Livre — bootstrap do kernel (UEFI + QEMU)
-.PHONY: build esp baremetal-esp run verify verify-runtime verify-runtime-gpu verify-runtime-contract verify-gpu-manager verify-gpu-shard-host verify-gpu-multi verify-gpu-native-real verify-gpu-guest-passthrough verify-node verify-node-relay verify-agent verify-harness verify-harness-comparable verify-harness-a-otimizada verify-harness-gpu verify-harness-sym-cpu verify-baremetal verify-write-usb verify-boot-guide-release verify-prototipo-objetivo verify-runtime-native-perf verify-metal-infer verify-autonomia-bridge verify-autonomia-nativa verify-abi-runtime-native verify-rede-bridge verify-rede-guest verify-docs-consistency verify-baremetal-report-tokens verify-collect-baremetal-report verify-distro-scaffold verify-distro-config-models verify-distro-native-tune verify-distro-smoke verify-linux-usb-artifact verify-distro-debian-qemu verify-distro-first-boot verify-distro-iso verify-linux-release verify-distro-systemd stage-distro clean help
+.PHONY: build esp baremetal-esp run verify verify-runtime verify-runtime-gpu verify-runtime-contract verify-gpu-manager verify-gpu-shard-host verify-gpu-multi verify-gpu-native-real verify-gpu-guest-passthrough verify-node verify-node-relay verify-agent verify-harness verify-harness-comparable verify-harness-a-otimizada verify-harness-gpu verify-harness-sym-cpu verify-baremetal verify-write-usb verify-boot-guide-release verify-prototipo-objetivo verify-runtime-native-perf verify-metal-infer verify-autonomia-bridge verify-autonomia-nativa verify-abi-runtime-native verify-rede-bridge verify-rede-guest verify-docs-consistency verify-baremetal-report-tokens verify-collect-baremetal-report verify-distro-scaffold verify-distro-config-models verify-distro-native-tune verify-distro-smoke verify-linux-usb-artifact verify-distro-debian-qemu verify-distro-first-boot verify-distro-iso verify-linux-release verify-distro-systemd verify-distro-net verify-distro-agent verify-distro-gpu-optional verify-distro-tune-advanced verify-kernel-linux-ia verify-produto-linux stage-distro clean help
 
 export PATH := $(HOME)/.cargo/bin:$(PATH)
 # Evita CARGO_TARGET_DIR herdado (ex.: cache de sandbox) fora do repo
@@ -189,6 +189,24 @@ verify-linux-release:
 
 verify-distro-systemd:
 	./scripts/verify-distro-systemd.sh
+
+verify-distro-net:
+	./scripts/verify-distro-net.sh
+
+verify-distro-agent:
+	./scripts/verify-distro-agent.sh
+
+verify-distro-gpu-optional:
+	./scripts/verify-distro-gpu-optional.sh
+
+verify-distro-tune-advanced:
+	./scripts/verify-distro-tune-advanced.sh
+
+verify-kernel-linux-ia:
+	./scripts/verify-kernel-linux-ia.sh
+
+verify-produto-linux:
+	./scripts/verify-produto-linux.sh
 
 verify-write-usb:
 	./scripts/verify-write-usb.sh

@@ -2,13 +2,14 @@
 
 ## O que funciona
 
-- Etapas 1–88
-- ISO live + writer + release packaging + systemd units (disabled default)
+- Etapas 1–96; produto Linux IA-nativo utilizável (ISO/USB/QEMU + stack)
+- `make verify-produto-linux` OK
 
 ## Bloqueios
 
-- Smokes Rede/Autonomia/GPU na imagem; tuning avançado; kernel custom; checklist final = B84–B91
+- Nenhum na fila Abertas
+- Kernel custom build = futuro (ADR 0028)
 
 ## Roadmap
 
-- Sem em_andamento; topo Abertas = B84
+- Sem em_andamento/pendente; Abertas vazio

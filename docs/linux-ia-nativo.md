@@ -97,6 +97,25 @@ make verify-linux-release
 
 ISO no pacote **sem** GGUF default (`IA_LIVRE_DEBIAN_INCLUDE_GGUF=0`). ≠ `prepare-baremetal-release` (ESP).
 
+## Smokes stack do SO (Etapas 89–92)
+
+```bash
+make verify-distro-net              # Rede (binários overlay)
+make verify-distro-agent            # Autonomia
+make verify-distro-gpu-optional     # GPU docs + skip
+make verify-distro-tune-advanced    # isolcpus/hugepages/cgroup hints
+```
+
+GPU opcional: [`linux-ia-nativo-gpu.md`](linux-ia-nativo-gpu.md). Tuning: [`linux-ia-nativo-tuning.md`](linux-ia-nativo-tuning.md).
+
+## Kernel Linux (Etapas 93–94)
+
+ADR [`0028`](adr/0028-kernel-linux-ia-nativo.md) · [`kernel-linux-ia-nativo.md`](kernel-linux-ia-nativo.md) · `make verify-kernel-linux-ia` (stock deferred).
+
+## Aceite produto
+
+Guia: [`guia-usuario-ia-livre-linux.md`](guia-usuario-ia-livre-linux.md) · Checklist: [`produto-linux-checklist.md`](produto-linux-checklist.md) · `make verify-produto-linux`
+
 ## USB Linux
 
 Ver [`docs/guia-ia-livre-linux-usb.md`](guia-ia-livre-linux-usb.md) (tarball E81 + ISO E85 — distinto do ESP UEFI).

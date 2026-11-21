@@ -8,57 +8,49 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-> **Produto (ADR 0027):** **Linux IA-nativo** (TTY, shell, qualquer GGUF, tuning/kernel Linux). Linha B UEFI **arquivada**. Ordem = prioridade (topo primeiro). Fila até o **produto final** (métricas em `docs/product-context.md`).
+> **Produto (ADR 0027):** fila B77–B91 **concluída** (Etapas 82–96). *(vazio)*
 
-### B84 — Smoke Rede no SO
-- Issue: [#90](https://github.com/eriksonlima/projeto-ia-livre/issues/90)
-- Origem: plano backlog produto final / ADR 0027
-- Pronto quando: `ia-livre node` na imagem/QEMU com net; gate/smoke; ≠ guest UEFI
-- Deps: B78
-
-### B85 — Smoke autonomia no SO
-- Issue: [#91](https://github.com/eriksonlima/projeto-ia-livre/issues/91)
-- Origem: plano backlog produto final / ADR 0027
-- Pronto quando: agent one-shot/REPL na imagem; gate/smoke
-- Deps: B78
-
-### B86 — GPU opcional na imagem
-- Issue: [#92](https://github.com/eriksonlima/projeto-ia-livre/issues/92)
-- Origem: plano backlog produto final / ADR 0027
-- Pronto quando: docs + pacotes/features; skip honesto sem GPU
-- Deps: B77
-
-### B87 — Tuning avançado na imagem
-- Issue: [#93](https://github.com/eriksonlima/projeto-ia-livre/issues/93)
-- Origem: plano backlog produto final / ADR 0027
-- Pronto quando: isolcpus/cgroups/hugepages com evidência no guest (evolui E79)
-- Deps: B77
-
-### B88 — ADR + defconfig/patches kernel Linux IA-nativo
-- Issue: [#94](https://github.com/eriksonlima/projeto-ia-livre/issues/94)
-- Origem: plano backlog produto final / ADR 0027
-- Pronto quando: ADR aceita + defconfig/patches mínimos documentados (após imagem bootável)
-- Deps: B78
-
-### B89 — Gate boot com kernel custom
-- Issue: [#95](https://github.com/eriksonlima/projeto-ia-livre/issues/95)
-- Origem: plano backlog produto final / ADR 0027
-- Pronto quando: gate com boot custom **ou** inviável honesto documentado
-- Deps: B88
-
-### B90 — Guia usuário final
-- Issue: [#96](https://github.com/eriksonlima/projeto-ia-livre/issues/96)
-- Origem: plano backlog produto final / ADR 0027
-- Pronto quando: guia QEMU + USB + primeira sessão; product-context alinhado
-- Deps: B78, B81
+## Promovidas / arquivadas
 
 ### B91 — Checklist + gate verify-produto-linux
 - Issue: [#97](https://github.com/eriksonlima/projeto-ia-livre/issues/97)
-- Origem: plano backlog produto final / ADR 0027
-- Pronto quando: checklist das 4 métricas + `make verify-produto-linux` (completo: B78+B81+B84+B85 mínimos)
-- Deps: B78, B81, B84, B85, B90
+- Promovido para Etapa 96.
+- Etapa: [Etapa 96 — verify-produto-linux](ROADMAP.md)
 
-## Promovidas / arquivadas
+### B90 — Guia usuário final
+- Issue: [#96](https://github.com/eriksonlima/projeto-ia-livre/issues/96)
+- Promovido para Etapa 95.
+- Etapa: [Etapa 95 — Guia usuário](ROADMAP.md)
+
+### B89 — Gate boot com kernel custom
+- Issue: [#95](https://github.com/eriksonlima/projeto-ia-livre/issues/95)
+- Promovido para Etapa 94.
+- Etapa: [Etapa 94 — gate kernel](ROADMAP.md)
+
+### B88 — ADR + defconfig/patches kernel Linux IA-nativo
+- Issue: [#94](https://github.com/eriksonlima/projeto-ia-livre/issues/94)
+- Promovido para Etapa 93.
+- Etapa: [Etapa 93 — ADR 0028](ROADMAP.md)
+
+### B87 — Tuning avançado na imagem
+- Issue: [#93](https://github.com/eriksonlima/projeto-ia-livre/issues/93)
+- Promovido para Etapa 92.
+- Etapa: [Etapa 92 — tuning avançado](ROADMAP.md)
+
+### B86 — GPU opcional na imagem
+- Issue: [#92](https://github.com/eriksonlima/projeto-ia-livre/issues/92)
+- Promovido para Etapa 91.
+- Etapa: [Etapa 91 — GPU opcional](ROADMAP.md)
+
+### B85 — Smoke autonomia no SO
+- Issue: [#91](https://github.com/eriksonlima/projeto-ia-livre/issues/91)
+- Promovido para Etapa 90.
+- Etapa: [Etapa 90 — smoke agent](ROADMAP.md)
+
+### B84 — Smoke Rede no SO
+- Issue: [#90](https://github.com/eriksonlima/projeto-ia-livre/issues/90)
+- Promovido para Etapa 89.
+- Etapa: [Etapa 89 — smoke Rede](ROADMAP.md)
 
 ### B83 — Unidades systemd opcionais
 - Issue: [#89](https://github.com/eriksonlima/projeto-ia-livre/issues/89)

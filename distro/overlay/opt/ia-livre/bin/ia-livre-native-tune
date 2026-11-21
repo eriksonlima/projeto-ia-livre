@@ -71,4 +71,30 @@ else
 fi
 echo "IA_LIVRE_NATIVE_SYSCTL=$SYSCTL_STATUS"
 
+# Tuning avançado (E92): hints — aplicar isolcpus via cmdline do kernel; cgroup/hugepages best-effort
+if [[ "$NPROC" -ge 4 ]]; then
+  echo "IA_LIVRE_NATIVE_ISOLCPUS_HINT=2-$((NPROC - 1))"
+else
+  echo "IA_LIVRE_NATIVE_ISOLCPUS_HINT=none_lt4cpus"
+fi
+
+HP=skip_no_sys
+if [[ -r /proc/sys/vm/nr_hugepages ]]; then
+  if [[ "$(id -u)" -eq 0 ]]; then
+    echo 128 >/proc/sys/vm/nr_hugepages 2>/dev/null && HP=applied_128 || HP=skip_write_fail
+  else
+    HP=skip_need_root
+  fi
+fi
+echo "IA_LIVRE_NATIVE_HUGEPAGES=$HP"
+
+CG=skip_no_cgroup
+if [[ -d /sys/fs/cgroup ]]; then
+  CG=available
+  if [[ "$(id -u)" -eq 0 ]] && [[ -w /sys/fs/cgroup ]]; then
+    CG=writable_root
+  fi
+fi
+echo "IA_LIVRE_NATIVE_CGROUP=$CG"
+
 echo "IA_LIVRE_NATIVE_TUNE_OK"
