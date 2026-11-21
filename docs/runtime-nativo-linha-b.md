@@ -120,8 +120,8 @@ Com Etapas 19/20 verificáveis no serial QEMU, `scripts/run-harness-line-b.sh`:
 - **Motor:** `runtime-native/` — ADR [`0010`](adr/0010-runtime-nativo-freestanding-linha-b.md) / [`0012`](adr/0012-forward-gguf-fatiado-linha-b.md) / [`0013`](adr/0013-geracao-canonica-fatiada-linha-b.md).
 - **Avanço E31:** `TENSOR_MAP_OK` + `Q4K_DEQUANT_OK` + `FORWARD_OP_OK` (bloco Q4_K + dot parcial).
 - **Etapa 32 (contrato):** geração canônica fatiada — tokenize → embed `token_embd` → camada parcial → Prefill/Decode/sampling **ou** `B_BLOCK` novo (≠ `no_gguf_generate`) após intermediários. Marcadores: `TOKENIZE_OK` / `EMBED_OK` / `LAYER_PARTIAL_OK`.
-- **Avanço E32 Task 2:** `tokenize_canonical` (ids fixos do prompt) + `embed_token` / `try_embed_canonical` em `token_embd.weight` (Q4_K); evidência em `cargo test -p ia-livre-runtime-native`.
-- **Bloqueio residual (até Tasks 3–4):** `B_BLOCK=no_gguf_generate` — sem camada/decode → **sem** `TOKENS_PER_S`.
+- **Avanço E32 Tasks 2–3:** tokenize + embed `token_embd` + camada parcial `blk.0.attn_output` (matvec 8 saídas); marcadores serial `TOKENIZE_OK` / `EMBED_OK` / `LAYER_PARTIAL_OK`; `FORWARD_FAIL=no_decode`.
+- **Bloqueio residual:** `B_BLOCK=no_gguf_decode` (≠ `no_gguf_generate`) — sem Prefill/Decode/sampling completo → **sem** `TOKENS_PER_S`. Harness alinhado na Task 4.
 - Proxy E12 permanece (`LOAD_KIND=proxy`) até geração medida. Hipótese **não** comprovada.
 
 ### Loader GGUF nativo mínimo (Etapa 26)

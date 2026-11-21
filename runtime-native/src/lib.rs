@@ -18,8 +18,11 @@ pub const CANONICAL_PROMPT_TOKEN_IDS: &[u32] = &[
 ];
 
 const TOKEN_EMBD_NAME: &[u8] = b"token_embd.weight";
+const ATTN_OUT_NAME: &[u8] = b"blk.0.attn_output.weight";
 /// Blocos Q4_K por linha de embedding (2048 / 256).
 const BLOCKS_PER_EMBD_ROW: usize = N_EMBD / QK_K;
+/// Saídas parciais da matvec attn_output (camada parcial honesta).
+pub const LAYER_PARTIAL_OUT: usize = 8;
 
 /// Relatório de layout após `prepare`.
 #[derive(Clone, Copy, Debug)]
@@ -296,15 +299,105 @@ pub fn try_embed_canonical(
     })
 }
 
-/// Tentativa de geração canônica — ainda sem Prefill/Decode/sampling.
+/// Dequantiza uma coluna/linha de 2048 pesos Q4_K a partir do offset absoluto.
+fn dequant_q4k_row_at(gguf: &[u8], abs: usize, out: &mut [f32; N_EMBD]) -> Result<(), ForwardError> {
+    let row_bytes = BLOCKS_PER_EMBD_ROW
+        .checked_mul(BLOCK_Q4_K_SIZE)
+        .ok_or(ForwardError::Truncated)?;
+    let end = abs.checked_add(row_bytes).ok_or(ForwardError::Truncated)?;
+    if end > gguf.len() {
+        return Err(ForwardError::Truncated);
+    }
+    for b in 0..BLOCKS_PER_EMBD_ROW {
+        let boff = abs + b * BLOCK_Q4_K_SIZE;
+        let mut block_out = [0f32; QK_K];
+        dequant_block_q4_k(&gguf[boff..boff + BLOCK_Q4_K_SIZE], &mut block_out)?;
+        let dst = b * QK_K;
+        out[dst..dst + QK_K].copy_from_slice(&block_out);
+    }
+    Ok(())
+}
+
+fn dot_f32(a: &[f32], b: &[f32]) -> f32 {
+    let mut acc = 0f32;
+    let n = a.len().min(b.len());
+    for i in 0..n {
+        acc += a[i] * b[i];
+    }
+    acc
+}
+
+/// Camada parcial: matvec das primeiras `LAYER_PARTIAL_OUT` colunas de
+/// `blk.0.attn_output.weight` (Q4_K [2048,2048]) com o vetor de embedding.
+pub fn layer_partial_attn_output(
+    gguf: &[u8],
+    layout: &LayoutReport,
+    x: &[f32; N_EMBD],
+    out: &mut [f32; LAYER_PARTIAL_OUT],
+) -> Result<u32, ForwardError> {
+    let tensor = find_tensor(gguf, layout, ATTN_OUT_NAME)?;
+    if tensor.ggml_type != GGML_TYPE_Q4_K {
+        return Err(ForwardError::UnsupportedType);
+    }
+    if tensor.n_dims < 2
+        || tensor.dims[0] != N_EMBD as u64
+        || tensor.dims[1] < LAYER_PARTIAL_OUT as u64
+    {
+        return Err(ForwardError::BadDims);
+    }
+    let row_bytes = BLOCKS_PER_EMBD_ROW
+        .checked_mul(BLOCK_Q4_K_SIZE)
+        .ok_or(ForwardError::Truncated)?;
+    let base = layout
+        .data_offset
+        .checked_add(tensor.data_rel as usize)
+        .ok_or(ForwardError::Truncated)?;
+    let mut wrow = [0f32; N_EMBD];
+    let mut acc_abs = 0f32;
+    for o in 0..LAYER_PARTIAL_OUT {
+        let abs = base
+            .checked_add(o.checked_mul(row_bytes).ok_or(ForwardError::Truncated)?)
+            .ok_or(ForwardError::Truncated)?;
+        dequant_q4k_row_at(gguf, abs, &mut wrow)?;
+        let v = dot_f32(&wrow, x);
+        out[o] = v;
+        acc_abs += if v >= 0.0 { v } else { -v };
+    }
+    Ok((acc_abs * 1000.0) as u32)
+}
+
+/// Embed canônico + camada attn_output parcial (E32 Task 3).
+pub fn try_layer_partial_canonical(
+    gguf: &[u8],
+    layout: &LayoutReport,
+) -> Result<LayerPartialReport, ForwardError> {
+    let emb = try_embed_canonical(gguf, layout)?;
+    let last = emb.token_id;
+    let mut x = [0f32; N_EMBD];
+    let _ = embed_token(gguf, layout, last, &mut x)?;
+    let mut y = [0f32; LAYER_PARTIAL_OUT];
+    let layer_cs = layer_partial_attn_output(gguf, layout, &x, &mut y)?;
+    if layer_cs == 0 {
+        return Err(ForwardError::DequantFail);
+    }
+    Ok(LayerPartialReport {
+        n_tokens: emb.n_tokens,
+        embed_checksum_milli: emb.embed_checksum_milli,
+        layer_checksum_milli: layer_cs,
+        partial_out0_milli: (y[0] * 1000.0) as i32,
+    })
+}
+
+/// Tentativa de geração canônica — embed+camada ok; decode/sampling ainda não.
 pub fn try_forward_canonical(
     gguf: &[u8],
     layout: &LayoutReport,
 ) -> Result<(), ForwardError> {
     let _ = try_forward_partial(gguf, layout)?;
-    let _ = try_embed_canonical(gguf, layout)?;
-    // Camada / decode virão na Task 3; até lá sem tokens.
-    Err(ForwardError::NoGenerate)
+    let _ = try_layer_partial_canonical(gguf, layout)?;
+    // Transformer completo + Prefill/Decode/sampling: inviável sem fraude no prazo
+    // (ADR 0013). Bloqueio residual novo: NoDecode → B_BLOCK=no_gguf_decode.
+    Err(ForwardError::NoDecode)
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -326,6 +419,14 @@ pub struct EmbedReport {
     pub n_tokens: u32,
     pub token_id: u32,
     pub embed_checksum_milli: u32,
+}
+
+#[derive(Clone, Copy, Debug)]
+pub struct LayerPartialReport {
+    pub n_tokens: u32,
+    pub embed_checksum_milli: u32,
+    pub layer_checksum_milli: u32,
+    pub partial_out0_milli: i32,
 }
 
 fn dequant_block_q4_k(block: &[u8], out: &mut [f32; QK_K]) -> Result<(), ForwardError> {
@@ -552,7 +653,7 @@ mod tests {
         assert_eq!(partial.tensor_ggml_type, GGML_TYPE_Q4_K);
         assert!(matches!(
             try_forward_canonical(&data, &layout),
-            Err(ForwardError::NoGenerate)
+            Err(ForwardError::NoDecode)
         ));
     }
 
@@ -583,5 +684,20 @@ mod tests {
         // Linhas distintas devem diferir no checksum (smoke).
         let cs2 = embed_token(&data, &layout, 904, &mut out).expect("last embed");
         assert_ne!(cs, cs2);
+    }
+
+    #[test]
+    fn layer_partial_canonical() {
+        let Some((data, layout)) = load_canonical_gguf() else {
+            return;
+        };
+        let report = try_layer_partial_canonical(&data, &layout).expect("layer");
+        assert_eq!(report.n_tokens, 16);
+        assert!(report.embed_checksum_milli > 0);
+        assert!(report.layer_checksum_milli > 0);
+        assert!(matches!(
+            try_forward_canonical(&data, &layout),
+            Err(ForwardError::NoDecode)
+        ));
     }
 }

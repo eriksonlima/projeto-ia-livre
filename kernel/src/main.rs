@@ -601,7 +601,7 @@ fn main() -> Status {
             // Etapa 19 — memória tipada + Prefill/Decode (≠ NATIVE_BENCH / ≠ geração GGUF).
             let _ = run_mem_sched_demo(proof_base, proof_cap, gguf_prefix);
 
-            // Etapa 29/31 — runtime-native: layout + mapa/dequant/op; geração ainda não.
+            // Etapa 29/31/32 — runtime-native: layout + mapa/dequant/op + tokenize/embed/camada.
             uart_write("IA_LIVRE_NATIVE_INFER_BEGIN\n");
             if let Some((p, n)) = gguf_prefix {
                 if n > GGUF_PREFIX_MAX {
@@ -640,10 +640,40 @@ fn main() -> Status {
                                     uart_write("IA_LIVRE_RUNTIME_NATIVE_PARTIAL_FAIL\n");
                                 }
                             }
+                            let tok = ia_livre_runtime_native::tokenize_canonical();
+                            uart_emit_kv(
+                                "IA_LIVRE_RUNTIME_NATIVE_TOKEN_N=",
+                                tok.n_tokens as u64,
+                            );
+                            uart_write("IA_LIVRE_RUNTIME_NATIVE_TOKENIZE_OK\n");
+                            match ia_livre_runtime_native::try_layer_partial_canonical(
+                                slice, &layout,
+                            ) {
+                                Ok(layer) => {
+                                    uart_emit_kv(
+                                        "IA_LIVRE_RUNTIME_NATIVE_EMBED_CS=",
+                                        layer.embed_checksum_milli as u64,
+                                    );
+                                    uart_write("IA_LIVRE_RUNTIME_NATIVE_EMBED_OK\n");
+                                    uart_emit_kv(
+                                        "IA_LIVRE_RUNTIME_NATIVE_LAYER_CS=",
+                                        layer.layer_checksum_milli as u64,
+                                    );
+                                    uart_write("IA_LIVRE_RUNTIME_NATIVE_LAYER_PARTIAL_OK\n");
+                                }
+                                Err(_) => {
+                                    uart_write("IA_LIVRE_RUNTIME_NATIVE_LAYER_FAIL\n");
+                                }
+                            }
                             match ia_livre_runtime_native::try_forward_canonical(slice, &layout)
                             {
                                 Ok(()) => {
                                     uart_write("IA_LIVRE_RUNTIME_NATIVE_OK\n");
+                                }
+                                Err(ia_livre_runtime_native::ForwardError::NoDecode) => {
+                                    uart_write(
+                                        "IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_decode\n",
+                                    );
                                 }
                                 Err(ia_livre_runtime_native::ForwardError::NoGenerate) => {
                                     uart_write(
