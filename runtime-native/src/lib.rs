@@ -1,7 +1,10 @@
 //! Runtime nativo freestanding (Linha B) — ADR 0010 / 0012 / 0013.
-//! Layout + mapa + dequant Q4_K + op + tokenize/embed (E32).
+//! Layout + mapa + dequant Q4_K + op + tokenize/embed (E32) + attn (E33).
 //! Geração canônica TinyLlama: Prefill/Decode/sampling ainda não.
 #![no_std]
+
+mod attn;
+pub use attn::{try_attn_layer0_single, AttnLayerReport, N_HEAD, N_KV_HEAD, HEAD_DIM};
 
 /// Dimensão de embedding TinyLlama 1.1B.
 pub const N_EMBD: usize = 2048;
@@ -20,7 +23,7 @@ pub const CANONICAL_PROMPT_TOKEN_IDS: &[u32] = &[
 const TOKEN_EMBD_NAME: &[u8] = b"token_embd.weight";
 const ATTN_OUT_NAME: &[u8] = b"blk.0.attn_output.weight";
 /// Blocos Q4_K por linha de embedding (2048 / 256).
-const BLOCKS_PER_EMBD_ROW: usize = N_EMBD / QK_K;
+pub(crate) const BLOCKS_PER_EMBD_ROW: usize = N_EMBD / QK_K;
 /// Saídas parciais da matvec attn_output (camada parcial honesta).
 pub const LAYER_PARTIAL_OUT: usize = 8;
 
@@ -74,8 +77,8 @@ pub enum ForwardError {
 
 const GGUF_MAGIC: [u8; 4] = *b"GGUF";
 const GGML_TYPE_Q4_K: u32 = 12;
-const QK_K: usize = 256;
-const BLOCK_Q4_K_SIZE: usize = 144; // half+half+12+128
+pub(crate) const QK_K: usize = 256;
+pub(crate) const BLOCK_Q4_K_SIZE: usize = 144; // half+half+12+128
 
 /// Prepara layout e localiza o início das infos de tensores.
 pub fn prepare(gguf: &[u8]) -> Result<LayoutReport, PrepareError> {
@@ -300,7 +303,7 @@ pub fn try_embed_canonical(
 }
 
 /// Dequantiza uma coluna/linha de 2048 pesos Q4_K a partir do offset absoluto.
-fn dequant_q4k_row_at(gguf: &[u8], abs: usize, out: &mut [f32; N_EMBD]) -> Result<(), ForwardError> {
+pub(crate) fn dequant_q4k_row_at(gguf: &[u8], abs: usize, out: &mut [f32; N_EMBD]) -> Result<(), ForwardError> {
     let row_bytes = BLOCKS_PER_EMBD_ROW
         .checked_mul(BLOCK_Q4_K_SIZE)
         .ok_or(ForwardError::Truncated)?;
@@ -429,7 +432,7 @@ pub struct LayerPartialReport {
     pub partial_out0_milli: i32,
 }
 
-fn dequant_block_q4_k(block: &[u8], out: &mut [f32; QK_K]) -> Result<(), ForwardError> {
+pub(crate) fn dequant_block_q4_k(block: &[u8], out: &mut [f32; QK_K]) -> Result<(), ForwardError> {
     if block.len() < BLOCK_Q4_K_SIZE {
         return Err(ForwardError::DequantFail);
     }
@@ -493,7 +496,7 @@ fn unpack_q4k_scales(scales: &[u8], j: usize) -> (u8, u8, u8, u8) {
     (sc[a], sc[a + 1], m[a], m[a + 1])
 }
 
-fn f16_to_f32(h: u16) -> f32 {
+pub(crate) fn f16_to_f32(h: u16) -> f32 {
     // IEEE half → f32
     let sign = ((h >> 15) & 1) as u32;
     let exp = ((h >> 10) & 0x1f) as u32;
@@ -699,5 +702,16 @@ mod tests {
             try_forward_canonical(&data, &layout),
             Err(ForwardError::NoDecode)
         ));
+    }
+
+    #[test]
+    fn attn_layer0_single_token() {
+        let Some((data, layout)) = load_canonical_gguf() else {
+            return;
+        };
+        let report = try_attn_layer0_single(&data, &layout).expect("attn");
+        assert_eq!(report.n_tokens, 16);
+        assert!(report.rms_checksum_milli > 0);
+        assert!(report.attn_checksum_milli > 0);
     }
 }

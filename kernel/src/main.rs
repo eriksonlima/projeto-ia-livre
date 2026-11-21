@@ -665,6 +665,19 @@ fn main() -> Status {
                                     uart_write("IA_LIVRE_RUNTIME_NATIVE_LAYER_FAIL\n");
                                 }
                             }
+                            match ia_livre_runtime_native::try_attn_layer0_single(slice, &layout)
+                            {
+                                Ok(attn) => {
+                                    uart_emit_kv(
+                                        "IA_LIVRE_RUNTIME_NATIVE_ATTN_CS=",
+                                        attn.attn_checksum_milli as u64,
+                                    );
+                                    uart_write("IA_LIVRE_RUNTIME_NATIVE_ATTN_LAYER_OK\n");
+                                }
+                                Err(_) => {
+                                    uart_write("IA_LIVRE_RUNTIME_NATIVE_ATTN_LAYER_FAIL\n");
+                                }
+                            }
                             match ia_livre_runtime_native::try_forward_canonical(slice, &layout)
                             {
                                 Ok(()) => {
