@@ -172,7 +172,7 @@ Pronto quando: implementação no host em `agent/` com `--prompt` one-shot, allo
 
 ## Etapa 25 — GPU manager / multi-GPU (protótipo mínimo)
 
-Status: pendente  
+Status: em_andamento  
 Issue: [#25](https://github.com/eriksonlima/projeto-ia-livre/issues/25)  
-Spec: specs/gpu-manager-prototipo/  
+Spec: specs/gpu-manager-multi-gpu-prototipo/  
 Pronto quando: caminho verificável de manager/afinidade/placement e/ou shard documentado; skip/gate honesto; sem prova A vs B via multi-GPU.
