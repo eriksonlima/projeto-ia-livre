@@ -332,6 +332,6 @@ Pronto quando: geração canônica em B emite `TOKENS_PER_S` (e marcadores Decod
 
 Status: em_andamento  
 Issue: [#45](https://github.com/eriksonlima/projeto-ia-livre/issues/45)  
-Spec: (a gerar)  
+Spec: specs/recorrida-harness-veredito-limpo/  
 Pronto quando: `make verify-harness-comparable` com B gerando; veredito ∈ {COMPROVA, REFUTA, INCONCLUSIVO} **sem** reason de proxy/`no_gguf_full_prefill`/subset-espécie; metodologia quieta preservada.
 
