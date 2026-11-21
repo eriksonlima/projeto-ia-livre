@@ -11,9 +11,10 @@ ADR 0006 / [`gpu-manager-nativo.md`](gpu-manager-nativo.md). **≠** stub E25 (`
 | E25 | `GPU_MGR=host_stub` | Host stub |
 | E38 | `GPU_MGR=native` + `KIND=synthetic` | QEMU default |
 | E41 | `host_shard_exec` | Multi-GPU host |
-| **E55** | `GPU_REAL_*` | Real (`SRC=host` ou `pci_passthrough`) **ou** `NEED_GPU` |
+| **E55** | `GPU_REAL_*` | Real **host** (`SRC=host`) **ou** `NEED_GPU` |
+| **E65** | `GPU_REAL_*` guest | `SRC=pci_passthrough` + `REAL_OK` **ou** `need_vfio`/`need_gpu` — [`gpu-guest-passthrough.md`](gpu-guest-passthrough.md) |
 
-`synthetic` + `GPU_MGR_OK` **não** conta como sucesso E55.
+`synthetic` + `GPU_MGR_OK` **não** conta como sucesso E55/E65. `SRC=host` **não** conta como sucesso E65.
 
 ## Marcadores
 

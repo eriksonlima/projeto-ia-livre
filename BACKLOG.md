@@ -10,22 +10,9 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Meta do protótipo (objetivo do projeto):** um ecossistema verificável em que (1) a **hipótese A vs B** possa ser comprovada ou refutada com geração real na Linha B (`TOKENS_PER_S`), (2) o **SO IA Livre** boote de USB/ESP em hardware real com caminho de IA nativo mínimo honesto, (3) a **Rede** e a **autonomia** continuem utilizáveis **sem** exigir o SO. Ordem abaixo = prioridade sugerida (topo primeiro).
 >
-> **Análise pós-E63 (2026-11-21):** E63 A = `esp_sfs_full`. Promovido **B59→E64**. B55 adiada.
+> **Análise pós-E65 (2026-11-21):** E63 SFS full; E64 sym_cpu; E65 skip VFIO. Topo: **B61** (TCP guest) ou B67 docs; B55 adiada.
 
 
-
-### B55 — Re-corrida harness A/B quieta pós-espécie canônica
-- Issue: [#61](https://github.com/eriksonlima/projeto-ia-livre/issues/61)
-- Origem: instrumento E22/E28 existe; falta corrida decisiva
-- Pronto quando: `VERDICT` + `REASON` limpos; quieto; comprovada/refutada **ou** `INCONCLUSIVO` numérico (não teto de espécie)
-- Deps: B54 — **adiada** enquanto ADR 0021 (canônico inviável) vigorar sem caminho novo
-- Nota: reordenada abaixo de B59; não promover enquanto 0021/0022 sem caminho novo
-
-### B60 — GPU real no guest (PCI/pass-through)
-- Issue: [#65](https://github.com/eriksonlima/projeto-ia-livre/issues/65)
-- Origem: E55 = `SRC=host`; QEMU ainda `KIND=synthetic`
-- Pronto quando: `GPU_REAL_SRC=pci_passthrough` (ou equiv.) + `GPU_REAL_OK` **ou** skip `need_gpu`; ≠ só enum host
-- Deps: E38/E55
 
 ### B61 — Stack TCP Rede nativa no guest
 - Issue: [#66](https://github.com/eriksonlima/projeto-ia-livre/issues/66)
@@ -70,6 +57,21 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: E58
 
 ## Promovidas / arquivadas
+
+### B60 — GPU real no guest (PCI/pass-through)
+- Issue: [#65](https://github.com/eriksonlima/projeto-ia-livre/issues/65)
+- Origem: E55 = `SRC=host`; QEMU ainda `KIND=synthetic`
+- Pronto quando: `GPU_REAL_SRC=pci_passthrough` (ou equiv.) + `GPU_REAL_OK` **ou** skip `need_gpu`; ≠ só enum host
+- Deps: E38/E55
+- Promovido para Etapa 65 (após E64); desfecho skip `need_vfio` neste host.
+- Etapa: [Etapa 65 — GPU guest passthrough](ROADMAP.md)
+
+### B55 — Re-corrida harness A/B quieta pós-espécie canônica
+- Issue: [#61](https://github.com/eriksonlima/projeto-ia-livre/issues/61)
+- Origem: instrumento E22/E28 existe; falta corrida decisiva
+- Pronto quando: `VERDICT` + `REASON` limpos; quieto; comprovada/refutada **ou** `INCONCLUSIVO` numérico (não teto de espécie)
+- Deps: B54 — **adiada** enquanto ADR 0021 vigorar
+- Nota: mantida adiada (não promovida); prioridade abaixo de B61+
 
 ### B59 — Accel GPU simétrica A/B no harness
 - Issue: [#73](https://github.com/eriksonlima/projeto-ia-livre/issues/73)

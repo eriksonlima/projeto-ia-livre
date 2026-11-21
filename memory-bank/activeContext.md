@@ -2,15 +2,15 @@
 
 ## Foco atual
 
-- Etapas 1–64 **feitas** (E64 a fechar no push)
-- E63: `esp_sfs_full` · E64: `sym_cpu` + ADR 0023
-- Pilar 1 BLOQUEIO_FINAL · METAL_OK SKIP · path metal SFS full ok
+- Etapas 1–65 **feitas**
+- E63 `esp_sfs_full` · E64 `sym_cpu`/0023 · E65 `need_vfio` (GPU host sem passthrough)
+- Topo Abertas: **B61** (TCP Rede guest); B55 adiada
 
 ## Próximo passo
 
-- Topo Abertas acionável após E64: **B60** (GPU guest) ou B55 adiada / B67 docs
-- Pedido “continuar” → promover topo
+- “continuar” → B61
+- VFIO real / log metal PC = operador
 
 ## Notas
 
-- Lease liberar após push E64
+- Lease livre

@@ -488,3 +488,11 @@ Spec: specs/harness-accel-simetrico-ab/
 Pronto quando: corrida A/B com o **mesmo** perfil de aceleração (ambos GPU ou ambos CPU documentado); skip sem GPU; **proibido** `ACCEL` fingido em B; veredito honesto (tipicamente `INCONCLUSIVO` até espécie/GPU guest); ≠ `COMPROVA` fabricado.  
 **Desfecho:** perfil `sym_cpu` + `make verify-harness-sym-cpu`; ADR [`0023`](docs/adr/0023-simetria-gpu-harness-inviavel.md) (simetria GPU inviável até B60); E56 permanece assimétrico; sem ACCEL fingido em B; sem `COMPROVA`.  
 
+## Etapa 65 — GPU real no guest (PCI/pass-through)
+
+Status: feita  
+Issue: [#65](https://github.com/eriksonlima/projeto-ia-livre/issues/65)  
+Spec: specs/gpu-guest-passthrough/  
+Pronto quando: `GPU_REAL_SRC=pci_passthrough` (ou equiv.) + `GPU_REAL_OK` **ou** skip `need_gpu`/`need_vfio`; ≠ só enum host.  
+**Desfecho:** contrato [`docs/gpu-guest-passthrough.md`](docs/gpu-guest-passthrough.md) + `make verify-gpu-guest-passthrough`; neste host tipicamente `need_vfio`/`need_gpu` (sem inventar passthrough); E55 `SRC=host` intacto; ADR 0023 permanece até VFIO real.  
+

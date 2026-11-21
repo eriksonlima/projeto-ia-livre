@@ -369,6 +369,23 @@ Com GPU: `IA_LIVRE_GPU_REAL_SRC=host` + `GPU_REAL_OK` + `DEVICES`≥1.
 Sem GPU / CI: `IA_LIVRE_GPU_NEED_GPU=need_gpu` exit **0** — **sem** `REAL_OK`. Force skip: `VERIFY_GPU_REAL_SKIP=1`.  
 `make verify` (E38 synthetic) permanece independente.
 
+### Gate GPU guest PCI/pass-through (Etapa 65 — adicional)
+
+Além de E55 (`SRC=host`). Exige VFIO/`pci_passthrough` **ou** skip `need_gpu`/`need_vfio`. Contrato: [`docs/gpu-guest-passthrough.md`](docs/gpu-guest-passthrough.md). **≠** inventar passthrough.
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+test -f scripts/verify-gpu-guest-passthrough.sh
+test -f docs/gpu-guest-passthrough.md
+make verify-gpu-guest-passthrough
+grep -q 'pci_passthrough' scripts/run-gpu-guest-passthrough.sh
+grep -q 'need_vfio' scripts/run-gpu-guest-passthrough.sh
+```
+
+Com VFIO bound: `GPU_REAL_SRC=pci_passthrough` + `GPU_REAL_OK`.  
+Sem VFIO / CI: `NEED_GPU=need_vfio|need_gpu` exit **0** — **sem** `REAL_OK`. Force: `VERIFY_GPU_GUEST_SKIP=1`.  
+`verify-gpu-native-real` (E55) permanece independente.
+
 ### Gate do nó Rede IA Livre (Etapas 6 / 23 / 39 / 50 — adicional)
 
 Só Rust no host. **Não** usa QEMU, GGUF nem o runtime de inferência. Participar da Rede **não exige** o SO IA Livre. Gate: regressão `--peer` + estágio `--bootstrap` (`DISC_OK`) + mDNS opt-in (Etapa 50).
