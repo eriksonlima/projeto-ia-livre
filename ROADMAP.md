@@ -144,7 +144,7 @@ Pronto quando: runtime (host e/ou caminho nativo) com evidência verificável de
 
 ## Etapa 21 — Carga GGUF canônica na Linha B (mínimo honesto)
 
-Status: pendente  
+Status: em_andamento  
 Issue: [#21](https://github.com/eriksonlima/projeto-ia-livre/issues/21)  
 Spec: specs/carga-gguf-linha-b/  
 Pronto quando: caminho mínimo da carga canônica do harness (TinyLlama Q4_K_M) na Linha B (QEMU/IA Livre) emite métricas B em espécie comparáveis às de A, **ou** bloqueio honesto documentado; gate harness atualizado sem inventar números; hipótese **não** comprovada; sem GPU manager. Depende das Etapas 19/20.
