@@ -83,6 +83,15 @@ make verify-distro-iso
 Requer `mksquashfs`, `grub-mkrescue`, `xorriso`, `mformat` (mtools) (+ Docker para `live-boot` se preciso).  
 QEMU prova com **UEFI/OVMF** (`-cdrom`); SeaBIOS costuma falhar El Torito nesta ISO. Skip `need_*` / `boot_fail` honesto.
 
+## Release packaging (Etapa 87)
+
+```bash
+./scripts/prepare-linux-release.sh   # → build/release-linux/ + SHA256SUMS
+make verify-linux-release
+```
+
+ISO no pacote **sem** GGUF default (`IA_LIVRE_DEBIAN_INCLUDE_GGUF=0`). ≠ `prepare-baremetal-release` (ESP).
+
 ## USB Linux
 
 Ver [`docs/guia-ia-livre-linux-usb.md`](guia-ia-livre-linux-usb.md) (tarball E81 + ISO E85 — distinto do ESP UEFI).

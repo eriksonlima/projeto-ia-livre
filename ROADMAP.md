@@ -668,3 +668,12 @@ Pronto quando: writer grava ISO com `--confirm`/`--yes`; gate artefato sem devic
 Project: https://github.com/users/eriksonlima/projects/1  
 **Desfecho:** `write-linux-usb.sh --mode iso` (`dd`); prepare inclui ISO; `verify-linux-usb-artifact`.
 
+## Etapa 87 — Release packaging produto Linux
+
+Status: feita  
+Issue: [#88](https://github.com/eriksonlima/projeto-ia-livre/issues/88)  
+Spec: specs/linux-release-packaging/  
+Pronto quando: SHA256SUMS + artefato sem GGUF default + guia release.  
+Project: https://github.com/users/eriksonlima/projects/1  
+**Desfecho:** `prepare-linux-release` → `build/release-linux/`; ISO sem GGUF; `make verify-linux-release`.
+

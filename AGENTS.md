@@ -758,6 +758,7 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `scripts/verify-distro-config-models.sh` / `verify-distro-native-tune.sh` / `verify-distro-smoke.sh` / `verify-linux-usb-artifact.sh` — gates produto
 - `scripts/build-distro-debian-rootfs.sh` / `run-distro-debian-qemu.sh` / `verify-distro-debian-qemu.sh` — Debian QEMU (Etapa 82; ≠ Alpine)
 - `scripts/build-distro-debian-iso.sh` / `run-distro-iso-qemu.sh` / `verify-distro-iso.sh` — ISO híbrida live (Etapa 85; UEFI/OVMF)
+- `scripts/prepare-linux-release.sh` / `verify-linux-release.sh` — pacote `build/release-linux/` (Etapa 87)
 - `scripts/write-usb-esp.sh` / `scripts/verify-write-usb.sh` — gravar pendrive com confirmação (Etapa 47)
 - `docs/guia-primeiro-boot-usb.md` — onboarding USB (Etapa 57)
 - `scripts/prepare-baremetal-release.sh` / `scripts/verify-boot-guide-release.sh` — release + gate Etapa 57

@@ -1,5 +1,5 @@
 # Projeto IA Livre — bootstrap do kernel (UEFI + QEMU)
-.PHONY: build esp baremetal-esp run verify verify-runtime verify-runtime-gpu verify-runtime-contract verify-gpu-manager verify-gpu-shard-host verify-gpu-multi verify-gpu-native-real verify-gpu-guest-passthrough verify-node verify-node-relay verify-agent verify-harness verify-harness-comparable verify-harness-a-otimizada verify-harness-gpu verify-harness-sym-cpu verify-baremetal verify-write-usb verify-boot-guide-release verify-prototipo-objetivo verify-runtime-native-perf verify-metal-infer verify-autonomia-bridge verify-autonomia-nativa verify-abi-runtime-native verify-rede-bridge verify-rede-guest verify-docs-consistency verify-baremetal-report-tokens verify-collect-baremetal-report verify-distro-scaffold verify-distro-config-models verify-distro-native-tune verify-distro-smoke verify-linux-usb-artifact verify-distro-debian-qemu verify-distro-first-boot verify-distro-iso stage-distro clean help
+.PHONY: build esp baremetal-esp run verify verify-runtime verify-runtime-gpu verify-runtime-contract verify-gpu-manager verify-gpu-shard-host verify-gpu-multi verify-gpu-native-real verify-gpu-guest-passthrough verify-node verify-node-relay verify-agent verify-harness verify-harness-comparable verify-harness-a-otimizada verify-harness-gpu verify-harness-sym-cpu verify-baremetal verify-write-usb verify-boot-guide-release verify-prototipo-objetivo verify-runtime-native-perf verify-metal-infer verify-autonomia-bridge verify-autonomia-nativa verify-abi-runtime-native verify-rede-bridge verify-rede-guest verify-docs-consistency verify-baremetal-report-tokens verify-collect-baremetal-report verify-distro-scaffold verify-distro-config-models verify-distro-native-tune verify-distro-smoke verify-linux-usb-artifact verify-distro-debian-qemu verify-distro-first-boot verify-distro-iso verify-linux-release stage-distro clean help
 
 export PATH := $(HOME)/.cargo/bin:$(PATH)
 # Evita CARGO_TARGET_DIR herdado (ex.: cache de sandbox) fora do repo
@@ -183,6 +183,9 @@ verify-distro-first-boot:
 
 verify-distro-iso:
 	./scripts/verify-distro-iso.sh
+
+verify-linux-release:
+	./scripts/verify-linux-release.sh
 
 verify-write-usb:
 	./scripts/verify-write-usb.sh

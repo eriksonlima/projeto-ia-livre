@@ -36,6 +36,14 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 2. Monte o pendrive; extraira `ia-livre-distro-rootfs.tar.gz` em `/` (ou mescle `/opt/ia-livre`, `/etc/ia-livre`, `/var/lib/ia-livre`).
 3. `ia-livre model list` / `ia-livre infer` / `ia-livre-native-tune`
 
+## Release
+
+```bash
+./scripts/prepare-linux-release.sh
+# → build/release-linux/ (ISO + tar + SHA256SUMS + README-RELEASE.txt)
+make verify-linux-release
+```
+
 ## Gates
 
 | Gate | O quê |
@@ -45,3 +53,5 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 | `make verify-distro-native-tune` | tuning |
 | `make verify-distro-smoke` | rootfs + smoke |
 | `make verify-linux-usb-artifact` | artefato USB (sem device) |
+| `make verify-distro-iso` | ISO + QEMU UEFI |
+| `make verify-linux-release` | pacote release-linux |
