@@ -1,4 +1,4 @@
-//! CLI do ambiente de autonomia v1 (Etapa 22) — evolui o protótipo Etapa 7.
+//! CLI do ambiente de autonomia v1 (Etapa 24) — evolui o protótipo Etapa 7.
 //! Loop: memória (N=8) → prompt → runtime (subprocesso) → ferramentas allowlist → re-leitura.
 //! Marcadores E7: `IA_LIVRE_TOOL_OK`, `IA_LIVRE_MEMORY_OK`, `IA_LIVRE_AGENT_OK`.
 //! Marcadores v1: `IA_LIVRE_MEMORY_POLICY_OK` (+ evidência de tools na Task 2).

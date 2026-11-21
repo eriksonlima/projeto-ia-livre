@@ -15,7 +15,7 @@ Uma task = uma fatia. Ordem sequencial.
   - **Nota:** prova exerce note+recall+help (`TOOLS_USED=3`); README sem mudança.
 
 - [x] Task 3 — Gate `verify-agent` estendido + docs da v1
-  - **Pronto quando:** `scripts/verify-agent.sh` (e `make verify-agent`) exige marcadores E7 **e** `IA_LIVRE_MEMORY_POLICY_OK` **e** evidência de ≥2 ferramentas; regressão E7 (nota canônica / memória) preservada; `AGENTS.md` documenta `--prompt`, allowlist, política N=8 e o gate estendido; docs (`ambiente-autonomia-prototipo.md` e/ou `desenho-autonomia-v1.md`) deixam claro que a v1 está **implementada** no host (Etapa 22), sem exigir SO IA Livre; README reavaliado; etapa pronta para revisão (não marcar `feita` aqui).
+  - **Pronto quando:** `scripts/verify-agent.sh` (e `make verify-agent`) exige marcadores E7 **e** `IA_LIVRE_MEMORY_POLICY_OK` **e** evidência de ≥2 ferramentas; regressão E7 (nota canônica / memória) preservada; `AGENTS.md` documenta `--prompt`, allowlist, política N=8 e o gate estendido; docs (`ambiente-autonomia-prototipo.md` e/ou `desenho-autonomia-v1.md`) deixam claro que a v1 está **implementada** no host (Etapa 24), sem exigir SO IA Livre; README reavaliado; etapa pronta para revisão (não marcar `feita` aqui).
   - **Arquivos típicos:** `scripts/verify-agent.sh`, `AGENTS.md`, docs de autonomia; `Makefile` só se necessário.
   - **Fora:** kernel/harness/node; promoção da etapa no ROADMAP (agente principal).
   - **Nota:** README reavaliado — sem mudança (AGENTS cobre operacional).

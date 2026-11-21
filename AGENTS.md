@@ -146,7 +146,7 @@ Gate automatizado: `make verify-node` (não exige QEMU, GGUF nem runtime).
 Camada 3 no host Linux (`std`). **Não** precisa do kernel UEFI / QEMU. Consome o runtime CPU existente (`ia-livre-runtime`) e o GGUF canônico. Autonomia **não exige** o SO IA Livre (ADR 0001).
 
 - Protótipo E7: [`docs/ambiente-autonomia-prototipo.md`](docs/ambiente-autonomia-prototipo.md)
-- Autonomia v1 (Etapa 22): [`docs/desenho-autonomia-v1.md`](docs/desenho-autonomia-v1.md) / ADR [`0005`](docs/adr/0005-autonomia-v1-utilizavel.md) — `--prompt`, allowlist `note`/`recall`/`help`, política N=8
+- Autonomia v1 (Etapa 24): [`docs/desenho-autonomia-v1.md`](docs/desenho-autonomia-v1.md) / ADR [`0005`](docs/adr/0005-autonomia-v1-utilizavel.md) — `--prompt`, allowlist `note`/`recall`/`help`, política N=8
 
 Pré-requisitos: Rust no host + deps/modelo do runtime (ver seção Runtime acima). **Sem** QEMU/OVMF para o agente.
 
@@ -349,7 +349,7 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `docs/desenho-protocolo-rede-ia-livre.md` — desenho Rede IA Livre v1 (ADR 0004; não implementado)
 - `docs/adr/0004-stack-protocolo-rede-ia-livre.md` — ADR da stack candidata P2P
 - `docs/ambiente-autonomia-prototipo.md` — loop/memória/ferramenta do protótipo de autonomia (Etapa 7); ponte para v1
-- `docs/desenho-autonomia-v1.md` — escopo autonomia v1 (ADR 0005; **implementado** na Etapa 22 em `agent/`)
+- `docs/desenho-autonomia-v1.md` — escopo autonomia v1 (ADR 0005; **implementado** na Etapa 24 em `agent/`)
 - `docs/adr/0005-autonomia-v1-utilizavel.md` — ADR do escopo v1
 - `Makefile` — `build` / `esp` / `run` / `verify` / `verify-runtime` / `verify-runtime-gpu` / `verify-node` / `verify-agent` / `verify-harness` / `clean`
 - `scripts/run-qemu.sh` — atalho para `make run`

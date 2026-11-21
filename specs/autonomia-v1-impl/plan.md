@@ -13,8 +13,8 @@ Ordem: CLI/memória → tools → gate/docs (o gate depende dos marcadores das t
 - `agent/src/main.rs` — CLI, montagem de prompt, tools, marcadores
 - `agent/Cargo.toml` — só se precisar de dep mínima (preferir std + JSON manual como E7)
 - `docs/ambiente-autonomia-prototipo.md` — evoluir ou ponte clara E7→v1 impl
-- `docs/desenho-autonomia-v1.md` — marcar implementação (Etapa 22); não reabrir escopo
-- `docs/adr/0005-autonomia-v1-utilizavel.md` — ponte curta “implementação = Etapa 22” (opcional se desenho + ambiente bastarem)
+- `docs/desenho-autonomia-v1.md` — marcar implementação (Etapa 24); não reabrir escopo
+- `docs/adr/0005-autonomia-v1-utilizavel.md` — ponte curta “implementação = Etapa 24” (opcional se desenho + ambiente bastarem)
 - `scripts/verify-agent.sh` — checks novos + regressão E7
 - `Makefile` — só se o alvo `verify-agent` precisar de nota; preferir script
 - `AGENTS.md` — Como rodar (`--prompt`) / Como verificar (marcadores v1)
@@ -26,7 +26,7 @@ Ordem: CLI/memória → tools → gate/docs (o gate depende dos marcadores das t
 - Etapas 7 e 15 feitas (protótipo + desenho/ADR 0005).
 - Runtime CPU + GGUF canônico (`./scripts/fetch-model.sh`) para o gate.
 - **Não** depende de Etapa 19 (kernel/scheduler), harness ou `node/`.
-- Lease: Etapa 22 está `pendente`; implementação só quando o agente principal promover / claimar — esta spec **não** promove.
+- Lease: Etapa 24 está `pendente`; implementação só quando o agente principal promover / claimar — esta spec **não** promove.
 
 ## Verificação
 

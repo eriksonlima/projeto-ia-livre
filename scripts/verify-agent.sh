@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Gate Etapa 7 + Etapa 22 (autonomia v1):
+# Gate Etapa 7 + Etapa 24 (autonomia v1):
 #   E7: TOOL_OK + MEMORY_OK + AGENT_OK + nota canônica
 #   v1: MEMORY_POLICY_OK + ≥2 ferramentas (TOOLS_USED≥2 / TOOL=note + TOOL=recall|help)
 # Não exige QEMU/UEFI nem o nó P2P. Requer GGUF canônico (como verify-runtime).
@@ -80,7 +80,7 @@ for marker in IA_LIVRE_TOOL_OK IA_LIVRE_MEMORY_OK IA_LIVRE_AGENT_OK; do
   fi
 done
 
-# Extensão v1 (Etapa 22)
+# Extensão v1 (Etapa 24)
 if ! grep -q 'IA_LIVRE_MEMORY_POLICY_OK' "$COMBINED"; then
   echo "GATE_FAIL: marcador ausente: IA_LIVRE_MEMORY_POLICY_OK"
   fail=1

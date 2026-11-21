@@ -47,9 +47,9 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ### B18 — Autonomia v1 utilizável (impl. em agent/)
 
-- Promovido para Etapa 22 do roadmap (`pendente`; Etapa 19 permanece `em_andamento`; trabalho em paralelo na branch `etapa-b18-autonomia-v1`).
+- Promovido para Etapa 24 do roadmap (`pendente`; Etapa 19 permanece `em_andamento`; trabalho em paralelo na branch `etapa-b18-autonomia-v1`).
 - Issue: [#24](https://github.com/eriksonlima/projeto-ia-livre/issues/24)
-- Etapa: [Etapa 22 — Autonomia v1 utilizável (impl. em agent/)](ROADMAP.md)
+- Etapa: [Etapa 24 — Autonomia v1 utilizável (impl. em agent/)](ROADMAP.md)
 
 ### B13 — Memória model-aware + scheduler por fases (impl. mínima)
 

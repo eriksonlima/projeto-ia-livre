@@ -83,7 +83,7 @@ Complete em uma frase: O Projeto IA Livre é
 
 Multi-agente, ReAct robusto, RAG/vetores, sandbox OS-level, integração P2P/kernel, GPU, UI.
 
-> **Etapa 22 (implementação):** autonomia v1 (`--prompt`, `note`/`recall`/`help`, política N=8) está em `agent/` — ver [`desenho-autonomia-v1.md`](desenho-autonomia-v1.md) / ADR [`0005`](adr/0005-autonomia-v1-utilizavel.md). Este doc permanece o contrato do **protótipo Etapa 7**; o gate `make verify-agent` agora também cobre a v1 (política + ≥2 tools) sem exigir QEMU/SO IA Livre.
+> **Etapa 24 (implementação):** autonomia v1 (`--prompt`, `note`/`recall`/`help`, política N=8) está em `agent/` — ver [`desenho-autonomia-v1.md`](desenho-autonomia-v1.md) / ADR [`0005`](adr/0005-autonomia-v1-utilizavel.md). Este doc permanece o contrato do **protótipo Etapa 7**; o gate `make verify-agent` agora também cobre a v1 (política + ≥2 tools) sem exigir QEMU/SO IA Livre.
 
 ## Fluxo canônico
 

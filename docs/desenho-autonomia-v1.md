@@ -1,7 +1,7 @@
 # Desenho — Autonomia v1 utilizável (camada 3)
 
 Primeira versão **utilizável** da camada 3, além do protótipo Etapa 7.  
-**Nível:** desenho (Etapa 15) + **implementação** (Etapa 22) em `agent/` / `ia-livre-agent`.  
+**Nível:** desenho (Etapa 15) + **implementação** (Etapa 24) em `agent/` / `ia-livre-agent`.  
 Host only; **não** exige o SO IA Livre.
 
 ADR: [`docs/adr/0005-autonomia-v1-utilizavel.md`](adr/0005-autonomia-v1-utilizavel.md).  
@@ -70,7 +70,7 @@ Cenário de prova v1 (documental):
 3. Confirmar JSONL escrito/re-lido e política N aplicada.
 4. Emitir: `IA_LIVRE_TOOL_OK`, `IA_LIVRE_MEMORY_OK`, `IA_LIVRE_AGENT_OK` (E7) **e** evidência de política (ex. `IA_LIVRE_MEMORY_POLICY_OK`) + prova de ≥2 ferramentas (ex. `IA_LIVRE_TOOLS_USED=2` ou marcadores por ferramenta).
 
-`make verify-agent` (Etapa 22) exige marcadores E7 **e** `IA_LIVRE_MEMORY_POLICY_OK` **e** evidência de ≥2 ferramentas (`IA_LIVRE_TOOLS_USED` + `IA_LIVRE_TOOL=…`).
+`make verify-agent` (Etapa 24) exige marcadores E7 **e** `IA_LIVRE_MEMORY_POLICY_OK` **e** evidência de ≥2 ferramentas (`IA_LIVRE_TOOLS_USED` + `IA_LIVRE_TOOL=…`).
 
 ## Alternativas consideradas
 
@@ -88,5 +88,5 @@ Cenário de prova v1 (documental):
 
 ## Implementação
 
-1. **Etapa 22** (`specs/autonomia-v1-impl/`): `--prompt`, `recall`/`help`, política N=8, gate estendido — **feito** em `agent/`.
+1. **Etapa 24** (`specs/autonomia-v1-impl/`): `--prompt`, `recall`/`help`, política N=8, gate estendido — **feito** em `agent/`.
 2. Depois: REPL, sandbox, integração Rede (ADR própria)
