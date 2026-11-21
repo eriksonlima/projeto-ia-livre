@@ -76,9 +76,14 @@ cargo build -p ia-livre-node
 # Terminal A
 cargo run -p ia-livre-node -- --tcp-port 7400 --node-id alice
 
-# Terminal B (gate preferencial: --peer)
+# Terminal B (regressão: --peer)
 cargo run -p ia-livre-node -- --tcp-port 7401 --node-id bob --peer 127.0.0.1:7400
+
+# Terminal B (Etapa 39: bootstrap, sem --peer)
+cargo run -p ia-livre-node -- --tcp-port 7401 --node-id bob --bootstrap 127.0.0.1:7400
 ```
+
+Descoberta além de LAN/`--peer`: [`rede-descoberta-wan.md`](rede-descoberta-wan.md).
 
 ## Gate
 
@@ -87,9 +92,10 @@ make verify-node
 # ou: ./scripts/verify-node.sh
 ```
 
-Exige `IA_LIVRE_PEER_OK` (ambos) + `IA_LIVRE_MSG_OK` (pelo menos um) + `IA_LIVRE_IDENT_OK` + `IA_LIVRE_PING_OK` (pelo menos um processo cada).  
-Caminho canônico do script: `--peer` no nó B. Timeout: `VERIFY_NODE_TIMEOUT` (default 45s).
+Exige regressão `--peer` **e** estágio bootstrap (`IA_LIVRE_DISC_OK` + marcadores v1).  
+Timeout: `VERIFY_NODE_TIMEOUT` (default 45s **por estágio**).
 
-## Fora deste v1
+## Fora deste v1 (núcleo framing)
 
-mDNS, DHT, relay, NAT traversal, marketplace, integração runtime/kernel, libp2p/Iroh, QUIC obrigatório.
+DHT, relay executável, NAT traversal, marketplace, integração runtime/kernel, libp2p/Iroh, QUIC obrigatório.  
+mDNS = opt-in / skip no gate (Etapa 39).

@@ -56,7 +56,7 @@ PING / PONG           →  opcional
 
 **Continua fora (só nomeado):**
 
-- mDNS, DHT/Kademlia, relay, STUN/TURN/hole-punching
+- DHT/Kademlia, relay executável, STUN/TURN/hole-punching (mDNS = Etapa 39 opt-in/skip)
 - marketplace / economia
 - integração com runtime ou kernel
 - libp2p / Iroh como dependência do próximo protótipo
@@ -79,5 +79,6 @@ PING / PONG           →  opcional
 ## Implementação
 
 1. **Etapa 23:** v1 mínimo em `node/` + gate `make verify-node` — feito (contrato [`rede-ia-livre-v1.md`](rede-ia-livre-v1.md))
-2. Depois: descoberta WAN (NAT/DHT) se a comunidade exigir
-3. Reavaliar libp2p só com ADR nova
+2. **Etapa 39:** descoberta WAN mínima — bootstrap + gate; mDNS opt-in/skip — [`rede-descoberta-wan.md`](rede-descoberta-wan.md)
+3. Depois: NAT/DHT/relay se a comunidade exigir
+4. Reavaliar libp2p só com ADR nova

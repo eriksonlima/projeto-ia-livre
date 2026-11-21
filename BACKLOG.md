@@ -8,12 +8,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-### B33 — Autonomia além de v1 (REPL ou tool sandboxed)
-
-- Issue: [#39](https://github.com/eriksonlima/projeto-ia-livre/issues/39)
-- Origem: v1 = one-shot + note/recall/help
-- Pronto quando: REPL ou ≥1 tool nova sandboxed + gate; sem shell/HTTP irrestrito
-
 ### B34 — Shard multi-GPU host executado (além do stub)
 
 - Issue: [#40](https://github.com/eriksonlima/projeto-ia-livre/issues/40)
@@ -27,6 +21,11 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Pronto quando: `architecture.md` / README-AGENTS refletem estado atual sem ambiguidade
 
 ## Promovidas / arquivadas
+
+### B33 — Autonomia além de v1 (REPL ou tool sandboxed)
+
+- Promovido para Etapa 40 do roadmap (promoção autônoma após Etapa 39).
+- Issue: [#39](https://github.com/eriksonlima/projeto-ia-livre/issues/39)
 
 ### B32 — Rede IA Livre além de v1 (descoberta WAN mínima)
 

@@ -1,8 +1,8 @@
-//! CLI do nó Rede IA Livre v1 (Etapa 23).
+//! CLI do nó Rede IA Livre v1 + descoberta WAN mínima (Etapas 23 / 39).
 //! Identidade ed25519/PeerId, HELLO UDP assinado, IDENT, MSG/ACK, PING/PONG.
-//! Marcadores: `IA_LIVRE_PEER_OK`, `IA_LIVRE_MSG_OK`, `IA_LIVRE_IDENT_OK`, `IA_LIVRE_PING_OK`.
-//! Participar **não exige** o SO IA Livre (ADR 0001).
+//! Bootstrap: `--bootstrap` / `--bootstrap-file` (sem exigir SO IA Livre).
 
+mod discovery;
 mod identity;
 mod proto;
 mod session;
@@ -20,18 +20,18 @@ use socket2::{Domain, Protocol, Socket, Type};
 use tokio::net::{TcpListener, TcpStream, UdpSocket};
 use tokio::time::interval;
 
+use discovery::load_bootstrap;
 use identity::{default_key_path, load_or_generate_key, peer_id_from_signing, pubkey_hex};
 use proto::{format_hello, parse_hello_v1};
 use session::run_session;
 
 const USAGE: &str = "\
 Uso: ia-livre-node [--node-id <apelido>] [--tcp-port <porta>] [--udp-port <porta>]
-                   [--peer <host:port>] [--key-file <path>]
+                   [--peer <host:port>] [--bootstrap <host:port>]…
+                   [--bootstrap-file <path>] [--disc-mdns] [--key-file <path>]
 
-Nó Rede IA Livre v1: ed25519/PeerId, HELLO UDP assinado, IDENT, MSG/ACK, PING/PONG.
---node-id é apelido (UX), não âncora de confiança. Chave default: build/node-keys/<apelido>.key
-Marcadores: IA_LIVRE_PEER_OK, IA_LIVRE_MSG_OK, IA_LIVRE_IDENT_OK, IA_LIVRE_PING_OK.
-Ver docs/rede-ia-livre-v1.md.
+Nó Rede IA Livre v1 + descoberta WAN mínima (bootstrap).
+--peer tem precedência sobre bootstrap para dial. Ver docs/rede-descoberta-wan.md.
 ";
 
 struct Config {
@@ -39,6 +39,8 @@ struct Config {
     tcp_port: u16,
     udp_port: u16,
     peer: Option<String>,
+    bootstrap: Vec<String>,
+    disc_mdns: bool,
     key_file: PathBuf,
 }
 
@@ -48,6 +50,9 @@ fn parse_args() -> Result<Config, i32> {
     let mut tcp_port: u16 = 7400;
     let mut udp_port: u16 = 7410;
     let mut peer: Option<String> = None;
+    let mut bootstrap_cli: Vec<String> = Vec::new();
+    let mut bootstrap_file: Option<PathBuf> = None;
+    let mut disc_mdns = false;
     let mut key_file: Option<PathBuf> = None;
 
     let mut i = 0;
@@ -101,6 +106,25 @@ fn parse_args() -> Result<Config, i32> {
                 };
                 peer = Some(v.clone());
             }
+            "--bootstrap" => {
+                i += 1;
+                let Some(v) = args.get(i) else {
+                    eprintln!("erro: --bootstrap exige host:port");
+                    return Err(2);
+                };
+                bootstrap_cli.push(v.clone());
+            }
+            "--bootstrap-file" => {
+                i += 1;
+                let Some(v) = args.get(i) else {
+                    eprintln!("erro: --bootstrap-file exige um path");
+                    return Err(2);
+                };
+                bootstrap_file = Some(PathBuf::from(v));
+            }
+            "--disc-mdns" => {
+                disc_mdns = true;
+            }
             "--key-file" => {
                 i += 1;
                 let Some(v) = args.get(i) else {
@@ -120,11 +144,20 @@ fn parse_args() -> Result<Config, i32> {
 
     let alias = alias.unwrap_or_else(|| format!("node-{}", std::process::id()));
     let key_file = key_file.unwrap_or_else(|| default_key_path(&alias));
+    let bootstrap = match load_bootstrap(&bootstrap_cli, bootstrap_file.as_deref()) {
+        Ok(v) => v,
+        Err(e) => {
+            eprintln!("erro: {e}");
+            return Err(2);
+        }
+    };
     Ok(Config {
         alias,
         tcp_port,
         udp_port,
         peer,
+        bootstrap,
+        disc_mdns,
         key_file,
     })
 }
@@ -154,7 +187,7 @@ async fn run_udp_discovery(
     let sock = match bind_udp_reuse(udp_port) {
         Ok(s) => s,
         Err(e) => {
-            eprintln!("aviso: UDP descoberta indisponível ({e}); use --peer");
+            eprintln!("aviso: UDP descoberta indisponível ({e}); use --peer ou --bootstrap");
             return;
         }
     };
@@ -217,27 +250,17 @@ async fn run_udp_discovery(
     }
 }
 
-async fn dial_peer(
-    peer: String,
+async fn try_dial_addr(
+    addr: SocketAddr,
     sk: SigningKey,
     peer_id: String,
     pubkey: String,
     peer_ok: Arc<AtomicBool>,
     dialing: Arc<AtomicBool>,
-) {
-    tokio::time::sleep(Duration::from_millis(300)).await;
-
-    let addr: SocketAddr = match peer.parse() {
-        Ok(a) => a,
-        Err(_) => {
-            eprintln!("erro: --peer inválido (use host:port): {peer}");
-            return;
-        }
-    };
-
+) -> bool {
     for attempt in 1..=30 {
         if peer_ok.load(Ordering::SeqCst) {
-            return;
+            return true;
         }
         if dialing
             .compare_exchange(false, true, Ordering::SeqCst, Ordering::SeqCst)
@@ -249,18 +272,81 @@ async fn dial_peer(
         match TcpStream::connect(addr).await {
             Ok(stream) => {
                 run_session(stream, sk, peer_id, pubkey, addr, peer_ok).await;
-                return;
+                return true;
             }
             Err(e) => {
                 dialing.store(false, Ordering::SeqCst);
                 if attempt == 30 {
-                    eprintln!("erro: não conectou a {addr} após tentativas: {e}");
-                    return;
+                    eprintln!("aviso: não conectou a {addr} após tentativas: {e}");
+                    return false;
                 }
                 tokio::time::sleep(Duration::from_millis(200)).await;
             }
         }
     }
+    false
+}
+
+async fn dial_peer(
+    peer: String,
+    sk: SigningKey,
+    peer_id: String,
+    pubkey: String,
+    peer_ok: Arc<AtomicBool>,
+    dialing: Arc<AtomicBool>,
+) {
+    tokio::time::sleep(Duration::from_millis(300)).await;
+    println!("IA_LIVRE_DISC_MODE=peer");
+    let addr: SocketAddr = match peer.parse() {
+        Ok(a) => a,
+        Err(_) => {
+            eprintln!("erro: --peer inválido (use host:port): {peer}");
+            return;
+        }
+    };
+    if try_dial_addr(addr, sk, peer_id, pubkey, peer_ok, dialing).await {
+        println!("IA_LIVRE_DISC_OK");
+    }
+}
+
+async fn dial_bootstrap(
+    endpoints: Vec<String>,
+    sk: SigningKey,
+    peer_id: String,
+    pubkey: String,
+    peer_ok: Arc<AtomicBool>,
+    dialing: Arc<AtomicBool>,
+) {
+    tokio::time::sleep(Duration::from_millis(300)).await;
+    println!("IA_LIVRE_DISC_MODE=bootstrap");
+    for ep in &endpoints {
+        if peer_ok.load(Ordering::SeqCst) {
+            println!("IA_LIVRE_DISC_OK");
+            return;
+        }
+        let addr: SocketAddr = match ep.parse() {
+            Ok(a) => a,
+            Err(_) => {
+                eprintln!("aviso: bootstrap inválido (use host:port): {ep}");
+                continue;
+            }
+        };
+        println!("IA_LIVRE_DISC_TRY={ep}");
+        if try_dial_addr(
+            addr,
+            sk.clone(),
+            peer_id.clone(),
+            pubkey.clone(),
+            peer_ok.clone(),
+            dialing.clone(),
+        )
+        .await
+        {
+            println!("IA_LIVRE_DISC_OK");
+            return;
+        }
+    }
+    eprintln!("erro: bootstrap esgotado sem sessão");
 }
 
 async fn run(cfg: Config) -> Result<(), String> {
@@ -279,6 +365,11 @@ async fn run(cfg: Config) -> Result<(), String> {
     println!("udp_port={}", cfg.udp_port);
     println!("key_file={}", cfg.key_file.display());
 
+    if cfg.disc_mdns {
+        // Opt-in reservado; implementação adiada — skip honesto no gate.
+        println!("IA_LIVRE_DISC_MDNS=skip");
+    }
+
     let peer_ok = Arc::new(AtomicBool::new(false));
     let dialing = Arc::new(AtomicBool::new(false));
 
@@ -290,9 +381,7 @@ async fn run(cfg: Config) -> Result<(), String> {
         loop {
             match listener.accept().await {
                 Ok((stream, addr)) => {
-                    // Não emite PEER_OK aqui — só após IDENT na sessão.
                     if peer_ok_accept.load(Ordering::SeqCst) {
-                        // Já autenticamos outro peer; aceita só uma sessão no gate.
                         continue;
                     }
                     let sk_c = sk_accept.clone();
@@ -320,6 +409,7 @@ async fn run(cfg: Config) -> Result<(), String> {
         dialing.clone(),
     ));
 
+    // Precedência: --peer > bootstrap > LAN-only.
     if let Some(peer) = cfg.peer {
         println!("peer={peer}");
         tokio::spawn(dial_peer(
@@ -330,9 +420,18 @@ async fn run(cfg: Config) -> Result<(), String> {
             peer_ok.clone(),
             dialing,
         ));
+    } else if !cfg.bootstrap.is_empty() {
+        println!("bootstrap={}", cfg.bootstrap.join(","));
+        tokio::spawn(dial_bootstrap(
+            cfg.bootstrap,
+            sk,
+            peer_id,
+            pubkey,
+            peer_ok.clone(),
+            dialing,
+        ));
     }
 
-    // Mantém o processo vivo até o gate / operador encerrar.
     loop {
         tokio::time::sleep(Duration::from_secs(3600)).await;
     }

@@ -2,19 +2,18 @@
 
 ## Foco atual
 
-- Etapa **39** `em_andamento` (#38) — Rede IA Livre além de v1 (descoberta WAN)
-- E38 **feita**: GPU manager nativo (`GPU_MGR=native`)
+- Etapa **40** `em_andamento` (#39) — autonomia além de v1 (REPL / tool sandboxed)
+- E39 **feita**: bootstrap + `DISC_OK` no `verify-node`
 
 ## Mudanças recentes
 
-- E38: `kernel/src/gpu_mgr.rs` — enum sintética + afinidade + placement pós-`MEM_SCHED_OK`
-- E37: GOP/input + `OBS_OK`
+- E39: `--bootstrap` / `--bootstrap-file`; gate peer+bootstrap; mDNS skip
+- E38: `GPU_MGR=native`
 
 ## Próximo passo
 
-- Especificar Etapa 39 (B32)
+- Especificar Etapa 40 (B33)
 
 ## Notas
 
-- README E38: considerado — AGENTS/docs cobrem; capa sem mudança obrigatória
-- Stub host E25 permanece `verify-gpu-manager` (`host_stub`)
+- README E39: considerado — AGENTS cobre bootstrap; capa sem mudança obrigatória

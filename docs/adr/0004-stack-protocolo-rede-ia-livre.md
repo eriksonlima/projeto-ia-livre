@@ -54,6 +54,11 @@ Esta ADR fixou a stack no nível desenho (Etapa 14). A implementação mínima d
 | Etapa 6 | Protótipo HELLO/MSG/ACK — continua válido até etapa de implementação do v1 |
 | Etapa 14 | Esta ADR + doc de desenho |
 | Etapa 23 | Implementação v1 mínima em `node/` (IDENT + HELLO assinado + PeerId + PING/PONG) |
+| Etapa 39 | Descoberta WAN mínima: lista bootstrap (= dial multiendereço); mDNS opt-in/skip — [`rede-descoberta-wan.md`](../rede-descoberta-wan.md) |
 | Futuro | NAT/DHT/relay; reavaliar libp2p só com ADR nova |
 
-Doc de desenho (Task 2): [`docs/desenho-protocolo-rede-ia-livre.md`](../desenho-protocolo-rede-ia-livre.md) (a criar).
+### Addendum (Etapa 39)
+
+`--bootstrap` / `--bootstrap-file` concretizam o item 4 («dial multiendereço») sem reabrir a stack (sem libp2p/DHT/NAT). Identidade permanece IDENT ed25519; bootstrap não é âncora de confiança.
+
+Doc de desenho: [`docs/desenho-protocolo-rede-ia-livre.md`](../desenho-protocolo-rede-ia-livre.md).

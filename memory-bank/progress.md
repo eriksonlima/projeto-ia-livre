@@ -2,17 +2,17 @@
 
 ## O que funciona
 
-- Etapas 1–38
-- E38: `GPU_MGR=native` + afinidade/placement no `make verify`
-- E37: GOP + `OBS_OK`
+- Etapas 1–39
+- E39: bootstrap WAN mínimo + `DISC_OK` no gate do nó
+- E38: GPU manager nativo
 
 ## Bloqueios
 
 - Sem TOKENS_PER_S em B (22L/KV)
 - Sem log metal real (SKIP)
-- Multi-GPU shard ainda só documentado
+- mDNS ainda skip (não implementado)
 
 ## Por etapa
 
-- 1–38: feitas
-- 39: em_andamento (#38) — descoberta WAN mínima
+- 1–39: feitas
+- 40: em_andamento (#39) — autonomia além de v1

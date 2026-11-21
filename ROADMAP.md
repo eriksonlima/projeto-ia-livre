@@ -282,7 +282,15 @@ Pronto quando: enum/afinidade/placement mínimo pós-ExitBoot verificável; sem 
 
 ## Etapa 39 — Rede IA Livre além de v1 (descoberta WAN mínima)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#38](https://github.com/eriksonlima/projeto-ia-livre/issues/38)  
+Spec: specs/rede-descoberta-wan/  
+Pronto quando: descoberta além de `--peer`/HELLO LAN + gate; sem exigir SO.  
+**Desfecho:** `--bootstrap` + `DISC_OK` no gate; regressão `--peer`; mDNS skip honesto.
+
+## Etapa 40 — Autonomia além de v1 (REPL ou tool sandboxed)
+
+Status: em_andamento  
+Issue: [#39](https://github.com/eriksonlima/projeto-ia-livre/issues/39)  
 Spec: (a definir — `especificador`)  
-Pronto quando: descoberta além de `--peer`/HELLO LAN + gate; sem exigir SO.
+Pronto quando: REPL ou ≥1 tool nova sandboxed + gate; sem shell/HTTP irrestrito.
