@@ -2,14 +2,14 @@
 
 ## Foco atual
 
-- Etapas 1–70 **feitas**
-- E70: autonomia consome bridge (`NATIVE_CONSUME_*`; note/recall); gate `verify-autonomia-nativa`
-- Topo Abertas: **B66** (ABI mínima kernel↔runtime-native)
+- Etapas 1–70 **feitas**; **Etapa 71** `em_andamento` (B66)
+- ABI mínima estável kernel↔runtime-native (contrato versionado + consumidor)
+- Sem puxar inferência pro kernel (ADR 0001/0003)
 
 ## Próximo passo
 
-- “continuar” → B66
+- Spec + tasks E71
 
 ## Notas
 
-- Lease a liberar após commit E70
+- Lease: Etapa 71 / #71

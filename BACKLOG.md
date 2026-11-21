@@ -10,15 +10,9 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Meta do protótipo (objetivo do projeto):** um ecossistema verificável em que (1) a **hipótese A vs B** possa ser comprovada ou refutada com geração real na Linha B (`TOKENS_PER_S`), (2) o **SO IA Livre** boote de USB/ESP em hardware real com caminho de IA nativo mínimo honesto, (3) a **Rede** e a **autonomia** continuem utilizáveis **sem** exigir o SO. Ordem abaixo = prioridade sugerida (topo primeiro).
 >
-> **Análise pós-E70 (2026-11-21):** E70 NATIVE_CONSUME. Topo: **B66** (ABI); B55 adiada.
+> **Análise pós-promoção B66 (2026-11-21):** B66→E71. Topo Abertas: **B67** (docs sync); B55 adiada.
 
 
-
-### B66 — ABI mínima estável kernel↔runtime-native
-- Issue: [#71](https://github.com/eriksonlima/projeto-ia-livre/issues/71)
-- Origem: ADR 0003 — ABI fora; glue/serial ad hoc na Linha B
-- Pronto quando: contrato versionado documentado + consumidor nativo; sem puxar inferência pro kernel
-- Deps: E19/E20; `runtime-native`
 
 ### B67 — Sincronizar architecture/product pós-E58
 - Issue: [#72](https://github.com/eriksonlima/projeto-ia-livre/issues/72)
@@ -34,6 +28,15 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Nota: não promover enquanto BLOQUEIO_FINAL / canônico inviável sem reabertura
 
 ## Promovidas / arquivadas
+
+### B66 — ABI mínima estável kernel↔runtime-native
+- Issue: [#71](https://github.com/eriksonlima/projeto-ia-livre/issues/71)
+- Origem: ADR 0003 — ABI fora; glue/serial ad hoc na Linha B
+- Pronto quando: contrato versionado documentado + consumidor nativo; sem puxar inferência pro kernel
+- Deps: E19/E20; `runtime-native`
+- Promovido para Etapa 71.
+- Etapa: [Etapa 71 — ABI runtime-native](ROADMAP.md)
+
 
 ### B65 — Autonomia consumindo runtime/evidência nativa
 - Issue: [#70](https://github.com/eriksonlima/projeto-ia-livre/issues/70)
