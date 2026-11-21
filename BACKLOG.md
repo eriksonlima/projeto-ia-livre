@@ -8,6 +8,119 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
+> **Meta do protótipo (objetivo do projeto):** um ecossistema verificável em que (1) a **hipótese A vs B** possa ser comprovada ou refutada com geração real na Linha B (`TOKENS_PER_S`), (2) o **SO IA Livre** boote de USB/ESP em hardware real com caminho de IA nativo mínimo honesto, (3) a **Rede** e a **autonomia** continuem utilizáveis **sem** exigir o SO. Ordem abaixo = prioridade sugerida (topo primeiro).
+
+### B37 — Prefill completo 22L + KV cache viável na Linha B
+- Issue: [#43](https://github.com/eriksonlima/projeto-ia-livre/issues/43)
+
+- Origem: pedido de backlog para meta do protótipo; desbloqueia `B_BLOCK=no_gguf_full_prefill`
+- Pronto quando: prefill das 22 camadas TinyLlama (ou subset documentado equivalente) + KV alocado/viável no QEMU Linha B, com marcadores serial; **sem** fingir `TOKENS_PER_S` ainda
+- Deps: E33 (attn/FFN/prefill layer0)
+
+### B38 — Decode + sampling + `TOKENS_PER_S` canônico na Linha B
+- Issue: [#44](https://github.com/eriksonlima/projeto-ia-livre/issues/44)
+
+- Origem: hipótese de pesquisa / ADR 0013
+- Pronto quando: geração canônica em B emite `TOKENS_PER_S` (e marcadores Decode/sampling) honestos; `B_BLOCK` removido ou substituído; gate harness B atualizado
+- Deps: B37
+
+### B39 — Re-corrida harness A vs B com geração real (veredito limpo)
+- Issue: [#45](https://github.com/eriksonlima/projeto-ia-livre/issues/45)
+
+- Origem: Etapa 22 ainda INCONCLUSIVO com B parcial
+- Pronto quando: `make verify-harness-comparable` com B gerando; veredito ∈ {COMPROVA, REFUTA, INCONCLUSIVO} **sem** reason de proxy/`no_gguf_full_prefill`; metodologia quieta preservada
+- Deps: B38
+
+### B40 — Evidência de boot metal real (serial ≥ `BOOT_OK` em PC)
+- Issue: [#46](https://github.com/eriksonlima/projeto-ia-livre/issues/46)
+
+- Origem: USB/pendrive; E35 ficou SKIP neste host
+- Pronto quando: log serial de PC real em `docs/evidence/boot-metal/` + `IA_LIVRE_BAREMETAL_METAL_OK` no gate; Secure Boot/checklist documentados
+- Deps: E30/E35 artefato
+
+### B41 — One-shot gravar pendrive UEFI (script + doc contribuidores)
+- Issue: [#47](https://github.com/eriksonlima/projeto-ia-livre/issues/47)
+
+- Origem: “colocar SO no pendrive” — hoje manual/`dd`
+- Pronto quando: script ou procedimento único (detecta device com confirmação, grava ESP/FAT ou `.img`) + README/AGENTS; **sem** gravar `/dev/sdX` sem confirmação explícita
+- Deps: E30
+
+### B42 — Inferência mínima no metal (GGUF ESP → geração ou bloqueio honesto)
+- Issue: [#48](https://github.com/eriksonlima/projeto-ia-livre/issues/48)
+
+- Origem: protótipo SO usável além de marcadores de boot
+- Pronto quando: no PC (ou QEMU espelhando path metal), após boot USB/ESP com `model.gguf`, caminho nativo emite geração mínima **ou** `B_BLOCK`/`metal` honesto documentado; sem `TOKENS_PER_S` fingido
+- Deps: B40 preferível; E36 FULL_GGUF; caminho B37/B38 se aplicável
+
+### B43 — Autonomia mínima no caminho nativo (ou bridge SO↔host documentada)
+- Issue: [#49](https://github.com/eriksonlima/projeto-ia-livre/issues/49)
+
+- Origem: camada 3 no ecossistema do SO, não só Linux host
+- Pronto quando: agente one-shot (ou bridge verificável) consome runtime nativo/metal **ou** contrato explícito host↔nativo com gate; sem shell irrestrito; ADR 0001 preservada
+- Deps: B38 ou runtime host + metal estável
+
+### B44 — mDNS real na Rede IA Livre (além do skip)
+- Issue: [#50](https://github.com/eriksonlima/projeto-ia-livre/issues/50)
+
+- Origem: E39 adiou mDNS (`VERIFY_NODE_MDNS_SKIP`)
+- Pronto quando: `--disc-mdns` anuncia/resolve `_ia-livre._tcp` em LAN com gate opt-in; skip honesto se multicast indisponível
+- Deps: E39
+
+### B45 — Tarefa/conhecimento mínimo na Rede (além de PING)
+- Issue: [#51](https://github.com/eriksonlima/projeto-ia-livre/issues/51)
+
+- Origem: manifesto — colaborar recursos/conhecimento
+- Pronto quando: tipo de mensagem v1 (ex. `TASK`/`KNOW` ou equivalente) + ACK + gate de dois nós; sem marketplace; sem exigir SO
+- Deps: E23
+
+### B46 — Nó Rede no SO nativo (pós-ExitBoot ou bridge)
+- Issue: [#52](https://github.com/eriksonlima/projeto-ia-livre/issues/52)
+
+- Origem: nó nativo de referência (hoje só host `std`)
+- Pronto quando: stack TCP mínima no kernel/runtime-native **ou** bridge documentada UEFI↔host com marcadores; participação na Rede a partir do caminho B; ADR 0001 (host continua válido)
+- Deps: E11; B45 preferível
+
+### B47 — REPL sandboxed no agente (host)
+- Issue: [#53](https://github.com/eriksonlima/projeto-ia-livre/issues/53)
+
+- Origem: E40 adioud REPL
+- Pronto quando: `--repl` com allowlist; modo scripted para `verify-agent`; sem shell/HTTP
+- Deps: E40
+
+### B48 — Tool `read_local` allowlisted
+- Issue: [#54](https://github.com/eriksonlima/projeto-ia-livre/issues/54)
+
+- Origem: E40 adioud FS
+- Pronto quando: leitura só sob allowlist de paths; rejeição honesta fora; gate; sem write arbitrário
+- Deps: E40
+
+### B49 — GPU real no caminho nativo (além de `synthetic`)
+- Issue: [#55](https://github.com/eriksonlima/projeto-ia-livre/issues/55)
+
+- Origem: E38 enum sintética no QEMU
+- Pronto quando: detecção/placement com GPU real (PCI/pass-through ou host path documentado) **ou** skip `need_gpu` honesto; ≠ stub E25; sem fingir multi-GPU
+- Deps: E38
+
+### B50 — Perfil harness GPU espelhado A/B (quando B gerar)
+- Issue: [#56](https://github.com/eriksonlima/projeto-ia-livre/issues/56)
+
+- Origem: E18 metodologia; prova hipótese com aceleração
+- Pronto quando: corrida A/B com perfil GPU documentado e métricas honestas; skip se sem GPU; deps geração em B
+- Deps: B39; E8/E18
+
+### B51 — Guia “primeiro boot USB” + release de artefato
+- Issue: [#57](https://github.com/eriksonlima/projeto-ia-livre/issues/57)
+
+- Origem: onboarding comunitário / sustentabilidade humana do manifesto
+- Pronto quando: guia passo a passo (Secure Boot, serial, o que esperar) + tag/release com ESP/tar/checksums; sem declarar hipótese comprovada
+- Deps: B40; B41
+
+### B52 — Definição verificável de “protótipo objetivo atingido”
+- Issue: [#58](https://github.com/eriksonlima/projeto-ia-livre/issues/58)
+
+- Origem: este pedido — fechar o que conta como meta
+- Pronto quando: checklist em `docs/` (hipótese A/B decidível **ou** bloqueio honesto final; USB metal com boot+IA mínima; Rede+autonomia host verdes) + espelho no ROADMAP/Memory Bank; celebrar só com evidência
+- Deps: B39 + B40 + B42 (mínimo sugerido)
 
 ## Promovidas / arquivadas
 

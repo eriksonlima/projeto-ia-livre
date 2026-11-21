@@ -3,18 +3,20 @@
 ## Foco atual
 
 - Nenhuma etapa `em_andamento`
-- Etapas 1–42 **feitas**; backlog **Abertas vazio**
+- Backlog **Abertas** repovoado (B37–B52) rumo ao protótipo objetivo
+- Topo: **B37** — Prefill 22L + KV na Linha B
 
 ## Mudanças recentes
 
-- E42: sync `architecture.md` / `product-context.md` / `glossario.md` / README
-- E37–E41: obs GOP, GPU nativo, bootstrap rede, calc, shard host
+- Backlog meta-protótipo: hipótese A/B → USB metal → Rede/autonomia/GPU
+- E42 sync docs; E1–E42 feitas
 
 ## Próximo passo
 
-- Pedido explícito ou novo item em `BACKLOG.md` — não inventar etapa
+- Promover B37 ao ROADMAP quando pedir “continuar” / próximo
+- Ou priorizar USB (B40/B41) se o foco for pendrive primeiro
 
 ## Notas
 
 - Lease liberado
-- Um agente escritor; claim antes de editar `em_andamento`
+- Issues #43–#58 (label `backlog`)

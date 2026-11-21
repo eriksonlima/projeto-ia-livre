@@ -2,17 +2,17 @@
 
 ## O que funciona
 
-- Etapas 1–42 feitas
-- Docs de architecture/product/glossário sincronizados (E42)
-- Kernel, runtime, node, agent, harness, bare-metal, GPU stub/nativo/shard host
+- Etapas 1–42 feitas (protótipos por camada)
+- Backlog Abertas: B37–B52 (meta protótipo objetivo)
 
-## Bloqueios
+## Bloqueios / lacunas para a meta
 
-- Sem `TOKENS_PER_S` em Linha B (`no_gguf_full_prefill`)
-- Sem log metal real (SKIP)
-- Shard EXEC_OK só com ≥2 GPUs
-- Backlog Abertas vazio — próxima etapa só com pedido/novo item
+- Sem `TOKENS_PER_S` em B → B37–B39
+- Sem evidência metal → B40–B42
+- Rede/autonomia/GPU avançados → B43–B50
+- Fechamento formal da meta → B52
 
 ## Por etapa
 
 - 1–42: feitas
+- Próxima candidata: B37 (ou B40 se priorizar USB)
