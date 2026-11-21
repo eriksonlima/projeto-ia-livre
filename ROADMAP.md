@@ -402,8 +402,9 @@ Pronto quando: `--repl` com allowlist; modo scripted para `verify-agent`; sem sh
 
 ## Etapa 54 — Tool `read_local` allowlisted (host)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#54](https://github.com/eriksonlima/projeto-ia-livre/issues/54)  
 Spec: specs/read-local-allowlisted/  
-Pronto quando: leitura só sob allowlist de paths; rejeição honesta fora; gate; sem write arbitrário.
+Pronto quando: leitura só sob allowlist de paths; rejeição honesta fora; gate; sem write arbitrário.  
+**Desfecho:** `read_local` roots `agent/fixtures`+`build/agent-memory`; `READ_LOCAL_OK`; rejeição honesta; prova+REPL no `verify-agent`.
 
