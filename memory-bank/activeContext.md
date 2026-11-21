@@ -3,19 +3,19 @@
 ## Foco atual
 
 - Etapas **1–30 feitas**
-- Backlog **Abertas vazio**
+- Backlog **Abertas:** B25–B35 (topo = B25 forward GGUF / TOKENS em B)
 - Lease: livre
+- Nenhuma `em_andamento`
 
 ## Mudanças recentes
 
-- E30: ESP bare-metal empacotável + `verify-baremetal` (artefato)
-- E29: runtime-native layout; `no_gguf_forward`
+- Análise pós-E30 → backlog B25–B35 (#31–#41)
+- Bloqueio crítico hipótese: `no_gguf_forward`
 
 ## Próximo passo
 
-- Pedido explícito ou item novo em `BACKLOG.md`
-- Candidato natural: **forward TinyLlama / TOKENS_PER_S em B** (sair de `no_gguf_forward`)
+- “continuar” promove **B25** → Etapa 31 (forward runtime-native)
 
 ## Notas
 
-- `make verify-baremetal` ≠ QEMU ≠ boot físico automático
+- Ordem: hipótese (B25→B26) → SO metal (B28…) → host (B32/B33) → higiene (B35)

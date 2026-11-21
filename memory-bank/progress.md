@@ -2,14 +2,14 @@
 
 ## O que funciona
 
-- Etapas 1–30
-- E30: `make verify-baremetal` → `IMAGE_OK` (ESP+tar)
-- E29: layout runtime-native; `no_gguf_forward`
+- Etapas 1–30 (kernel QEMU, runtime/agent/node host, harness, ESP artefato)
+- Layout GGUF em B (`runtime-native`); sem forward
 
-## Bloqueios
+## Bloqueios / lacunas (ver BACKLOG)
 
-- Sem forward em B → hipótese INCONCLUSIVO
-- Backlog Abertas: vazio
+- B25: forward / TOKENS_PER_S em B → hipótese INCONCLUSIVO
+- B28: boot metal ainda não evidenciado
+- GPU nativo / rede / autonomia além de v1 abertos
 
 ## Por etapa
 

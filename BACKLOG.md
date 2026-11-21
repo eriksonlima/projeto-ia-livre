@@ -8,7 +8,75 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-_(vazio — próxima etapa vem de pedido explícito ou novo item)_
+### B25 — Forward GGUF mínimo em runtime-native (TOKENS_PER_S na Linha B)
+
+- Issue: [#31](https://github.com/eriksonlima/projeto-ia-livre/issues/31)
+- Origem: análise pós Etapas 1–30 — desbloquear `B_BLOCK=no_gguf_forward`
+- Notas: Prefill+Decode+sampling canônico no guest; ADR 0001; proibido inventar métricas
+- Pronto quando: `LOAD_KIND=gguf` + `TOKENS_PER_S`/`LOAD_S` medidos em B (ou bloqueio honesto novo)
+
+### B26 — Re-corrida harness A vs B com geração real em B
+
+- Issue: [#32](https://github.com/eriksonlima/projeto-ia-livre/issues/32)
+- Origem: instrumento E22/E28; depende de B25
+- Pronto quando: `verify-harness-comparable` quieto com `COMPROVA`/`REFUTA` **ou** `INCONCLUSIVO` só com motivo ≠ ausência de tokens B
+
+### B27 — Baseline Linha A otimizada (CPU) no gate comparável
+
+- Issue: [#33](https://github.com/eriksonlima/projeto-ia-livre/issues/33)
+- Origem: metodologia E18; referência A ainda fraca
+- Pronto quando: perfil `A_otimizada` documentado + corrida verificável lado a lado
+- Deps: ideal após B25/B26
+
+### B28 — Boot UEFI em hardware real (evidência serial)
+
+- Issue: [#34](https://github.com/eriksonlima/projeto-ia-livre/issues/34)
+- Origem: E30 = artefato; metal ainda `BAREMETAL_SKIP`
+- Pronto quando: evidência em PC real com ≥ `BOOT_OK` (ideal `EXIT_BOOT_OK`) via serial; sem fingir CI de metal
+
+### B29 — GGUF canônico completo em mídia bare-metal (+ path I/O)
+
+- Issue: [#35](https://github.com/eriksonlima/projeto-ia-livre/issues/35)
+- Origem: ESP de gate só `gguf.hdr` 4 KiB; BlockIO QEMU ≠ PC
+- Pronto quando: modelo/path documentado na mídia/metal com loader verificável
+- Deps: B28 (ou checklist metal)
+
+### B30 — Observabilidade mínima no SO (além de UART-only)
+
+- Issue: [#36](https://github.com/eriksonlima/projeto-ia-livre/issues/36)
+- Origem: sem framebuffer/teclado o SO é só EFI+serial
+- Pronto quando: caminho mínimo (GOP text ou input) + marcador de prova; sem desktop
+
+### B31 — GPU manager nativo (mecanismos kernel ↔ runtime)
+
+- Issue: [#37](https://github.com/eriksonlima/projeto-ia-livre/issues/37)
+- Origem: ADR 0006 / E25 stub host ≠ nativo
+- Pronto quando: enum/afinidade/placement mínimo pós-ExitBoot verificável; sem fingir multi-GPU completo
+- Deps: preferível após B25
+
+### B32 — Rede IA Livre além de v1 (descoberta WAN mínima)
+
+- Issue: [#38](https://github.com/eriksonlima/projeto-ia-livre/issues/38)
+- Origem: v1 sem mDNS/DHT/NAT/relay
+- Pronto quando: descoberta além de `--peer`/HELLO LAN + gate; sem exigir SO
+
+### B33 — Autonomia além de v1 (REPL ou tool sandboxed)
+
+- Issue: [#39](https://github.com/eriksonlima/projeto-ia-livre/issues/39)
+- Origem: v1 = one-shot + note/recall/help
+- Pronto quando: REPL ou ≥1 tool nova sandboxed + gate; sem shell/HTTP irrestrito
+
+### B34 — Shard multi-GPU host executado (além do stub)
+
+- Issue: [#40](https://github.com/eriksonlima/projeto-ia-livre/issues/40)
+- Origem: E25 só `SHARD_DOC`
+- Pronto quando: placement/shard mínimo real no host com evidência ou skip honesto; ≠ manager nativo
+
+### B35 — Sincronizar architecture/product + glossário pós-E30
+
+- Issue: [#41](https://github.com/eriksonlima/projeto-ia-livre/issues/41)
+- Origem: pontes desatualizadas (`no_gguf_forward`, metal vs QEMU)
+- Pronto quando: `architecture.md` / README-AGENTS refletem estado atual sem ambiguidade
 
 ## Promovidas / arquivadas
 
