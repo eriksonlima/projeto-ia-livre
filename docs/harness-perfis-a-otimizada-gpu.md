@@ -11,7 +11,7 @@ Linha B proxy: [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md).
 | Perfil | O que é | Estado |
 |--------|---------|--------|
 | **A pragmática** (harness v1) | Ubuntu no host de referência + `ia-livre-runtime` CPU, **sem** campanha de tuning | **Gate** (`run-harness-line-a.sh`) |
-| **A otimizada** | Mesma carga canônica + checklist de isolamento/tuning do SO | **Metodologia** (esta doc) — não é gate obrigatório |
+| **A otimizada** | Mesma carga canônica + checklist de isolamento/tuning do SO | **Executável** — `scripts/run-harness-line-a-optimized.sh` + `make verify-harness-a-otimizada` (Etapa 34); **não** substitui `verify-harness` |
 
 Otimizar A **melhora a referência**; **não** prova A≻B nem B≻A.
 
@@ -63,9 +63,17 @@ Até lá: GPU-B = **roadmap de medição**, não execução no gate.
 | ADR 0006 | GPU manager / multi-GPU nativo — **desenho**; não implementar aqui |
 | Este perfil | Metodologia de medição do **harness** |
 
-## Gate (decisão Etapa 18)
+## Gate
 
-**Default:** gate permanece `make verify-harness` (A CPU pragmática + B proxy).  
-Perfis A otimizada e GPU A/B são **metodologia / roadmap de medição** — **sem** gate novo nesta etapa (não há scripts de execução obrigatória dos perfis novos).
+**Default:** `make verify-harness` (A CPU pragmática + B).  
+**A_otimizada (Etapa 34):** `make verify-harness-a-otimizada` — opt-in; exige `PROFILE=A_otimizada` + métricas honestas; governor/taskset podem ser `SKIP` sem fingir sucesso.
 
-Se no futuro houver corrida verificável dos perfis, aí sim acrescentar script + critério em `AGENTS.md` — sem skip disfarçado de sucesso.
+Comparable com A otimizada:
+
+```bash
+IA_LIVRE_HARNESS_A_PROFILE=A_otimizada make verify-harness-comparable
+```
+
+Variáveis úteis: `IA_LIVRE_HARNESS_N_THREADS`, `IA_LIVRE_HARNESS_TASKSET_CPUS`, `IA_LIVRE_HARNESS_GOVERNOR_SKIP=1`.
+
+GPU A/B espelhado continua metodologia / roadmap — **sem** inventar `TOKENS_PER_S` em B.

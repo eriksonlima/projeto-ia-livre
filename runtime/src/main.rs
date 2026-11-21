@@ -25,10 +25,11 @@ const DEFAULT_N_PREDICT: i32 = 48;
 const DEFAULT_N_GPU_LAYERS: u32 = 0;
 
 const USAGE: &str = "\
-Uso: ia-livre-runtime --model <caminho.gguf> [--prompt <texto>] [--n-predict <n>] [--n-gpu-layers <n>]
+Uso: ia-livre-runtime --model <caminho.gguf> [--prompt <texto>] [--n-predict <n>] [--n-gpu-layers <n>] [--n-threads <n>]
 
 Carrega o GGUF (llama.cpp) e imprime o texto gerado na stdout.
 --n-gpu-layers: default 0 = CPU; N > 0 = offload (requer build com --features cuda|vulkan).
+--n-threads: threads do contexto llama (omitido = default da binding).
 Prompt padrão (fixado): \"Complete em uma frase: O Projeto IA Livre é\"
 Métricas: IA_LIVRE_LOAD_S=… IA_LIVRE_TOKENS_PER_S=… IA_LIVRE_INFER_OK
 Aceleração: IA_LIVRE_ACCEL=… IA_LIVRE_N_GPU_LAYERS=…
@@ -47,6 +48,7 @@ fn run() -> Result<(), ExitCode> {
     let mut prompt = DEFAULT_PROMPT.to_string();
     let mut n_predict = DEFAULT_N_PREDICT;
     let mut n_gpu_layers = DEFAULT_N_GPU_LAYERS;
+    let mut n_threads: Option<i32> = None;
 
     let mut i = 0;
     while i < args.len() {
@@ -97,6 +99,22 @@ fn run() -> Result<(), ExitCode> {
                     ExitCode::from(2)
                 })?;
             }
+            "--n-threads" => {
+                i += 1;
+                let Some(raw) = args.get(i) else {
+                    eprintln!("erro: --n-threads exige um inteiro >= 1");
+                    return Err(ExitCode::from(2));
+                };
+                let n: i32 = raw.parse().map_err(|_| {
+                    eprintln!("erro: --n-threads inválido: {raw}");
+                    ExitCode::from(2)
+                })?;
+                if n < 1 {
+                    eprintln!("erro: --n-threads deve ser >= 1");
+                    return Err(ExitCode::from(2));
+                }
+                n_threads = Some(n);
+            }
             other => {
                 eprintln!("erro: argumento desconhecido: {other}");
                 eprint!("{USAGE}");
@@ -122,7 +140,7 @@ fn run() -> Result<(), ExitCode> {
         return Err(ExitCode::from(1));
     }
 
-    if let Err(e) = infer(&model_path, &prompt, n_predict, n_gpu_layers) {
+    if let Err(e) = infer(&model_path, &prompt, n_predict, n_gpu_layers, n_threads) {
         eprintln!("erro: {e}");
         return Err(ExitCode::from(1));
     }
@@ -149,6 +167,7 @@ fn infer(
     prompt: &str,
     n_predict: i32,
     n_gpu_layers: u32,
+    n_threads: Option<i32>,
 ) -> Result<(), String> {
     let backend = LlamaBackend::init().map_err(|e| format!("init backend: {e}"))?;
 
@@ -166,8 +185,11 @@ fn infer(
     let model = LlamaModel::load_from_file(&backend, model_path, &model_params)
         .map_err(|e| format!("load model {}: {e}", model_path.display()))?;
 
-    let ctx_params = LlamaContextParams::default()
+    let mut ctx_params = LlamaContextParams::default()
         .with_n_ctx(Some(NonZeroU32::new(512).expect("512 != 0")));
+    if let Some(nt) = n_threads {
+        ctx_params = ctx_params.with_n_threads(nt).with_n_threads_batch(nt);
+    }
 
     let mut ctx = model
         .new_context(&backend, ctx_params)

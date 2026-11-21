@@ -8,12 +8,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-### B28 — Boot UEFI em hardware real (evidência serial)
-
-- Issue: [#34](https://github.com/eriksonlima/projeto-ia-livre/issues/34)
-- Origem: E30 = artefato; metal ainda `BAREMETAL_SKIP`
-- Pronto quando: evidência em PC real com ≥ `BOOT_OK` (ideal `EXIT_BOOT_OK`) via serial; sem fingir CI de metal
-
 ### B29 — GGUF canônico completo em mídia bare-metal (+ path I/O)
 
 - Issue: [#35](https://github.com/eriksonlima/projeto-ia-livre/issues/35)
@@ -59,6 +53,11 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Pronto quando: `architecture.md` / README-AGENTS refletem estado atual sem ambiguidade
 
 ## Promovidas / arquivadas
+
+### B28 — Boot UEFI em hardware real (evidência serial)
+
+- Promovido para Etapa 35 do roadmap (promoção autônoma após Etapa 34).
+- Issue: [#34](https://github.com/eriksonlima/projeto-ia-livre/issues/34)
 
 ### B27 — Baseline Linha A otimizada (CPU) no gate comparável
 

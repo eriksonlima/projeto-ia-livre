@@ -2,15 +2,16 @@
 
 ## O que funciona
 
-- Etapas 1–33
-- E33: attn+FFN layer0 + prefill parcial; `B_BLOCK=no_gguf_full_prefill`; comparable INCONCLUSIVO com reason estrutural
+- Etapas 1–34
+- E33: attn+FFN layer0; `no_gguf_full_prefill`
+- E34: `A_otimizada` script + gate
 
 ## Bloqueios
 
-- Sem Prefill 22L / Decode / `TOKENS_PER_S` em B
-- Topo backlog após E34: B28 bare-metal…
+- Sem TOKENS_PER_S em B (22L/KV)
+- E35 bare-metal exige hardware real (pode `BAREMETAL_SKIP` honesto)
 
 ## Por etapa
 
-- 1–33: feitas
-- 34: em_andamento (#33) — B27 promovido; spec a definir
+- 1–34: feitas
+- 35: em_andamento (#34) — B28 promovido

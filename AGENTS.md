@@ -195,6 +195,10 @@ cargo build -p ia-livre-runtime
 # Linha A — emite IA_LIVRE_HARNESS_LINE=A + IA_LIVRE_HARNESS_OK + load/tokens
 ./scripts/run-harness-line-a.sh
 
+# Linha A otimizada (Etapa 34; opt-in) — PROFILE=A_otimizada + threads/governor/taskset
+./scripts/run-harness-line-a-optimized.sh
+# Gate: make verify-harness-a-otimizada
+
 # Linha B — QEMU proxy + HARNESS_CONTRACT_* + bloqueio GGUF honesto (não TinyLlama)
 ./scripts/run-harness-line-b.sh
 ```
@@ -411,7 +415,7 @@ grep -q 'IA_LIVRE_HARNESS_VERDICT' scripts/run-harness-a-b-comparable.sh
 grep -q 'VERDICT_REASON' scripts/run-harness-a-b-comparable.sh
 ```
 
-`make verify-harness-comparable` exige `VERDICT=` ∈ {COMPROVA, REFUTA, INCONCLUSIVO} + `VERDICT_REASON=`; falha se `COMPROVA`/`REFUTA` com B proxy ou se o runner exit ≠ 0 (fraude/timeout). Timeout: `VERIFY_HARNESS_COMPARABLE_TIMEOUT` (default 300s). `make verify-harness` (v1) permanece.
+`make verify-harness-comparable` exige `VERDICT=` ∈ {COMPROVA, REFUTA, INCONCLUSIVO} + `VERDICT_REASON=`; falha se `COMPROVA`/`REFUTA` com B proxy ou se o runner exit ≠ 0 (fraude/timeout). Timeout: `VERIFY_HARNESS_COMPARABLE_TIMEOUT` (default 300s). `make verify-harness` (v1) permanece. Perfil A otimizada: `make verify-harness-a-otimizada` (opt-in; não substitui o gate v1).
 
 ### Gate da imagem ESP/USB (Etapa 30 — adicional)
 
@@ -489,9 +493,11 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `LICENSE` / `NOTICE` — Apache-2.0 (1ª parte); ADR [`0007`](docs/adr/0007-licencas-por-componente.md)
 - `docs/licencas-terceiros.md` — aviso de deps (llama.cpp, uefi, …)
 - `scripts/run-harness-line-a.sh` — corrida Linha A (wrapper do runtime, marcadores `HARNESS_`)
+- `scripts/run-harness-line-a-optimized.sh` — perfil `A_otimizada` (Etapa 34; threads/governor/taskset)
 - `scripts/run-harness-line-b.sh` — Linha B via QEMU (proxy + `HARNESS_CONTRACT_*` + bloqueio GGUF; `HARNESS_OK`)
 - `scripts/verify-harness.sh` — gate A (GGUF) + B (proxy QEMU + contrato + bloqueio GGUF)
-- `scripts/run-harness-a-b-comparable.sh` — corrida A+B + `VERDICT`/`VERDICT_REASON` (Etapa 22)
+- `scripts/verify-harness-a-otimizada.sh` — gate do perfil A_otimizada (`make verify-harness-a-otimizada`)
+- `scripts/run-harness-a-b-comparable.sh` — corrida A+B + `VERDICT`/`VERDICT_REASON` (Etapa 22); opt-in `IA_LIVRE_HARNESS_A_PROFILE=A_otimizada`
 - `scripts/verify-harness-comparable.sh` — gate do instrumento comparável
 - `build/esp/` — ESP gerada (gitignored via `build/`)
 

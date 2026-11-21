@@ -53,7 +53,12 @@ echo "IA_LIVRE_HARNESS_QUIET_LOADAVG=$(cut -d' ' -f1-3 /proc/loadavg 2>/dev/null
 
 echo "=== Harness comparável — Linha A (timeout ${TIMEOUT_SEC}s) ==="
 set +e
-timeout "${TIMEOUT_SEC}s" ./scripts/run-harness-line-a.sh >"$LOG_A" 2>"$LOG_A.err"
+A_SCRIPT=./scripts/run-harness-line-a.sh
+if [[ "${IA_LIVRE_HARNESS_A_PROFILE:-}" == "A_otimizada" ]]; then
+  A_SCRIPT=./scripts/run-harness-line-a-optimized.sh
+  echo "IA_LIVRE_HARNESS_A_PROFILE=A_otimizada"
+fi
+timeout "${TIMEOUT_SEC}s" "$A_SCRIPT" >"$LOG_A" 2>"$LOG_A.err"
 rc_a=$?
 set -e
 cat "$LOG_A.err" >>"$LOG_A" 2>/dev/null || true

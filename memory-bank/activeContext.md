@@ -2,17 +2,17 @@
 
 ## Foco atual
 
-- Etapa **34** `em_andamento` (#33) — baseline A otimizada
-- E33 **feita**: `no_gguf_full_prefill` + comparable reason `…22L_kv_inviable`
+- Etapa **35** `em_andamento` (#34) — boot UEFI em hardware real
+- E34 **feita**: perfil `A_otimizada` + `verify-harness-a-otimizada`
 
 ## Mudanças recentes
 
-- E33: attn+FFN SwiGLU layer0 + PREFILL_OK; harness/comparable atualizados
+- E32–E34: geração fatiada até `no_gguf_full_prefill`; baseline A otimizada
 
 ## Próximo passo
 
-- Especificar Etapa 34 (`especificador`)
+- Especificar Etapa 35 (bare-metal serial) — tipicamente precisa de PC físico
 
 ## Notas
 
-- README E33: avaliado — sem mudança (capa não cita B_BLOCK)
+- README E34: avaliado — menção leve via AGENTS; capa sem B_BLOCK
