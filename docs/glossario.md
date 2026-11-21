@@ -27,6 +27,12 @@ Princípios: [`manifesto.md`](manifesto.md).
 | **`host_shard_exec`** | Shard multi-GPU host executado (E41) | [`shard-multi-gpu-host.md`](shard-multi-gpu-host.md) |
 | **Bootstrap (rede)** | Lista `--bootstrap` além de `--peer`/HELLO (E39) | [`rede-descoberta-wan.md`](rede-descoberta-wan.md) |
 | **`calc`** | Tool sandboxed do agente (E40) | [`autonomia-alem-v1.md`](autonomia-alem-v1.md) |
+| **REPL** | Loop sandboxed do agente (`--repl` / `--repl-script`; E53) | [`autonomia-repl.md`](autonomia-repl.md) |
+| **`read_local`** | Tool allowlist de leitura local (E54) | [`autonomia-read-local.md`](autonomia-read-local.md) |
+| **mDNS** | Descoberta local `_ia-livre._tcp` (E50) | [`rede-descoberta-wan.md`](rede-descoberta-wan.md) |
+| **relay (intro)** | Introdução WAN via relay (E67; ≠ internet pública completa) | `verify-node-relay` / E67 |
+| **`KNOW` / `KNOW_ACK`** | Mensagem de conhecimento Rede (E68) | [`rede-ia-livre-v1.md`](rede-ia-livre-v1.md) |
+| **`host_multi`** | Placement multi-GPU host Weights+Kv (E69; skip se &lt;2 GPUs) | [`multi-gpu-completo-host.md`](multi-gpu-completo-host.md) |
 | **GOP / OBS** | Observabilidade mínima pré-exit (E37) | [`observabilidade-minima-so.md`](observabilidade-minima-so.md) |
 | **PeerId** | Fingerprint ed25519 (âncora de confiança do nó) | [`rede-ia-livre-v1.md`](rede-ia-livre-v1.md) |
 | **Protótipo objetivo atingido** | Checklist dos 3 pilares (hipótese A/B; USB/metal; Rede+autonomia host); celebrar só com evidência | [`prototipo-objetivo-atingido.md`](prototipo-objetivo-atingido.md) |

@@ -2,13 +2,14 @@
 
 ## Foco atual
 
-- Etapas 1–71 **feitas**; **Etapa 72** `em_andamento` (B67)
-- Sync architecture / product-context / glossário pós-E58…E71
+- Etapas 1–72 **feitas**
+- Docs architecture/product/glossário alinhados pós-E71
+- Abertas: só **B55** (adiada sob ADR 0021/0022)
 
 ## Próximo passo
 
-- Spec + sync docs
+- Pedido explícito ou novo item em `BACKLOG.md` — não promover B55
 
 ## Notas
 
-- Lease: Etapa 72 / #72
+- Lease livre após commit E72

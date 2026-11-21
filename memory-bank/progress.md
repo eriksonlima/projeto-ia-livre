@@ -25,3 +25,8 @@
 - `make verify` exige `ABI_OK`; ADR 0001 intacta
 - Próximo: B67 docs sync
 
+## Etapa 72 — Sync architecture/product (feita)
+
+- architecture/product/glossário pós-E71; verify-docs-consistency
+- Abertas: B55 adiada
+

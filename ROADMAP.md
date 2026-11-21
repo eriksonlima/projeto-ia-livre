@@ -546,8 +546,9 @@ Pronto quando: contrato versionado documentado + consumidor nativo; sem puxar in
 
 ## Etapa 72 — Sincronizar architecture/product pós-E58
 
-Status: em_andamento  
+Status: feita  
 Issue: [#72](https://github.com/eriksonlima/projeto-ia-livre/issues/72)  
 Spec: specs/sync-architecture-product/  
-Pronto quando: architecture + product-context + glossário refletem E42–E71 e decisões abertas reais (sem listar REPL/GPU harness como se ainda abertos se já feitos).
+Pronto quando: architecture + product-context + glossário refletem E42–E71 e decisões abertas reais (sem listar REPL/GPU harness como se ainda abertos se já feitos).  
+**Desfecho:** mapa pós-E71; abertos reais = BLOQUEIO_FINAL / METAL_OK / DHT / VFIO; `make verify-docs-consistency` estendido.
 

@@ -60,9 +60,13 @@ Queremos **comprovar ou refutar**, com método justo:
 
 ## Estado atual (produto)
 
-- Kernel UEFI + gates QEMU; observabilidade GOP mínima; GPU manager nativo sintético
-- Runtime host (CPU/GPU) + agente (`note`/`recall`/`help`/`calc`) + nó Rede v1 com bootstrap
-- Harness A vs B: veredito **INCONCLUSIVO**/teto; pilar 1 em **`BLOQUEIO_FINAL`** (ADR [`0022`](adr/0022-bloqueio-final-hipotese-ab.md)) — sem `COMPROVA` fingido; reabertura só com critérios da ADR
-- Bare-metal: artefato ESP + metal/GGUF via evidência/opt-in (QEMU ≠ PC real)
+- Kernel UEFI + gates QEMU; obs GOP; GPU nativo sintético; ABI mínima v1 (`ABI_OK`)
+- Runtime host (CPU/GPU) + Linha B subset (`TOKENS_PER_S` medidos; espécie ≠ canônica)
+- Agente: allowlist `note`/`recall`/`help`/`calc` + REPL + `read_local` + consumo evidência nativa (`NATIVE_CONSUME_*`)
+- Rede: v1 + bootstrap + mDNS + TASK + KNOW + relay intro; TCP guest inviável (bridge E52)
+- Harness A vs B: **INCONCLUSIVO** / teto; pilar 1 em **`BLOQUEIO_FINAL`** (ADR [`0022`](adr/0022-bloqueio-final-hipotese-ab.md)) — sem `COMPROVA` fingido
+- Path metal: SFS full (E63); `METAL_OK` pendente de log PC
+- Bare-metal: artefato ESP + guia/release USB (QEMU ≠ PC real)
+- GPU host: shard + `host_multi` (skip se &lt;2 devices); guest passthrough skip sem VFIO
 
 Glossário: [`glossario.md`](glossario.md). Detalhe técnico: [`architecture.md`](architecture.md). Operacional: `AGENTS.md`.
