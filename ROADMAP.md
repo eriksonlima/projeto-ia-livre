@@ -552,3 +552,10 @@ Spec: specs/sync-architecture-product/
 Pronto quando: architecture + product-context + glossário refletem E42–E71 e decisões abertas reais (sem listar REPL/GPU harness como se ainda abertos se já feitos).  
 **Desfecho:** mapa pós-E71; abertos reais = BLOQUEIO_FINAL / METAL_OK / DHT / VFIO; `make verify-docs-consistency` estendido.
 
+## Etapa 73 — Canal padrão bare-metal: relatório na ESP (sem COM1)
+
+Status: em_andamento  
+Issue: [#74](https://github.com/eriksonlima/projeto-ia-livre/issues/74)  
+Spec: specs/baremetal-report-esp/  
+Pronto quando: `\\IA_LIVRE\\baremetal-report.txt` escrito pré-ExitBoot via SFS; `METAL_OK` via esse report sem UART; ADR canal padrão; serial permanece válido; vídeo fora do gate.
+

@@ -10,7 +10,7 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Meta do protótipo (objetivo do projeto):** um ecossistema verificável em que (1) a **hipótese A vs B** possa ser comprovada ou refutada com geração real na Linha B (`TOKENS_PER_S`), (2) o **SO IA Livre** boote de USB/ESP em hardware real com caminho de IA nativo mínimo honesto, (3) a **Rede** e a **autonomia** continuem utilizáveis **sem** exigir o SO. Ordem abaixo = prioridade sugerida (topo primeiro).
 >
-> **Análise pós-E72 (2026-11-21):** docs sync. Abertas: só **B55** (adiada — não promover).
+> **Análise pós-promoção B68 (2026-11-21):** B68→E73 baremetal-report. Abertas: só **B55** (adiada).
 
 
 
@@ -21,6 +21,15 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Nota: não promover enquanto BLOQUEIO_FINAL / canônico inviável sem reabertura
 
 ## Promovidas / arquivadas
+
+### B68 — Canal padrão bare-metal: relatório na ESP (sem COM1)
+- Issue: [#74](https://github.com/eriksonlima/projeto-ia-livre/issues/74)
+- Origem: operador sem UART; canal ESP para evidências/métricas bare-metal
+- Pronto quando: `\\IA_LIVRE\\baremetal-report.txt` pré-ExitBoot + METAL_OK via report; ADR canal padrão; serial secundário
+- Deps: E30/E35/E62; SFS E63
+- Promovido para Etapa 73.
+- Etapa: [Etapa 73 — Baremetal report ESP](ROADMAP.md)
+
 
 ### B67 — Sincronizar architecture/product pós-E58
 - Issue: [#72](https://github.com/eriksonlima/projeto-ia-livre/issues/72)

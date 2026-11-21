@@ -2,14 +2,13 @@
 
 ## Foco atual
 
-- Etapas 1–72 **feitas**
-- Docs architecture/product/glossário alinhados pós-E71
-- Abertas: só **B55** (adiada sob ADR 0021/0022)
+- **Etapa 73** `em_andamento` — canal padrão baremetal-report na ESP
+- Issue #74
 
 ## Próximo passo
 
-- Pedido explícito ou novo item em `BACKLOG.md` — não promover B55
+- ADR + kernel flush + gate METAL_OK via report
 
 ## Notas
 
-- Lease livre após commit E72
+- Lease E73 / #74
