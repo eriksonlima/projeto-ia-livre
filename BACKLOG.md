@@ -12,12 +12,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 
 
-### B40 — Evidência de boot metal real (serial ≥ `BOOT_OK` em PC)
-- Issue: [#46](https://github.com/eriksonlima/projeto-ia-livre/issues/46)
-
-- Origem: USB/pendrive; E35 ficou SKIP neste host
-- Pronto quando: log serial de PC real em `docs/evidence/boot-metal/` + `IA_LIVRE_BAREMETAL_METAL_OK` no gate; Secure Boot/checklist documentados
-- Deps: E30/E35 artefato
 
 ### B41 — One-shot gravar pendrive UEFI (script + doc contribuidores)
 - Issue: [#47](https://github.com/eriksonlima/projeto-ia-livre/issues/47)
@@ -104,6 +98,16 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: B39 + B40 + B42 (mínimo sugerido)
 
 ## Promovidas / arquivadas
+
+### B40 — Evidência de boot metal real (serial ≥ `BOOT_OK` em PC)
+- Issue: [#46](https://github.com/eriksonlima/projeto-ia-livre/issues/46)
+
+- Origem: USB/pendrive; E35 ficou SKIP neste host
+- Pronto quando: log serial de PC real em `docs/evidence/boot-metal/` + `IA_LIVRE_BAREMETAL_METAL_OK` no gate; Secure Boot/checklist documentados
+- Deps: E30/E35 artefato
+
+- Promovido para Etapa 46 do roadmap (promoção autônoma após E45).
+- Etapa: [Etapa 46 — Evidência de boot metal real](ROADMAP.md)
 
 ### B39 — Re-corrida harness A vs B com geração real (veredito limpo)
 - Issue: [#45](https://github.com/eriksonlima/projeto-ia-livre/issues/45)

@@ -336,3 +336,10 @@ Spec: specs/recorrida-harness-veredito-limpo/
 Pronto quando: `make verify-harness-comparable` com B gerando; veredito ∈ {COMPROVA, REFUTA, INCONCLUSIVO} **sem** reason de proxy/`no_gguf_full_prefill`/subset-espécie; metodologia quieta preservada.  
 **Desfecho:** ADR 0016; B gera; comparable `INCONCLUSIVO` / `E45_perf_ceiling_below_canonical_layers=2_npredict=1` (22L×32 inviável no gate); sem COMPROVA forçado.
 
+## Etapa 46 — Evidência de boot metal real (serial ≥ BOOT_OK em PC)
+
+Status: em_andamento  
+Issue: [#46](https://github.com/eriksonlima/projeto-ia-livre/issues/46)  
+Spec: (a gerar)  
+Pronto quando: log serial de PC real em `docs/evidence/boot-metal/` + `IA_LIVRE_BAREMETAL_METAL_OK` no gate; Secure Boot/checklist documentados.
+
