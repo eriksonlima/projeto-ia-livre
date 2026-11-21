@@ -1,5 +1,5 @@
 # Projeto IA Livre — bootstrap do kernel (UEFI + QEMU)
-.PHONY: build esp baremetal-esp run verify verify-runtime verify-runtime-gpu verify-runtime-contract verify-gpu-manager verify-gpu-shard-host verify-gpu-native-real verify-gpu-guest-passthrough verify-node verify-node-relay verify-agent verify-harness verify-harness-comparable verify-harness-a-otimizada verify-harness-gpu verify-harness-sym-cpu verify-baremetal verify-write-usb verify-boot-guide-release verify-prototipo-objetivo verify-runtime-native-perf verify-metal-infer verify-autonomia-bridge verify-rede-bridge verify-rede-guest verify-docs-consistency clean help
+.PHONY: build esp baremetal-esp run verify verify-runtime verify-runtime-gpu verify-runtime-contract verify-gpu-manager verify-gpu-shard-host verify-gpu-multi verify-gpu-native-real verify-gpu-guest-passthrough verify-node verify-node-relay verify-agent verify-harness verify-harness-comparable verify-harness-a-otimizada verify-harness-gpu verify-harness-sym-cpu verify-baremetal verify-write-usb verify-boot-guide-release verify-prototipo-objetivo verify-runtime-native-perf verify-metal-infer verify-autonomia-bridge verify-rede-bridge verify-rede-guest verify-docs-consistency clean help
 
 export PATH := $(HOME)/.cargo/bin:$(PATH)
 # Evita CARGO_TARGET_DIR herdado (ex.: cache de sandbox) fora do repo
@@ -108,6 +108,9 @@ verify-gpu-manager:
 
 verify-gpu-shard-host:
 	./scripts/verify-gpu-shard-host.sh
+
+verify-gpu-multi:
+	./scripts/verify-gpu-multi.sh
 
 verify-gpu-native-real:
 	./scripts/verify-gpu-native-real.sh

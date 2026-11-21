@@ -352,6 +352,23 @@ grep -q 'host_shard_exec' scripts/run-gpu-shard-host.sh
 Com ≥2 GPUs: `IA_LIVRE_GPU_SHARD_EXEC_OK` + plano `0:0-10,1:11-21`.  
 Com &lt;2 GPUs / CI: `IA_LIVRE_GPU_SHARD_SKIP` (ex. `need_2_devices`) exit **0** — **sem** `EXEC_OK`. Force skip: `VERIFY_GPU_SHARD_SKIP=1`.
 
+### Gate multi-GPU host além do shard (Etapa 69 — adicional)
+
+Placement dual Weights+Kv (`host_multi`) além de E41. **≠** shard-only. **≠** inferência llama multi-GPU. Contrato: [`docs/multi-gpu-completo-host.md`](docs/multi-gpu-completo-host.md).
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+test -f scripts/verify-gpu-multi.sh
+test -f docs/multi-gpu-completo-host.md
+make verify-gpu-multi
+grep -q 'host_multi' scripts/run-gpu-multi-host.sh
+grep -q 'weights_kv_place' scripts/run-gpu-multi-host.sh
+```
+
+Com ≥2 GPUs: `MULTI_EXEC_OK` + `PLAN=W:0,K:1`.  
+Com &lt;2 / CI: `MULTI_SKIP` (`need_2_devices`) exit **0** — **sem** `EXEC_OK`. Force: `VERIFY_GPU_MULTI_SKIP=1`.  
+`verify-gpu-shard-host` (E41) permanece independente.
+
 ### Gate GPU real no caminho nativo (Etapa 55 — adicional)
 
 Além de `synthetic` (E38). Path **host** com `SRC=host` + âncora contrato nativo **ou** skip `need_gpu`. **≠** stub E25. **≠** multi-GPU fingido. Contrato: [`docs/gpu-real-nativo.md`](docs/gpu-real-nativo.md).

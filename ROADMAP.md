@@ -520,3 +520,11 @@ Spec: specs/mensagem-know-rede/
 Pronto quando: `KNOW`(+ACK) + gate dois nós; sem marketplace; sem exigir SO.  
 **Desfecho:** `KNOW k1 prova-know-v1` / `KNOW_ACK` → `IA_LIVRE_KNOW_OK`; `make verify-node` exige KNOW; sem marketplace/store.  
 
+## Etapa 69 — Multi-GPU completo além do shard host
+
+Status: feita  
+Issue: [#69](https://github.com/eriksonlima/projeto-ia-livre/issues/69)  
+Spec: specs/multi-gpu-completo-host/  
+Pronto quando: placement/execução multi-device real com evidência; sem fingir.  
+**Desfecho:** `host_multi` + placement dual `W:0,K:1` + `make verify-gpu-multi`; neste host tipicamente `need_2_devices` (1×1050); E41 shard intacto; sem TOKENS.  
+

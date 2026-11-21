@@ -1,7 +1,8 @@
 # Shard multi-GPU host executado (Etapa 41)
 
 Caminho **host** que **executa** placement/shard pipeline/layer mínimo **além** do stub E25 (`SHARD_DOC` só documentado).  
-**≠** `host_stub` (E25) · **≠** `native` (E38) · **≠** offload single-GPU E8 como «manager entregue».
+**≠** `host_stub` (E25) · **≠** `native` (E38) · **≠** offload single-GPU E8 como «manager entregue».  
+Além do shard (placement dual Weights+Kv): Etapa 69 — [`multi-gpu-completo-host.md`](multi-gpu-completo-host.md).
 
 Spec: [`specs/shard-multi-gpu-host/`](../specs/shard-multi-gpu-host/).  
 Stub: [`gpu-manager-prototipo-host.md`](gpu-manager-prototipo-host.md).  

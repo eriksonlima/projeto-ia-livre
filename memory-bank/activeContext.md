@@ -2,13 +2,13 @@
 
 ## Foco atual
 
-- Etapas 1–68 **feitas**
-- E68: `KNOW`/`KNOW_ACK` → `IA_LIVRE_KNOW_OK`
-- Topo Abertas: **B64** (multi-GPU) ou B67 docs; B55 adiada
+- Etapas 1–69 **feitas**
+- E69: `host_multi` dual place; skip `need_2_devices` (1 GPU)
+- Topo Abertas: **B65** (autonomia nativa) ou B67 docs
 
 ## Próximo passo
 
-- “continuar” → B64 ou B67
+- “continuar” → B65
 
 ## Notas
 
