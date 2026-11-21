@@ -2,21 +2,21 @@
 
 ## Foco atual
 
-- Etapas 1–18 **feitas**; roadmap sem `em_andamento`
-- Backlog **Abertas** reabastecido (B13–B19) após análise de lacunas pós-desenho
-- Nenhuma etapa promovida nesta fatia (só captura); lease liberado
+- **Etapa 19** `em_andamento` — Memória model-aware + scheduler por fases (impl. mínima)
+- Issue [#19](https://github.com/eriksonlima/projeto-ia-livre/issues/19); Project: https://github.com/users/eriksonlima/projects/1
+- Spec alvo: `specs/memoria-scheduler-impl-minima/` (a gerar)
+- Lease: `cursor-agent-principal` em `AGENT_CLAIM.md`
 
 ## Mudanças recentes
 
-- Análise do estado: fundação + protótipos + desenhos (ADRs 0003–0006) feitos; implementações e prova da hipótese abertas
-- Captura B13–B19 em `BACKLOG.md` com issues #19–#25 (label `backlog`)
-- Prioridade: trilha hipótese (B13→B16), depois Rede/autonomia (B17–B18), depois GPU manager (B19)
+- Promovido B13 → Etapa 19 (promoção autônoma após “continuar”)
+- Labels issue #19: `roadmap` + `status:em_andamento` (removido `backlog`); item no Project V2
 
 ## Próximo passo
 
-- Promover o topo (B13) quando houver “continuar” / pedido de próxima etapa — ou promoção autônoma se o fluxo pedir
-- Não inventar etapa fora do backlog
+- Especificar + fatiar Etapa 19; implementar tasks uma a uma com gate `make verify`
 
 ## Notas
 
-- Um agente escritor; claim antes de editar `em_andamento`
+- Sem GGUF; sem prova da hipótese; sem ABI estável/multi-tenant/GPU manager
+- ADR 0003 + `docs/desenho-memoria-scheduler-nativo.md`

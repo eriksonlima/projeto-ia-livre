@@ -8,13 +8,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-### B13 — Memória model-aware + scheduler por fases (impl. mínima)
-
-- Issue: [#19](https://github.com/eriksonlima/projeto-ia-livre/issues/19)
-- Origem: pós-Etapa 13 / ADR 0003; `docs/desenho-memoria-scheduler-nativo.md`
-- Notas: allocator tipado `Weights`/`KvCache` pós-ExitBoot + hints Prefill/Decode + gate serial; sem GGUF; sem prova da hipótese.
-- Pronto quando (candidato): contrato mínimo verificável no kernel; `make verify` (ou extensão) cobre o caminho.
-
 ### B14 — Runtime falando o contrato nativo (além do proxy Linha B)
 
 - Issue: [#20](https://github.com/eriksonlima/projeto-ia-livre/issues/20)
@@ -58,6 +51,12 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Pronto quando (candidato): caminho verificável; skip/gate honesto; sem prova A vs B via multi-GPU.
 
 ## Promovidas / arquivadas
+
+### B13 — Memória model-aware + scheduler por fases (impl. mínima)
+
+- Promovido para Etapa 19 do roadmap (promoção autônoma após “continuar”; etapas 1–18 feitas).
+- Issue: [#19](https://github.com/eriksonlima/projeto-ia-livre/issues/19)
+- Etapa: [Etapa 19 — Memória model-aware + scheduler por fases (impl. mínima)](ROADMAP.md)
 
 ### B12 — Evolução do harness (Linha A otimizada / perfil GPU)
 
