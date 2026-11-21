@@ -29,13 +29,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Notas: corrida lado a lado mesmo modelo/quantização/carga; resultado comprova, refuta ou inconclusivo. Depende de B15.
 - Pronto quando (candidato): corrida reproduzível documentada; sem vitória sem evidência.
 
-### B17 — Protocolo Rede IA Livre v1 (impl. em node/)
-
-- Issue: [#23](https://github.com/eriksonlima/projeto-ia-livre/issues/23)
-- Origem: Etapa 14 / ADR 0004; `node/` ainda é protótipo E6
-- Notas: ed25519/PeerId, HELLO assinado, IDENT, MSG/ACK, PING/PONG; sem libp2p/NAT/DHT; independente do SO.
-- Pronto quando (candidato): contratos do desenho em `node/` + gate `verify-node` (ou extensão).
-
 ### B18 — Autonomia v1 utilizável (impl. em agent/)
 
 - Issue: [#24](https://github.com/eriksonlima/projeto-ia-livre/issues/24)
@@ -51,6 +44,12 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Pronto quando (candidato): caminho verificável; skip/gate honesto; sem prova A vs B via multi-GPU.
 
 ## Promovidas / arquivadas
+
+### B17 — Protocolo Rede IA Livre v1 (impl. em node/)
+
+- Promovido para Etapa 23 do roadmap (paralelo a Etapa 19 `em_andamento`; Etapas 20–22 reservadas mentalmente a B14–B16 em branches paralelas).
+- Issue: [#23](https://github.com/eriksonlima/projeto-ia-livre/issues/23)
+- Etapa: [Etapa 23 — Protocolo Rede IA Livre v1 (impl. em node/)](ROADMAP.md)
 
 ### B13 — Memória model-aware + scheduler por fases (impl. mínima)
 
