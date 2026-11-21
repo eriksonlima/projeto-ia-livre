@@ -134,3 +134,10 @@ Status: em_andamento
 Issue: [#19](https://github.com/eriksonlima/projeto-ia-livre/issues/19)  
 Spec: specs/memoria-scheduler-impl-minima/  
 Pronto quando: contrato mínimo verificável no kernel pós-ExitBoot — allocator tipado `Weights`/`KvCache`, hints Prefill/Decode com política de quantum mínima e marcadores serial; `make verify` (ou extensão documentada) cobre o caminho; sem GGUF; sem prova da hipótese; sem ABI estável/multi-tenant/GPU manager.
+
+## Etapa 21 — Carga GGUF canônica na Linha B (mínimo honesto)
+
+Status: pendente  
+Issue: [#21](https://github.com/eriksonlima/projeto-ia-livre/issues/21)  
+Spec: specs/carga-gguf-linha-b/  
+Pronto quando: caminho mínimo da carga canônica do harness (TinyLlama Q4_K_M) na Linha B (QEMU/IA Livre) emite métricas B em espécie comparáveis às de A (ex. tokens/s), **ou** bloqueio honesto documentado; gate harness atualizado sem inventar números; hipótese **não** comprovada; sem GPU manager.

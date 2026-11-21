@@ -171,10 +171,11 @@ Saída esperada: `IA_LIVRE_RUNTIME_USED=1`, `IA_LIVRE_TOOL_OK`, `IA_LIVRE_MEMORY
 
 Gate automatizado: `make verify-agent` (não exige QEMU/UEFI nem o nó P2P; requer GGUF).
 
-### Harness Linha A vs Linha B (Etapas 9 / 12)
+### Harness Linha A vs Linha B (Etapas 9 / 12 / 21)
 
 Metodologia: [`docs/harness-linha-a-b.md`](docs/harness-linha-a-b.md); caminho B mínimo: [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md).  
-**Não** confundir com métricas dos protótipos CPU/GPU. Linha A = host + GGUF; Linha B = proxy pós-ExitBoot no QEMU (**não** TinyLlama). Hipótese **não** comprovada.
+**Não** confundir com métricas dos protótipos CPU/GPU. Linha A = host + GGUF; Linha B no gate = proxy pós-ExitBoot no QEMU (**não** TinyLlama).  
+**Etapa 21 (pendente):** carga GGUF canônica em B **ou** bloqueio honesto (`LOAD_KIND=blocked` / `B_BLOCK=awaiting_b13_b14` enquanto deps 19/20 faltarem) — **sem** inventar `TOKENS_PER_S`. Spec: `specs/carga-gguf-linha-b/`. Hipótese **não** comprovada.
 
 Pré-requisitos: runtime CPU (GGUF) para A; QEMU/OVMF para B. Sem GPU no harness v1.
 
@@ -192,7 +193,8 @@ cargo build -p ia-livre-runtime
 ./scripts/run-harness-line-b.sh
 ```
 
-Linha B (Etapa 12): proxy pós-ExitBoot no QEMU — **não** é TinyLlama; ver [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md). Hipótese **não** comprovada.
+Linha B (Etapa 12): proxy pós-ExitBoot no QEMU — **não** é TinyLlama; ver [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md).  
+Etapa 21: o script B emite `B_BLOCK=` + `GGUF_STATUS=blocked` junto do proxy (estado honesto; **não** inventa `TOKENS_PER_S`). Opcional: `IA_LIVRE_HARNESS_B_MODE=block-status` acrescenta `LOAD_KIND_GGUF=blocked`. Hipótese **não** comprovada.
 
 Gate automatizado: `make verify-harness` (A = GGUF no host; B = QEMU/kernel proxy; requer GGUF para A).
 
@@ -309,7 +311,7 @@ grep -q 'IA_LIVRE_HARNESS_OK' scripts/run-harness-line-a.sh
 grep -q 'post_exit_microbench' scripts/run-harness-line-b.sh
 ```
 
-`make verify-harness` exige A (`LINE=A`, `OK`, load/tokens) **e** B (`LINE=B`, `OK`, `PROXY=*`, sem `TOKENS_PER_S` / sem `B_SKIP`). Timeout padrão 300s; `VERIFY_HARNESS_TIMEOUT`. Gates existentes permanecem.
+`make verify-harness` exige A (`LINE=A`, `OK`, load/tokens) **e** B (`LINE=B`, `OK`, `PROXY=*`, `B_BLOCK=`, `GGUF_STATUS=blocked`, sem `TOKENS_PER_S` / sem `LOAD_S` / sem `B_SKIP` / sem `LOAD_KIND=gguf` fingido). Timeout padrão 300s; `VERIFY_HARNESS_TIMEOUT`. Gates existentes permanecem.
 
 ## PATH
 

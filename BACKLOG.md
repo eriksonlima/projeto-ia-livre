@@ -15,12 +15,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Notas: runtime exerce memória tipada/fases; harness B honesto. Depende de B13.
 - Pronto quando (candidato): evidência verificável do contrato; sem fingir `TOKENS_PER_S` GGUF se ainda não houver.
 
-### B15 — Carga GGUF canônica na Linha B (mínimo honesto)
-
-- Issue: [#21](https://github.com/eriksonlima/projeto-ia-livre/issues/21)
-- Origem: `docs/runtime-nativo-linha-b.md` / architecture (GGUF em B aberto)
-- Notas: caminho mínimo da carga canônica do harness em B (QEMU/IA Livre). Depende de B13/B14.
-- Pronto quando (candidato): métricas B em espécie comparáveis às de A, ou bloqueio honesto documentado.
 
 ### B16 — Harness A vs B comparável (prova ou refutação da hipótese)
 
@@ -51,6 +45,12 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Pronto quando (candidato): caminho verificável; skip/gate honesto; sem prova A vs B via multi-GPU.
 
 ## Promovidas / arquivadas
+
+### B15 — Carga GGUF canônica na Linha B (mínimo honesto)
+
+- Promovido para Etapa 21 do roadmap (`pendente`; Etapa 19 permanece `em_andamento`; Etapa 20 reservada a B14 em paralelo — trabalho na branch `etapa-b15-gguf-linha-b`).
+- Issue: [#21](https://github.com/eriksonlima/projeto-ia-livre/issues/21)
+- Etapa: [Etapa 21 — Carga GGUF canônica na Linha B (mínimo honesto)](ROADMAP.md)
 
 ### B13 — Memória model-aware + scheduler por fases (impl. mínima)
 

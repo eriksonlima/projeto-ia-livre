@@ -69,11 +69,24 @@ Fora do mínimo v1: joules, p95 multi-request, VRAM multi-tenant (candidatos da 
 2. `scripts/run-harness-line-b.sh` sobe QEMU, captura serial e reemite `HARNESS_LINE=B` + `HARNESS_OK` + marcadores proxy.
 3. **Não** declara hipótese comprovada; A e B **não** são lado a lado comparáveis até B rodar a carga canônica GGUF.
 
-### Ainda falta (carga canônica em B)
+### Etapa 21 — Carga GGUF canônica em B (mínimo honesto)
 
-Runtime nativo de inferência no IA Livre com TinyLlama Q4_K_M, prompt e `n-predict=32` — fora desta etapa.  
-Desenho dos mecanismos nativos (memória/scheduler) que tornariam B diferencial: [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-scheduler-nativo.md) (ADR 0003) — **desenho ≠ implementação ≠ prova**.
+Contrato: [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md) (seção Etapa 21) + [`../specs/carga-gguf-linha-b/spec.md`](../specs/carga-gguf-linha-b/spec.md).
 
+| `LOAD_KIND` | Papel no slot B |
+|-------------|-----------------|
+| `proxy` | Etapa 12 — **default do gate** enquanto GGUF real não existir |
+| `blocked` | Bloqueio honesto (`B_BLOCK=…`, ex. `awaiting_b13_b14`) — **sem** inventar `TOKENS_PER_S`/`LOAD_S` |
+| `gguf` | Carga canônica real no QEMU/IA Livre (TinyLlama Q4_K_M, prompt, `n-predict=32`) com métricas **medidas** |
+
+**Deps:** Etapa 19 / B13 + Etapa 20 / B14. Sem eles → bloqueio `awaiting_b13_b14`; proxy permanece o instrumento mínimo.  
+Quando A e B tiverem `LOAD_KIND=gguf` com métricas em espécie, ainda assim a **prova/refutação** da hipótese fica para etapa posterior (B16) — esta etapa **não** declara vitória.
+
+### Ainda falta para métricas em espécie em B
+
+1. B13 + B14 mergeados/verificáveis.  
+2. Caminho GGUF real no IA Livre (Etapa 21 Task 3–4).  
+Desenho dos mecanismos: [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-scheduler-nativo.md) (ADR 0003) — **desenho ≠ implementação ≠ prova**.
 ## Como rodar
 
 ```bash

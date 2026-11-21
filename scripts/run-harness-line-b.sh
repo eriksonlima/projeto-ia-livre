@@ -60,5 +60,14 @@ echo "IA_LIVRE_HARNESS_MODEL=proxy-post-exit-v1"
 echo "IA_LIVRE_HARNESS_N_PREDICT=0"
 echo "IA_LIVRE_HARNESS_ACCEL=cpu"
 echo "IA_LIVRE_HARNESS_OK"
-echo "nota: hipótese A vs B NÃO comprovada — B é proxy, não carga TinyLlama canônica."
+# Etapa 21: estado honesto do caminho GGUF (não substitui LOAD_KIND=proxy; não inventa tokens)
+# B_BLOCK informa que a carga canônica ainda não está disponível neste ambiente.
+B_BLOCK_REASON="${IA_LIVRE_HARNESS_B_BLOCK:-awaiting_b13_b14}"
+echo "IA_LIVRE_HARNESS_B_BLOCK=${B_BLOCK_REASON}"
+echo "IA_LIVRE_HARNESS_GGUF_STATUS=blocked"
+if [[ "${IA_LIVRE_HARNESS_B_MODE:-}" == "block-status" ]]; then
+  # Stanza explícita de bloqueio GGUF (LOAD_KIND=blocked) — informativa; gate mínimo continua no proxy acima.
+  echo "IA_LIVRE_HARNESS_LOAD_KIND_GGUF=blocked"
+fi
+echo "nota: hipótese A vs B NÃO comprovada — B é proxy; GGUF canônico em B bloqueado (${B_BLOCK_REASON})."
 exit 0
