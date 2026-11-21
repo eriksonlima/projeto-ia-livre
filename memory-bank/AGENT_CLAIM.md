@@ -5,12 +5,12 @@ Regra: `.cursor/rules/agentes-em-paralelo.mdc`.
 
 ## Estado atual
 
-- **holder:** _(nenhum)_
-- **etapa:** —
-- **issue:** —
-- **paths:** —
-- **since:** —
-- **expires:** —
+- **holder:** cursor-agent-principal-e27
+- **etapa:** 27
+- **issue:** #27
+- **paths:** specs/inferencia-minima-linha-b/, kernel/, scripts/, docs/, AGENTS.md, memory-bank/
+- **since:** 2026-11-20T23:00:00-03:00
+- **expires:** 2026-11-21T01:00:00-03:00
 
 ## Como usar
 

@@ -183,3 +183,10 @@ Status: feita
 Issue: [#26](https://github.com/eriksonlima/projeto-ia-livre/issues/26)  
 Spec: specs/loader-gguf-nativo-linha-b/  
 Pronto quando: caminho verificável para o GGUF canônico (ou bytes/cabeçalho do modelo) chegar ao ambiente Linha B (QEMU/IA Livre pós-ExitBoot) com I/O mínimo documentado e evidência de progresso do loader (`GGUF_NATIVE_LOADER` ≠ `absent` ou marcadores intermediários honestos); gate harness atualizado sem inventar `TOKENS_PER_S` se ainda não houver geração; hipótese **não** comprovada; sem inferência completa obrigatória nesta etapa; sem GPU manager.
+
+## Etapa 27 — Inferência mínima / TOKENS_PER_S na Linha B (após loader)
+
+Status: em_andamento  
+Issue: [#27](https://github.com/eriksonlima/projeto-ia-livre/issues/27)  
+Spec: specs/inferencia-minima-linha-b/  
+Pronto quando: geração mínima na Linha B com a carga canônica (ou caminho intermediário documentado) emitindo `TOKENS_PER_S` / `LOAD_S` **medidos** comparáveis em espécie aos de A, **ou** bloqueio honesto novo documentado; gates harness atualizados sem inventar números; hipótese só deixa `INCONCLUSIVO` com evidência real; depende da Etapa 26 (loader).

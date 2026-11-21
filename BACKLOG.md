@@ -8,13 +8,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-### B21 — Inferência mínima / TOKENS_PER_S na Linha B (após loader)
-
-- Issue: [#27](https://github.com/eriksonlima/projeto-ia-livre/issues/27)
-- Origem: desbloqueio da Etapa 22 / hipótese; depende de B20
-- Notas: geração mínima canônica em B com métricas em espécie iguais às de A
-- Pronto quando (candidato): `TOKENS_PER_S`/`LOAD_S` medidos em B ou bloqueio honesto novo; gates atualizados
-
 ### B22 — Re-corrida harness A vs B quieta (COMPROVA/REFUTA ou INCONCLUSIVO limpo)
 
 - Issue: [#28](https://github.com/eriksonlima/projeto-ia-livre/issues/28)
@@ -24,9 +17,15 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Promovidas / arquivadas
 
+### B21 — Inferência mínima / TOKENS_PER_S na Linha B (após loader)
+
+- Promovido para Etapa 27 do roadmap (promoção autônoma após Etapa 26).
+- Issue: [#27](https://github.com/eriksonlima/projeto-ia-livre/issues/27)
+- Etapa: [Etapa 27 — Inferência mínima / TOKENS_PER_S na Linha B](ROADMAP.md)
+
 ### B20 — Loader GGUF nativo mínimo na Linha B (desbloquear no_gguf_path)
 
-- Promovido para Etapa 26 do roadmap (promoção autônoma após “continuar” + métricas serial).
+- Promovido para Etapa 26 do roadmap — **feita**.
 - Issue: [#26](https://github.com/eriksonlima/projeto-ia-livre/issues/26)
 - Etapa: [Etapa 26 — Loader GGUF nativo mínimo na Linha B](ROADMAP.md)
 
