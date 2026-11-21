@@ -464,6 +464,19 @@ Esperado: `IA_LIVRE_BAREMETAL_IMAGE_OK` + `EFI_SHA256=` / `EFI_BYTES=`. Default 
 
 **Metal (Etapa 35):** com log real em PC, `IA_LIVRE_BAREMETAL_SKIP=0 IA_LIVRE_BAREMETAL_EVIDENCE=docs/evidence/boot-metal/….txt make verify-baremetal` → `IA_LIVRE_BAREMETAL_METAL_OK` (≥ `BOOT_OK`, sem QEMU/OVMF no log). Formato: [`docs/boot-hardware-real.md`](docs/boot-hardware-real.md) / [`docs/evidence/boot-metal/`](docs/evidence/boot-metal/).
 
+### Gate gravar pendrive UEFI (Etapa 47 — adicional)
+
+Writer seguro (`scripts/write-usb-esp.sh`): confirmação explícita do device; **não** exige USB no CI; **não** é `METAL_OK`.
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+test -f scripts/write-usb-esp.sh && test -f scripts/verify-write-usb.sh
+make verify-write-usb
+grep -q 'IA_LIVRE_WRITE_USB_OK' scripts/verify-write-usb.sh
+```
+
+Gravação real (operador): `make baremetal-esp` → `./scripts/write-usb-esp.sh --list` → `--device /dev/sdX --confirm /dev/sdX --yes`. Contrato: [`docs/boot-hardware-real.md`](docs/boot-hardware-real.md).
+
 ## PATH
 
 Sempre inclua o GitHub CLI e o Cargo locais:
@@ -504,9 +517,10 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `docs/ambiente-autonomia-prototipo.md` — loop/memória/ferramenta do protótipo de autonomia (Etapa 7); ponte para v1
 - `docs/desenho-autonomia-v1.md` — escopo autonomia v1 (ADR 0005; **implementado** na Etapa 24 em `agent/`)
 - `docs/adr/0005-autonomia-v1-utilizavel.md` — ADR do escopo v1
-- `docs/boot-hardware-real.md` — ESP/USB + gate de artefato (Etapa 30; QEMU ≠ metal)
-- `Makefile` — `build` / `esp` / `baremetal-esp` / `run` / `verify` / `verify-baremetal` / `verify-runtime` / … / `clean`
+- `docs/boot-hardware-real.md` — ESP/USB + gate de artefato (Etapa 30; QEMU ≠ metal) + writer Etapa 47
+- `Makefile` — `build` / `esp` / `baremetal-esp` / `run` / `verify` / `verify-baremetal` / `verify-write-usb` / …
 - `scripts/make-baremetal-esp.sh` / `scripts/verify-baremetal.sh` — artefato + gate Etapa 30
+- `scripts/write-usb-esp.sh` / `scripts/verify-write-usb.sh` — gravar pendrive com confirmação (Etapa 47)
 - `scripts/run-qemu.sh` — atalho para `make run`
 - `scripts/verify-boot.sh` — gate serial do kernel (`BOOT_OK` + mem/alloc + `EXIT_BOOT_OK` + `MEM_SCHED_OK` + `NATIVE_BENCH_OK`)
 - `scripts/verify-runtime.sh` — gate do runtime CPU (`IA_LIVRE_INFER_OK` + métricas)

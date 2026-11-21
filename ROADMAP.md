@@ -346,8 +346,9 @@ Pronto quando: log serial de PC real em `docs/evidence/boot-metal/` + `IA_LIVRE_
 
 ## Etapa 47 — One-shot gravar pendrive UEFI (script + doc)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#47](https://github.com/eriksonlima/projeto-ia-livre/issues/47)  
-Spec: (a gerar)  
-Pronto quando: script ou procedimento único (detecta device com confirmação, grava ESP/FAT ou `.img`) + README/AGENTS; **sem** gravar `/dev/sdX` sem confirmação explícita.
+Spec: specs/gravar-pendrive-uefi/  
+Pronto quando: script ou procedimento único (detecta device com confirmação, grava ESP/FAT ou `.img`) + README/AGENTS; **sem** gravar `/dev/sdX` sem confirmação explícita.  
+**Desfecho:** `write-usb-esp.sh` + `make verify-write-usb` (`IA_LIVRE_WRITE_USB_OK`); confirmação obrigatória; ≠ METAL_OK.
 

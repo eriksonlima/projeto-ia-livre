@@ -41,12 +41,27 @@ O gate valida estrutura + EFI (MZ) + tar + checksum. **Não** sobe QEMU e **não
 | USB externo / path doc | operador copia `model.gguf` | SimpleFileSystem documentado |
 
 Contrato completo: [`gguf-baremetal-midia.md`](gguf-baremetal-midia.md).
-## Gravar USB / ESP (manual)
+## Gravar USB / ESP (Etapa 47 — one-shot)
 
-1. Gerar artefato (`make baremetal-esp`).
-2. Opção A — copiar a árvore para partição FAT ESP/USB (montar e `cp -a build/baremetal-esp/* /mnt/…`).
-3. Opção B — se existir `.img` (com mtools): `dd if=build/ia-livre-esp.img of=/dev/sdX bs=4M status=progress` (**confirme o dispositivo**).
-4. No firmware: boot USB/ESP; **Secure Boot off** ou modo setup (EFI não assinado).
+**Preferido:** script com confirmação explícita (nunca grava sem digitar o path):
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+make baremetal-esp
+./scripts/write-usb-esp.sh --list
+# Revise o device com cuidado (checks anti-sistema são honestos, não absolutos):
+./scripts/write-usb-esp.sh --device /dev/sdX --confirm /dev/sdX --yes
+# Simulação sem escrita:
+./scripts/write-usb-esp.sh --dry-run --device /dev/sdX --confirm /dev/sdX
+```
+
+- Prefere `build/ia-livre-esp.img` (`dd`); sem `.img` (sem mtools): monte a FAT e `IA_LIVRE_USB_MOUNT=/mnt/…` para `cp` da árvore.
+- Gate CI (sem USB): `make verify-write-usb` → `IA_LIVRE_WRITE_USB_OK`.
+- **Gravação ≠** `METAL_OK` (E46). No firmware: boot USB; **Secure Boot off** ou setup.
+
+### Manual (legado)
+
+Se preferir à mão: montar FAT e `cp -a build/baremetal-esp/* /mnt/…`, ou `dd if=build/ia-livre-esp.img of=/dev/sdX bs=4M status=progress` **só** após confirmar o dispositivo.
 
 ## Checklist hardware real (Etapa 46)
 

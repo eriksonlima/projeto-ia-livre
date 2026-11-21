@@ -1,5 +1,5 @@
 # Projeto IA Livre — bootstrap do kernel (UEFI + QEMU)
-.PHONY: build esp baremetal-esp run verify verify-runtime verify-runtime-gpu verify-runtime-contract verify-gpu-manager verify-gpu-shard-host verify-node verify-agent verify-harness verify-harness-comparable verify-harness-a-otimizada verify-baremetal verify-docs-consistency clean help
+.PHONY: build esp baremetal-esp run verify verify-runtime verify-runtime-gpu verify-runtime-contract verify-gpu-manager verify-gpu-shard-host verify-node verify-agent verify-harness verify-harness-comparable verify-harness-a-otimizada verify-baremetal verify-write-usb verify-docs-consistency clean help
 
 export PATH := $(HOME)/.cargo/bin:$(PATH)
 # Evita CARGO_TARGET_DIR herdado (ex.: cache de sandbox) fora do repo
@@ -36,7 +36,7 @@ MODEL_GGUF ?= models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf
 GGUF_QEMU_IMG ?= build/gguf-canon.gguf
 
 help:
-	@echo "Alvos: build | esp | baremetal-esp | run | verify | verify-baremetal | verify-runtime | … | clean"
+	@echo "Alvos: build | esp | baremetal-esp | run | verify | verify-baremetal | verify-write-usb | verify-runtime | … | clean"
 	@echo "Pré-requisitos: ver AGENTS.md → Como rodar"
 
 build:
@@ -129,6 +129,9 @@ baremetal-esp: build
 
 verify-baremetal:
 	./scripts/verify-baremetal.sh
+
+verify-write-usb:
+	./scripts/verify-write-usb.sh
 
 verify-docs-consistency:
 	./scripts/verify-docs-consistency.sh

@@ -2,14 +2,14 @@
 
 ## Foco atual
 
-- Etapas 1–46 **feitas** (E46 = SKIP metal honesto)
-- Hipótese A vs B: INCONCLUSIVO (teto perf)
-- Topo Abertas: **B41** (script gravar pendrive)
+- Etapa 47 **feita** (writer USB seguro)
+- Etapas 1–47 feitas
+- Topo Abertas: **B42** (inferência mínima no metal)
 
 ## Próximo passo
 
-- Promover B41 ou fornecer log metal para caminho A da E46
+- Promover B42 ou “continuar”
 
 ## Notas
 
-- Lease livre
+- Lease: liberar após push E47
