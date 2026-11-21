@@ -3,7 +3,7 @@
 Definição canônica do que conta como **“protótipo objetivo atingido”** no Projeto IA Livre.  
 Fonte da meta: parágrafo em `BACKLOG.md` · produto: [`product-context.md`](product-context.md) · manifesto: [`manifesto.md`](manifesto.md).
 
-> **Celebrar só com evidência.** Esta página **define** o critério; **não** declara que o objetivo já foi atingido em todas as frentes. Hipótese A vs B hoje = **`INCONCLUSIVO`**.
+> **Checklist dos 3 pilares: cumprido (2026-11-21).** Celebrar só com evidência (abaixo). A hipótese científica A vs B fica **fora do escopo de produto** daqui em diante (ADR [`0026`](adr/0026-produto-sem-comprovacao-ab.md)); instrumento lab pode permanecer `INCONCLUSIVO` sem reabrir roadmap.
 
 ## Os três pilares
 
@@ -13,7 +13,7 @@ Fonte da meta: parágrafo em `BACKLOG.md` · produto: [`product-context.md`](pro
 | 2 | SO / USB / metal | Boot ESP/USB em hardware com caminho de IA nativo mínimo **honesto** (+ evidência quando `METAL_OK`) |
 | 3 | Rede + autonomia | Utilizáveis no **host** sem exigir o SO (`verify-node` / `verify-agent`) |
 
-Objetivo do protótipo = **os três** pilares no estado “atingido” (ou bloqueio final explícito no pilar 1). Até lá: verdades parciais ok; vitória global **não**.
+Objetivo do protótipo = **os três** pilares no estado “atingido” (ou bloqueio final explícito no pilar 1).
 
 ---
 
@@ -24,7 +24,7 @@ Objetivo do protótipo = **os três** pilares no estado “atingido” (ou bloqu
 | Critério decidível | `make verify-harness-comparable` emite `IA_LIVRE_HARNESS_VERDICT=COMPROVA` **ou** `REFUTA` com espécie canônica (22L + `n_predict=32` em B) — ver [`harness-a-b-comparavel.md`](harness-a-b-comparavel.md) |
 | Bloqueio honesto final | Doc/ADR declara terminalmente inviável a espécie canônica **e** o instrumento permanece honesto (`INCONCLUSIVO` ou reason terminal) — sem fingir `COMPROVA` |
 | Evidência | `IA_LIVRE_HARNESS_VERDICT=` / `VERDICT_REASON=` |
-| **Estado atual** | **`BLOQUEIO_FINAL`** — ADR [`0022`](adr/0022-bloqueio-final-hipotese-ab.md) (terminal no gate/motor atuais; encadeia 0020/0021). Instrumento comparable permanece `INCONCLUSIVO`/teto (sem `COMPROVA`). Reabertura: critérios na 0022 |
+| **Estado atual** | **`BLOQUEIO_FINAL`** — ADR [`0022`](adr/0022-bloqueio-final-hipotese-ab.md). **Arquivado como meta de produto** (ADR [`0026`](adr/0026-produto-sem-comprovacao-ab.md)): sem `COMPROVA`/`REFUTA` no roadmap; B55 arquivada. Instrumento comparable permanece lab/`INCONCLUSIVO` |
 | Não conta | Celebrar subset / `A_gpu` / proxy como `COMPROVA`; tratar teto operacional 0020/0021 sozinhos como bloqueio final |
 
 ---
@@ -58,21 +58,19 @@ Objetivo do protótipo = **os três** pilares no estado “atingido” (ou bloqu
 
 ## Celebração (só com evidência)
 
-**Proibido** declarar “protótipo objetivo atingido” / vitória da hipótese enquanto:
+**Protótipo checklist = ok** quando os três pilares estão “atingidos” (pilar 1 via `BLOQUEIO_FINAL`). Isso **não** declara vitória científica `COMPROVA`.
 
-1. Pilar 1 estiver `INCONCLUSIVO` **sem** bloqueio final documentado (hoje: **`BLOQUEIO_FINAL`** via ADR 0022 — este item cumprido), **ou**
-2. Pilar 2 carecer de caminho honesto **e** (quando celebrar metal) de `METAL_OK` real, **ou**
-3. Pilar 3 falhar `verify-node` / `verify-agent`.
+**Proibido** declarar “hipótese comprovada” / `COMPROVA` sem espécie canônica; **proibido** reabrir ADR 0022 / B55 no roadmap sem pedido explícito (ADR 0026).
 
-**Permitido** celebrar **parciais** (ex.: “pilar 3 verde”; “pilar 1 com bloqueio final documentado”; “artefato USB + guia”) citando o gate/ADR correspondente.
+**Permitido** celebrar o checklist dos 3 pilares e seguir evolução de **produto** na Linha B (SO bare-metal / report / runtime nativo).
 
-### O que falta para o objetivo global (resumo)
+### Resumo dos pilares
 
-| Pilar | Falta |
+| Pilar | Estado |
 |-------|--------|
-| 1 | — (bloqueio **final** ADR 0022; reabertura só com critérios da ADR) |
-| 2 | — (`METAL_OK` via report ESP E73; evidência versionada) |
-| 3 | — (critério host satisfeito) |
+| 1 | `BLOQUEIO_FINAL` (ADR 0022) — **encerra** o pilar no protótipo; meta A/B **arquivada** (ADR 0026) |
+| 2 | `METAL_OK` (report ESP real) |
+| 3 | Rede + autonomia host ok |
 
 ---
 
@@ -81,5 +79,7 @@ Objetivo do protótipo = **os três** pilares no estado “atingido” (ou bloqu
 | Onde | O quê |
 |------|--------|
 | `ROADMAP.md` | Etapa 58 + ponte a este doc |
-| `memory-bank/activeContext.md` / `progress.md` | Estado dos pilares + residual |
+| `memory-bank/activeContext.md` / `progress.md` | Checklist ok; foco Linha B |
 | Gate | `make verify-prototipo-objetivo` → `IA_LIVRE_PROTOTIPO_OBJETIVO_OK` (presença + greps; **não** exige `COMPROVA`) |
+| Produto | ADR [`0026`](adr/0026-produto-sem-comprovacao-ab.md) |
+

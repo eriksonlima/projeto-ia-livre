@@ -13,7 +13,7 @@
 2. **Formato:** `IA_LIVRE_BAREMETAL_REPORT_V1` + marcadores/`KEY=value` no namespace `IA_LIVRE_*`.
 3. **UART COM1** permanece válido (QEMU / lab); **não** é obrigatório para o operador notebook.
 4. **ConOut/GOP** = observação humana; **vídeo/foto** nunca entram no gate.
-5. Pós-ExitBoot sem SFS: métricas pós-exit **não** persistem neste canal nesta etapa (UART ou BlockIO futuro).
+5. Pós-ExitBoot sem SFS: na Etapa 73 métricas pós-exit não persistiam; **Etapa 74** adiciona slot BlockIO (`IALVPST1`) no mesmo arquivo → `REPORT_POST_OK` (best-effort).
 
 ## Rejeitado
 

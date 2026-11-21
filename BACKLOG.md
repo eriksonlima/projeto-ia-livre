@@ -8,19 +8,37 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-> **Meta do protótipo (objetivo do projeto):** um ecossistema verificável em que (1) a **hipótese A vs B** possa ser comprovada ou refutada com geração real na Linha B (`TOKENS_PER_S`), (2) o **SO IA Livre** boote de USB/ESP em hardware real com caminho de IA nativo mínimo honesto, (3) a **Rede** e a **autonomia** continuem utilizáveis **sem** exigir o SO. Ordem abaixo = prioridade sugerida (topo primeiro).
->
-> **Análise pós-E73 (2026-11-21):** baremetal-report ESP. Abertas: só **B55** (adiada).
+> **Produto (pós-checklist E58 / ADR 0026):** evoluir **Linha B** (SO bare-metal / report / runtime nativo). Hipótese A/B **arquivada** — sem promover B55. Ordem = prioridade (topo primeiro).
 
 
+
+### B70 — Inferência mínima path metal no baremetal-report
+- Issue: [#76](https://github.com/eriksonlima/projeto-ia-livre/issues/76)
+- Origem: plano evolução Linha B
+- Pronto quando: geração subset + `TOKENS_PER_S` medidos **no report** (honesto); **não** alimenta comparable/`COMPROVA`
+- Deps: B69 preferível
+
+### B71 — Script collect-baremetal-report.sh
+- Issue: [#77](https://github.com/eriksonlima/projeto-ia-livre/issues/77)
+- Origem: DX operador (mount IALIVRE → evidence)
+- Pronto quando: script copia report (+ post); opcional `verify-baremetal SKIP=0`; doc no guia
+- Deps: B69 preferível
+
+## Promovidas / arquivadas
+
+### B69 — Persistência pós-ExitBoot no baremetal-report (BlockIO)
+- Issue: [#75](https://github.com/eriksonlima/projeto-ia-livre/issues/75)
+- Origem: plano evolução Linha B; E73 só pré-exit (SFS)
+- Pronto quando: append pós-ExitBoot (`EXIT_*` / `MEM_SCHED` / métricas subset) via BlockIO/slot; formato V1+; sem UART obrigatório; sem `COMPROVA`
+- Deps: E73 / ADR 0025
+- Promovido para Etapa 74.
+- Etapa: [Etapa 74 — baremetal-report pós-ExitBoot](ROADMAP.md)
 
 ### B55 — Re-corrida harness A/B quieta pós-espécie canônica
 - Issue: [#61](https://github.com/eriksonlima/projeto-ia-livre/issues/61)
-- Origem: instrumento E22/E28; **adiada** (ADR 0021/0022)
-- Pronto quando: `VERDICT` limpo pós-espécie canônica ou caminho novo
-- Nota: não promover enquanto BLOQUEIO_FINAL / canônico inviável sem reabertura
-
-## Promovidas / arquivadas
+- Origem: instrumento E22/E28
+- **Arquivada (2026-11-21)** — produto sem `COMPROVA` (ADR 0026); não “adiada aguardando reabertura”
+- Nota: reabertura só com pedido explícito + critérios ADR 0022
 
 ### B68 — Canal padrão bare-metal: relatório na ESP (sem COM1)
 - Issue: [#74](https://github.com/eriksonlima/projeto-ia-livre/issues/74)

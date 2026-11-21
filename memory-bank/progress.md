@@ -2,36 +2,27 @@
 
 ## O que funciona
 
-- 1–66 feitas; E63 SFS full; E64 sym_cpu; E65 need_vfio; E66 NET_GUEST_BLOCK
-- Rede/autonomia host verdes; pilar 1 BLOQUEIO_FINAL
+- Etapas 1–74 feitas
+- Checklist 3 pilares **ok** (E58); `METAL_OK` via report ESP; Rede/autonomia host
+- E74: `REPORT_POST_OK` no `make verify` (slot BlockIO + buffer pós-exit)
+- Hipótese A/B **arquivada** como meta de produto (ADR 0026); B55 arquivada
 
 ## Bloqueios
 
-- COMPROVA / espécie; METAL_OK (PC); simetria GPU (VFIO); TCP guest (virtio+stack)
+- Lab: COMPROVA / espécie (não meta de produto)
+- Simetria GPU (VFIO); TCP guest (ADR 0024)
+- BlockIO rewrite pós-exit: best-effort (QEMU fat:rw pode hang após `POST_OK`)
 
 ## Roadmap
 
-- Sem em_andamento; topo Abertas B62
+- Sem `em_andamento`; Abertas: B70 (tokens metal no report), B71 (collect script)
 
-## Etapa 70 — Autonomia consumindo nativo (feita)
+## Etapa 74 — baremetal-report pós-ExitBoot (feita)
 
-- Contrato `docs/autonomia-nativa.md`; runner bridge→note/recall→`NATIVE_CONSUME_*`
-- Gate `make verify-autonomia-nativa` (blockio fixture); ADR 0001 intacta
-- Próximo: B66 ABI
-
-## Etapa 71 — ABI runtime-native (feita)
-
-- Contrato `docs/abi-runtime-native.md`; `abi.rs` + glue guest; gate freestanding
-- `make verify` exige `ABI_OK`; ADR 0001 intacta
-- Próximo: B67 docs sync
-
-## Etapa 72 — Sync architecture/product (feita)
-
-- architecture/product/glossário pós-E71; verify-docs-consistency
-- Abertas: B55 adiada
+- Slot `IALVPST1`; `uart_write` → post buffer; `flush_post_exit` + `REPORT_POST_OK`
+- Gate: `verify-boot` exige POST_OK|POST_FAIL
+- ADR 0026 + B55 arquivada; B69–B71 criadas
 
 ## Etapa 73 — baremetal-report ESP (feita)
 
-- ADR 0025; flush SFS pré-exit; METAL_OK via report; fixture + FAT32 persistência
-- Próximo operador: versionar report de PC real
-
+- ADR 0025; flush SFS pré-exit; METAL_OK via report

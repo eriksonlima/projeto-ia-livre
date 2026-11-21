@@ -2,15 +2,15 @@
 
 ## Foco atual
 
-- Etapas 1–73 **feitas**
-- **`METAL_OK`** atingido: report ESP real `2026-11-21-eriksonlima-Nitro-AN515-51.txt`
-- Pilar 2 do checklist: evidência metal ok; pilar 1 permanece `BLOQUEIO_FINAL`
-- Abertas: só **B55** (adiada)
+- Etapas 1–74 **feitas**
+- Checklist 3 pilares **ok**; hipótese A/B **arquivada** (ADR 0026); B55 arquivada
+- E74: pós-exit no baremetal-report (`REPORT_POST_OK` + slot BlockIO)
+- Abertas: **B70** (tokens metal no report), **B71** (collect script)
 
 ## Próximo passo
 
-- Novo item de backlog ou pedido explícito (não promover B55)
+- Promover topo Abertas (**B70**) quando “continuar” / roadmap sem `em_andamento`
 
 ## Notas
 
-- Lease livre
+- Lease: liberar após push E74

@@ -560,3 +560,11 @@ Spec: specs/baremetal-report-esp/
 Pronto quando: `\\IA_LIVRE\\baremetal-report.txt` escrito pré-ExitBoot via SFS; `METAL_OK` via esse report sem UART; ADR canal padrão; serial permanece válido; vídeo fora do gate.  
 **Desfecho:** ADR 0025; kernel flush SFS `baremetal-report.txt`; `verify-baremetal` aceita report ESP (`OBS_OK`+`REPORT_OK`); fixture CI; QEMU FAT32 persiste o arquivo; UART opcional.
 
+## Etapa 74 — Persistência pós-ExitBoot no baremetal-report (BlockIO)
+
+Status: feita  
+Issue: [#75](https://github.com/eriksonlima/projeto-ia-livre/issues/75)  
+Spec: specs/baremetal-report-post-exit/  
+Pronto quando: append pós-ExitBoot (`EXIT_*` / `MEM_SCHED` / métricas subset) via BlockIO/slot no report; `REPORT_POST_OK` ou FAIL honesto; docs; gate serial; sem `COMPROVA`.  
+**Desfecho:** slot `IALVPST1` no report pré-exit; buffer pós-exit via `uart_write`; `REPORT_POST_OK` + tentativa BlockIO rewrite (best-effort; QEMU fat:rw pode hang após OK); `make verify` exige REPORT_POST; ADR 0026 produto sem COMPROVA; B55 arquivada.
+

@@ -52,6 +52,12 @@ MARKERS=(
   "IA_LIVRE_GPU_MGR_OK"
   "IA_LIVRE_NATIVE_BENCH_OK"
 )
+
+# Etapa 74: pós-exit no report (OK ou FAIL honesto — BlockIO best-effort).
+post_report_ok() {
+  grep -q 'IA_LIVRE_BAREMETAL_REPORT_POST_OK' "$LOG" 2>/dev/null \
+    || grep -q 'IA_LIVRE_BAREMETAL_REPORT_POST_FAIL=' "$LOG" 2>/dev/null
+}
 NUMERIC=(
   "IA_LIVRE_MEM_CONVENTIONAL_PAGES="
   "IA_LIVRE_ALLOC_BYTES="
@@ -112,11 +118,16 @@ obs_mode_ok() {
 
 deadline=$((SECONDS + TIMEOUT_SEC))
 while (( SECONDS < deadline )); do
-  if all_present && obs_mode_ok; then
+  if all_present && obs_mode_ok && post_report_ok; then
     kill -KILL "$QEMU_PID" 2>/dev/null || true
     wait "$QEMU_PID" 2>/dev/null || true
     QEMU_PID=
-    echo "GATE_OK: kernel — BOOT_OK … OBS_OK … EXIT_BOOT_OK + GGUF blockio_full + LAYOUT_OK + MEM_SCHED_OK + GPU_MGR_OK + NATIVE_BENCH_OK"
+    if grep -q 'IA_LIVRE_BAREMETAL_REPORT_POST_OK' "$LOG" 2>/dev/null; then
+      echo "IA_LIVRE_BAREMETAL_REPORT_POST_OK"
+    else
+      grep -oE 'IA_LIVRE_BAREMETAL_REPORT_POST_FAIL=[^[:space:]]+' "$LOG" | tail -n1 || true
+    fi
+    echo "GATE_OK: kernel — BOOT_OK … OBS_OK … EXIT_BOOT_OK + GGUF blockio_full + LAYOUT_OK + MEM_SCHED_OK + GPU_MGR_OK + NATIVE_BENCH_OK + REPORT_POST"
     exit 0
   fi
   if ! kill -0 "$QEMU_PID" 2>/dev/null; then

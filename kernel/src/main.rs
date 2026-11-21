@@ -574,6 +574,8 @@ unsafe fn uart_put(b: u8) {
 }
 
 pub(crate) unsafe fn uart_write(s: &str) {
+    // Etapa 74: acumula pós-exit no slot do baremetal-report (BlockIO).
+    baremetal_report::post_push(s);
     for b in s.bytes() {
         if b == b'\n' {
             uart_put(b'\r');
@@ -929,6 +931,11 @@ fn main() -> Status {
             uart_emit_kv("IA_LIVRE_NATIVE_BENCH_MS=", ms);
             uart_write("IA_LIVRE_NATIVE_BENCH_OK\n");
         }
+    }
+
+    // Etapa 74 — persistir pós-exit no slot BlockIO do baremetal-report.
+    unsafe {
+        baremetal_report::flush_post_exit();
     }
 
     halt()

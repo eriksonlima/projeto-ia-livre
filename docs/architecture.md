@@ -1,6 +1,6 @@
 # Arquitetura
 
-Visão do **Projeto IA Livre**. Detalhes evoluem por etapa e ADR; este documento fixa camadas, hipótese e o que está decidido vs **realmente** aberto (pós-E71).
+Visão do **Projeto IA Livre**. Detalhes evoluem por etapa e ADR; este documento fixa camadas, o que está decidido vs **realmente** aberto (pós-E73 / ADR 0026).
 
 Princípios: [`docs/manifesto.md`](manifesto.md).  
 Produto: [`docs/product-context.md`](product-context.md).  
@@ -16,12 +16,11 @@ Glossário: [`glossario.md`](glossario.md).
 | 3 | **Ambiente de autonomia** | Agentes, memória, ferramentas. Consome o runtime; **não** exige o SO (ADR 0001). |
 | 4 | **Rede IA Livre** | P2P: descoberta, identidade, tarefas, conhecimento. Nós nativos **e** em SO convencional. |
 
-## Hipótese de pesquisa
+## Hipótese de pesquisa (lab; fora do escopo de produto)
 
-**Afirmação:** um SO só para IA pode aproveitar melhor o hardware que um SO genérico otimizado para a mesma carga, se trouxer mecanismos nativos (memória model-aware, scheduler Prefill/Decode, etc.).
+**Afirmação histórica:** um SO só para IA pode aproveitar melhor o hardware que um SO genérico otimizado para a mesma carga.
 
-Comparar Linha A (Linux + runtime) vs Linha B (IA Livre + runtime nativo), mesma carga.  
-**Estado do pilar 1:** **`BLOQUEIO_FINAL`** (ADR [`0022`](adr/0022-bloqueio-final-hipotese-ab.md)) — espécie canônica / passo intermediário inviáveis no gate atual (ADR [`0020`](adr/0020-runtime-native-passo-intermediario-inviavel.md) / [`0021`](adr/0021-especie-canonica-linha-b-inviavel.md)); B55 adiada. **Sem** `COMPROVA` fingido.
+**Estado:** pilar 1 = **`BLOQUEIO_FINAL`** (ADR [`0022`](adr/0022-bloqueio-final-hipotese-ab.md)); **meta de produto arquivada** (ADR [`0026`](adr/0026-produto-sem-comprovacao-ab.md)) — sem `COMPROVA`/`REFUTA` no roadmap; B55 arquivada. Foco de produto = **Linha B** (bare-metal / runtime nativo / report).
 
 ## Decisões tomadas (resumo)
 
@@ -43,27 +42,28 @@ Comparar Linha A (Linux + runtime) vs Linha B (IA Livre + runtime nativo), mesma
 
 | Tema | Estado honesto |
 |------|----------------|
-| Hipótese A vs B / `COMPROVA` | **`BLOQUEIO_FINAL`**; reabertura só com critérios ADR 0022 (B55 adiada) |
-| `METAL_OK` em PC | Pendente de evidência real (E62 = skip honesto neste host) |
+| Hipótese A vs B / `COMPROVA` | **Arquivada** (ADR 0026); `BLOQUEIO_FINAL` (0022); sem reabrir no roadmap |
+| Pós-exit no `baremetal-report` | Próxima fatia Linha B (BlockIO append) |
 | DHT / NAT avançado | Adiado; relay intro ≠ DHT completo |
-| Simetria GPU A/B | Até passthrough VFIO utilizável (ADR 0023) |
-| TCP Rede no guest | **Inviável** no path atual (ADR 0024) — não “ainda a fazer” |
-| Inferência multi-GPU host plena (llama) | Além de `host_multi` placement; sem fingir TOKENS |
+| Simetria GPU A/B | Lab; até VFIO (ADR 0023) — ≠ meta de produto |
+| TCP Rede no guest | **Inviável** (ADR 0024) |
+| Inferência multi-GPU host plena (llama) | Além de `host_multi`; sem fingir TOKENS |
 
-**Já fechados (não listar como abertos):** REPL/`read_local`; mDNS; relay intro; KNOW; multi-GPU host_multi; ABI v1; consumo autonomia nativo; path metal SFS full.
+**Já fechados (não listar como abertos):** REPL/`read_local`; mDNS; relay intro; KNOW; multi-GPU host_multi; ABI v1; consumo autonomia nativo; path metal SFS full; `METAL_OK` (report ESP); checklist E58.
 
-## Estado do mapa (pós-E71)
+## Estado do mapa (pós-E73 / ADR 0026)
 
 | Faixa | Status |
 |-------|--------|
 | Kernel boot → ExitBoot → MEM_SCHED → ABI → obs → GPU nativo | Feito (`make verify`) |
 | Runtime host CPU/GPU + contrato shim E20 | Feito |
-| Linha B subset + Decode/`TOKENS_PER_S` | Feito; espécie canônica **bloqueada** |
-| Path metal SFS + bridge/consumo autonomia | Feito (host); `METAL_OK` pendente |
+| Linha B subset + Decode/`TOKENS_PER_S` | Feito (lab; espécie ≠ canônica) |
+| Path metal SFS + report ESP + `METAL_OK` | Feito |
 | Nó P2P v1 + bootstrap + mDNS + TASK + KNOW + relay | Feito |
 | Autonomia v1 + calc + REPL + read_local | Feito |
 | Bare-metal artefato / guia USB | Feito |
-| Hipótese A vs B comprovável no gate atual | **`BLOQUEIO_FINAL`** |
+| Checklist 3 pilares | **Ok** |
+| Hipótese A vs B como meta de produto | **Arquivada** (ADR 0026) |
 
 ## Referências próximas
 

@@ -547,7 +547,7 @@ Esperado: `IA_LIVRE_BAREMETAL_IMAGE_OK` + `EFI_SHA256=` / `EFI_BYTES=`. Default 
 
 **GGUF completo na ESP (Etapa 36):** opt-in `IA_LIVRE_BAREMETAL_FULL_GGUF=1` (após `./scripts/fetch-model.sh`) → `IA_LIVRE/model.gguf` + `IA_LIVRE_BAREMETAL_GGUF_OK`. Contrato: [`docs/gguf-baremetal-midia.md`](docs/gguf-baremetal-midia.md). Default do gate **não** exige o ~638 MiB.
 
-**Metal (Etapas 35 / 73):** canal **padrão** = report ESP `\IA_LIVRE\baremetal-report.txt` (ADR [`0025`](docs/adr/0025-baremetal-report-esp.md) / [`baremetal-report.md`](docs/baremetal-report.md)) — **sem** COM1. Serial legado ainda ok.  
+**Metal (Etapas 35 / 73 / 74):** canal **padrão** = report ESP `\IA_LIVRE\baremetal-report.txt` (ADR [`0025`](docs/adr/0025-baremetal-report-esp.md) / [`baremetal-report.md`](docs/baremetal-report.md)) — **sem** COM1. Pré-exit SFS + slot pós-exit BlockIO (`REPORT_POST_OK`). Serial legado ainda ok. Produto sem meta `COMPROVA` (ADR [`0026`](docs/adr/0026-produto-sem-comprovacao-ab.md)).  
 `IA_LIVRE_BAREMETAL_SKIP=0 IA_LIVRE_BAREMETAL_EVIDENCE=docs/evidence/boot-metal/….txt make verify-baremetal` → `IA_LIVRE_BAREMETAL_METAL_OK` (`BOOT_OK` + `OBS_OK` no path ESP; sem QEMU/OVMF). Fixture de formato: `docs/evidence/boot-metal/fixture-esp-report.txt`. Vídeo/foto ≠ gate.
 
 ### Gate gravar pendrive UEFI (Etapa 47 — adicional)
@@ -732,8 +732,9 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `docs/boot-hardware-real.md` — ESP/USB + gate de artefato (Etapa 30; QEMU ≠ metal) + writer Etapa 47
 - `Makefile` — `build` / `esp` / `baremetal-esp` / `run` / `verify` / `verify-baremetal` / `verify-write-usb` / …
 - `scripts/make-baremetal-esp.sh` / `scripts/verify-baremetal.sh` — artefato + gate Etapa 30 / metal E73
-- `docs/baremetal-report.md` — canal padrão evidências/métricas bare-metal na ESP (Etapa 73)
+- `docs/baremetal-report.md` — canal padrão evidências/métricas bare-metal na ESP (Etapas 73–74)
 - `docs/adr/0025-baremetal-report-esp.md` — ADR do canal ESP
+- `docs/adr/0026-produto-sem-comprovacao-ab.md` — produto sem COMPROVA / Linha B
 - `scripts/write-usb-esp.sh` / `scripts/verify-write-usb.sh` — gravar pendrive com confirmação (Etapa 47)
 - `docs/guia-primeiro-boot-usb.md` — onboarding USB (Etapa 57)
 - `scripts/prepare-baremetal-release.sh` / `scripts/verify-boot-guide-release.sh` — release + gate Etapa 57

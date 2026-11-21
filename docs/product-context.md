@@ -33,7 +33,9 @@ Detalhe técnico: [`docs/architecture.md`](architecture.md). Em resumo, o que ca
 
 ## Meta do protótipo (checklist)
 
-Critério verificável dos três pilares (hipótese A/B; USB/metal; Rede+autonomia sem exigir SO): [`prototipo-objetivo-atingido.md`](prototipo-objetivo-atingido.md). Celebrar só com evidência.
+Critério verificável dos três pilares: [`prototipo-objetivo-atingido.md`](prototipo-objetivo-atingido.md).  
+**Estado (2026-11-21): checklist cumprido** (pilar 1 = `BLOQUEIO_FINAL`, pilar 2 = `METAL_OK`, pilar 3 = host ok).  
+Evolução de produto: **Linha B** (SO / bare-metal / runtime nativo) — ADR [`0026`](adr/0026-produto-sem-comprovacao-ab.md). Sem buscar `COMPROVA` no roadmap.
 
 ## Não objetivos
 
@@ -41,32 +43,31 @@ Critério verificável dos três pilares (hipótese A/B; USB/metal; Rede+autonom
 - Substituir Linux em todos os cenários
 - Cobrar tokens no acesso comunitário básico
 - Exigir o SO para entrar na rede P2P
-- Declarar vitória da hipótese de pesquisa sem benchmark comparável
+- Declarar vitória da hipótese de pesquisa (`COMPROVA`) ou reabrir A/B no roadmap sem pedido explícito
 
-## Hipótese de pesquisa (métrica central)
+## Hipótese de pesquisa (arquivada como meta de produto)
 
-Queremos **comprovar ou refutar**, com método justo:
+Histórico de lab (não meta de produto — ADR 0026 / 0022):
 
 > O IA Livre, com mecanismos nativos de gerenciamento para inferência, aproveita melhor o hardware do que um Linux otimizado rodando carga equivalente.
 
-- **Comparar:** mesmo hardware, modelo, quantização e carga; Linha A (Linux + runtime otimizado) vs Linha B (IA Livre + runtime nativo). Ver architecture, o harness v1 em [`harness-linha-a-b.md`](harness-linha-a-b.md) e o instrumento de veredito (Etapa 22) em [`harness-a-b-comparavel.md`](harness-a-b-comparavel.md).
-- **Não conta como prova:** só empilhar o mesmo runtime em um kernel vazio; números anedóticos sem baseline equivalente; assumir ganho multi-GPU antes de existir o mecanismo; tratar B proxy (`PROXY_MS`) como se fosse `TOKENS_PER_S`.
+Instrumentos A/B permanecem no repo como lab (`INCONCLUSIVO` / `BLOQUEIO_FINAL`). **Não** geram etapas novas de produto.
 
-## Métricas de sucesso
+## Métricas de sucesso (produto)
 
-- Hipótese documentada e, nas etapas de runtime/benchmark, **comparável** (IA Livre vs Linux otimizado)
+- SO IA Livre bootável (QEMU + metal com report ESP) e caminho de IA nativo honesto
 - Comunidade capaz de contribuir e participar sem barreira de troca de SO
-- Entregas progressivas: boot QEMU → inferência CPU → nó P2P → autonomia → caminhos bare-metal/GPU — ver [`architecture.md`](architecture.md)
+- Rede + autonomia utilizáveis no host; Linha B evolui com evidência (`baremetal-report`, gates)
 
 ## Estado atual (produto)
 
+- Checklist 3 pilares **ok**; hipótese A/B **arquivada** (ADR 0026); B55 arquivada
 - Kernel UEFI + gates QEMU; obs GOP; GPU nativo sintético; ABI mínima v1 (`ABI_OK`)
-- Runtime host (CPU/GPU) + Linha B subset (`TOKENS_PER_S` medidos; espécie ≠ canônica)
-- Agente: allowlist `note`/`recall`/`help`/`calc` + REPL + `read_local` + consumo evidência nativa (`NATIVE_CONSUME_*`)
+- Runtime host (CPU/GPU) + Linha B subset (`TOKENS_PER_S` medidos; espécie ≠ canônica — lab)
+- Agente: allowlist `note`/`recall`/`help`/`calc` + REPL + `read_local` + consumo evidência nativa
 - Rede: v1 + bootstrap + mDNS + TASK + KNOW + relay intro; TCP guest inviável (bridge E52)
-- Harness A vs B: **INCONCLUSIVO** / teto; pilar 1 em **`BLOQUEIO_FINAL`** (ADR [`0022`](adr/0022-bloqueio-final-hipotese-ab.md)) — sem `COMPROVA` fingido
-- Path metal: SFS full (E63); `METAL_OK` pendente de log PC
-- Bare-metal: artefato ESP + guia/release USB (QEMU ≠ PC real)
+- Path metal: SFS full (E63); **`METAL_OK`** via report ESP (E73)
+- Bare-metal: artefato ESP + guia/release USB; canal padrão = report (ADR 0025)
 - GPU host: shard + `host_multi` (skip se &lt;2 devices); guest passthrough skip sem VFIO
 
 Glossário: [`glossario.md`](glossario.md). Detalhe técnico: [`architecture.md`](architecture.md). Operacional: `AGENTS.md`.
