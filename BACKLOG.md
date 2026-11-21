@@ -10,12 +10,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Produto (ADR 0027):** **Linux IA-nativo** (TTY, shell, qualquer GGUF, tuning/kernel Linux). Linha B UEFI **arquivada**. Ordem = prioridade (topo primeiro). Fila até o **produto final** (métricas em `docs/product-context.md`).
 
-### B81 — Writer USB grava imagem bootável
-- Issue: [#87](https://github.com/eriksonlima/projeto-ia-livre/issues/87)
-- Origem: plano backlog produto final / ADR 0027
-- Pronto quando: `write-linux-usb.sh` grava ISO/live com `--confirm`/`--yes`; gate artefato sem device; ≠ ESP UEFI
-- Deps: B80
-
 ### B82 — Release packaging produto
 - Issue: [#88](https://github.com/eriksonlima/projeto-ia-livre/issues/88)
 - Origem: plano backlog produto final / ADR 0027
@@ -77,6 +71,13 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: B78, B81, B84, B85, B90
 
 ## Promovidas / arquivadas
+
+### B81 — Writer USB grava imagem bootável
+- Issue: [#87](https://github.com/eriksonlima/projeto-ia-livre/issues/87)
+- Origem: plano backlog produto final / ADR 0027
+- Pronto quando: writer grava ISO com confirm; gate artefato; ≠ ESP
+- Promovido para Etapa 86.
+- Etapa: [Etapa 86 — Writer USB ISO](ROADMAP.md)
 
 ### B80 — ISO híbrida / live USB bootável
 - Issue: [#86](https://github.com/eriksonlima/projeto-ia-livre/issues/86)

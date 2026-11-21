@@ -2,15 +2,14 @@
 
 ## O que funciona
 
-- Etapas 1–82; produto Linux IA-nativo
-- E82: rootfs Debian bookworm + overlay; QEMU 9p; `IA_LIVRE_DISTRO_DEBIAN_QEMU_OK`
-- Stack host + overlay + USB tarball (E77–81)
+- Etapas 1–86; Linux IA-nativo até ISO live + writer USB
+- E82–84: Debian QEMU, smoke Debian, first-boot
+- E85–86: ISO híbrida UEFI + `dd` com confirmação
 
 ## Bloqueios
 
-- ISO live ainda não (B80+)
-- Autologin root no serial ainda falha auth (conf oneshot basta para E82)
+- Release packaging / systemd / smokes Rede-Autonomia-GPU / kernel custom = Abertas B82+
 
 ## Roadmap
 
-- E82 feita; Abertas B78–B91
+- Sem em_andamento; topo Abertas = B82

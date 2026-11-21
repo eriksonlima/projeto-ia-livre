@@ -23,11 +23,13 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 
 ```bash
 ./scripts/write-linux-usb.sh --list
-./scripts/write-linux-usb.sh --device /dev/sdX --confirm /dev/sdX --yes
+# ISO live (recomendado — destrutivo no device inteiro):
+./scripts/write-linux-usb.sh --mode iso --device /dev/sdX --confirm /dev/sdX --yes
+# Tarball em partição já formatada (legado):
+./scripts/write-linux-usb.sh --mode tar --device /dev/sdX --confirm /dev/sdX --yes
 ```
 
-Isso formata uma partição FAT/ext4 **só com confirmação explícita** e copia o artefato (não é o writer ESP UEFI).
-
+`--mode iso` faz `dd` da ISO híbrida (E85). Exige `--confirm`/`--yes` idênticos. **≠** writer ESP UEFI.
 ## No PC alvo
 
 1. Instale Debian mínimo TTY (ou use live Debian).

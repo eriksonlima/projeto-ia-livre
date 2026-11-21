@@ -2,14 +2,14 @@
 
 ## Foco atual
 
-- Etapas 1–85 **feitas**
-- E85: ISO híbrida `ia-livre-linux.iso` + QEMU UEFI OK
-- Abertas: B81–B91 (topo B81 writer USB grava ISO)
+- Etapas 1–86 **feitas**
+- Onda B: E85 ISO live + E86 writer `--mode iso`
+- Abertas: B82–B91 (topo **B82** release packaging)
 
 ## Próximo passo
 
-- Promover **B81** writer USB para ISO bootável
+- Promover **B82** release packaging produto
 
 ## Notas
 
-- ISO ~916 MiB; precisa mtools (`mformat`); prova QEMU = OVMF `-cdrom`
+- ISO ~287 MiB sem GGUF; gravação real: `write-linux-usb.sh --mode iso --device … --confirm … --yes`

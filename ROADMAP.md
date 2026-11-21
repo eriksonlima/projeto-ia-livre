@@ -659,3 +659,12 @@ Pronto quando: artefato bootável (live/híbrido); gate; ≠ tarball E81.
 Project: https://github.com/users/eriksonlima/projects/1  
 **Desfecho:** `ia-livre-linux.iso` (squashfs+grub-mkrescue); QEMU UEFI `-cdrom` → `DISTRO_ISO_QEMU_OK`; `make verify-distro-iso`.
 
+## Etapa 86 — Writer USB grava imagem bootável
+
+Status: feita  
+Issue: [#87](https://github.com/eriksonlima/projeto-ia-livre/issues/87)  
+Spec: specs/linux-usb-writer-iso/  
+Pronto quando: writer grava ISO com `--confirm`/`--yes`; gate artefato sem device; ≠ ESP.  
+Project: https://github.com/users/eriksonlima/projects/1  
+**Desfecho:** `write-linux-usb.sh --mode iso` (`dd`); prepare inclui ISO; `verify-linux-usb-artifact`.
+
