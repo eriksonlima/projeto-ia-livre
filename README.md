@@ -29,5 +29,6 @@ Veja `AGENTS.md` → **Como verificar**.
 - Arquitetura: `docs/architecture.md`
 - Harness A vs B (metodologia): `docs/harness-linha-a-b.md` — comparável / veredito: `docs/harness-a-b-comparavel.md` (veja `AGENTS.md` → gates)
 - ADRs: `docs/adr/`
+- Contrato nativo (consumidor / Etapa 20): `docs/runtime-contrato-nativo.md` — veja também `AGENTS.md` → gate `verify-runtime-contract`
 - Contexto ativo (Memory Bank): `memory-bank/activeContext.md`
 - Contribuição: `CONTRIBUTING.md`

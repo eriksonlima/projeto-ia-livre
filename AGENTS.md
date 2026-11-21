@@ -42,8 +42,8 @@ make verify   # gate automatizado do kernel (marcadores: ver docs/kernel-alem-do
 
 Equivalente interativo: `./scripts/run-qemu.sh`.
 
-Na serial: Etapa 10 (`BOOT_OK` … `ALLOC_OK`) + `IA_LIVRE_EXIT_BOOT_BEGIN`; após ExitBootServices (UART COM1): `EXIT_MAP_PAGES=` / `EXIT_MAP_OK` / `EXIT_MEM_OK` / `EXIT_BOOT_OK`.  
-Contratos: [`docs/kernel-alem-do-boot.md`](docs/kernel-alem-do-boot.md), [`docs/kernel-pos-boot-services.md`](docs/kernel-pos-boot-services.md). Ainda **sem** inferência no kernel.
+Na serial: Etapa 10 (`BOOT_OK` … `ALLOC_OK`) + `IA_LIVRE_EXIT_BOOT_BEGIN`; após ExitBootServices (UART COM1): `EXIT_MAP_PAGES=` / `EXIT_MAP_OK` / `EXIT_MEM_OK` / `EXIT_BOOT_OK`; em seguida demo Etapa 19 (`TYPED_*` / `PHASE=` / `QUANTUM=` / `MEM_SCHED_OK` — ver [`docs/memoria-scheduler-impl-minima.md`](docs/memoria-scheduler-impl-minima.md)); depois proxy Linha B (`NATIVE_BENCH_*`).  
+Contratos: [`docs/kernel-alem-do-boot.md`](docs/kernel-alem-do-boot.md), [`docs/kernel-pos-boot-services.md`](docs/kernel-pos-boot-services.md), [`docs/memoria-scheduler-impl-minima.md`](docs/memoria-scheduler-impl-minima.md). Ainda **sem** inferência / GGUF no kernel.
 
 ### Runtime de inferência (host — Etapas 5 / 8)
 
@@ -171,10 +171,11 @@ Saída esperada: `IA_LIVRE_RUNTIME_USED=1`, `IA_LIVRE_TOOL_OK`, `IA_LIVRE_MEMORY
 
 Gate automatizado: `make verify-agent` (não exige QEMU/UEFI nem o nó P2P; requer GGUF).
 
-### Harness Linha A vs Linha B (Etapas 9 / 12)
+### Harness Linha A vs Linha B (Etapas 9 / 12 / 20 / 21)
 
-Metodologia: [`docs/harness-linha-a-b.md`](docs/harness-linha-a-b.md); caminho B mínimo: [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md).  
-**Não** confundir com métricas dos protótipos CPU/GPU. Linha A = host + GGUF; Linha B = proxy pós-ExitBoot no QEMU (**não** TinyLlama). Hipótese **não** comprovada.
+Metodologia: [`docs/harness-linha-a-b.md`](docs/harness-linha-a-b.md); caminho B mínimo: [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md); contrato: [`docs/runtime-contrato-nativo.md`](docs/runtime-contrato-nativo.md).  
+**Não** confundir com métricas dos protótipos CPU/GPU. Linha A = host + GGUF; Linha B = proxy pós-ExitBoot no QEMU **+** evidência `MEM_SCHED` (E19) reemitida como `HARNESS_CONTRACT_*` (**não** TinyLlama).  
+**Etapa 21:** deps 19/20 ok (`CONTRACT_READY=1`); carga GGUF real em B **bloqueada** (`B_BLOCK=no_gguf_path`, `GGUF_STATUS=blocked`, `GGUF_NATIVE_LOADER=absent`) — **sem** inventar `TOKENS_PER_S`. Spec: `specs/carga-gguf-linha-b/`. Hipótese **não** comprovada.
 
 Pré-requisitos: runtime CPU (GGUF) para A; QEMU/OVMF para B. Sem GPU no harness v1.
 
@@ -188,13 +189,27 @@ cargo build -p ia-livre-runtime
 # Linha A — emite IA_LIVRE_HARNESS_LINE=A + IA_LIVRE_HARNESS_OK + load/tokens
 ./scripts/run-harness-line-a.sh
 
-# Linha B — QEMU proxy pós-ExitBoot (não TinyLlama; hipótese não comprovada)
+# Linha B — QEMU proxy + HARNESS_CONTRACT_* + bloqueio GGUF honesto (não TinyLlama)
 ./scripts/run-harness-line-b.sh
 ```
 
-Linha B (Etapa 12): proxy pós-ExitBoot no QEMU — **não** é TinyLlama; ver [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md). Hipótese **não** comprovada.
+Linha B: proxy E12 **preservado** (`LOAD_KIND=proxy`) + contrato E19 (`HARNESS_CONTRACT_*`, `CONTRACT_READY=1`) + alvos `GGUF_TARGET_*` + `B_BLOCK=no_gguf_path` / `GGUF_STATUS=blocked`.  
+**Proibido** `TOKENS_PER_S` / `LOAD_KIND=gguf` / `MODEL=` TinyLlama sem carga real. Opcional: `IA_LIVRE_HARNESS_B_MODE=block-status` → `LOAD_KIND_GGUF=blocked`. Ver [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md). Hipótese **não** comprovada.
 
-Gate automatizado: `make verify-harness` (A = GGUF no host; B = QEMU/kernel proxy; requer GGUF para A).
+Gate automatizado: `make verify-harness` (A = GGUF; B = proxy + contrato + bloqueio GGUF; requer GGUF para A).
+
+### Contrato nativo — consumidor / shim host (Etapa 20)
+
+Consumidor do contrato ADR 0003: (1) **shim host** — sem QEMU; (2) **harness B** observa serial E19. Doc: [`docs/runtime-contrato-nativo.md`](docs/runtime-contrato-nativo.md). Hipótese **não** comprovada; **proibido** `TOKENS_PER_S`. Shim host **≠** Linha B.
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+cargo build -p ia-livre-runtime-contract
+cargo run -p ia-livre-runtime-contract
+# Esperado: IA_LIVRE_CONTRACT_* + IA_LIVRE_RUNTIME_CONTRACT_OK
+make verify-runtime-contract
+# Evidência nativa: ./scripts/run-harness-line-b.sh (HARNESS_CONTRACT_*)
+```
 
 ### Harness A vs B comparável (Etapa 22)
 
@@ -218,7 +233,7 @@ Timeout: `VERIFY_HARNESS_COMPARABLE_TIMEOUT` (default = `VERIFY_HARNESS_TIMEOUT`
 
 ## Como verificar
 
-### Gate do kernel (Etapas 4 / 10 / 11)
+### Gate do kernel (Etapas 4 / 10 / 11 / 12 / 19)
 
 ```bash
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
@@ -227,6 +242,7 @@ test -d kernel && test -f kernel/Cargo.toml && test -f kernel/src/main.rs
 test -f Makefile && test -f Cargo.toml
 test -f docs/kernel-alem-do-boot.md
 test -f docs/kernel-pos-boot-services.md
+test -f docs/memoria-scheduler-impl-minima.md
 make build
 test -f target/x86_64-unknown-uefi/debug/ia-livre-kernel.efi
 make verify
@@ -234,10 +250,12 @@ grep -q 'IA_LIVRE_BOOT_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_MEM_MAP_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_ALLOC_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_EXIT_BOOT_OK' kernel/src/main.rs
+grep -q 'IA_LIVRE_MEM_SCHED_OK' kernel/src/main.rs
+grep -q 'IA_LIVRE_TYPED_WEIGHTS_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_NATIVE_BENCH_OK' kernel/src/main.rs
 ```
 
-`make verify` falha se faltarem BOOT/MEM/ALLOC/EXIT_* ou `NATIVE_BENCH_OK` (proxy Linha B). Timeout padrão 45s; `VERIFY_TIMEOUT`. Contratos: kernel-alem-do-boot, kernel-pos-boot-services, runtime-nativo-linha-b.
+`make verify` falha se faltarem BOOT/MEM/ALLOC/EXIT_* / `MEM_SCHED_OK` (Etapa 19) / `NATIVE_BENCH_OK` (proxy Linha B). Timeout padrão 45s; `VERIFY_TIMEOUT`. Contratos: kernel-alem-do-boot, kernel-pos-boot-services, memoria-scheduler-impl-minima, runtime-nativo-linha-b.
 
 ### Gate do runtime (Etapa 5 — adicional)
 
@@ -311,9 +329,9 @@ grep -q 'IA_LIVRE_AGENT_OK' agent/src/main.rs
 
 `make verify-agent` falha se o modelo estiver ausente ou se faltarem `IA_LIVRE_TOOL_OK` / `IA_LIVRE_MEMORY_OK` / `IA_LIVRE_AGENT_OK` (timeout padrão 300s; `VERIFY_AGENT_TIMEOUT`). Gates do kernel, runtime e nó permanecem.
 
-### Gate do harness Linha A vs Linha B (Etapas 9 / 12 — adicional)
+### Gate do harness Linha A vs Linha B (Etapas 9 / 12 / 20 — adicional)
 
-Requer GGUF local para A e QEMU/UEFI para B. **Não** prova a hipótese — A = carga canônica; B = proxy pós-ExitBoot.
+Requer GGUF local para A e QEMU/UEFI para B. **Não** prova a hipótese — A = carga canônica; B = proxy + evidência `MEM_SCHED` (sem `TOKENS_PER_S`).
 
 ```bash
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
@@ -327,9 +345,25 @@ test -f docs/runtime-nativo-linha-b.md
 make verify-harness
 grep -q 'IA_LIVRE_HARNESS_OK' scripts/run-harness-line-a.sh
 grep -q 'post_exit_microbench' scripts/run-harness-line-b.sh
+grep -q 'HARNESS_CONTRACT_BACKEND=native_qemu' scripts/run-harness-line-b.sh
 ```
 
-`make verify-harness` exige A (`LINE=A`, `OK`, load/tokens) **e** B (`LINE=B`, `OK`, `PROXY=*`, sem `TOKENS_PER_S` / sem `B_SKIP`). Timeout padrão 300s; `VERIFY_HARNESS_TIMEOUT`. Gates existentes permanecem.
+`make verify-harness` exige A (`LINE=A`, `OK`, load/tokens) **e** B (`LINE=B`, `OK`, `PROXY=*`, `HARNESS_CONTRACT_MEM_SCHED=OK`, `CONTRACT_READY=1`, `GGUF_TARGET_*`, `GGUF_NATIVE_LOADER=absent`, `B_BLOCK=no_gguf_path` (ou legado), `GGUF_STATUS=blocked`, sem `TOKENS_PER_S` / sem `LOAD_S` / sem `B_SKIP` / sem `LOAD_KIND=gguf` fingido). Timeout padrão 300s; `VERIFY_HARNESS_TIMEOUT`. Gates existentes permanecem.
+
+### Gate do contrato nativo host (Etapa 20 — adicional)
+
+Só Rust no host. **Não** usa QEMU nem GGUF. Shim ≠ Linha B. Hipótese **não** comprovada. Evidência QEMU do contrato fica em `verify-harness` (B).
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+test -d runtime-contract && test -f runtime-contract/Cargo.toml && test -f runtime-contract/src/main.rs
+test -f scripts/verify-runtime-contract.sh && test -f docs/runtime-contrato-nativo.md
+make verify-runtime-contract
+grep -q 'IA_LIVRE_RUNTIME_CONTRACT_OK' runtime-contract/src/main.rs
+grep -q 'IA_LIVRE_CONTRACT_BACKEND' runtime-contract/src/main.rs
+```
+
+`make verify-runtime-contract` exige `CONTRACT_BACKEND=host_shim`, alloc Weights/KvCache, fases Prefill+Decode e `RUNTIME_CONTRACT_OK` (timeout padrão 30s; `VERIFY_RUNTIME_CONTRACT_TIMEOUT`). Gates existentes permanecem.
 
 ### Gate do harness A vs B comparável (Etapa 22 — adicional)
 
@@ -368,22 +402,26 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `kernel/` — crate do kernel IA Livre (`Cargo.toml`, `src/main.rs`), target UEFI
 - `docs/kernel-alem-do-boot.md` — contrato Etapa 10 (mapa UEFI + alloc/bump; marcadores serial)
 - `docs/kernel-pos-boot-services.md` — contrato Etapa 11 (ExitBoot + UART COM1; marcadores `EXIT_*`)
+- `docs/memoria-scheduler-impl-minima.md` — contrato Etapa 19 (allocator tipado Weights/KvCache + Prefill/Decode; `MEM_SCHED_OK`)
 - `runtime/` — protótipo de runtime de inferência (host, llama-cpp-2; CPU default + features `cuda`/`vulkan`)
+- `runtime-contract/` — shim host do contrato nativo Weights/KvCache + fases (Etapa 20; ≠ Linha B)
+- `docs/runtime-contrato-nativo.md` — contrato consumidor + marcadores `CONTRACT_*` / `RUNTIME_CONTRACT_OK`
 - `node/` — protótipo do nó Rede IA Livre (host; independente do SO)
 - `agent/` — protótipo do ambiente de autonomia (host; consome runtime; independente do SO)
 - `models/` — pesos GGUF locais (gitignored); obter com `./scripts/fetch-model.sh`
-- `Cargo.toml` — workspace Cargo (membros `kernel`, `runtime`, `node`, `agent`)
+- `Cargo.toml` — workspace Cargo (membros `kernel`, `runtime`, `runtime-contract`, `node`, `agent`)
 - `docs/rede-ia-livre-prototipo.md` — framing/descoberta/mensagem do protótipo P2P (Etapa 6)
 - `docs/desenho-protocolo-rede-ia-livre.md` — desenho Rede IA Livre v1 (ADR 0004; não implementado)
 - `docs/adr/0004-stack-protocolo-rede-ia-livre.md` — ADR da stack candidata P2P
 - `docs/ambiente-autonomia-prototipo.md` — loop/memória/ferramenta do protótipo de autonomia (Etapa 7)
 - `docs/desenho-autonomia-v1.md` — escopo autonomia v1 (ADR 0005; não implementado)
 - `docs/adr/0005-autonomia-v1-utilizavel.md` — ADR do escopo v1
-- `Makefile` — `build` / `esp` / `run` / `verify` / `verify-runtime` / `verify-runtime-gpu` / `verify-node` / `verify-agent` / `verify-harness` / `verify-harness-comparable` / `clean`
+- `Makefile` — `build` / `esp` / `run` / `verify` / `verify-runtime` / `verify-runtime-gpu` / `verify-runtime-contract` / `verify-node` / `verify-agent` / `verify-harness` / `verify-harness-comparable` / `clean`
 - `scripts/run-qemu.sh` — atalho para `make run`
-- `scripts/verify-boot.sh` — gate serial do kernel (`BOOT_OK` + mem/alloc + `EXIT_BOOT_OK`)
+- `scripts/verify-boot.sh` — gate serial do kernel (`BOOT_OK` + mem/alloc + `EXIT_BOOT_OK` + `MEM_SCHED_OK` + `NATIVE_BENCH_OK`)
 - `scripts/verify-runtime.sh` — gate do runtime CPU (`IA_LIVRE_INFER_OK` + métricas)
 - `scripts/verify-runtime-gpu.sh` — gate GPU (`IA_LIVRE_ACCEL` ≠ `cpu`; skip `IA_LIVRE_GPU_SKIP`)
+- `scripts/verify-runtime-contract.sh` — gate shim host do contrato nativo (`RUNTIME_CONTRACT_OK`)
 - `docs/runtime-inferencia-gpu-metricas.md` — métricas do protótipo GPU no host
 - `docs/adr/0002-aceleracao-gpu-host-llama-cpp.md` — CUDA canônico / Vulkan alternativa
 - `scripts/verify-node.sh` — gate do nó Rede IA Livre (`IA_LIVRE_PEER_OK` + `IA_LIVRE_MSG_OK`)
@@ -395,14 +433,14 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `docs/harness-perfis-a-otimizada-gpu.md` — perfis A otimizada / GPU (Etapa 18; gate permanece `verify-harness`)
 - `docs/runtime-nativo-linha-b.md` — contrato Linha B mínima (proxy pós-ExitBoot)
 - `docs/desenho-memoria-scheduler-nativo.md` — desenho candidato Weights/KvCache + Prefill/Decode (ADR 0003)
-- `docs/adr/0003-memoria-model-aware-e-scheduler-fases.md` — ADR do desenho (sem implementação)
+- `docs/adr/0003-memoria-model-aware-e-scheduler-fases.md` — ADR do desenho; impl. mínima = Etapa 19
 - `docs/desenho-gpu-manager-multi-gpu.md` — desenho GPU manager / multi-GPU (ADR 0006; não implementado)
 - `docs/adr/0006-gpu-manager-multi-gpu.md` — ADR do escopo candidato (host ≠ nativo)
 - `LICENSE` / `NOTICE` — Apache-2.0 (1ª parte); ADR [`0007`](docs/adr/0007-licencas-por-componente.md)
 - `docs/licencas-terceiros.md` — aviso de deps (llama.cpp, uefi, …)
 - `scripts/run-harness-line-a.sh` — corrida Linha A (wrapper do runtime, marcadores `HARNESS_`)
-- `scripts/run-harness-line-b.sh` — Linha B via QEMU (proxy; `HARNESS_OK` + `PROXY_*`)
-- `scripts/verify-harness.sh` — gate A (GGUF) + B (proxy QEMU)
+- `scripts/run-harness-line-b.sh` — Linha B via QEMU (proxy + `HARNESS_CONTRACT_*` + bloqueio GGUF; `HARNESS_OK`)
+- `scripts/verify-harness.sh` — gate A (GGUF) + B (proxy QEMU + contrato + bloqueio GGUF)
 - `scripts/run-harness-a-b-comparable.sh` — corrida A+B + `VERDICT`/`VERDICT_REASON` (Etapa 22)
 - `scripts/verify-harness-comparable.sh` — gate do instrumento comparável
 - `build/esp/` — ESP gerada (gitignored via `build/`)

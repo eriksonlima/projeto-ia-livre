@@ -8,49 +8,45 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-### B14 — Runtime falando o contrato nativo (além do proxy Linha B)
-
-- Issue: [#20](https://github.com/eriksonlima/projeto-ia-livre/issues/20)
-- Origem: sequência ADR 0003 + limite da Etapa 12 (proxy ≠ carga real)
-- Notas: runtime exerce memória tipada/fases; harness B honesto. Depende de B13.
-- Pronto quando (candidato): evidência verificável do contrato; sem fingir `TOKENS_PER_S` GGUF se ainda não houver.
-
-### B15 — Carga GGUF canônica na Linha B (mínimo honesto)
-
-- Issue: [#21](https://github.com/eriksonlima/projeto-ia-livre/issues/21)
-- Origem: `docs/runtime-nativo-linha-b.md` / architecture (GGUF em B aberto)
-- Notas: caminho mínimo da carga canônica do harness em B (QEMU/IA Livre). Depende de B13/B14.
-- Pronto quando (candidato): métricas B em espécie comparáveis às de A, ou bloqueio honesto documentado.
-
-### B17 — Protocolo Rede IA Livre v1 (impl. em node/)
-
-- Issue: [#23](https://github.com/eriksonlima/projeto-ia-livre/issues/23)
-- Origem: Etapa 14 / ADR 0004; `node/` ainda é protótipo E6
-- Notas: ed25519/PeerId, HELLO assinado, IDENT, MSG/ACK, PING/PONG; sem libp2p/NAT/DHT; independente do SO.
-- Pronto quando (candidato): contratos do desenho em `node/` + gate `verify-node` (ou extensão).
-
-### B18 — Autonomia v1 utilizável (impl. em agent/)
-
-- Issue: [#24](https://github.com/eriksonlima/projeto-ia-livre/issues/24)
-- Origem: Etapa 15 / ADR 0005; `agent/` ainda é protótipo E7
-- Notas: `--prompt`, allowlist `note`/`recall`/`help`, política N=8; host only.
-- Pronto quando (candidato): prova v1 com ≥2 ferramentas + marcadores de política; `verify-agent` preservado/estendido.
-
-### B19 — GPU manager / multi-GPU (protótipo mínimo)
-
-- Issue: [#25](https://github.com/eriksonlima/projeto-ia-livre/issues/25)
-- Origem: Etapa 16 / ADR 0006; E8 = host GPU ≠ manager nativo
-- Notas: enum/afinidade/placement e/ou shard documentado; posterior à trilha da hipótese.
-- Pronto quando (candidato): caminho verificável; skip/gate honesto; sem prova A vs B via multi-GPU.
+_(nenhuma — B15–B19 já promovidas às Etapas 21–25)_
 
 ## Promovidas / arquivadas
 
+### B15 — Carga GGUF canônica na Linha B (mínimo honesto)
+
+- Promovido para Etapa 21 do roadmap — **feita** (Tasks 1–4; bloqueio honesto `no_gguf_path`).
+- Issue: [#21](https://github.com/eriksonlima/projeto-ia-livre/issues/21)
+- Etapa: [Etapa 21 — Carga GGUF canônica na Linha B (mínimo honesto)](ROADMAP.md)
+
 ### B16 — Harness A vs B comparável (prova ou refutação da hipótese)
 
-- Promovido para Etapa 22 do roadmap (`pendente` em paralelo à Etapa 19 `em_andamento`; branch `etapa-b16-harness-comparavel` / worktree `projeto-ia-livre-b16`).
+- Promovido para Etapa 22 do roadmap (`em_andamento`; branch `etapa-b16-harness-comparavel`).
 - Issue: [#22](https://github.com/eriksonlima/projeto-ia-livre/issues/22)
 - Etapa: [Etapa 22 — Harness A vs B comparável (prova ou refutação da hipótese)](ROADMAP.md)
-- Depende: B15 / Etapa 21 (carga GGUF em B); sem prova falsa sem carga real.
+
+### B17 — Protocolo Rede IA Livre v1 (impl. em node/)
+
+- Promovido para Etapa 23 do roadmap (`pendente`; trabalho em branch paralela — não duplicar).
+- Issue: [#23](https://github.com/eriksonlima/projeto-ia-livre/issues/23)
+- Etapa: Etapa 23
+
+### B18 — Autonomia v1 utilizável (impl. em agent/)
+
+- Promovido para Etapa 24 do roadmap (`pendente`; trabalho em branch paralela — não duplicar).
+- Issue: [#24](https://github.com/eriksonlima/projeto-ia-livre/issues/24)
+- Etapa: Etapa 24
+
+### B19 — GPU manager / multi-GPU (protótipo mínimo)
+
+- Promovido para Etapa 25 do roadmap (`pendente`; trabalho em branch paralela — não duplicar).
+- Issue: [#25](https://github.com/eriksonlima/projeto-ia-livre/issues/25)
+- Etapa: Etapa 25
+
+### B14 — Runtime falando o contrato nativo (além do proxy Linha B)
+
+- Promovido para Etapa 20 do roadmap — **feita** (Tasks 1–4; harness B + shim host).
+- Issue: [#20](https://github.com/eriksonlima/projeto-ia-livre/issues/20)
+- Etapa: [Etapa 20 — Runtime falando o contrato nativo (além do proxy Linha B)](ROADMAP.md)
 
 ### B13 — Memória model-aware + scheduler por fases (impl. mínima)
 

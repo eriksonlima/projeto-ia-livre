@@ -2,23 +2,16 @@
 
 ## O que funciona
 
-- Gates de produto; ADRs 0001–0007; LICENSE Apache-2.0
-- Etapas 1–18 (fundação → protótipos host → kernel até proxy Linha B → desenhos → licenças → perfis harness)
-- Lease + skill `claim-agente-paralelo`
-- Backlog Abertas: B13–B19 (#19–#25)
+- Etapas 1–21 feitas
+- E21: bloqueio honesto GGUF em B (`no_gguf_path`) + `CONTRACT_READY`
+- E22 (em andamento): instrumento comparável (Tasks 1–3 na branch) — validar pós-merge
 
 ## Bloqueios
 
-- Nenhuma etapa `em_andamento` — falta promover do backlog para retomar implementação
-- Hipótese A vs B **não** comprovada (B ainda = proxy; sem GGUF canônico em B)
-- Implementações dos desenhos ainda abertas (memória/scheduler, P2P v1, autonomia v1, GPU manager)
+- Hipótese A vs B: B ainda sem GGUF real → veredito esperado INCONCLUSIVO
 
 ## Por etapa
 
-- 1–18: feitas
-- Próxima candidata (topo Abertas): B13 — memória model-aware + scheduler (impl. mínima) → #19
-
-## Paralelo B16 (branch)
-
-- Etapa 22 `pendente` (#22): instrumento comparável entregue (doc + script + gate); veredito honesto `INCONCLUSIVO` enquanto B=proxy
-- Bloqueio para COMPROVA/REFUTA: depende B15 (GGUF em B) / Etapas 20–21
+- 1–21: feitas
+- 22: em_andamento (validação pós-merge E21)
+- 23–25: pendente (branches paralelas)

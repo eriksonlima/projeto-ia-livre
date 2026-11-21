@@ -2,30 +2,23 @@
 
 ## Foco atual
 
-- **Etapa 19** `em_andamento` — Memória model-aware + scheduler por fases (impl. mínima)
-- Issue [#19](https://github.com/eriksonlima/projeto-ia-livre/issues/19); Project: https://github.com/users/eriksonlima/projects/1
-- Spec alvo: `specs/memoria-scheduler-impl-minima/` (a gerar)
-- Lease: `cursor-agent-principal` em `AGENT_CLAIM.md`
+- **Etapa 22** `em_andamento` — Harness A vs B comparável (prova ou refutação)
+- Issue [#22](https://github.com/eriksonlima/projeto-ia-livre/issues/22)
+- Spec: `specs/harness-a-b-comparavel/`
+- Branch/worktree: `etapa-b16-harness-comparavel` / `projeto-ia-livre-b16`
+- Lease: `cursor-agent-principal` (E22)
 
 ## Mudanças recentes
 
-- Promovido B13 → Etapa 19 (promoção autônoma após “continuar”)
-- Labels issue #19: `roadmap` + `status:em_andamento` (removido `backlog`); item no Project V2
+- E21 feita (bloqueio `no_gguf_path`); merge main → b16 em andamento
+- Tasks 1–3 da E22 já existiam na branch; validar gate pós-merge
 
 ## Próximo passo
 
-- Especificar + fatiar Etapa 19; implementar tasks uma a uma com gate `make verify`
+- Resolver merge; `make verify-harness` + `make verify-harness-comparable`
+- Fechar E22 se veredito INCONCLUSIVO honesto (B=proxy) cumprir Pronto quando
 
 ## Notas
 
-- Sem GGUF; sem prova da hipótese; sem ABI estável/multi-tenant/GPU manager
-- ADR 0003 + `docs/desenho-memoria-scheduler-nativo.md`
-
-## Paralelo (esta branch)
-
-- **Etapa 22** `pendente` — B16 Harness A vs B comparável (Issue #22)
-- Branch/worktree: `etapa-b16-harness-comparavel` / `projeto-ia-livre-b16`
-- Spec: `specs/harness-a-b-comparavel/` (tasks 1–3 feitas)
-- Gate: `make verify-harness-comparable` → `VERDICT=INCONCLUSIVO` (B ainda proxy; aguarda B15)
-- **Não** claimou lease da Etapa 19; **não** promoveu a `em_andamento`
-
+- Com B=proxy / `no_gguf_path`, veredito deve ser INCONCLUSIVO — não COMPROVA/REFUTA
+- Não claimar 23–25

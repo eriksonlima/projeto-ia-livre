@@ -6,11 +6,11 @@ Regra: `.cursor/rules/agentes-em-paralelo.mdc`.
 ## Estado atual
 
 - **holder:** cursor-agent-principal
-- **etapa:** 19 — Memória model-aware + scheduler por fases (impl. mínima)
-- **issue:** #19
-- **paths:** ROADMAP.md, BACKLOG.md, memory-bank/, specs/memoria-scheduler-impl-minima/, kernel/, docs/, AGENTS.md, Makefile, scripts/
-- **since:** 2026-11-21T00:00:49Z
-- **expires:** 2026-11-21T02:00:49Z
+- **etapa:** 22 — Harness A vs B comparável (prova ou refutação da hipótese)
+- **issue:** #22
+- **paths:** ROADMAP.md, BACKLOG.md, memory-bank/, specs/harness-a-b-comparavel/, docs/, AGENTS.md, Makefile, scripts/
+- **since:** 2026-11-21T00:55:00Z
+- **expires:** 2026-11-21T02:55:00Z
 
 ## Como usar
 

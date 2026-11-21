@@ -18,6 +18,41 @@ const NATIVE_BENCH_ITERS: u64 = 200_000;
 /// Frequência TSC assumida no QEMU para converter ciclos → ms (documentada).
 const TSC_HZ_ASSUMED: u64 = 2_000_000_000;
 
+/// Etapa 19 — tamanhos fixos do allocator tipado (docs/memoria-scheduler-impl-minima.md).
+const TYPED_WEIGHTS_BYTES: usize = 128;
+const TYPED_KVCACHE_BYTES: usize = 256;
+/// Política de quantum mínima (Prefill > Decode); unidades arbitrárias.
+const QUANTUM_PREFILL: u64 = 8;
+const QUANTUM_DECODE: u64 = 2;
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum MemClass {
+    Weights,
+    KvCache,
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Phase {
+    Prefill,
+    Decode,
+}
+
+impl Phase {
+    fn marker(self) -> &'static str {
+        match self {
+            Phase::Prefill => "IA_LIVRE_PHASE=prefill\n",
+            Phase::Decode => "IA_LIVRE_PHASE=decode\n",
+        }
+    }
+
+    fn quantum(self) -> u64 {
+        match self {
+            Phase::Prefill => QUANTUM_PREFILL,
+            Phase::Decode => QUANTUM_DECODE,
+        }
+    }
+}
+
 const COM1: u16 = 0x3F8;
 
 struct LineSink<'a> {
@@ -116,6 +151,63 @@ fn prove_bump(base: NonNull<u8>, capacity: usize) -> Option<usize> {
         }
     }
     Some(BUMP_PROOF_BYTES)
+}
+
+fn typed_alloc(bump: &mut Bump, class: MemClass, size: usize) -> Option<(MemClass, NonNull<u8>, usize)> {
+    let ptr = bump.alloc(size)?;
+    Some((class, ptr, size))
+}
+
+fn prove_typed_region(ptr: NonNull<u8>, size: usize, salt: u8) -> bool {
+    let slice = unsafe { core::slice::from_raw_parts_mut(ptr.as_ptr(), size) };
+    for (i, b) in slice.iter_mut().enumerate() {
+        *b = (i as u8).wrapping_mul(5).wrapping_add(salt);
+    }
+    for (i, b) in slice.iter().enumerate() {
+        let expected = (i as u8).wrapping_mul(5).wrapping_add(salt);
+        if *b != expected {
+            return false;
+        }
+    }
+    true
+}
+
+/// Demo Etapa 19: allocator tipado + Prefill/Decode + quantum. Emite MEM_SCHED_OK só se ok.
+unsafe fn run_mem_sched_demo(base: NonNull<u8>, capacity: usize) -> bool {
+    let mut bump = Bump::new(base, capacity);
+
+    let Some((_c, w_ptr, w_sz)) = typed_alloc(&mut bump, MemClass::Weights, TYPED_WEIGHTS_BYTES) else {
+        return false;
+    };
+    if !prove_typed_region(w_ptr, w_sz, 0x11) {
+        return false;
+    }
+    uart_emit_kv("IA_LIVRE_TYPED_WEIGHTS_BYTES=", w_sz as u64);
+    uart_write("IA_LIVRE_TYPED_WEIGHTS_OK\n");
+
+    let Some((_c, k_ptr, k_sz)) = typed_alloc(&mut bump, MemClass::KvCache, TYPED_KVCACHE_BYTES) else {
+        return false;
+    };
+    if !prove_typed_region(k_ptr, k_sz, 0x22) {
+        return false;
+    }
+    uart_emit_kv("IA_LIVRE_TYPED_KVCACHE_BYTES=", k_sz as u64);
+    uart_write("IA_LIVRE_TYPED_KVCACHE_OK\n");
+
+    if QUANTUM_PREFILL <= QUANTUM_DECODE {
+        return false;
+    }
+
+    let mut phase = Phase::Prefill;
+    uart_write(phase.marker());
+    uart_emit_kv("IA_LIVRE_QUANTUM=", phase.quantum());
+
+    phase = Phase::Decode;
+    uart_write(phase.marker());
+    uart_emit_kv("IA_LIVRE_QUANTUM=", phase.quantum());
+
+    uart_write("IA_LIVRE_MEM_SCHED_OK\n");
+    true
 }
 
 // --- UART COM1 (16550) — único I/O válido após ExitBootServices ---
@@ -278,6 +370,9 @@ fn main() -> Status {
         if prove_bump(proof_base, proof_cap).is_some() {
             uart_write("IA_LIVRE_EXIT_MEM_OK\n");
             uart_write("IA_LIVRE_EXIT_BOOT_OK\n");
+
+            // Etapa 19 — memória tipada + Prefill/Decode (≠ NATIVE_BENCH / ≠ GGUF).
+            let _ = run_mem_sched_demo(proof_base, proof_cap);
 
             // Etapa 12 — proxy Linha B (não é inferência / TinyLlama).
             uart_write("IA_LIVRE_NATIVE_BENCH_BEGIN\n");
