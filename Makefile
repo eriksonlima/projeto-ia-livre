@@ -1,5 +1,5 @@
 # Projeto IA Livre — bootstrap do kernel (UEFI + QEMU)
-.PHONY: build esp run verify verify-runtime verify-runtime-gpu verify-node verify-agent verify-harness clean help
+.PHONY: build esp run verify verify-runtime verify-runtime-gpu verify-gpu-manager verify-node verify-agent verify-harness clean help
 
 export PATH := $(HOME)/.cargo/bin:$(PATH)
 # Evita CARGO_TARGET_DIR herdado (ex.: cache de sandbox) fora do repo
@@ -28,7 +28,7 @@ OVMF_VARS := $(CURDIR)/build/OVMF_VARS.fd
 QEMU ?= qemu-system-x86_64
 
 help:
-	@echo "Alvos: build | esp | run | verify | verify-runtime | verify-runtime-gpu | verify-node | verify-agent | verify-harness | clean"
+	@echo "Alvos: build | esp | run | verify | verify-runtime | verify-runtime-gpu | verify-gpu-manager | verify-node | verify-agent | verify-harness | clean"
 	@echo "Pré-requisitos: ver AGENTS.md → Como rodar"
 
 build:
@@ -75,6 +75,9 @@ verify-runtime:
 
 verify-runtime-gpu:
 	./scripts/verify-runtime-gpu.sh
+
+verify-gpu-manager:
+	./scripts/verify-gpu-manager.sh
 
 verify-node:
 	./scripts/verify-node.sh

@@ -88,10 +88,11 @@ O GPU manager **não** substitui o scheduler de fases do ADR 0003 — **compleme
 | Tensor parallel como preferido | Mais complexo; menos alinhado ao primeiro passo Prefill/Decode |
 | Copiar AgentOS / TensorOS / SLM-OS | Lacunas a estudar, não blueprint |
 
-## Implementação futura (backlog — sem auto-promover)
+## Implementação (estado)
 
-1. Enumeração mínima de aceleradores pós-ExitBoot (ou ponte host→nativo)
-2. Afinidade `Weights`/`KvCache` + device hint
-3. Placement por fase (Prefill/Decode)
-4. Pipeline/layer sharding em ≥2 devices
-5. Só então: métricas multi-GPU / perfil no harness (coordenar com evolução do harness)
+1. **Stub host (Etapa 25 / B19)** — [`gpu-manager-prototipo-host.md`](gpu-manager-prototipo-host.md) + `scripts/gpu-manager-stub.sh`: enum/`DEVICES`, placement hint, shard **documentado**; `IA_LIVRE_GPU_MGR=host_stub`. **Não** é manager nativo; **não** toca `kernel/`.
+2. Enumeração mínima de aceleradores pós-ExitBoot (caminho nativo)
+3. Afinidade `Weights`/`KvCache` + device hint no kernel
+4. Placement por fase (Prefill/Decode) nativo
+5. Pipeline/layer sharding em ≥2 devices
+6. Só então: métricas multi-GPU / perfil no harness (coordenar com evolução do harness)
