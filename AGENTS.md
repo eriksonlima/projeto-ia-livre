@@ -478,6 +478,8 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `BACKLOG.md` — demandas ainda não promovidas (canônico; espelho GitHub best-effort, label `backlog`; promoção do topo **autônoma** quando o roadmap esvazia)
 - `specs/` — Spec-Driven Development (spec → plan → tasks)
 - `docs/` — produto, arquitetura e ADRs
+- `docs/glossario.md` — termos estáveis (Linha A/B, B_BLOCK, bare-metal, GPU_MGR, veredito)
+- `scripts/verify-docs-consistency.sh` — gate documental (`make verify-docs-consistency` → `IA_LIVRE_CONSISTENCY_OK`)
 - `memory-bank/` — contexto volátil entre chats (`activeContext.md`, `progress.md`)
 - `.cursor/` — rules, agents, skills, commands, hooks
 - `kernel/` — crate do kernel IA Livre (`Cargo.toml`, `src/main.rs`), target UEFI

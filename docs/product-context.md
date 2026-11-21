@@ -52,8 +52,13 @@ Queremos **comprovar ou refutar**, com método justo:
 
 - Hipótese documentada e, nas etapas de runtime/benchmark, **comparável** (IA Livre vs Linux otimizado)
 - Comunidade capaz de contribuir e participar sem barreira de troca de SO
-- Entregas progressivas: boot QEMU → inferência CPU → nó P2P
+- Entregas progressivas: boot QEMU → inferência CPU → nó P2P → autonomia → caminhos bare-metal/GPU — ver [`architecture.md`](architecture.md)
 
-## Fronteira desta etapa
+## Estado atual (produto)
 
-A Etapa 3 é **só documentação** de produto e arquitetura (e ADR estrutural). Bootstrap de código começa na **Etapa 4** (kernel em QEMU).
+- Kernel UEFI + gates QEMU; observabilidade GOP mínima; GPU manager nativo sintético
+- Runtime host (CPU/GPU) + agente (`note`/`recall`/`help`/`calc`) + nó Rede v1 com bootstrap
+- Harness A vs B: veredito tipicamente **INCONCLUSIVO** até geração canônica em B (`TOKENS_PER_S` proibido fingido)
+- Bare-metal: artefato ESP + metal/GGUF via evidência/opt-in (QEMU ≠ PC real)
+
+Glossário: [`glossario.md`](glossario.md). Detalhe técnico: [`architecture.md`](architecture.md). Operacional: `AGENTS.md`.

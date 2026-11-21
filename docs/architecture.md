@@ -43,7 +43,7 @@ As camadas formam um ecossistema, não quatro produtos desconectados. A ordem de
 - Protocolo P2P **independente** do kernel/SO — desenvolvível em paralelo no host — ver ADR 0001.
 - Bootstrap inicial: **x86-64 + UEFI + QEMU**; **CPU antes de GPU**.
 - **Etapa 30:** imagem ESP/USB empacotável + gate de artefato (`verify-baremetal`) — ADR [`0011`](adr/0011-boot-imagem-esp-baremetal.md) / [`boot-hardware-real.md`](boot-hardware-real.md); **QEMU ≠ bare-metal**; hardware real = checklist manual + skip honesto.
-- Aceleração multi-GPU / GPU manager **nativo**: alvo **posterior** à base CPU e ao protótipo host (ADR 0002); desenho Etapa 16 (ADR 0006); **stub host** verificável (Etapa 25) — [`gpu-manager-prototipo-host.md`](gpu-manager-prototipo-host.md) — **≠** manager nativo.
+- Aceleração GPU: host single-GPU (E8/ADR 0002); stub host (E25); **manager nativo mínimo** (E38) — [`gpu-manager-nativo.md`](gpu-manager-nativo.md); **shard host executado** (E41) — [`shard-multi-gpu-host.md`](shard-multi-gpu-host.md); multi-GPU completo / métricas A vs B **ainda abertos**.
 - Nenhuma decisão só por curiosidade técnica (manifesto).
 - **Etapa 10:** primeiro mecanismo de memória no kernel UEFI — mapa + `AllocatePages`/bump sob Boot Services (sem inferência). Contrato: [`kernel-alem-do-boot.md`](kernel-alem-do-boot.md).
 - **Etapa 11:** `ExitBootServices` + base estável (mapa owned + memória); I/O pós-exit via UART COM1. Contrato: [`kernel-pos-boot-services.md`](kernel-pos-boot-services.md).
@@ -51,43 +51,37 @@ As camadas formam um ecossistema, não quatro produtos desconectados. A ordem de
 - **Etapa 13:** desenho candidato memória model-aware + scheduler por fases (ADR 0003).
 - **Etapa 19:** implementação mínima no kernel pós-ExitBoot (`Weights`/`KvCache` + Prefill/Decode + quantum) — [`memoria-scheduler-impl-minima.md`](memoria-scheduler-impl-minima.md); **sem** GGUF; hipótese **não** comprovada.
 - **Etapa 20:** runtime/shim falando o contrato nativo + harness B com `HARNESS_CONTRACT_*` — [`runtime-contrato-nativo.md`](runtime-contrato-nativo.md); **sem** GGUF em B; hipótese **não** comprovada.
-- **Etapa 21:** integração harness↔contrato (`CONTRACT_READY=1`) + bloqueio honesto `no_gguf_path` (sem loader); proxy permanece; hipótese **não** comprovada. Spec: [`../specs/carga-gguf-linha-b/`](../specs/carga-gguf-linha-b/).
-- **Etapa 26:** loader GGUF nativo mínimo via ESP pré-ExitBoot (ADR [`0008`](adr/0008-loader-gguf-esp-pre-exitboot.md)) — `GGUF_NATIVE_LOADER=esp_header`; **sem** `TOKENS_PER_S` em B; hipótese **não** comprovada. Spec: [`../specs/loader-gguf-nativo-linha-b/`](../specs/loader-gguf-nativo-linha-b/).
-- **Etapa 14:** desenho stack Rede IA Livre v1 (ADR 0004) — **sem** implementação no `node/`.
-- **Etapa 15:** escopo autonomia v1 (ADR 0005) — **sem** implementação no `agent/`.
-- **Etapa 16:** desenho GPU manager + multi-GPU (ADR 0006) — doc; stub host = Etapa 25 (não nativo).
-- **Etapa 25:** stub host GPU manager (enum/placement/shard doc) — [`gpu-manager-prototipo-host.md`](gpu-manager-prototipo-host.md); `make verify-gpu-manager`; **sem** `kernel/`.
-- **Etapa 18:** metodologia harness A otimizada / perfil GPU — [`harness-perfis-a-otimizada-gpu.md`](harness-perfis-a-otimizada-gpu.md); hipótese **não** comprovada.
+- **Etapa 21–33 (Linha B):** loader BlockIO full → layout → attn/FFN/prefill layer0; bloqueio atual `B_BLOCK=no_gguf_full_prefill` — **sem** Prefill 22L/Decode/`TOKENS_PER_S` em B; veredito harness comparável tipicamente **INCONCLUSIVO**. Contratos: [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md), ADR [`0013`](adr/0013-geracao-canonica-fatiada-linha-b.md).
+- **Etapa 14 / 23 / 39:** desenho + protocolo Rede v1 + descoberta bootstrap — [`rede-ia-livre-v1.md`](rede-ia-livre-v1.md), [`rede-descoberta-wan.md`](rede-descoberta-wan.md).
+- **Etapa 15 / 24 / 40:** autonomia v1 + tool `calc` sandboxed — [`desenho-autonomia-v1.md`](desenho-autonomia-v1.md), [`autonomia-alem-v1.md`](autonomia-alem-v1.md).
+- **Etapa 16 / 25 / 38 / 41:** desenho GPU → stub host → nativo mínimo → shard host executado (ou skip).
+- **Etapa 18 / 34:** perfis harness A otimizada — [`harness-perfis-a-otimizada-gpu.md`](harness-perfis-a-otimizada-gpu.md).
+- **Etapa 35–36:** boot metal (evidência/skip) + GGUF completo opt-in na ESP — [`boot-hardware-real.md`](boot-hardware-real.md), [`gguf-baremetal-midia.md`](gguf-baremetal-midia.md).
+- **Etapa 37:** observabilidade mínima GOP/input — [`observabilidade-minima-so.md`](observabilidade-minima-so.md).
 
 ## Decisões abertas
 
-- ~~Desenho fino de memória model-aware e do scheduler de inferência~~ — **decidido no nível desenho (Etapa 13):** classes `Weights`/`KvCache` + hints Prefill/Decode — ADR [`0003`](adr/0003-memoria-model-aware-e-scheduler-fases.md) + [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-scheduler-nativo.md). ~~Implementação mínima~~ — **Etapa 19:** [`memoria-scheduler-impl-minima.md`](memoria-scheduler-impl-minima.md). Runtime falando o contrato e prova da hipótese continuam **abertas**.
-- ~~Stack concreta do protocolo P2P (bibliotecas, transporte, identidade)~~ — **decidida no nível desenho (Etapa 14):** TCP+UDP, ed25519/`PeerId`, HELLO assinado + IDENT — ADR [`0004`](adr/0004-stack-protocolo-rede-ia-livre.md) + [`desenho-protocolo-rede-ia-livre.md`](desenho-protocolo-rede-ia-livre.md). **Implementação continua aberta.**
-- ~~Licenças definitivas por componente~~ — **decididas (Etapa 17):** Apache-2.0 para kernel, runtime, node, agent e docs — ADR [`0007`](adr/0007-licencas-por-componente.md) + [`LICENSE`](../LICENSE). Deps de terceiros: [`licencas-terceiros.md`](licencas-terceiros.md).
-- ~~Estratégia de aceleração além de CPU~~ — **protótipo host (Etapa 8 / ADR 0002):** CUDA canônico / Vulkan alternativa via llama.cpp (single-GPU). ~~GPU manager no kernel e multi-GPU~~ — **desenho (Etapa 16 / ADR 0006)** + **stub host (Etapa 25)** — [`gpu-manager-prototipo-host.md`](gpu-manager-prototipo-host.md). **Manager nativo e multi-GPU real continuam abertos.** Host stub ≠ manager nativo ≠ prova A vs B.
-- ~~Forma e escopo do ambiente de autonomia na primeira versão utilizável~~ — **decidido no nível desenho (Etapa 15):** host, `--prompt` one-shot, allowlist `note`/`recall`/`help`, política N últimas entradas — ADR [`0005`](adr/0005-autonomia-v1-utilizavel.md) + [`desenho-autonomia-v1.md`](desenho-autonomia-v1.md). **Implementação continua aberta.**
-- ~~Critérios exatos e harness do benchmark Linha A vs Linha B~~ — **harness v1 (Etapa 9)** + **Linha B mínima (Etapa 12):** proxy pós-ExitBoot ([`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md)); **metodologia de perfis (Etapa 18):** A «Linux otimizado» + GPU espelhado A/B — [`harness-perfis-a-otimizada-gpu.md`](harness-perfis-a-otimizada-gpu.md). Etapa 21: bloqueio `no_gguf_path`. **Etapa 26:** loader ESP cabeçalho (`esp_header`) — ainda **sem** geração/`TOKENS_PER_S` em B. **Prova** da hipótese continua **aberta** até inferência canônica em B.
+- Memória model-aware / scheduler: desenho E13 + impl. mínima E19 + consumidor E20 — **feitos**; prova A vs B com geração em B **aberta**.
+- Rede: desenho E14 + v1 E23 + bootstrap E39 — **feitos**; DHT/NAT/relay **abertos**.
+- Autonomia: desenho E15 + v1 E24 + `calc` E40 — **feitos**; REPL/`read_local` **abertos**.
+- GPU: E8 host + E25 stub + E38 nativo mínimo + E41 shard host (ou skip) — **feitos**; multi-GPU completo / harness GPU **abertos**.
+- Harness A vs B: instrumento E22 + A otimizada E34 — **feitos**; hipótese **não** comprovada enquanto `B_BLOCK=no_gguf_full_prefill` (sem `TOKENS_PER_S` em B).
+- Licenças: Apache-2.0 (E17) — **feitas**.
+
+Glossário: [`glossario.md`](glossario.md).
 
 ## Referências próximas
 
-Estudar como **lacunas**, não como blueprint a copiar:
+Estudar como **lacunas**, não como blueprint a copiar: AgentOS, SLM-OS, TensorOS, CLLM — GPU eficiente, multi-GPU completo, KV avançado, multi-tenant.
 
-| Projeto | Interesse |
-|---------|-----------|
-| AgentOS | Kernel bare-metal, execução em servidor |
-| SLM-OS | Memória e escalonamento conscientes de modelo |
-| TensorOS | Integração kernel ↔ runtime / tensores |
-| CLLM | Unikernel + HTTP + caminho para inferência |
+## Estado do mapa (pós-E41)
 
-Lacunas típicas a investigar: GPU eficiente, multi-GPU, KV cache avançado, multi-tenant / muitas requisições simultâneas.
-
-## Fronteira com Etapas 4+
-
-| Etapa | Entrega | Esta doc |
-|-------|---------|----------|
-| **3** (atual) | Product-context + architecture + ADR estrutural | Feita quando os critérios do roadmap/spec forem cumpridos |
-| **4** | Bootstrap kernel UEFI/QEMU (Rust), saída serial | Código começa aqui |
-| **5** | Runtime mínimo de inferência em CPU | — |
-| **6** | Protótipo do nó Rede IA Livre em SO convencional | — |
-
-Nenhum bootstrap de código nesta etapa.
+| Faixa | Status |
+|-------|--------|
+| Kernel boot → ExitBoot → MEM_SCHED → obs GOP → GPU nativo | Feito (gates `make verify`) |
+| Runtime host CPU/GPU + contrato shim | Feito |
+| Linha B proxy + BlockIO + attn/FFN/prefill parcial | Feito; **sem** geração canônica |
+| Nó P2P v1 + bootstrap | Feito |
+| Autonomia v1 + `calc` | Feito |
+| Bare-metal artefato (+ metal/GGUF opt-in) | Feito (metal SKIP sem log PC) |
+| Hipótese A vs B com `TOKENS_PER_S` em B | **Aberta** |

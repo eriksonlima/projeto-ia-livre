@@ -23,13 +23,16 @@ Veja `AGENTS.md` → **Como verificar**.
 ## Documentação
 
 - Manifesto Fundador: `docs/manifesto.md`
-- Roadmap: `ROADMAP.md`
+- Roadmap: `ROADMAP.md` · Backlog: `BACKLOG.md`
 - Specs: `specs/`
 - Produto: `docs/product-context.md`
-- Arquitetura: `docs/architecture.md`
-- Harness A vs B (metodologia): `docs/harness-linha-a-b.md` — comparável: `docs/harness-a-b-comparavel.md` — corrida quieta: `docs/harness-corrida-quieta.md` (veja `AGENTS.md` → gates)
-- Boot/imagem hardware real (ESP/USB): `docs/boot-hardware-real.md` — gate `make verify-baremetal` (artefato; ≠ QEMU)
+- Arquitetura: `docs/architecture.md` · Glossário: `docs/glossario.md`
+- Harness A vs B: `docs/harness-linha-a-b.md` · comparável: `docs/harness-a-b-comparavel.md` (veja `AGENTS.md` → gates)
+- Boot/imagem hardware real (ESP/USB): `docs/boot-hardware-real.md` — `make verify-baremetal` (artefato; ≠ QEMU)
+- Rede (v1 + bootstrap): `docs/rede-ia-livre-v1.md` · `docs/rede-descoberta-wan.md`
+- Autonomia (`calc`): `docs/autonomia-alem-v1.md`
+- GPU host shard: `docs/shard-multi-gpu-host.md` — `make verify-gpu-shard-host`
 - ADRs: `docs/adr/`
-- Contrato nativo (consumidor / Etapa 20): `docs/runtime-contrato-nativo.md` — veja também `AGENTS.md` → gate `verify-runtime-contract`
-- Contexto ativo (Memory Bank): `memory-bank/activeContext.md`
+- Contrato nativo: `docs/runtime-contrato-nativo.md`
+- Contexto ativo: `memory-bank/activeContext.md`
 - Contribuição: `CONTRIBUTING.md`

@@ -2,19 +2,19 @@
 
 ## Foco atual
 
-- Etapa **42** `em_andamento` (#41) — sync architecture/product + glossário
-- E41 **feita**: `host_shard_exec` (skip `need_2_devices` neste host)
+- Nenhuma etapa `em_andamento`
+- Etapas 1–42 **feitas**; backlog **Abertas vazio**
 
 ## Mudanças recentes
 
-- E41: `run-gpu-shard-host.sh` + `verify-gpu-shard-host`
-- E40: `calc` sandboxed
+- E42: sync `architecture.md` / `product-context.md` / `glossario.md` / README
+- E37–E41: obs GOP, GPU nativo, bootstrap rede, calc, shard host
 
 ## Próximo passo
 
-- Especificar Etapa 42 (B35)
+- Pedido explícito ou novo item em `BACKLOG.md` — não inventar etapa
 
 ## Notas
 
-- README E41: considerado — AGENTS/docs cobrem
-- Backlog Abertas: verificar se ficou vazio após B35
+- Lease liberado
+- Um agente escritor; claim antes de editar `em_andamento`

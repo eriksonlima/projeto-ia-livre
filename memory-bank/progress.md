@@ -2,17 +2,17 @@
 
 ## O que funciona
 
-- Etapas 1–41
-- E41: shard host `host_shard_exec` (EXEC ou SKIP honesto)
-- E40: calc sandboxed
+- Etapas 1–42 feitas
+- Docs de architecture/product/glossário sincronizados (E42)
+- Kernel, runtime, node, agent, harness, bare-metal, GPU stub/nativo/shard host
 
 ## Bloqueios
 
-- Sem TOKENS_PER_S em B
+- Sem `TOKENS_PER_S` em Linha B (`no_gguf_full_prefill`)
 - Sem log metal real (SKIP)
-- Shard EXEC_OK só com ≥2 GPUs (este host: skip)
+- Shard EXEC_OK só com ≥2 GPUs
+- Backlog Abertas vazio — próxima etapa só com pedido/novo item
 
 ## Por etapa
 
-- 1–41: feitas
-- 42: em_andamento (#41) — sync docs architecture
+- 1–42: feitas

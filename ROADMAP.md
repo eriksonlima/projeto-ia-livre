@@ -306,7 +306,8 @@ Pronto quando: placement/shard mínimo real no host com evidência ou skip hones
 
 ## Etapa 42 — Sincronizar architecture/product + glossário pós-E30
 
-Status: em_andamento  
+Status: feita  
 Issue: [#41](https://github.com/eriksonlima/projeto-ia-livre/issues/41)  
-Spec: (a definir — `especificador`)  
-Pronto quando: `architecture.md` / README-AGENTS refletem estado atual sem ambiguidade.
+Spec: specs/sync-architecture-glossario/  
+Pronto quando: `architecture.md` / README-AGENTS refletem estado atual sem ambiguidade.  
+**Desfecho:** glossário + architecture/product/README alinhados a E30–E41; backlog Abertas vazio.
