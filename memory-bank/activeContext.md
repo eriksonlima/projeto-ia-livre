@@ -2,14 +2,14 @@
 
 ## Foco atual
 
-- Etapas 1–69 **feitas**
-- E69: `host_multi` dual place; skip `need_2_devices` (1 GPU)
-- Topo Abertas: **B65** (autonomia nativa) ou B67 docs
+- Etapas 1–69 **feitas**; **Etapa 70** `em_andamento` (B65)
+- Autonomia consumindo evidência/runtime nativo (além da bridge E49)
+- ADR 0001: `verify-agent` permanece independente do SO
 
 ## Próximo passo
 
-- “continuar” → B65
+- Spec + tasks E70; one-shot nativo **ou** contrato “bridge = máximo”
 
 ## Notas
 
-- Lease livre
+- Lease: Etapa 70 / #70

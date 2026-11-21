@@ -526,5 +526,12 @@ Status: feita
 Issue: [#69](https://github.com/eriksonlima/projeto-ia-livre/issues/69)  
 Spec: specs/multi-gpu-completo-host/  
 Pronto quando: placement/execução multi-device real com evidência; sem fingir.  
-**Desfecho:** `host_multi` + placement dual `W:0,K:1` + `make verify-gpu-multi`; neste host tipicamente `need_2_devices` (1×1050); E41 shard intacto; sem TOKENS.  
+**Desfecho:** `host_multi` + placement dual `W:0,K:1` + `make verify-gpu-multi`; neste host tipicamente `need_2_devices` (1×1050); E41 shard intacto; sem TOKENS.
+
+## Etapa 70 — Autonomia consumindo runtime/evidência nativa
+
+Status: em_andamento  
+Issue: [#70](https://github.com/eriksonlima/projeto-ia-livre/issues/70)  
+Spec: specs/autonomia-nativa/  
+Pronto quando: one-shot que consome fonte nativa **ou** contrato “bridge = máximo até X”; ADR 0001 preservada (`verify-agent` independente do SO).
 

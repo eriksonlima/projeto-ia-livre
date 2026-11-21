@@ -10,15 +10,9 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Meta do protótipo (objetivo do projeto):** um ecossistema verificável em que (1) a **hipótese A vs B** possa ser comprovada ou refutada com geração real na Linha B (`TOKENS_PER_S`), (2) o **SO IA Livre** boote de USB/ESP em hardware real com caminho de IA nativo mínimo honesto, (3) a **Rede** e a **autonomia** continuem utilizáveis **sem** exigir o SO. Ordem abaixo = prioridade sugerida (topo primeiro).
 >
-> **Análise pós-E69 (2026-11-21):** E69 host_multi. Topo: **B65** (autonomia nativa) ou B67 docs; B55 adiada.
+> **Análise pós-promoção B65 (2026-11-21):** B65→E70. Topo Abertas: **B66** (ABI); B55 adiada.
 
 
-
-### B65 — Autonomia consumindo runtime/evidência nativa
-- Issue: [#70](https://github.com/eriksonlima/projeto-ia-livre/issues/70)
-- Origem: E49 bridge só valida log; sem loop usando nativo/metal
-- Pronto quando: one-shot que consome fonte nativa **ou** contrato “bridge = máximo até X”; ADR 0001
-- Deps: E49; B56/B57 preferíveis
 
 ### B66 — ABI mínima estável kernel↔runtime-native
 - Issue: [#71](https://github.com/eriksonlima/projeto-ia-livre/issues/71)
@@ -40,6 +34,15 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Nota: não promover enquanto BLOQUEIO_FINAL / canônico inviável sem reabertura
 
 ## Promovidas / arquivadas
+
+### B65 — Autonomia consumindo runtime/evidência nativa
+- Issue: [#70](https://github.com/eriksonlima/projeto-ia-livre/issues/70)
+- Origem: E49 bridge só valida log; sem loop usando nativo/metal
+- Pronto quando: one-shot que consome fonte nativa **ou** contrato “bridge = máximo até X”; ADR 0001
+- Deps: E49; B56/B57 preferíveis
+- Promovido para Etapa 70.
+- Etapa: [Etapa 70 — Autonomia nativa](ROADMAP.md)
+
 
 ### B64 — Multi-GPU completo além do shard host
 - Issue: [#69](https://github.com/eriksonlima/projeto-ia-livre/issues/69)
