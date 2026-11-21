@@ -114,15 +114,14 @@ Com Etapas 19/20 verificáveis no serial QEMU, `scripts/run-harness-line-b.sh`:
 
 `HARNESS_MODEL=` permanece `proxy-post-exit-v1`. Rodar `ia-livre-runtime` no host continua sendo **Linha A**.
 
-### Estado atual (após Etapa 43 — Prefill multi + KV subset)
+### Estado atual (após Etapa 44 — Decode + TOKENS_PER_S subset)
 
 - Loader E26/E27: GGUF completo via BlockIO (`blockio_full`).
-- **Motor:** `runtime-native/` — ADR [`0010`](adr/0010-runtime-nativo-freestanding-linha-b.md) / [`0012`](adr/0012-forward-gguf-fatiado-linha-b.md) / [`0013`](adr/0013-geracao-canonica-fatiada-linha-b.md) / [`0014`](adr/0014-prefill-22l-kv-linha-b.md).
-- **Avanço E32/E33:** tokenize + embed + attn/FFN layer0 + `PREFILL_OK` (1 token × camada 0).
-- **Avanço E43:** Prefill multi × **`PREFILL_LAYERS=2` × `KV_N_POS=2`** (subset guest) + KV GQA (`KV_CACHE_OK`); `PREFILL_PARTIAL_OK`; `FORWARD_FAIL=no_decode`. Host prova 2L×16 tokens.
-- **Por que não 22L / 16 pos no QEMU:** extrapolação 22L inviável; 2L×16 no QEMU debug estourou 600 s (ADR 0014). Subset 2×2 = mesmas ops, projeção documentada.
-- **Bloqueio residual:** `B_BLOCK=no_gguf_prefill_22l` — Prefill 22L pleno ainda não; Decode/sampling = B38 → **sem** `TOKENS_PER_S`.
-- Proxy E12 permanece (`LOAD_KIND=proxy`). Hipótese **não** comprovada. Comparable: `VERDICT_REASON=E43_no_gguf_prefill_22l_subset_kv_ok`.
+- **Motor:** `runtime-native/` — ADR [`0010`](adr/0010-runtime-nativo-freestanding-linha-b.md) … [`0015`](adr/0015-decode-tokens-linha-b.md).
+- **E43:** Prefill subset `2L×2` + KV.
+- **E44:** Decode greedy `n_predict=1` + `DECODE_OK`/`SAMPLING_OK`/`RUNTIME_NATIVE_OK`; harness `LOAD_KIND=gguf` + `TOKENS_PER_S` **medidos**; kernel release opt-in (`IA_LIVRE_KERNEL_PROFILE=release`).
+- **Espécie:** ainda **subset** (≠ 22L × 32) → comparable **INCONCLUSIVO** (`E44_subset_generate_not_canonical_species_*`); **sem** `B_BLOCK` no sucesso Decode.
+- Microbench E12 permanece como `PROXY=*`; `LOAD_KIND` de geração = `gguf`.
 
 ### Loader GGUF nativo mínimo (Etapa 26)
 

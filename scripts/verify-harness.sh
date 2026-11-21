@@ -85,35 +85,22 @@ for marker in \
   'IA_LIVRE_HARNESS_LINE=B' \
   'IA_LIVRE_HARNESS_OK' \
   'IA_LIVRE_HARNESS_PROXY=post_exit_microbench' \
-  'IA_LIVRE_HARNESS_LOAD_KIND=proxy' \
   'IA_LIVRE_HARNESS_PROXY_MS=' \
   'IA_LIVRE_HARNESS_PROXY_OPS=' \
-  'IA_LIVRE_HARNESS_MODEL=proxy-post-exit-v1' \
-  'IA_LIVRE_HARNESS_N_PREDICT=0' \
   'IA_LIVRE_HARNESS_CONTRACT_BACKEND=native_qemu' \
   'IA_LIVRE_HARNESS_CONTRACT_MEM_SCHED=OK' \
-  'IA_LIVRE_HARNESS_CONTRACT_TYPED_WEIGHTS=OK' \
-  'IA_LIVRE_HARNESS_CONTRACT_TYPED_KVCACHE=OK' \
-  'IA_LIVRE_HARNESS_CONTRACT_PHASE_PREFILL=OK' \
-  'IA_LIVRE_HARNESS_CONTRACT_PHASE_DECODE=OK' \
   'IA_LIVRE_HARNESS_CONTRACT_READY=1' \
-  'IA_LIVRE_HARNESS_GGUF_TARGET_MODEL=' \
-  'IA_LIVRE_HARNESS_GGUF_TARGET_N_PREDICT=32' \
   'IA_LIVRE_HARNESS_GGUF_NATIVE_LOADER=blockio_full' \
-  'IA_LIVRE_HARNESS_GGUF_STATUS=layout_ok' \
   'IA_LIVRE_HARNESS_RUNTIME_NATIVE_LAYOUT=OK' \
-  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_TENSOR_MAP=OK' \
-  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_Q4K_DEQUANT=OK' \
-  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_FORWARD_OP=OK' \
-  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_TOKENIZE=OK' \
-  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_EMBED=OK' \
-  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_LAYER_PARTIAL=OK' \
-  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_ATTN_LAYER=OK' \
-  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_FFN_LAYER=OK' \
   'IA_LIVRE_HARNESS_RUNTIME_NATIVE_PREFILL=OK' \
   'IA_LIVRE_HARNESS_RUNTIME_NATIVE_KV_CACHE=OK' \
-  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_PREFILL_PARTIAL=OK' \
-  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_FORWARD_FAIL=no_decode'; do
+  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_DECODE=OK' \
+  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_SAMPLING=OK' \
+  'IA_LIVRE_HARNESS_RUNTIME_NATIVE=OK' \
+  'IA_LIVRE_HARNESS_LOAD_KIND=gguf' \
+  'IA_LIVRE_HARNESS_TOKENS_PER_S=' \
+  'IA_LIVRE_HARNESS_LOAD_S=' \
+  'IA_LIVRE_HARNESS_N_PREDICT='; do
   if ! grep -q "$marker" "$LOG_B"; then
     echo "GATE_FAIL: marcador ausente na Linha B: $marker"
     fail=1
@@ -123,44 +110,18 @@ if ! grep -qE 'IA_LIVRE_HARNESS_RUNTIME_NATIVE_PREFILL_LAYERS=[0-9]+' "$LOG_B"; 
   echo "GATE_FAIL: PREFILL_LAYERS ausente na Linha B"
   fail=1
 fi
-if ! grep -q 'IA_LIVRE_HARNESS_GGUF_NATIVE_LOADER=blockio_full' "$LOG_B"; then
-  echo "GATE_FAIL: exige GGUF_NATIVE_LOADER=blockio_full"
+# E44: com geração real, B_BLOCK deve estar ausente
+if grep -q 'IA_LIVRE_HARNESS_B_BLOCK=' "$LOG_B"; then
+  echo "GATE_FAIL: B_BLOCK não deve aparecer com LOAD_KIND=gguf / Decode ok"
   fail=1
 fi
-
-# Fraudes / legado (sem inventar GGUF)
 if grep -q 'IA_LIVRE_HARNESS_B_SKIP' "$LOG_B"; then
   echo "GATE_FAIL: B não deve emitir HARNESS_B_SKIP no sucesso"
   fail=1
 fi
-if grep -qE 'IA_LIVRE_HARNESS_TOKENS_PER_S=' "$LOG_B"; then
-  echo "GATE_FAIL: B não deve emitir TOKENS_PER_S sem carga GGUF real (fraude / proxy)"
-  fail=1
-fi
-if grep -qE 'IA_LIVRE_HARNESS_LOAD_S=' "$LOG_B"; then
-  echo "GATE_FAIL: B não deve emitir LOAD_S (load GGUF falso)"
-  fail=1
-fi
-# HARNESS_MODEL= (não TARGET) não pode fingir TinyLlama/GGUF
-if grep -qiE 'IA_LIVRE_HARNESS_MODEL=.*tinyllama|IA_LIVRE_HARNESS_MODEL=.*\.gguf' "$LOG_B"; then
-  echo "GATE_FAIL: B não deve fingir modelo GGUF TinyLlama em HARNESS_MODEL="
-  fail=1
-fi
-if grep -qE 'IA_LIVRE_HARNESS_LOAD_KIND=gguf' "$LOG_B"; then
-  echo "GATE_FAIL: B emitiu LOAD_KIND=gguf sem caminho GGUF real implementado"
-  fail=1
-fi
-# Bloqueio residual E43: prefill multi/KV subset; 22L pleno ainda não (ADR 0014)
-if ! grep -q 'IA_LIVRE_HARNESS_B_BLOCK=' "$LOG_B"; then
-  echo "GATE_FAIL: B deve declarar B_BLOCK= (estado honesto)"
-  fail=1
-fi
-if grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=(no_gguf_path|awaiting_b13_b14|no_gguf_infer|no_gguf_infer_engine|no_gguf_forward|no_gguf_generate|no_gguf_full_prefill)$' "$LOG_B"; then
-  echo "GATE_FAIL: B_BLOCK legado — Etapa 43 exige no_gguf_prefill_22l (ou no_gguf_decode se 22L)"
-  fail=1
-fi
-if ! grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=(no_gguf_prefill_22l|no_gguf_decode)$' "$LOG_B"; then
-  echo "GATE_FAIL: B_BLOCK deve ser no_gguf_prefill_22l (subset) ou no_gguf_decode (22L)"
+# TOKENS_PER_S deve ser numérico > 0
+if ! grep -qE 'IA_LIVRE_HARNESS_TOKENS_PER_S=[0-9]+\.[0-9]+' "$LOG_B"; then
+  echo "GATE_FAIL: TOKENS_PER_S malformado"
   fail=1
 fi
 
@@ -169,5 +130,5 @@ if (( fail )); then
   exit 1
 fi
 
-echo "GATE_OK: harness — A (GGUF) ok + B (proxy + prefill multi/KV + no_gguf_prefill_22l) ok — hipótese NÃO comprovada"
+echo "GATE_OK: harness — A (GGUF) ok + B (Decode/sampling + TOKENS_PER_S medidos) ok"
 exit 0

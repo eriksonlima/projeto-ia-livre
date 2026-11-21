@@ -113,25 +113,33 @@ if grep -q 'IA_LIVRE_HARNESS_PROXY=' "$LOG_B" \
   b_is_proxy=1
 fi
 
-if (( b_is_proxy )) && grep -qE 'IA_LIVRE_HARNESS_TOKENS_PER_S=' "$LOG_B"; then
+# PROXY microbench + LOAD_KIND=gguf (E44) é honesto; fraude = tokens sem gguf.
+if grep -qE 'IA_LIVRE_HARNESS_TOKENS_PER_S=' "$LOG_B" \
+  && ! grep -q 'IA_LIVRE_HARNESS_LOAD_KIND=gguf' "$LOG_B"; then
   echo "IA_LIVRE_HARNESS_VERDICT=INCONCLUSIVO"
-  echo "IA_LIVRE_HARNESS_VERDICT_REASON=fraude_tokens_em_B_proxy"
+  echo "IA_LIVRE_HARNESS_VERDICT_REASON=fraude_tokens_sem_load_kind_gguf"
   exit 1
 fi
 
-if (( b_is_proxy )); then
-  # B ainda proxy: loader ESP (E26) ≠ geração — sem TOKENS_PER_S em B → INCONCLUSIVO
+if (( b_is_proxy )) && ! grep -q 'IA_LIVRE_HARNESS_LOAD_KIND=gguf' "$LOG_B"; then
   echo "IA_LIVRE_HARNESS_VERDICT=INCONCLUSIVO"
-  # Motivo ≠ "ausência de tokens" genérico: bloqueio estrutural 22L/KV (E33 Task 2+).
-  echo "IA_LIVRE_HARNESS_VERDICT_REASON=E43_no_gguf_prefill_22l_subset_kv_ok"
+  echo "IA_LIVRE_HARNESS_VERDICT_REASON=E44_b_proxy_sem_gguf_generate"
   exit 0
 fi
-
-# Candidato comparável: B com load+tokens GGUF, sem PROXY
+# Com LOAD_KIND=gguf + tokens: métricas reais existem.
 if ! grep -qE 'IA_LIVRE_HARNESS_TOKENS_PER_S=[0-9]' "$LOG_B" \
   || ! grep -qE 'IA_LIVRE_HARNESS_LOAD_S=[0-9]' "$LOG_B"; then
   echo "IA_LIVRE_HARNESS_VERDICT=INCONCLUSIVO"
   echo "IA_LIVRE_HARNESS_VERDICT_REASON=B_sem_metricas_GGUF_comparaveis"
+  exit 0
+fi
+
+# Espécie canônica A: 22L + n_predict=32. Subset E44 (2L×1) → INCONCLUSIVO (≠ REFUTA).
+PL="$(grep -oE 'IA_LIVRE_HARNESS_RUNTIME_NATIVE_PREFILL_LAYERS=[0-9]+' "$LOG_B" | head -1 | cut -d= -f2 || true)"
+NP="$(grep -oE 'IA_LIVRE_HARNESS_N_PREDICT=[0-9]+' "$LOG_B" | head -1 | cut -d= -f2 || true)"
+if [[ "${PL:-0}" != "22" || "${NP:-0}" != "32" ]]; then
+  echo "IA_LIVRE_HARNESS_VERDICT=INCONCLUSIVO"
+  echo "IA_LIVRE_HARNESS_VERDICT_REASON=E44_subset_generate_not_canonical_species_layers=${PL:-?}_npredict=${NP:-?}"
   exit 0
 fi
 
@@ -144,7 +152,6 @@ if [[ -z "$tokens_a" || -z "$tokens_b" ]]; then
   exit 0
 fi
 
-# Critério: R = B/A; margem default 5% (docs/harness-a-b-comparavel.md)
 verdict="$(MARGIN="$MARGIN" TOKENS_A="$tokens_a" TOKENS_B="$tokens_b" python3 - <<'PY'
 import os
 a = float(os.environ["TOKENS_A"])

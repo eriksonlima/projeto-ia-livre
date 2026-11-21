@@ -2,21 +2,20 @@
 
 ## Foco atual
 
-- Etapa 43 **feita** (subset Prefill 2L×2 + KV; `no_gguf_prefill_22l`)
-- Próximo: promover **B38** (Decode + sampling + `TOKENS_PER_S` em B) → Etapa 44
+- Etapas 43–44 **feitas** (Prefill subset + Decode/`TOKENS_PER_S` subset)
+- Hipótese A vs B: ainda **INCONCLUSIVO** (espécie B ≠ A plena)
+- Próximo backlog: **B39** (re-corrida comparável com geração “limpa”) — pode exigir Prefill 22L / n_predict=32
 
 ## Mudanças recentes
 
-- ADR 0014: critério 22L vs subset; QEMU debug 2L×16 timeout 600s → guest 2×2
-- `runtime-native`: attn/FFN `blk.N`, KvCache GQA, RoPE, prefill multi
-- Gates: `PREFILL_PARTIAL_OK` / `KV_CACHE_OK` / `B_BLOCK=no_gguf_prefill_22l`
-- Comparable reason `E43_no_gguf_prefill_22l_subset_kv_ok`
+- E43: ADR 0014, KV + Prefill 2×2 guest
+- E44: ADR 0015, Decode greedy, `LOAD_KIND=gguf`, release UEFI, comparable subset INCONCLUSIVO
 
 ## Próximo passo
 
-- Sync + claim; promover B38 → roadmap; especificar/fatiar Decode
+- Promover B39 ou B40 conforme ordem sensata (hipótese vs USB)
+- Lease liberar após push E44
 
 ## Notas
 
-- Lease: liberar após push da fatia E43
-- README capa: sem mudança (AGENTS/docs cobrem)
+- README capa: sem mudança necessária (AGENTS cobre)

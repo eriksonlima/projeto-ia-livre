@@ -4,10 +4,15 @@
 #![no_std]
 
 mod attn;
+mod decode;
 mod ffn;
 mod kv;
 mod names;
 pub use attn::{try_attn_layer0_single, AttnLayerReport, N_HEAD, N_KV_HEAD, HEAD_DIM};
+pub use decode::{
+    try_decode_canonical_guest, try_decode_generate, DecodeReport, N_PREDICT_GUEST,
+    N_PREDICT_TARGET,
+};
 pub use ffn::{
     try_ffn_layer0, try_prefill_canonical_guest, try_prefill_layer0, try_prefill_multi,
     FfnLayerReport, PrefillMultiReport, PrefillReport,
@@ -404,15 +409,14 @@ pub fn try_layer_partial_canonical(
     })
 }
 
-/// Tentativa de geração canônica — E43: prefill multi (guest subset) + KV;
-/// Decode/sampling ainda não → `NoDecode` (`B_BLOCK=no_gguf_prefill_22l`).
-/// Intermediários E32/E33 ficam a cargo do glue do kernel (evita trabalho duplicado).
+/// Tentativa de geração canônica — E44: Prefill subset + Decode guest.
+/// Sucesso → `Ok(())` (kernel emite `RUNTIME_NATIVE_OK` + métricas).
 pub fn try_forward_canonical(
     gguf: &[u8],
     layout: &LayoutReport,
 ) -> Result<(), ForwardError> {
-    let _ = try_prefill_canonical_guest(gguf, layout)?;
-    Err(ForwardError::NoDecode)
+    let _ = try_decode_canonical_guest(gguf, layout)?;
+    Ok(())
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -772,9 +776,17 @@ mod tests {
         let full_pos = try_prefill_multi(&data, &layout, 2, CANONICAL_PROMPT_TOKEN_IDS.len())
             .expect("multi16");
         assert_eq!(full_pos.n_pos, 16);
-        assert!(matches!(
-            try_forward_canonical(&data, &layout),
-            Err(ForwardError::NoDecode)
-        ));
+    }
+
+    #[test]
+    fn decode_guest_one_token() {
+        let Some((data, layout)) = load_canonical_gguf() else {
+            return;
+        };
+        let dec = try_decode_canonical_guest(&data, &layout).expect("decode");
+        assert_eq!(dec.n_layers, PREFILL_LAYERS_GUEST as u32);
+        assert_eq!(dec.n_predict, N_PREDICT_GUEST as u32);
+        assert!(dec.last_token_id > 0 || dec.decode_checksum_milli > 0);
+        assert!(try_forward_canonical(&data, &layout).is_ok());
     }
 }

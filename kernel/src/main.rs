@@ -700,49 +700,67 @@ fn main() -> Status {
                                     uart_write("IA_LIVRE_RUNTIME_NATIVE_PREFILL_FAIL\n");
                                 }
                             }
-                            // Etapa 43 — Prefill multi-token × N layers + KV (subset guest ADR 0014).
-                            // Não chama try_forward_canonical de novo (evita 2× o custo no QEMU).
-                            match ia_livre_runtime_native::try_prefill_canonical_guest(
+                            // Etapa 43/44 — Prefill subset + Decode/sampling (ADR 0014/0015).
+                            uart_write("IA_LIVRE_RUNTIME_NATIVE_DECODE_ATTEMPT=1\n");
+                            let t_dec0 = rdtsc();
+                            match ia_livre_runtime_native::try_decode_canonical_guest(
                                 slice, &layout,
                             ) {
-                                Ok(multi) => {
+                                Ok(dec) => {
+                                    let t_dec1 = rdtsc();
+                                    let cycles = t_dec1.saturating_sub(t_dec0);
+                                    let load_ms = cycles / (TSC_HZ_ASSUMED / 1000);
                                     uart_emit_kv(
                                         "IA_LIVRE_RUNTIME_NATIVE_PREFILL_LAYERS=",
-                                        multi.n_layers as u64,
-                                    );
-                                    uart_emit_kv(
-                                        "IA_LIVRE_RUNTIME_NATIVE_KV_BYTES=",
-                                        multi.kv_bytes as u64,
+                                        dec.n_layers as u64,
                                     );
                                     uart_emit_kv(
                                         "IA_LIVRE_RUNTIME_NATIVE_KV_N_POS=",
-                                        multi.n_pos as u64,
+                                        dec.n_prefill_pos as u64,
+                                    );
+                                    uart_emit_kv(
+                                        "IA_LIVRE_RUNTIME_NATIVE_KV_BYTES=",
+                                        ia_livre_runtime_native::kv_bytes_for_layers(
+                                            dec.n_layers as usize,
+                                        ) as u64,
                                     );
                                     uart_write("IA_LIVRE_RUNTIME_NATIVE_KV_CACHE_OK\n");
-                                    if multi.full_22l {
-                                        uart_write(
-                                            "IA_LIVRE_RUNTIME_NATIVE_PREFILL_22L_OK\n",
-                                        );
-                                    } else {
-                                        uart_write(
-                                            "IA_LIVRE_RUNTIME_NATIVE_PREFILL_PARTIAL_OK\n",
-                                        );
-                                    }
-                                    uart_emit_kv(
-                                        "IA_LIVRE_RUNTIME_NATIVE_PREFILL_CS=",
-                                        multi.prefill_checksum_milli as u64,
-                                    );
-                                    // Prefill ok; Decode = B38 → no_decode (≠ no_full_prefill).
                                     uart_write(
-                                        "IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_decode\n",
+                                        "IA_LIVRE_RUNTIME_NATIVE_PREFILL_PARTIAL_OK\n",
                                     );
+                                    uart_write("IA_LIVRE_RUNTIME_NATIVE_DECODE_OK\n");
+                                    uart_write("IA_LIVRE_RUNTIME_NATIVE_SAMPLING_OK\n");
+                                    uart_emit_kv(
+                                        "IA_LIVRE_RUNTIME_NATIVE_N_PREDICT=",
+                                        dec.n_predict as u64,
+                                    );
+                                    uart_emit_kv(
+                                        "IA_LIVRE_RUNTIME_NATIVE_LAST_TOKEN=",
+                                        dec.last_token_id as u64,
+                                    );
+                                    uart_emit_kv(
+                                        "IA_LIVRE_RUNTIME_NATIVE_LOAD_MS=",
+                                        load_ms,
+                                    );
+                                    // tokens/s × 1000 (milli) para inteiro UART
+                                    let tps_milli = if load_ms > 0 {
+                                        (dec.n_predict as u64).saturating_mul(1000_000)
+                                            / load_ms
+                                    } else {
+                                        0
+                                    };
+                                    uart_emit_kv(
+                                        "IA_LIVRE_RUNTIME_NATIVE_TOKENS_PER_S_MILLI=",
+                                        tps_milli,
+                                    );
+                                    uart_write("IA_LIVRE_RUNTIME_NATIVE_OK\n");
                                 }
                                 Err(_) => {
                                     uart_write(
-                                        "IA_LIVRE_RUNTIME_NATIVE_PREFILL_MULTI_FAIL\n",
+                                        "IA_LIVRE_RUNTIME_NATIVE_DECODE_FAIL=guest\n",
                                     );
                                     uart_write(
-                                        "IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=other\n",
+                                        "IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_decode\n",
                                     );
                                 }
                             }

@@ -7,6 +7,7 @@ cd "$(dirname "$0")/.."
 export PATH="${HOME}/.cargo/bin:${HOME}/.local/bin:${PATH}"
 
 TIMEOUT_SEC="${VERIFY_HARNESS_B_TIMEOUT:-${VERIFY_TIMEOUT:-600}}"
+export IA_LIVRE_KERNEL_PROFILE="${IA_LIVRE_KERNEL_PROFILE:-release}"
 # Alvo canônico (igual Linha A) — só como TARGET; não implica carga real.
 GGUF_TARGET_MODEL="${IA_LIVRE_HARNESS_GGUF_TARGET_MODEL:-tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf}"
 GGUF_TARGET_N_PREDICT="${IA_LIVRE_HARNESS_GGUF_TARGET_N_PREDICT:-32}"
@@ -39,7 +40,9 @@ have_ready() {
     && grep -q 'IA_LIVRE_RUNTIME_NATIVE_PREFILL_OK' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_RUNTIME_NATIVE_KV_CACHE_OK' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_RUNTIME_NATIVE_PREFILL_PARTIAL_OK' "$LOG" 2>/dev/null \
-    && grep -q 'IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_decode' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_RUNTIME_NATIVE_DECODE_OK' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_RUNTIME_NATIVE_SAMPLING_OK' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_RUNTIME_NATIVE_OK' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_TYPED_WEIGHTS_OK' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_TYPED_KVCACHE_OK' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_PHASE=prefill' "$LOG" 2>/dev/null \
@@ -82,14 +85,11 @@ if [[ -z "$OPS" || -z "$MS" ]]; then
   exit 1
 fi
 
-# Proxy E12 (preservado — ainda não é GGUF canônico em B)
+# Cabeçalho B + proxy E12 (métricas do microbench sempre; LOAD_KIND fechado no fim)
 echo "IA_LIVRE_HARNESS_LINE=B"
 echo "IA_LIVRE_HARNESS_PROXY=post_exit_microbench"
-echo "IA_LIVRE_HARNESS_LOAD_KIND=proxy"
 echo "IA_LIVRE_HARNESS_PROXY_MS=${MS}"
 echo "IA_LIVRE_HARNESS_PROXY_OPS=${OPS}"
-echo "IA_LIVRE_HARNESS_MODEL=proxy-post-exit-v1"
-echo "IA_LIVRE_HARNESS_N_PREDICT=0"
 echo "IA_LIVRE_HARNESS_ACCEL=cpu"
 
 # Evidência honesta do contrato E19 (Etapa 20) — namespace harness; ≠ TOKENS_PER_S
@@ -163,28 +163,44 @@ fi
 if grep -q 'IA_LIVRE_RUNTIME_NATIVE_PREFILL_PARTIAL_OK' "$LOG"; then
   echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_PREFILL_PARTIAL=OK"
 fi
-if grep -q 'IA_LIVRE_RUNTIME_NATIVE_PREFILL_22L_OK' "$LOG"; then
-  echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_PREFILL_22L=OK"
+if grep -q 'IA_LIVRE_RUNTIME_NATIVE_DECODE_OK' "$LOG"; then
+  echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_DECODE=OK"
 fi
-if grep -q 'IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_decode' "$LOG"; then
-  echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_FORWARD_FAIL=no_decode"
+if grep -q 'IA_LIVRE_RUNTIME_NATIVE_SAMPLING_OK' "$LOG"; then
+  echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_SAMPLING=OK"
+fi
+if grep -q 'IA_LIVRE_RUNTIME_NATIVE_OK' "$LOG"; then
+  echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE=OK"
 fi
 PL="$(grep -oE 'IA_LIVRE_RUNTIME_NATIVE_PREFILL_LAYERS=[0-9]+' "$LOG" | head -1 | cut -d= -f2 || true)"
 if [[ -n "${PL:-}" ]]; then
   echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_PREFILL_LAYERS=${PL}"
 fi
+NP="$(grep -oE 'IA_LIVRE_RUNTIME_NATIVE_N_PREDICT=[0-9]+' "$LOG" | head -1 | cut -d= -f2 || true)"
+LMS="$(grep -oE 'IA_LIVRE_RUNTIME_NATIVE_LOAD_MS=[0-9]+' "$LOG" | head -1 | cut -d= -f2 || true)"
+TPSM="$(grep -oE 'IA_LIVRE_RUNTIME_NATIVE_TOKENS_PER_S_MILLI=[0-9]+' "$LOG" | head -1 | cut -d= -f2 || true)"
 
 echo "IA_LIVRE_HARNESS_OK"
-# ADR 0014: subset N<22 → no_gguf_prefill_22l; 22L pleno → no_gguf_decode (B38).
-if grep -q 'IA_LIVRE_RUNTIME_NATIVE_PREFILL_22L_OK' "$LOG"; then
-  B_BLOCK_REASON="${IA_LIVRE_HARNESS_B_BLOCK:-no_gguf_decode}"
-else
-  B_BLOCK_REASON="${IA_LIVRE_HARNESS_B_BLOCK:-no_gguf_prefill_22l}"
+# E44: geração real (DECODE_OK) → LOAD_KIND=gguf + métricas; sem B_BLOCK.
+if grep -q 'IA_LIVRE_RUNTIME_NATIVE_DECODE_OK' "$LOG" \
+  && [[ -n "${NP:-}" && -n "${LMS:-}" && -n "${TPSM:-}" ]]; then
+  echo "IA_LIVRE_HARNESS_LOAD_KIND=gguf"
+  echo "IA_LIVRE_HARNESS_N_PREDICT=${NP}"
+  # LOAD_S em segundos (ms/1000) — inteiro se ms>=1000 senão 0 + fração via milli tokens
+  LOAD_S=$((LMS / 1000))
+  echo "IA_LIVRE_HARNESS_LOAD_S=${LOAD_S}"
+  # TOKENS_PER_S = milli/1000 (exibir com 3 casas via inteiro.milli)
+  TPS_I=$((TPSM / 1000))
+  TPS_F=$((TPSM % 1000))
+  printf 'IA_LIVRE_HARNESS_TOKENS_PER_S=%d.%03d\n' "$TPS_I" "$TPS_F"
+  echo "IA_LIVRE_HARNESS_ACCEL=cpu"
+  echo "IA_LIVRE_HARNESS_MODEL=tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf"
+  echo "IA_LIVRE_HARNESS_GGUF_STATUS=generate_ok"
+  echo "nota: geração nativa subset (layers=${PL:-?} n_predict=${NP}) — métricas medidas; hipótese ainda pode ser INCONCLUSIVO se espécie ≠ A plena."
+  exit 0
 fi
+B_BLOCK_REASON="${IA_LIVRE_HARNESS_B_BLOCK:-no_gguf_decode_perf}"
 echo "IA_LIVRE_HARNESS_B_BLOCK=${B_BLOCK_REASON}"
 echo "IA_LIVRE_HARNESS_GGUF_STATUS=${STATUS}"
-if [[ "${IA_LIVRE_HARNESS_B_MODE:-}" == "block-status" ]]; then
-  echo "IA_LIVRE_HARNESS_LOAD_KIND_GGUF=${STATUS}"
-fi
-echo "nota: hipótese A vs B NÃO comprovada — loader=${LOADER} status=${STATUS}; prefill multi/KV; sem TOKENS_PER_S (${B_BLOCK_REASON})."
+echo "nota: Decode ausente/falhou — sem TOKENS_PER_S (${B_BLOCK_REASON})."
 exit 0

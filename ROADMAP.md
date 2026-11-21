@@ -322,8 +322,9 @@ Pronto quando: prefill das 22 camadas TinyLlama (ou subset documentado equivalen
 
 ## Etapa 44 — Decode + sampling + TOKENS_PER_S canônico na Linha B
 
-Status: em_andamento  
+Status: feita  
 Issue: [#44](https://github.com/eriksonlima/projeto-ia-livre/issues/44)  
-Spec: (a gerar)  
-Pronto quando: geração canônica em B emite `TOKENS_PER_S` (e marcadores Decode/sampling) honestos; `B_BLOCK` removido ou substituído; gate harness B atualizado.
+Spec: specs/decode-tokens-linha-b/  
+Pronto quando: geração canônica em B emite `TOKENS_PER_S` (e marcadores Decode/sampling) honestos; `B_BLOCK` removido ou substituído; gate harness B atualizado.  
+**Desfecho:** Decode greedy subset 2L×`n_predict=1` + `TOKENS_PER_S` medidos; `LOAD_KIND=gguf`; `PROFILE=release`; comparable `INCONCLUSIVO` (espécie ≠ A); ADR 0015; sem `B_BLOCK` no sucesso.
 

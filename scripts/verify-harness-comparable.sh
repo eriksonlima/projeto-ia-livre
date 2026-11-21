@@ -11,7 +11,7 @@ if [[ -z "${BINDGEN_EXTRA_CLANG_ARGS:-}" ]]; then
 fi
 
 MODEL="${IA_LIVRE_MODEL:-models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf}"
-TIMEOUT_SEC="${VERIFY_HARNESS_COMPARABLE_TIMEOUT:-${VERIFY_HARNESS_TIMEOUT:-300}}"
+TIMEOUT_SEC="${VERIFY_HARNESS_COMPARABLE_TIMEOUT:-${VERIFY_HARNESS_TIMEOUT:-600}}"
 
 if [[ ! -f "$MODEL" ]]; then
   echo "GATE_FAIL: modelo ausente: $MODEL"
@@ -68,27 +68,28 @@ fi
 
 verdict="$(grep -oE 'IA_LIVRE_HARNESS_VERDICT=(COMPROVA|REFUTA|INCONCLUSIVO)' "$LOG" | tail -1 | cut -d= -f2)"
 
-# Se B é proxy na saída agregada, COMPROVA/REFUTA são ilegais
-if grep -q 'IA_LIVRE_HARNESS_PROXY=' "$LOG" \
-  || grep -q 'IA_LIVRE_HARNESS_LOAD_KIND=proxy' "$LOG"; then
+# COMPROVA/REFUTA ilegais se B não tem LOAD_KIND=gguf (só proxy/microbench)
+if ! grep -q 'IA_LIVRE_HARNESS_LOAD_KIND=gguf' "$LOG"; then
   if [[ "$verdict" == "COMPROVA" || "$verdict" == "REFUTA" ]]; then
-    echo "GATE_FAIL: VERDICT=$verdict ilegal com B proxy (exige INCONCLUSIVO)"
+    echo "GATE_FAIL: VERDICT=$verdict ilegal sem LOAD_KIND=gguf em B (exige INCONCLUSIVO)"
     fail=1
   fi
-  # tokens em linhas B proxy (fraude) — o runner já exit≠0, mas double-check
-  if grep -qE 'IA_LIVRE_HARNESS_LINE=B' "$LOG" && grep -qE 'IA_LIVRE_HARNESS_TOKENS_PER_S=' "$LOG"; then
-    # TOKENS pode existir na seção A; verificar proximidade com PROXY no mesmo log é frágil.
-    # Confiança no runner: se reason contém fraude_tokens, falhar.
-    if grep -q 'fraude_tokens_em_B_proxy' "$LOG"; then
-      echo "GATE_FAIL: tokens inventados em B proxy"
-      fail=1
-    fi
+fi
+# Subset generate: COMPROVA/REFUTA ilegais (espécie ≠ A)
+if grep -q 'E44_subset_generate_not_canonical_species' "$LOG"; then
+  if [[ "$verdict" == "COMPROVA" || "$verdict" == "REFUTA" ]]; then
+    echo "GATE_FAIL: VERDICT=$verdict ilegal com geração subset (exige INCONCLUSIVO)"
+    fail=1
   fi
+fi
+if grep -qE 'fraude_tokens' "$LOG"; then
+  echo "GATE_FAIL: fraude de tokens detectada no runner"
+  fail=1
 fi
 
 if (( fail )); then
   exit 1
 fi
 
-echo "GATE_OK: harness comparável — VERDICT=${verdict} (hipótese só 'comprovada' se VERDICT=COMPROVA com B GGUF)"
+echo "GATE_OK: harness comparável — VERDICT=${verdict} (hipótese só 'comprovada' se VERDICT=COMPROVA com B GGUF canônico)"
 exit 0

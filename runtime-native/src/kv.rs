@@ -6,8 +6,8 @@ use crate::ForwardError;
 
 /// Camadas TinyLlama 1.1B.
 pub const N_LAYER: usize = 22;
-/// Capacidade de posições (= len do prompt canônico).
-pub const MAX_SEQ: usize = 16;
+/// Capacidade de posições (prefill canônico 16 + decode até 32).
+pub const MAX_SEQ: usize = 48;
 /// Meta preferida (caminho A).
 pub const PREFILL_LAYERS_TARGET: usize = 22;
 /// Subset guest honesto (caminho B) — ADR 0014: 22L×16 inviável no timeout QEMU debug.

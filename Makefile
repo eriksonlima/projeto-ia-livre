@@ -6,9 +6,12 @@ export PATH := $(HOME)/.cargo/bin:$(PATH)
 export CARGO_TARGET_DIR := $(CURDIR)/target
 
 TARGET       := x86_64-unknown-uefi
-KERNEL_EFI   := $(CARGO_TARGET_DIR)/$(TARGET)/debug/ia-livre-kernel.efi
+# Etapa 44: release opt-in — `make build PROFILE=release` ou IA_LIVRE_KERNEL_PROFILE=release
+PROFILE      ?= $(or $(IA_LIVRE_KERNEL_PROFILE),debug)
+KERNEL_EFI   := $(CARGO_TARGET_DIR)/$(TARGET)/$(PROFILE)/ia-livre-kernel.efi
 ESP_DIR      := build/esp
 ESP_BOOT     := $(ESP_DIR)/EFI/BOOT/BOOTX64.EFI
+CARGO_PROFILE_FLAG := $(if $(filter release,$(PROFILE)),--release,)
 
 # Preferir imagem OVMF combinada; senão CODE_4M + VARS copiado para build/
 OVMF_BIOS ?= $(firstword \
@@ -38,7 +41,8 @@ help:
 
 build:
 	rustup target add $(TARGET)
-	cargo build -p ia-livre-kernel --target $(TARGET)
+	@echo "kernel PROFILE=$(PROFILE)"
+	cargo build -p ia-livre-kernel --target $(TARGET) $(CARGO_PROFILE_FLAG)
 
 esp: build
 	mkdir -p "$(ESP_DIR)/EFI/BOOT"

@@ -15,7 +15,7 @@ Princípios: [`manifesto.md`](manifesto.md).
 | **`runtime/` (host)** | Inferência llama.cpp no Linux (`std`) | ADR 0002 / `AGENTS.md` |
 | **`runtime-native/`** | Runtime freestanding Linha B (layout/forward parcial) | Etapa 29+ / crate `runtime-native/` |
 | **`TOKENS_PER_S`** | Métrica de geração medida — **proibida** fingida em B | harness / ADR [`0013`](adr/0013-geracao-canonica-fatiada-linha-b.md) |
-| **`B_BLOCK`** | Bloqueio honesto em B; evolução: … → `no_gguf_full_prefill` (E33) → **`no_gguf_prefill_22l`** (E43 subset; atual) → `no_gguf_decode` (quando 22L ok, pré-B38) | [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md) / ADR [`0014`](adr/0014-prefill-22l-kv-linha-b.md) |
+| **`B_BLOCK`** | Bloqueio honesto em B; com Decode+métricas E44 **omitido**; histórico: … → `no_gguf_prefill_22l` (E43) | [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md) / ADR [`0015`](adr/0015-decode-tokens-linha-b.md) |
 | **Veredito** | `COMPROVA` / `REFUTA` / `INCONCLUSIVO` no harness comparável | [`harness-a-b-comparavel.md`](harness-a-b-comparavel.md) |
 | **bare-metal** | Boot/imagem em PC real ou artefato ESP/USB — **≠** QEMU | [`boot-hardware-real.md`](boot-hardware-real.md) |
 | **QEMU ≠ metal** | `make verify` (QEMU) ≠ evidência de PC físico | [`boot-hardware-real.md`](boot-hardware-real.md) |
