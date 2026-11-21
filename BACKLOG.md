@@ -10,7 +10,7 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Meta do protótipo (objetivo do projeto):** um ecossistema verificável em que (1) a **hipótese A vs B** possa ser comprovada ou refutada com geração real na Linha B (`TOKENS_PER_S`), (2) o **SO IA Livre** boote de USB/ESP em hardware real com caminho de IA nativo mínimo honesto, (3) a **Rede** e a **autonomia** continuem utilizáveis **sem** exigir o SO. Ordem abaixo = prioridade sugerida (topo primeiro).
 >
-> **Análise pós-E65 (2026-11-21):** E63 SFS full; E64 sym_cpu; E65 skip VFIO. Topo: **B61** (TCP guest) ou B67 docs; B55 adiada.
+> **Análise pós-E65 (2026-11-21):** E63 SFS full; E64 sym_cpu; E65 skip VFIO. Topo: **B61** (TCP guest) ou B67 docs; B55 adiada (não promover).
 
 
 
@@ -56,6 +56,13 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Pronto quando: architecture + product-context + glossário refletem E42–E58 e decisões abertas reais
 - Deps: E58
 
+
+### B55 — Re-corrida harness A/B quieta pós-espécie canônica
+- Issue: [#61](https://github.com/eriksonlima/projeto-ia-livre/issues/61)
+- Origem: instrumento E22/E28; **adiada** (ADR 0021/0022)
+- Pronto quando: `VERDICT` limpo pós-espécie canônica ou caminho novo
+- Nota: não promover enquanto BLOQUEIO_FINAL / canônico inviável sem reabertura
+
 ## Promovidas / arquivadas
 
 ### B60 — GPU real no guest (PCI/pass-through)
@@ -65,13 +72,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: E38/E55
 - Promovido para Etapa 65 (após E64); desfecho skip `need_vfio` neste host.
 - Etapa: [Etapa 65 — GPU guest passthrough](ROADMAP.md)
-
-### B55 — Re-corrida harness A/B quieta pós-espécie canônica
-- Issue: [#61](https://github.com/eriksonlima/projeto-ia-livre/issues/61)
-- Origem: instrumento E22/E28 existe; falta corrida decisiva
-- Pronto quando: `VERDICT` + `REASON` limpos; quieto; comprovada/refutada **ou** `INCONCLUSIVO` numérico (não teto de espécie)
-- Deps: B54 — **adiada** enquanto ADR 0021 vigorar
-- Nota: mantida adiada (não promovida); prioridade abaixo de B61+
 
 ### B59 — Accel GPU simétrica A/B no harness
 - Issue: [#73](https://github.com/eriksonlima/projeto-ia-livre/issues/73)
