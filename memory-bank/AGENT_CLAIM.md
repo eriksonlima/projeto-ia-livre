@@ -5,12 +5,12 @@ Regra: `.cursor/rules/agentes-em-paralelo.mdc`.
 
 ## Estado atual
 
-- **holder:** _(nenhum)_
-- **etapa:** —
-- **issue:** —
-- **paths:** —
-- **since:** —
-- **expires:** —
+- **holder:** cursor-agent-principal
+- **etapa:** 21 — Carga GGUF canônica na Linha B (mínimo honesto)
+- **issue:** #21
+- **paths:** ROADMAP.md, BACKLOG.md, memory-bank/, specs/carga-gguf-linha-b/, docs/, AGENTS.md, Makefile, scripts/, kernel/ (só se carga GGUF real exigir)
+- **since:** 2026-11-21T00:37:00Z
+- **expires:** 2026-11-21T02:37:00Z
 
 ## Como usar
 
