@@ -378,8 +378,9 @@ Pronto quando: `--disc-mdns` anuncia/resolve `_ia-livre._tcp` em LAN com gate op
 
 ## Etapa 51 — Tarefa/conhecimento mínimo na Rede (além de PING)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#51](https://github.com/eriksonlima/projeto-ia-livre/issues/51)  
 Spec: specs/tarefa-conhecimento-rede/  
-Pronto quando: tipo de mensagem v1 (`TASK` + `TASK_ACK`) + ACK correspondente + gate de dois nós; sem marketplace; sem exigir SO.
+Pronto quando: tipo de mensagem v1 (`TASK` + `TASK_ACK`) + ACK correspondente + gate de dois nós; sem marketplace; sem exigir SO.  
+**Desfecho:** `TASK t1 prova-task-v1` / `TASK_ACK t1` → `IA_LIVRE_TASK_OK`; `make verify-node` exige TASK_OK; KNOW/marketplace fora.
 

@@ -6,6 +6,8 @@ use rand::RngCore;
 
 pub const PROTO_V: &str = "v1";
 pub const PROOF_TEXT: &str = "ola-rede-ia-livre";
+pub const PROOF_TASK_ID: &str = "t1";
+pub const PROOF_TASK_TEXT: &str = "prova-task-v1";
 
 /// Mensagem canônica HELLO (o que a assinatura cobre).
 pub fn hello_canonical(peer_id: &str, tcp_port: u16, pubkey_hex: &str) -> String {
@@ -126,4 +128,33 @@ pub fn format_ping(nonce_hex: &str) -> String {
 
 pub fn format_pong(nonce_hex: &str) -> String {
     format!("PONG {nonce_hex}\n")
+}
+
+pub fn format_task(task_id: &str, text: &str) -> String {
+    format!("TASK {task_id} {text}\n")
+}
+
+pub fn format_task_ack(task_id: &str) -> String {
+    format!("TASK_ACK {task_id}\n")
+}
+
+/// Parse `TASK <id> <texto>` — id sem espaços; texto sem `\n`.
+pub fn parse_task(line: &str) -> Option<(&str, &str)> {
+    let rest = line.strip_prefix("TASK ")?;
+    let (id, text) = rest.split_once(char::is_whitespace)?;
+    let id = id.trim();
+    let text = text.trim();
+    if id.is_empty() || text.is_empty() {
+        return None;
+    }
+    Some((id, text))
+}
+
+pub fn parse_task_ack(line: &str) -> Option<&str> {
+    let rest = line.strip_prefix("TASK_ACK ")?;
+    let id = rest.trim();
+    if id.is_empty() || id.contains(char::is_whitespace) {
+        return None;
+    }
+    Some(id)
 }

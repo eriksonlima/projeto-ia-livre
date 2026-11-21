@@ -2,14 +2,14 @@
 
 ## Foco atual
 
-- Etapas 1–50 **feitas**
-- E50: mDNS `_ia-livre._tcp` (`mdns-sd`); gate opt-in
-- Topo Abertas: **B45** (TASK/KNOW na Rede)
+- Etapas 1–51 **feitas**
+- E51: `TASK`/`TASK_ACK` + `TASK_OK` no gate do nó
+- Topo Abertas: **B46** (nó Rede no SO nativo)
 
 ## Próximo passo
 
-- Promover B45 → Etapa 51 ou continuar
+- Promover B46 → Etapa 52 ou continuar
 
 ## Notas
 
-- Lease: liberar após push E50
+- Lease: liberar após push E51

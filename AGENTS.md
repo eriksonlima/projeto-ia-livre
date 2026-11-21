@@ -138,10 +138,10 @@ cargo run -p ia-livre-node -- --tcp-port 7400 --node-id alice --disc-mdns
 cargo run -p ia-livre-node -- --tcp-port 7401 --node-id bob --disc-mdns
 ```
 
-Esperado: `IA_LIVRE_PROTO=v1`, `IA_LIVRE_PEER_ID=…`, `IA_LIVRE_IDENT_OK`, `IA_LIVRE_PEER_OK`, `IA_LIVRE_MSG_OK`, `IA_LIVRE_PING_OK`; com bootstrap: `IA_LIVRE_DISC_MODE=bootstrap` + `IA_LIVRE_DISC_OK`; com mDNS: `IA_LIVRE_DISC_MODE=mdns` + `IA_LIVRE_DISC_OK`.  
-`--node-id` é apelido; a âncora de confiança é o PeerId ed25519. Precedência dial: `--peer` > bootstrap > mdns.
+Esperado: `IA_LIVRE_PROTO=v1`, `IA_LIVRE_PEER_ID=…`, `IA_LIVRE_IDENT_OK`, `IA_LIVRE_PEER_OK`, `IA_LIVRE_MSG_OK`, `IA_LIVRE_PING_OK`, `IA_LIVRE_TASK_OK`; com bootstrap: `IA_LIVRE_DISC_MODE=bootstrap` + `IA_LIVRE_DISC_OK`; com mDNS: `IA_LIVRE_DISC_MODE=mdns` + `IA_LIVRE_DISC_OK`.  
+`--node-id` é apelido; a âncora de confiança é o PeerId ed25519. Precedência dial: `--peer` > bootstrap > mdns. `TASK`/`TASK_ACK` = Etapa 51 (além de PING).
 
-Gate automatizado: `make verify-node` (peer + bootstrap; mDNS skip default; não exige QEMU, GGUF nem runtime).
+Gate automatizado: `make verify-node` (peer + bootstrap + `TASK_OK`; mDNS skip default; não exige QEMU, GGUF nem runtime).
 
 ### Ambiente de autonomia (host — Etapas 7 / 24)
 
@@ -367,13 +367,14 @@ grep -q 'IA_LIVRE_PEER_OK' node/src/session.rs
 grep -q 'IA_LIVRE_MSG_OK' node/src/session.rs
 grep -q 'IA_LIVRE_IDENT_OK' node/src/session.rs
 grep -q 'IA_LIVRE_PING_OK' node/src/session.rs
+grep -q 'IA_LIVRE_TASK_OK' node/src/session.rs
 grep -q 'IA_LIVRE_DISC_OK' node/src/main.rs
 grep -q 'IA_LIVRE_DISC_MODE=bootstrap' scripts/verify-node.sh
 grep -q '_ia-livre._tcp' node/src/mdns.rs
 ! grep -qi 'libp2p' node/Cargo.toml
 ```
 
-`make verify-node` roda estágio peer **e** bootstrap (B sem `--peer`); exige v1 + `IA_LIVRE_DISC_OK` no bootstrap. Timeout por estágio: `VERIFY_NODE_TIMEOUT` (default 45s).  
+`make verify-node` roda estágio peer **e** bootstrap (B sem `--peer`); exige v1 + `TASK_OK` + `IA_LIVRE_DISC_OK` no bootstrap. Timeout por estágio: `VERIFY_NODE_TIMEOUT` (default 45s).  
 mDNS: `VERIFY_NODE_MDNS_SKIP=1` (default) → `IA_LIVRE_DISC_MDNS_SKIP=…`. Prova: `VERIFY_NODE_MDNS_SKIP=0 make verify-node` (exige `DISC_MODE=mdns` + `DISC_OK`); se multicast falhar sem `VERIFY_NODE_MDNS_FORCE=1`, skip honesto. Gates do kernel/runtime permanecem.
 
 ### Gate do ambiente de autonomia (Etapas 7 / 24 / 40 — adicional)

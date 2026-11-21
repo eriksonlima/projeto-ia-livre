@@ -1,4 +1,4 @@
-//! Sessão TCP v1: IDENT ↔ IDENT → MSG/ACK → PING/PONG.
+//! Sessão TCP v1: IDENT ↔ IDENT → MSG/ACK → PING/PONG → TASK/TASK_ACK.
 
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
@@ -8,7 +8,8 @@ use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 use tokio::net::TcpStream;
 
 use crate::proto::{
-    format_ack, format_ident, format_msg, format_ping, format_pong, parse_ident_v1, random_nonce_hex,
+    format_ack, format_ident, format_msg, format_ping, format_pong, format_task, format_task_ack,
+    parse_ident_v1, parse_task, parse_task_ack, random_nonce_hex, PROOF_TASK_ID, PROOF_TASK_TEXT,
     PROOF_TEXT,
 };
 
@@ -32,7 +33,7 @@ fn emit_once(flag: &mut bool, marker: &str) {
     }
 }
 
-/// Handshake IDENT + prova MSG/ACK + um ciclo PING/PONG.
+/// Handshake IDENT + prova MSG/ACK + PING/PONG + TASK/TASK_ACK.
 pub async fn run_session(
     stream: TcpStream,
     sk: SigningKey,
@@ -69,7 +70,6 @@ pub async fn run_session(
                 match parse_ident_v1(trimmed) {
                     Some(id) => {
                         if id.peer_id == peer_id {
-                            // Eco próprio — ignorar.
                             continue;
                         }
                         break id;
@@ -87,12 +87,10 @@ pub async fn run_session(
     println!("IA_LIVRE_IDENT_OK");
     println!("IA_LIVRE_REMOTE_PEER_ID={}", peer_ident.peer_id);
 
-    // Sessão autenticada → PEER_OK.
     if !emit_peer_ok(&peer_ok, remote_hint) {
-        // Outro caminho já emitiu; ainda assim completamos MSG/ACK se possível.
+        // Outro caminho já emitiu; ainda assim completamos a prova.
     }
 
-    // MSG de prova.
     let outbound = format_msg(PROOF_TEXT);
     if write_half.write_all(outbound.as_bytes()).await.is_err() {
         return;
@@ -101,8 +99,10 @@ pub async fn run_session(
 
     let mut msg_ok = false;
     let mut ping_ok = false;
+    let mut task_ok = false;
     let ping_nonce = random_nonce_hex();
     let mut ping_sent = false;
+    let mut task_sent = false;
 
     loop {
         line.clear();
@@ -136,12 +136,23 @@ pub async fn run_session(
                     if nonce.trim() == ping_nonce {
                         emit_once(&mut ping_ok, "IA_LIVRE_PING_OK");
                     }
+                } else if let Some((tid, text)) = parse_task(trimmed) {
+                    if tid == PROOF_TASK_ID && text == PROOF_TASK_TEXT {
+                        let ack = format_task_ack(tid);
+                        if write_half.write_all(ack.as_bytes()).await.is_err() {
+                            break;
+                        }
+                        let _ = write_half.flush().await;
+                        emit_once(&mut task_ok, "IA_LIVRE_TASK_OK");
+                    }
+                } else if let Some(tid) = parse_task_ack(trimmed) {
+                    if tid == PROOF_TASK_ID {
+                        emit_once(&mut task_ok, "IA_LIVRE_TASK_OK");
+                    }
                 } else if trimmed.starts_with("IDENT ") {
-                    // IDENT tardio — ignorar.
                     continue;
                 }
 
-                // Após MSG_OK, dispara um PING se ainda não.
                 if msg_ok && !ping_sent {
                     let ping = format_ping(&ping_nonce);
                     if write_half.write_all(ping.as_bytes()).await.is_err() {
@@ -151,8 +162,16 @@ pub async fn run_session(
                     ping_sent = true;
                 }
 
-                if msg_ok && ping_ok {
-                    // Prova completa; mantém a conexão um pouco para o peer.
+                if msg_ok && ping_ok && !task_sent {
+                    let task = format_task(PROOF_TASK_ID, PROOF_TASK_TEXT);
+                    if write_half.write_all(task.as_bytes()).await.is_err() {
+                        break;
+                    }
+                    let _ = write_half.flush().await;
+                    task_sent = true;
+                }
+
+                if msg_ok && ping_ok && task_ok {
                     tokio::time::sleep(std::time::Duration::from_millis(200)).await;
                     break;
                 }

@@ -81,12 +81,13 @@ run_pair() {
     --key-file "$b_key" $b_extra >"$B_LOG" 2>&1 &
   B_PID=$!
 
-  local deadline ok_peer ok_msg ok_ident ok_ping ok_disc
+  local deadline ok_peer ok_msg ok_ident ok_ping ok_task ok_disc
   deadline=$((SECONDS + TIMEOUT_SEC))
   ok_peer=0
   ok_msg=0
   ok_ident=0
   ok_ping=0
+  ok_task=0
   ok_disc=0
 
   while (( SECONDS < deadline )); do
@@ -109,11 +110,14 @@ run_pair() {
     if grep -q 'IA_LIVRE_PING_OK' "$A_LOG" || grep -q 'IA_LIVRE_PING_OK' "$B_LOG"; then
       ok_ping=1
     fi
+    if grep -q 'IA_LIVRE_TASK_OK' "$A_LOG" || grep -q 'IA_LIVRE_TASK_OK' "$B_LOG"; then
+      ok_task=1
+    fi
     if grep -q 'IA_LIVRE_DISC_OK' "$A_LOG" || grep -q 'IA_LIVRE_DISC_OK' "$B_LOG"; then
       ok_disc=1
     fi
 
-    if (( ok_peer && ok_msg && ok_ident && ok_ping )); then
+    if (( ok_peer && ok_msg && ok_ident && ok_ping && ok_task )); then
       if [[ "$need_disc" == "1" ]]; then
         if (( ok_disc )); then
           break
@@ -142,6 +146,10 @@ run_pair() {
     echo "GATE_FAIL (${stage}): IA_LIVRE_PING_OK ausente"
     fail=1
   fi
+  if (( ! ok_task )); then
+    echo "GATE_FAIL (${stage}): IA_LIVRE_TASK_OK ausente"
+    fail=1
+  fi
   if [[ "$need_disc" == "1" ]] && (( ! ok_disc )); then
     echo "GATE_FAIL (${stage}): IA_LIVRE_DISC_OK ausente"
     fail=1
@@ -160,7 +168,7 @@ run_pair() {
     return 1
   fi
 
-  echo "GATE_OK (${stage}): PEER_OK + MSG_OK + IDENT_OK + PING_OK$([ "$need_disc" = 1 ] && echo " + DISC_OK (${disc_mode})" || true)"
+  echo "GATE_OK (${stage}): PEER_OK + MSG_OK + IDENT_OK + PING_OK + TASK_OK$([ "$need_disc" = 1 ] && echo " + DISC_OK (${disc_mode})" || true)"
   return 0
 }
 

@@ -34,8 +34,10 @@ Linhas UTF-8 terminadas em `\n` (TCP e UDP).
 | `IDENT` | TCP | `IDENT v1 <peer_id> <pubkey_hex> <nonce_hex> <sig_hex>` | Handshake; canônico `IDENT\|v1\|<peer_id>\|<pubkey_hex>\|<nonce_hex>` |
 | `MSG` / `ACK` | TCP | `MSG <texto>` / `ACK <texto>` | Aplicação (prova: `ola-rede-ia-livre`) |
 | `PING` / `PONG` | TCP | `PING <nonce>` / `PONG <nonce>` | Liveness após IDENT |
+| `TASK` / `TASK_ACK` | TCP | `TASK <task_id> <texto>` / `TASK_ACK <task_id>` | Pedido mínimo além de PING (Etapa 51; prova: `t1` / `prova-task-v1`) |
 
-HELLO/IDENT inválidos (sig, PeerId≠pubkey, versão≠`v1`) são rejeitados. Dial por HELLO só após validação.
+HELLO/IDENT inválidos (sig, PeerId≠pubkey, versão≠`v1`) são rejeitados. Dial por HELLO só após validação.  
+`ACK` de MSG **não** confunde com `TASK_ACK`. `task_id` = token sem espaços. KNOW / marketplace **fora** desta versão.
 
 ### Fluxo canônico
 
@@ -45,6 +47,7 @@ TCP dial (--peer ou pós-HELLO)  →
 IDENT ↔ IDENT (nonce)    →  IA_LIVRE_IDENT_OK + IA_LIVRE_PEER_OK
 MSG / ACK (prova)        →  IA_LIVRE_MSG_OK
 PING / PONG              →  IA_LIVRE_PING_OK
+TASK / TASK_ACK          →  IA_LIVRE_TASK_OK
 ```
 
 ## Defaults
@@ -53,7 +56,8 @@ PING / PONG              →  IA_LIVRE_PING_OK
 |------|-------|
 | TCP A / B | `7400` / `7401` |
 | UDP | `7410` |
-| Prova | `ola-rede-ia-livre` |
+| Prova MSG | `ola-rede-ia-livre` |
+| Prova TASK | `task_id=t1` · texto `prova-task-v1` |
 | Timeout gate | 45s (`VERIFY_NODE_TIMEOUT`) |
 | Protocolo | `v1` |
 
@@ -66,6 +70,7 @@ PING / PONG              →  IA_LIVRE_PING_OK
 - `IA_LIVRE_PEER_OK` / `IA_LIVRE_PEER_ADDR=…` (após IDENT)
 - `IA_LIVRE_MSG_OK`
 - `IA_LIVRE_PING_OK`
+- `IA_LIVRE_TASK_OK`
 
 ## Como rodar
 
@@ -98,5 +103,6 @@ Timeout: `VERIFY_NODE_TIMEOUT` (default 45s **por estágio**).
 
 ## Fora deste v1 (núcleo framing)
 
-DHT, relay executável, NAT traversal, marketplace, integração runtime/kernel, libp2p/Iroh, QUIC obrigatório.  
-mDNS = serviço `_ia-livre._tcp` implementado na Etapa 50 (opt-in / skip CI); **não** substitui IDENT.
+DHT, relay executável, NAT traversal, marketplace, tipo `KNOW`, integração runtime/kernel, libp2p/Iroh, QUIC obrigatório.  
+mDNS = serviço `_ia-livre._tcp` (Etapa 50; opt-in / skip CI); **não** substitui IDENT.  
+`TASK` = pedido/ACK mínimo (Etapa 51); **não** é fila persistente nem matching multi-peer.
