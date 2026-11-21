@@ -2,20 +2,19 @@
 
 ## Foco atual
 
-- Etapa 19 **feita** (MEM_SCHED no kernel; `make verify` OK)
-- **Etapa 20** — Runtime falando o contrato nativo (B14) — branch `etapa-b14-runtime-contrato` / worktree `projeto-ia-livre-b14`
+- **Etapa 20** `em_andamento` — Runtime falando o contrato nativo (B14)
 - Issue [#20](https://github.com/eriksonlima/projeto-ia-livre/issues/20); Spec: `specs/runtime-contrato-nativo/`
-- Tasks 1–3 feitas (shim host + `verify-runtime-contract`); Task 4 desbloqueada (E19 em `main`)
+- Lease: `cursor-agent-principal-e20` (worktree `projeto-ia-livre-b14`)
+- Tasks 1–3 feitas; **Task 4** (QEMU + contrato E19) em implementação
 
 ## Mudanças recentes
 
-- Merge `origin/main` (E19) na branch B14
-- E19: Weights/KvCache + Prefill/Decode + gate MEM_SCHED_OK
-- Spec + Tasks 1–3: docs + shim `runtime-contract/` + gate host
+- Merge `origin/main` (E19 feita) na branch B14
+- Claim Etapa 20; status → `em_andamento`
 
 ## Próximo passo
 
-- Claim Etapa 20 → `em_andamento` → Task 4 (QEMU observa `MEM_SCHED_*` / `TYPED_*`; harness B honesto)
+- Task 4: harness B observa `MEM_SCHED_*`/`TYPED_*`, reemite evidência de contrato, preserva proxy; gates
 
 ## Notas
 
