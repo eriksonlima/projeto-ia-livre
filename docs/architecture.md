@@ -47,7 +47,8 @@ As camadas formam um ecossistema, não quatro produtos desconectados. A ordem de
 - **Etapa 10:** primeiro mecanismo de memória no kernel UEFI — mapa + `AllocatePages`/bump sob Boot Services (sem inferência). Contrato: [`kernel-alem-do-boot.md`](kernel-alem-do-boot.md).
 - **Etapa 11:** `ExitBootServices` + base estável (mapa owned + memória); I/O pós-exit via UART COM1. Contrato: [`kernel-pos-boot-services.md`](kernel-pos-boot-services.md).
 - **Etapa 12:** Linha B mínima = proxy pós-ExitBoot (não TinyLlama); hipótese **não** comprovada. Contrato: [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md).
-- **Etapa 13:** desenho candidato memória model-aware + scheduler por fases (ADR 0003) — **sem** implementação.
+- **Etapa 13:** desenho candidato memória model-aware + scheduler por fases (ADR 0003).
+- **Etapa 19:** implementação mínima no kernel pós-ExitBoot (`Weights`/`KvCache` + Prefill/Decode + quantum) — [`memoria-scheduler-impl-minima.md`](memoria-scheduler-impl-minima.md); **sem** GGUF; hipótese **não** comprovada.
 - **Etapa 14:** desenho stack Rede IA Livre v1 (ADR 0004) — **sem** implementação no `node/`.
 - **Etapa 15:** escopo autonomia v1 (ADR 0005) — **sem** implementação no `agent/`.
 - **Etapa 16:** desenho GPU manager + multi-GPU (ADR 0006) — **sem** implementação no `kernel/`/`runtime/`.
@@ -55,7 +56,7 @@ As camadas formam um ecossistema, não quatro produtos desconectados. A ordem de
 
 ## Decisões abertas
 
-- ~~Desenho fino de memória model-aware e do scheduler de inferência~~ — **decidido no nível desenho (Etapa 13):** classes `Weights`/`KvCache` + hints Prefill/Decode — ADR [`0003`](adr/0003-memoria-model-aware-e-scheduler-fases.md) + [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-scheduler-nativo.md). **Implementação e prova da hipótese continuam abertas.**
+- ~~Desenho fino de memória model-aware e do scheduler de inferência~~ — **decidido no nível desenho (Etapa 13):** classes `Weights`/`KvCache` + hints Prefill/Decode — ADR [`0003`](adr/0003-memoria-model-aware-e-scheduler-fases.md) + [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-scheduler-nativo.md). ~~Implementação mínima~~ — **Etapa 19:** [`memoria-scheduler-impl-minima.md`](memoria-scheduler-impl-minima.md). Runtime falando o contrato e prova da hipótese continuam **abertas**.
 - ~~Stack concreta do protocolo P2P (bibliotecas, transporte, identidade)~~ — **decidida no nível desenho (Etapa 14):** TCP+UDP, ed25519/`PeerId`, HELLO assinado + IDENT — ADR [`0004`](adr/0004-stack-protocolo-rede-ia-livre.md) + [`desenho-protocolo-rede-ia-livre.md`](desenho-protocolo-rede-ia-livre.md). **Implementação continua aberta.**
 - ~~Licenças definitivas por componente~~ — **decididas (Etapa 17):** Apache-2.0 para kernel, runtime, node, agent e docs — ADR [`0007`](adr/0007-licencas-por-componente.md) + [`LICENSE`](../LICENSE). Deps de terceiros: [`licencas-terceiros.md`](licencas-terceiros.md).
 - ~~Estratégia de aceleração além de CPU~~ — **protótipo host (Etapa 8 / ADR 0002):** CUDA canônico / Vulkan alternativa via llama.cpp (single-GPU). ~~GPU manager no kernel e multi-GPU~~ — **decididos no nível desenho (Etapa 16):** enum/afinidade/placement + pipeline/layer sharding preferido — ADR [`0006`](adr/0006-gpu-manager-multi-gpu.md) + [`desenho-gpu-manager-multi-gpu.md`](desenho-gpu-manager-multi-gpu.md). **Implementação e prova continuam abertas.** Host ≠ manager nativo.

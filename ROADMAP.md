@@ -130,7 +130,7 @@ Pronto quando: metodologia documentada para «Linux otimizado» na Linha A e/ou 
 
 ## Etapa 19 — Memória model-aware + scheduler por fases (impl. mínima)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#19](https://github.com/eriksonlima/projeto-ia-livre/issues/19)  
 Spec: specs/memoria-scheduler-impl-minima/  
 Pronto quando: contrato mínimo verificável no kernel pós-ExitBoot — allocator tipado `Weights`/`KvCache`, hints Prefill/Decode com política de quantum mínima e marcadores serial; `make verify` (ou extensão documentada) cobre o caminho; sem GGUF; sem prova da hipótese; sem ABI estável/multi-tenant/GPU manager.
@@ -141,3 +141,4 @@ Status: pendente
 Issue: [#20](https://github.com/eriksonlima/projeto-ia-livre/issues/20)  
 Spec: specs/runtime-contrato-nativo/  
 Pronto quando: runtime (host e/ou caminho nativo) com evidência verificável de uso do contrato `Weights`/`KvCache` e/ou phase hints; harness B atualizado honestamente (sem fingir `TOKENS_PER_S` GGUF se ainda não houver); hipótese **não** comprovada; sem GPU manager. Depende da Etapa 19 (contrato no kernel).
+
