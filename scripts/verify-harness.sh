@@ -9,7 +9,7 @@ if [[ -z "${BINDGEN_EXTRA_CLANG_ARGS:-}" ]]; then
 fi
 
 MODEL="${IA_LIVRE_MODEL:-models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf}"
-TIMEOUT_SEC="${VERIFY_HARNESS_TIMEOUT:-300}"
+TIMEOUT_SEC="${VERIFY_HARNESS_TIMEOUT:-600}"
 
 if [[ ! -f "$MODEL" ]]; then
   echo "GATE_FAIL: modelo ausente: $MODEL"
@@ -111,12 +111,18 @@ for marker in \
   'IA_LIVRE_HARNESS_RUNTIME_NATIVE_ATTN_LAYER=OK' \
   'IA_LIVRE_HARNESS_RUNTIME_NATIVE_FFN_LAYER=OK' \
   'IA_LIVRE_HARNESS_RUNTIME_NATIVE_PREFILL=OK' \
-  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_FORWARD_FAIL=no_full_prefill'; do
+  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_KV_CACHE=OK' \
+  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_PREFILL_PARTIAL=OK' \
+  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_FORWARD_FAIL=no_decode'; do
   if ! grep -q "$marker" "$LOG_B"; then
     echo "GATE_FAIL: marcador ausente na Linha B: $marker"
     fail=1
   fi
 done
+if ! grep -qE 'IA_LIVRE_HARNESS_RUNTIME_NATIVE_PREFILL_LAYERS=[0-9]+' "$LOG_B"; then
+  echo "GATE_FAIL: PREFILL_LAYERS ausente na Linha B"
+  fail=1
+fi
 if ! grep -q 'IA_LIVRE_HARNESS_GGUF_NATIVE_LOADER=blockio_full' "$LOG_B"; then
   echo "GATE_FAIL: exige GGUF_NATIVE_LOADER=blockio_full"
   fail=1
@@ -144,17 +150,17 @@ if grep -qE 'IA_LIVRE_HARNESS_LOAD_KIND=gguf' "$LOG_B"; then
   echo "GATE_FAIL: B emitiu LOAD_KIND=gguf sem caminho GGUF real implementado"
   fail=1
 fi
-# Bloqueio residual E33 Task 2: attn+FFN layer0/prefill; 22L/KV ainda não
+# Bloqueio residual E43: prefill multi/KV subset; 22L pleno ainda não (ADR 0014)
 if ! grep -q 'IA_LIVRE_HARNESS_B_BLOCK=' "$LOG_B"; then
   echo "GATE_FAIL: B deve declarar B_BLOCK= (estado honesto)"
   fail=1
 fi
-if grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=(no_gguf_path|awaiting_b13_b14|no_gguf_infer|no_gguf_infer_engine|no_gguf_forward|no_gguf_generate|no_gguf_decode)$' "$LOG_B"; then
-  echo "GATE_FAIL: B_BLOCK legado — Etapa 33 exige no_gguf_full_prefill"
+if grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=(no_gguf_path|awaiting_b13_b14|no_gguf_infer|no_gguf_infer_engine|no_gguf_forward|no_gguf_generate|no_gguf_full_prefill)$' "$LOG_B"; then
+  echo "GATE_FAIL: B_BLOCK legado — Etapa 43 exige no_gguf_prefill_22l (ou no_gguf_decode se 22L)"
   fail=1
 fi
-if ! grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=no_gguf_full_prefill' "$LOG_B"; then
-  echo "GATE_FAIL: B_BLOCK deve ser no_gguf_full_prefill (attn+ffn layer0 ok; sem 22L/KV)"
+if ! grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=(no_gguf_prefill_22l|no_gguf_decode)$' "$LOG_B"; then
+  echo "GATE_FAIL: B_BLOCK deve ser no_gguf_prefill_22l (subset) ou no_gguf_decode (22L)"
   fail=1
 fi
 
@@ -163,5 +169,5 @@ if (( fail )); then
   exit 1
 fi
 
-echo "GATE_OK: harness — A (GGUF) ok + B (proxy + attn/ffn/prefill layer0 + no_gguf_full_prefill) ok — hipótese NÃO comprovada"
+echo "GATE_OK: harness — A (GGUF) ok + B (proxy + prefill multi/KV + no_gguf_prefill_22l) ok — hipótese NÃO comprovada"
 exit 0

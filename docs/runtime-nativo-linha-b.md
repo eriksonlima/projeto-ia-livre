@@ -114,14 +114,15 @@ Com Etapas 19/20 verificáveis no serial QEMU, `scripts/run-harness-line-b.sh`:
 
 `HARNESS_MODEL=` permanece `proxy-post-exit-v1`. Rodar `ia-livre-runtime` no host continua sendo **Linha A**.
 
-### Estado atual (após Etapa 33 — attn+FFN layer0 / prefill parcial)
+### Estado atual (após Etapa 43 — Prefill multi + KV subset)
 
 - Loader E26/E27: GGUF completo via BlockIO (`blockio_full`).
-- **Motor:** `runtime-native/` — ADR [`0010`](adr/0010-runtime-nativo-freestanding-linha-b.md) / [`0012`](adr/0012-forward-gguf-fatiado-linha-b.md) / [`0013`](adr/0013-geracao-canonica-fatiada-linha-b.md).
-- **Avanço E32:** tokenize + embed + camada parcial.
-- **Avanço E33:** `ATTN_LAYER_OK` (GQA blk.0) + `FFN_LAYER_OK` (SwiGLU) + `PREFILL_OK` (1 token × camada 0); `FORWARD_FAIL=no_full_prefill`.
-- **Bloqueio residual:** `B_BLOCK=no_gguf_full_prefill` — 22 camadas + KV multi-token + decode inviáveis no prazo sem fraude → **sem** `TOKENS_PER_S`.
-- Proxy E12 permanece (`LOAD_KIND=proxy`). Hipótese **não** comprovada. Comparable: `VERDICT_REASON=E33_no_gguf_full_prefill_22L_kv_inviable` (≠ ausência genérica de tokens).
+- **Motor:** `runtime-native/` — ADR [`0010`](adr/0010-runtime-nativo-freestanding-linha-b.md) / [`0012`](adr/0012-forward-gguf-fatiado-linha-b.md) / [`0013`](adr/0013-geracao-canonica-fatiada-linha-b.md) / [`0014`](adr/0014-prefill-22l-kv-linha-b.md).
+- **Avanço E32/E33:** tokenize + embed + attn/FFN layer0 + `PREFILL_OK` (1 token × camada 0).
+- **Avanço E43:** Prefill multi × **`PREFILL_LAYERS=2` × `KV_N_POS=2`** (subset guest) + KV GQA (`KV_CACHE_OK`); `PREFILL_PARTIAL_OK`; `FORWARD_FAIL=no_decode`. Host prova 2L×16 tokens.
+- **Por que não 22L / 16 pos no QEMU:** extrapolação 22L inviável; 2L×16 no QEMU debug estourou 600 s (ADR 0014). Subset 2×2 = mesmas ops, projeção documentada.
+- **Bloqueio residual:** `B_BLOCK=no_gguf_prefill_22l` — Prefill 22L pleno ainda não; Decode/sampling = B38 → **sem** `TOKENS_PER_S`.
+- Proxy E12 permanece (`LOAD_KIND=proxy`). Hipótese **não** comprovada. Comparable: `VERDICT_REASON=E43_no_gguf_prefill_22l_subset_kv_ok`.
 
 ### Loader GGUF nativo mínimo (Etapa 26)
 

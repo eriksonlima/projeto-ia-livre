@@ -6,7 +6,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 export PATH="${HOME}/.cargo/bin:${HOME}/.local/bin:${PATH}"
 
-TIMEOUT_SEC="${VERIFY_HARNESS_B_TIMEOUT:-${VERIFY_TIMEOUT:-300}}"
+TIMEOUT_SEC="${VERIFY_HARNESS_B_TIMEOUT:-${VERIFY_TIMEOUT:-600}}"
 # Alvo canônico (igual Linha A) — só como TARGET; não implica carga real.
 GGUF_TARGET_MODEL="${IA_LIVRE_HARNESS_GGUF_TARGET_MODEL:-tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf}"
 GGUF_TARGET_N_PREDICT="${IA_LIVRE_HARNESS_GGUF_TARGET_N_PREDICT:-32}"
@@ -37,7 +37,9 @@ have_ready() {
     && grep -q 'IA_LIVRE_RUNTIME_NATIVE_ATTN_LAYER_OK' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_RUNTIME_NATIVE_FFN_LAYER_OK' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_RUNTIME_NATIVE_PREFILL_OK' "$LOG" 2>/dev/null \
-    && grep -q 'IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_full_prefill' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_RUNTIME_NATIVE_KV_CACHE_OK' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_RUNTIME_NATIVE_PREFILL_PARTIAL_OK' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_decode' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_TYPED_WEIGHTS_OK' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_TYPED_KVCACHE_OK' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_PHASE=prefill' "$LOG" 2>/dev/null \
@@ -155,16 +157,34 @@ fi
 if grep -q 'IA_LIVRE_RUNTIME_NATIVE_PREFILL_OK' "$LOG"; then
   echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_PREFILL=OK"
 fi
-if grep -q 'IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_full_prefill' "$LOG"; then
-  echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_FORWARD_FAIL=no_full_prefill"
+if grep -q 'IA_LIVRE_RUNTIME_NATIVE_KV_CACHE_OK' "$LOG"; then
+  echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_KV_CACHE=OK"
+fi
+if grep -q 'IA_LIVRE_RUNTIME_NATIVE_PREFILL_PARTIAL_OK' "$LOG"; then
+  echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_PREFILL_PARTIAL=OK"
+fi
+if grep -q 'IA_LIVRE_RUNTIME_NATIVE_PREFILL_22L_OK' "$LOG"; then
+  echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_PREFILL_22L=OK"
+fi
+if grep -q 'IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_decode' "$LOG"; then
+  echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_FORWARD_FAIL=no_decode"
+fi
+PL="$(grep -oE 'IA_LIVRE_RUNTIME_NATIVE_PREFILL_LAYERS=[0-9]+' "$LOG" | head -1 | cut -d= -f2 || true)"
+if [[ -n "${PL:-}" ]]; then
+  echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_PREFILL_LAYERS=${PL}"
 fi
 
 echo "IA_LIVRE_HARNESS_OK"
-B_BLOCK_REASON="${IA_LIVRE_HARNESS_B_BLOCK:-no_gguf_full_prefill}"
+# ADR 0014: subset N<22 → no_gguf_prefill_22l; 22L pleno → no_gguf_decode (B38).
+if grep -q 'IA_LIVRE_RUNTIME_NATIVE_PREFILL_22L_OK' "$LOG"; then
+  B_BLOCK_REASON="${IA_LIVRE_HARNESS_B_BLOCK:-no_gguf_decode}"
+else
+  B_BLOCK_REASON="${IA_LIVRE_HARNESS_B_BLOCK:-no_gguf_prefill_22l}"
+fi
 echo "IA_LIVRE_HARNESS_B_BLOCK=${B_BLOCK_REASON}"
 echo "IA_LIVRE_HARNESS_GGUF_STATUS=${STATUS}"
 if [[ "${IA_LIVRE_HARNESS_B_MODE:-}" == "block-status" ]]; then
   echo "IA_LIVRE_HARNESS_LOAD_KIND_GGUF=${STATUS}"
 fi
-echo "nota: hipótese A vs B NÃO comprovada — loader=${LOADER} status=${STATUS}; attn+ffn layer0/prefill_ok; sem TOKENS_PER_S (${B_BLOCK_REASON})."
+echo "nota: hipótese A vs B NÃO comprovada — loader=${LOADER} status=${STATUS}; prefill multi/KV; sem TOKENS_PER_S (${B_BLOCK_REASON})."
 exit 0

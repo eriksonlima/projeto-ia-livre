@@ -694,37 +694,53 @@ fn main() -> Status {
                                         pre.ffn.ffn_checksum_milli as u64,
                                     );
                                     uart_write("IA_LIVRE_RUNTIME_NATIVE_FFN_LAYER_OK\n");
-                                    uart_emit_kv(
-                                        "IA_LIVRE_RUNTIME_NATIVE_PREFILL_LAYERS=",
-                                        pre.n_layers as u64,
-                                    );
                                     uart_write("IA_LIVRE_RUNTIME_NATIVE_PREFILL_OK\n");
                                 }
                                 Err(_) => {
                                     uart_write("IA_LIVRE_RUNTIME_NATIVE_PREFILL_FAIL\n");
                                 }
                             }
-                            match ia_livre_runtime_native::try_forward_canonical(slice, &layout)
-                            {
-                                Ok(()) => {
-                                    uart_write("IA_LIVRE_RUNTIME_NATIVE_OK\n");
-                                }
-                                Err(ia_livre_runtime_native::ForwardError::NoFullPrefill) => {
-                                    uart_write(
-                                        "IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_full_prefill\n",
+                            // Etapa 43 — Prefill multi-token × N layers + KV (subset guest ADR 0014).
+                            // Não chama try_forward_canonical de novo (evita 2× o custo no QEMU).
+                            match ia_livre_runtime_native::try_prefill_canonical_guest(
+                                slice, &layout,
+                            ) {
+                                Ok(multi) => {
+                                    uart_emit_kv(
+                                        "IA_LIVRE_RUNTIME_NATIVE_PREFILL_LAYERS=",
+                                        multi.n_layers as u64,
                                     );
-                                }
-                                Err(ia_livre_runtime_native::ForwardError::NoDecode) => {
+                                    uart_emit_kv(
+                                        "IA_LIVRE_RUNTIME_NATIVE_KV_BYTES=",
+                                        multi.kv_bytes as u64,
+                                    );
+                                    uart_emit_kv(
+                                        "IA_LIVRE_RUNTIME_NATIVE_KV_N_POS=",
+                                        multi.n_pos as u64,
+                                    );
+                                    uart_write("IA_LIVRE_RUNTIME_NATIVE_KV_CACHE_OK\n");
+                                    if multi.full_22l {
+                                        uart_write(
+                                            "IA_LIVRE_RUNTIME_NATIVE_PREFILL_22L_OK\n",
+                                        );
+                                    } else {
+                                        uart_write(
+                                            "IA_LIVRE_RUNTIME_NATIVE_PREFILL_PARTIAL_OK\n",
+                                        );
+                                    }
+                                    uart_emit_kv(
+                                        "IA_LIVRE_RUNTIME_NATIVE_PREFILL_CS=",
+                                        multi.prefill_checksum_milli as u64,
+                                    );
+                                    // Prefill ok; Decode = B38 → no_decode (≠ no_full_prefill).
                                     uart_write(
                                         "IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_decode\n",
                                     );
                                 }
-                                Err(ia_livre_runtime_native::ForwardError::NoGenerate) => {
-                                    uart_write(
-                                        "IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_generate\n",
-                                    );
-                                }
                                 Err(_) => {
+                                    uart_write(
+                                        "IA_LIVRE_RUNTIME_NATIVE_PREFILL_MULTI_FAIL\n",
+                                    );
                                     uart_write(
                                         "IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=other\n",
                                     );

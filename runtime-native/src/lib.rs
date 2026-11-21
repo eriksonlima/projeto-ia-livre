@@ -1,12 +1,21 @@
-//! Runtime nativo freestanding (Linha B) — ADR 0010 / 0012 / 0013.
-//! Layout + mapa + dequant Q4_K + op + tokenize/embed (E32) + attn (E33).
-//! Geração canônica TinyLlama: Prefill/Decode/sampling ainda não.
+//! Runtime nativo freestanding (Linha B) — ADR 0010 / 0012 / 0013 / 0014.
+//! Layout + mapa + dequant Q4_K + op + tokenize/embed (E32) + attn/FFN (E33)
+//! + Prefill multi-token × N layers + KV (E43). Decode/sampling = B38.
 #![no_std]
 
 mod attn;
 mod ffn;
+mod kv;
+mod names;
 pub use attn::{try_attn_layer0_single, AttnLayerReport, N_HEAD, N_KV_HEAD, HEAD_DIM};
-pub use ffn::{try_ffn_layer0, try_prefill_layer0, FfnLayerReport, PrefillReport};
+pub use ffn::{
+    try_ffn_layer0, try_prefill_canonical_guest, try_prefill_layer0, try_prefill_multi,
+    FfnLayerReport, PrefillMultiReport, PrefillReport,
+};
+pub use kv::{
+    kv_bytes_for_layers, KvCache, PREFILL_LAYERS_GUEST, PREFILL_LAYERS_TARGET, PREFILL_POS_GUEST,
+    N_LAYER,
+};
 
 /// Dimensão de embedding TinyLlama 1.1B.
 pub const N_EMBD: usize = 2048;
@@ -69,7 +78,7 @@ pub enum ForwardError {
     NoGenerate,
     /// Tokenize+embed+camada ok; decode/sampling ainda não (E32 fallback).
     NoDecode,
-    /// Attn+FFN camada 0 ok; Prefill 22 camadas / KV multi-token ainda não (E33).
+    /// Prefill 22L ausente (legado E33); pós-E43 o caminho guest usa `NoDecode`.
     NoFullPrefill,
     TensorNotFound,
     UnsupportedType,
@@ -395,16 +404,15 @@ pub fn try_layer_partial_canonical(
     })
 }
 
-/// Tentativa de geração canônica — E33: attn+FFN layer0; Prefill 22L ainda não.
+/// Tentativa de geração canônica — E43: prefill multi (guest subset) + KV;
+/// Decode/sampling ainda não → `NoDecode` (`B_BLOCK=no_gguf_prefill_22l`).
+/// Intermediários E32/E33 ficam a cargo do glue do kernel (evita trabalho duplicado).
 pub fn try_forward_canonical(
     gguf: &[u8],
     layout: &LayoutReport,
 ) -> Result<(), ForwardError> {
-    let _ = try_forward_partial(gguf, layout)?;
-    let _ = try_layer_partial_canonical(gguf, layout)?;
-    let _ = try_prefill_layer0(gguf, layout)?;
-    // 22 camadas + KV multi-token + decode: NoFullPrefill → B_BLOCK=no_gguf_full_prefill.
-    Err(ForwardError::NoFullPrefill)
+    let _ = try_prefill_canonical_guest(gguf, layout)?;
+    Err(ForwardError::NoDecode)
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -722,9 +730,51 @@ mod tests {
         assert!(pre.attn.attn_checksum_milli > 0);
         assert!(pre.ffn.ffn_checksum_milli > 0);
         assert!(pre.prefill_checksum_milli > 0);
+    }
+
+    #[test]
+    fn attn_ffn_layer1_and_kv_multi_pos() {
+        let Some((data, layout)) = load_canonical_gguf() else {
+            return;
+        };
+        // ≥2 layers × ≥2 tokens (Task 2) — subset curto para tempo.
+        let mut kv = KvCache::begin(2).expect("kv");
+        let mut x = [0f32; N_EMBD];
+        let mut a = [0f32; N_EMBD];
+        let mut b = [0f32; N_EMBD];
+        for (pos, &tid) in CANONICAL_PROMPT_TOKEN_IDS.iter().take(2).enumerate() {
+            let _ = embed_token(&data, &layout, tid, &mut x).expect("emb");
+            for layer in 0..2 {
+                attn::attn_layer_on(&data, &layout, layer, pos, &x, &mut a, &mut kv)
+                    .expect("attn");
+                ffn::try_ffn_layer(&data, &layout, layer, &a, &mut b).expect("ffn");
+                x = b;
+            }
+        }
+        assert!(kv.checksum_pos(0, 0).unwrap() > 0);
+        assert!(kv.checksum_pos(0, 1).unwrap() > 0);
+        assert!(kv.checksum_pos(1, 0).unwrap() > 0);
+        assert_eq!(kv.n_pos, 2);
+    }
+
+    #[test]
+    fn prefill_multi_guest_subset() {
+        let Some((data, layout)) = load_canonical_gguf() else {
+            return;
+        };
+        let multi = try_prefill_canonical_guest(&data, &layout).expect("multi");
+        assert_eq!(multi.n_layers, PREFILL_LAYERS_GUEST as u32);
+        assert_eq!(multi.n_pos, PREFILL_POS_GUEST as u32);
+        assert!(multi.kv_bytes > 0);
+        assert!(multi.kv_checksum_milli > 0);
+        assert!(!multi.full_22l);
+        // Host: prompt completo × 2L (prova capacidade; guest QEMU usa 2 pos).
+        let full_pos = try_prefill_multi(&data, &layout, 2, CANONICAL_PROMPT_TOKEN_IDS.len())
+            .expect("multi16");
+        assert_eq!(full_pos.n_pos, 16);
         assert!(matches!(
             try_forward_canonical(&data, &layout),
-            Err(ForwardError::NoFullPrefill)
+            Err(ForwardError::NoDecode)
         ));
     }
 }

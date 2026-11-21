@@ -2,21 +2,21 @@
 
 ## Foco atual
 
-- Nenhuma etapa `em_andamento`
-- Backlog **Abertas** repovoado (B37–B52) rumo ao protótipo objetivo
-- Topo: **B37** — Prefill 22L + KV na Linha B
+- Etapa 43 **feita** (subset Prefill 2L×2 + KV; `no_gguf_prefill_22l`)
+- Próximo: promover **B38** (Decode + sampling + `TOKENS_PER_S` em B) → Etapa 44
 
 ## Mudanças recentes
 
-- Backlog meta-protótipo: hipótese A/B → USB metal → Rede/autonomia/GPU
-- E42 sync docs; E1–E42 feitas
+- ADR 0014: critério 22L vs subset; QEMU debug 2L×16 timeout 600s → guest 2×2
+- `runtime-native`: attn/FFN `blk.N`, KvCache GQA, RoPE, prefill multi
+- Gates: `PREFILL_PARTIAL_OK` / `KV_CACHE_OK` / `B_BLOCK=no_gguf_prefill_22l`
+- Comparable reason `E43_no_gguf_prefill_22l_subset_kv_ok`
 
 ## Próximo passo
 
-- Promover B37 ao ROADMAP quando pedir “continuar” / próximo
-- Ou priorizar USB (B40/B41) se o foco for pendrive primeiro
+- Sync + claim; promover B38 → roadmap; especificar/fatiar Decode
 
 ## Notas
 
-- Lease liberado
-- Issues #43–#58 (label `backlog`)
+- Lease: liberar após push da fatia E43
+- README capa: sem mudança (AGENTS/docs cobrem)

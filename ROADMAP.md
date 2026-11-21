@@ -314,7 +314,8 @@ Pronto quando: `architecture.md` / README-AGENTS refletem estado atual sem ambig
 
 ## Etapa 43 — Prefill completo 22L + KV cache viável na Linha B
 
-Status: em_andamento  
+Status: feita  
 Issue: [#43](https://github.com/eriksonlima/projeto-ia-livre/issues/43)  
-Spec: (a definir — `especificador`)  
-Pronto quando: prefill das 22 camadas TinyLlama (ou subset documentado equivalente) + KV alocado/viável no QEMU Linha B, com marcadores serial; **sem** fingir `TOKENS_PER_S` ainda.
+Spec: specs/prefill-22l-kv-linha-b/  
+Pronto quando: prefill das 22 camadas TinyLlama (ou subset documentado equivalente) + KV alocado/viável no QEMU Linha B, com marcadores serial; **sem** fingir `TOKENS_PER_S` ainda.  
+**Desfecho:** subset ADR 0014 — `PREFILL_LAYERS=2`×`KV_N_POS=2` + `KV_CACHE_OK`/`PREFILL_PARTIAL_OK`; host 2L×16; `B_BLOCK=no_gguf_prefill_22l`; comparable `E43_no_gguf_prefill_22l_subset_kv_ok`; sem `TOKENS_PER_S`.

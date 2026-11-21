@@ -123,7 +123,7 @@ if (( b_is_proxy )); then
   # B ainda proxy: loader ESP (E26) ≠ geração — sem TOKENS_PER_S em B → INCONCLUSIVO
   echo "IA_LIVRE_HARNESS_VERDICT=INCONCLUSIVO"
   # Motivo ≠ "ausência de tokens" genérico: bloqueio estrutural 22L/KV (E33 Task 2+).
-  echo "IA_LIVRE_HARNESS_VERDICT_REASON=E33_no_gguf_full_prefill_22L_kv_inviable"
+  echo "IA_LIVRE_HARNESS_VERDICT_REASON=E43_no_gguf_prefill_22l_subset_kv_ok"
   exit 0
 fi
 

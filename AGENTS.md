@@ -43,7 +43,7 @@ make verify   # gate automatizado do kernel (marcadores: ver docs/kernel-alem-do
 Equivalente interativo: `./scripts/run-qemu.sh`.
 
 Na serial: Etapa 10 (`BOOT_OK` … `ALLOC_OK`) + loader Etapas 26/27 (`GGUF_LOADER_*` / `GGUF_MAGIC_OK` / `GGUF_NATIVE_LOADER=blockio_full` / `GGUF_TENSORS_STUB_OK`) + obs Etapa 37 (`GOP_OK`/`INPUT_OK`/`OBS_OK`, ver [`docs/observabilidade-minima-so.md`](docs/observabilidade-minima-so.md)) + `IA_LIVRE_EXIT_BOOT_BEGIN`; após ExitBootServices (UART COM1): `EXIT_*` + reemissão GGUF + demo Etapa 19 (`TYPED_*` / `PHASE=` / `MEM_SCHED_OK`) + GPU manager nativo Etapa 38 (`GPU_MGR=native` / `GPU_MGR_OK`) + proxy Linha B (`NATIVE_BENCH_*`).  
-Contratos: kernel-alem-do-boot, kernel-pos-boot-services, memoria-scheduler-impl-minima, runtime-nativo-linha-b (BlockIO full + attn/FFN layer0). **Sem** geração/`TOKENS_PER_S` no kernel (`B_BLOCK=no_gguf_full_prefill`).
+Contratos: kernel-alem-do-boot, kernel-pos-boot-services, memoria-scheduler-impl-minima, runtime-nativo-linha-b (BlockIO full + Prefill multi/KV subset). **Sem** geração/`TOKENS_PER_S` no kernel (`B_BLOCK=no_gguf_prefill_22l`).
 
 ### Runtime de inferência (host — Etapas 5 / 8)
 
@@ -181,7 +181,7 @@ Gate automatizado: `make verify-agent` (não exige QEMU/UEFI nem o nó P2P; requ
 Metodologia: [`docs/harness-linha-a-b.md`](docs/harness-linha-a-b.md); caminho B mínimo: [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md); contrato: [`docs/runtime-contrato-nativo.md`](docs/runtime-contrato-nativo.md).  
 **Não** confundir com métricas dos protótipos CPU/GPU. Linha A = host + GGUF; Linha B = proxy pós-ExitBoot no QEMU **+** evidência `MEM_SCHED` (E19) reemitida como `HARNESS_CONTRACT_*` (**não** TinyLlama).  
 **Etapa 21:** deps 19/20 ok (`CONTRACT_READY=1`); bloqueio histórico `no_gguf_path`.  
-**Etapa 26–33:** loader BlockIO + `runtime-native` (layout → attn+FFN layer0 + prefill parcial; `B_BLOCK=no_gguf_full_prefill`) — **ainda sem** Prefill 22L/Decode/`TOKENS_PER_S` em B. ADR [`0013`](docs/adr/0013-geracao-canonica-fatiada-linha-b.md). Hipótese **não** comprovada.
+**Etapa 26–43:** loader BlockIO + `runtime-native` (layout → attn/FFN → Prefill multi + KV subset `PREFILL_LAYERS=2`; `B_BLOCK=no_gguf_prefill_22l`) — **ainda sem** Prefill 22L pleno / Decode / `TOKENS_PER_S` em B. ADR [`0013`](docs/adr/0013-geracao-canonica-fatiada-linha-b.md) / [`0014`](docs/adr/0014-prefill-22l-kv-linha-b.md). Hipótese **não** comprovada.
 
 Pré-requisitos: runtime CPU (GGUF) para A; QEMU/OVMF para B. Sem GPU no harness v1.
 
@@ -203,7 +203,7 @@ cargo build -p ia-livre-runtime
 ./scripts/run-harness-line-b.sh
 ```
 
-Linha B: proxy E12 **preservado** (`LOAD_KIND=proxy`) + contrato E19 + BlockIO + attn/FFN/prefill layer0 (`B_BLOCK=no_gguf_full_prefill`).  
+Linha B: proxy E12 **preservado** (`LOAD_KIND=proxy`) + contrato E19 + BlockIO + Prefill multi/KV (`B_BLOCK=no_gguf_prefill_22l`).  
 **Proibido** `TOKENS_PER_S` / `LOAD_KIND=gguf` sem geração medida. Ver [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md). Hipótese **não** comprovada.
 
 Gate automatizado: `make verify-harness` (A = GGUF; B = proxy + contrato + bloqueio GGUF; requer GGUF para A).
@@ -225,7 +225,7 @@ make verify-runtime-contract
 
 Metodologia + veredito: [`docs/harness-a-b-comparavel.md`](docs/harness-a-b-comparavel.md).  
 Protocolo serial (sem contenção): [`docs/harness-corrida-quieta.md`](docs/harness-corrida-quieta.md) — um gate por vez; preflight aviso; `IA_LIVRE_HARNESS_QUIET_STRICT=1` / `QUIET_FORCE=1`.  
-Corrida agregada A+B com `IA_LIVRE_HARNESS_VERDICT=` ∈ {`COMPROVA`,`REFUTA`,`INCONCLUSIVO`}. Com B proxy / `no_gguf_full_prefill` → **`INCONCLUSIVO`** (reason `E33_no_gguf_full_prefill_22L_kv_inviable`). **Não** inventa métricas lado a lado sem geração real em B.
+Corrida agregada A+B com `IA_LIVRE_HARNESS_VERDICT=` ∈ {`COMPROVA`,`REFUTA`,`INCONCLUSIVO`}. Com B proxy / `no_gguf_prefill_22l` → **`INCONCLUSIVO`** (reason `E43_no_gguf_prefill_22l_subset_kv_ok`). **Não** inventa métricas lado a lado sem geração real em B.
 
 ```bash
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
@@ -412,7 +412,7 @@ grep -q 'post_exit_microbench' scripts/run-harness-line-b.sh
 grep -q 'HARNESS_CONTRACT_BACKEND=native_qemu' scripts/run-harness-line-b.sh
 ```
 
-`make verify-harness` exige A (`LINE=A`, `OK`, load/tokens) **e** B (`LINE=B`, `OK`, `PROXY=*`, contrato, `blockio_full`, `layout_ok`, attn/FFN/prefill layer0, `B_BLOCK=no_gguf_full_prefill`, sem `TOKENS_PER_S` / sem `LOAD_KIND=gguf` fingido). Timeout padrão 300s; `VERIFY_HARNESS_TIMEOUT`.
+`make verify-harness` exige A (`LINE=A`, `OK`, load/tokens) **e** B (`LINE=B`, `OK`, `PROXY=*`, contrato, `blockio_full`, `layout_ok`, Prefill multi/KV/`PREFILL_PARTIAL_OK`, `B_BLOCK=no_gguf_prefill_22l`, sem `TOKENS_PER_S` / sem `LOAD_KIND=gguf` fingido). Timeout padrão 600s; `VERIFY_HARNESS_TIMEOUT`.
 
 ### Gate do contrato nativo host (Etapa 20 — adicional)
 

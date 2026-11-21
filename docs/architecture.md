@@ -51,7 +51,7 @@ As camadas formam um ecossistema, não quatro produtos desconectados. A ordem de
 - **Etapa 13:** desenho candidato memória model-aware + scheduler por fases (ADR 0003).
 - **Etapa 19:** implementação mínima no kernel pós-ExitBoot (`Weights`/`KvCache` + Prefill/Decode + quantum) — [`memoria-scheduler-impl-minima.md`](memoria-scheduler-impl-minima.md); **sem** GGUF; hipótese **não** comprovada.
 - **Etapa 20:** runtime/shim falando o contrato nativo + harness B com `HARNESS_CONTRACT_*` — [`runtime-contrato-nativo.md`](runtime-contrato-nativo.md); **sem** GGUF em B; hipótese **não** comprovada.
-- **Etapa 21–33 (Linha B):** loader BlockIO full → layout → attn/FFN/prefill layer0; bloqueio atual `B_BLOCK=no_gguf_full_prefill` — **sem** Prefill 22L/Decode/`TOKENS_PER_S` em B; veredito harness comparável tipicamente **INCONCLUSIVO**. Contratos: [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md), ADR [`0013`](adr/0013-geracao-canonica-fatiada-linha-b.md).
+- **Etapa 21–43 (Linha B):** loader BlockIO full → layout → attn/FFN → Prefill multi + KV (**subset** `PREFILL_LAYERS=2`; `no_gguf_full_prefill` foi E33); bloqueio atual `B_BLOCK=no_gguf_prefill_22l` — **sem** Prefill 22L pleno / Decode / `TOKENS_PER_S` em B; veredito **INCONCLUSIVO**. Contratos: [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md), ADR [`0013`](adr/0013-geracao-canonica-fatiada-linha-b.md) / [`0014`](adr/0014-prefill-22l-kv-linha-b.md).
 - **Etapa 14 / 23 / 39:** desenho + protocolo Rede v1 + descoberta bootstrap — [`rede-ia-livre-v1.md`](rede-ia-livre-v1.md), [`rede-descoberta-wan.md`](rede-descoberta-wan.md).
 - **Etapa 15 / 24 / 40:** autonomia v1 + tool `calc` sandboxed — [`desenho-autonomia-v1.md`](desenho-autonomia-v1.md), [`autonomia-alem-v1.md`](autonomia-alem-v1.md).
 - **Etapa 16 / 25 / 38 / 41:** desenho GPU → stub host → nativo mínimo → shard host executado (ou skip).
@@ -65,7 +65,7 @@ As camadas formam um ecossistema, não quatro produtos desconectados. A ordem de
 - Rede: desenho E14 + v1 E23 + bootstrap E39 — **feitos**; DHT/NAT/relay **abertos**.
 - Autonomia: desenho E15 + v1 E24 + `calc` E40 — **feitos**; REPL/`read_local` **abertos**.
 - GPU: E8 host + E25 stub + E38 nativo mínimo + E41 shard host (ou skip) — **feitos**; multi-GPU completo / harness GPU **abertos**.
-- Harness A vs B: instrumento E22 + A otimizada E34 — **feitos**; hipótese **não** comprovada enquanto `B_BLOCK=no_gguf_full_prefill` (sem `TOKENS_PER_S` em B).
+- Harness A vs B: instrumento E22 + A otimizada E34 — **feitos**; hipótese **não** comprovada enquanto `B_BLOCK=no_gguf_prefill_22l` (sem `TOKENS_PER_S` em B).
 - Licenças: Apache-2.0 (E17) — **feitas**.
 
 Glossário: [`glossario.md`](glossario.md).

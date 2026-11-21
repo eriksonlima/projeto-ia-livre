@@ -99,7 +99,7 @@ Detalhes: `AGENTS.md` → Como rodar / Como verificar (Etapa 22).
 
 ## Estado atual (host de referência)
 
-Com B = proxy + attn/FFN/prefill layer0 (Etapa 33, `no_gguf_full_prefill`): o instrumento **deve** emitir `INCONCLUSIVO` com reason `E33_no_gguf_full_prefill_22L_kv_inviable` (bloqueio estrutural 22L/KV — ≠ ausência genérica de tokens). Hipótese **não** comprovada nem refutada. ADR [`0013`](adr/0013-geracao-canonica-fatiada-linha-b.md).
+Com B = proxy + Prefill multi/KV subset (Etapa 43, `no_gguf_prefill_22l`): o instrumento **deve** emitir `INCONCLUSIVO` com reason `E43_no_gguf_prefill_22l_subset_kv_ok` (Prefill 22L pleno / Decode ainda ausentes — ≠ ausência genérica de tokens). Hipótese **não** comprovada nem refutada. ADR [`0014`](adr/0014-prefill-22l-kv-linha-b.md).
 
 **A_otimizada (opt-in, Etapa 34):** `IA_LIVRE_HARNESS_A_PROFILE=A_otimizada` usa `run-harness-line-a-optimized.sh` no lado A; veredito permanece honesto (ainda `INCONCLUSIVO` enquanto B não tiver tokens). Gate dedicado: `make verify-harness-a-otimizada`.
 
