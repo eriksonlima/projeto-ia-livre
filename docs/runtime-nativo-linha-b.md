@@ -122,6 +122,7 @@ Com Etapas 19/20 verificáveis no serial QEMU, `scripts/run-harness-line-b.sh`:
 - **E44:** Decode greedy `n_predict=1` + `DECODE_OK`/`SAMPLING_OK`/`RUNTIME_NATIVE_OK`; harness `LOAD_KIND=gguf` + `TOKENS_PER_S` **medidos**; kernel release opt-in (`IA_LIVRE_KERNEL_PROFILE=release`).
 - **Espécie:** ainda **subset** (≠ 22L × 32) → comparable **INCONCLUSIVO** (`E44_subset_generate_not_canonical_species_*`); **sem** `B_BLOCK` no sucesso Decode.
 - Microbench E12 permanece como `PROXY=*`; `LOAD_KIND` de geração = `gguf`.
+- **E49:** bridge host valida esta evidência (`BRIDGE_NATIVE_SRC=blockio`) ou o bloqueio metal (`metal_block` / E48) — [`autonomia-bridge-nativo.md`](autonomia-bridge-nativo.md); **≠** autonomia no guest.
 
 ### Loader GGUF nativo mínimo (Etapa 26)
 

@@ -2,14 +2,14 @@
 
 ## Foco atual
 
-- Etapas 1–48 **feitas**
-- Path metal: `B_BLOCK_METAL=no_gguf_metal_io` (FAT16)
-- Topo Abertas: **B43** (autonomia no caminho nativo)
+- Etapas 1–49 **feitas**
+- E49: bridge host↔nativo (`BRIDGE_*`; ADR 0018); gate `verify-autonomia-bridge`
+- Topo Abertas: **B44** (mDNS real)
 
 ## Próximo passo
 
-- Promover B43 ou continuar
+- Promover B44 → Etapa 50 (mDNS) ou continuar
 
 ## Notas
 
-- Lease livre após push E48
+- Lease: liberar após push E49; claim antes da próxima `em_andamento`

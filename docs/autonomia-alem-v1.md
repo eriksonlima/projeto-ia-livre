@@ -40,6 +40,10 @@ Preserva E7/v1: `TOOL_OK`, `MEMORY_OK`, `AGENT_OK`, `MEMORY_POLICY_OK`, `TOOLS_U
 
 `make verify-agent` exige `IA_LIVRE_TOOL=calc` + `IA_LIVRE_TOOL_SANDBOX_OK` além da regressão v1.
 
+## Ponte Etapa 49 (bridge nativo)
+
+Consumo de evidência do runtime nativo (serial BlockIO / path metal) fica em bridge **host**, não neste agente: [`autonomia-bridge-nativo.md`](autonomia-bridge-nativo.md). `make verify-agent` **não** depende do SO (ADR 0001).
+
 ## Futuro
 
 | Item | Nota |

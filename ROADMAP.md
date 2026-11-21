@@ -362,8 +362,9 @@ Pronto quando: no PC (ou QEMU espelhando path metal), após boot USB/ESP com `mo
 
 ## Etapa 49 — Autonomia mínima no caminho nativo (ou bridge SO↔host)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#49](https://github.com/eriksonlima/projeto-ia-livre/issues/49)  
-Spec: (a gerar)  
-Pronto quando: agente one-shot (ou bridge verificável) consome runtime nativo/metal **ou** contrato explícito host↔nativo com gate; sem shell irrestrito; ADR 0001 preservada.
+Spec: specs/autonomia-bridge-nativo/  
+Pronto quando: agente one-shot (ou bridge verificável) consome runtime nativo/metal **ou** contrato explícito host↔nativo com gate; sem shell irrestrito; ADR 0001 preservada.  
+**Desfecho:** ADR 0018 (bridge B); `BRIDGE_MODE=host_native` + `blockio`/`metal_block` + `BRIDGE_OK`; `make verify-autonomia-bridge`; `verify-agent` independente do SO.
 

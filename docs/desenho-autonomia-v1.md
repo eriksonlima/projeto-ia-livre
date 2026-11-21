@@ -90,4 +90,5 @@ Cenário de prova v1 (documental):
 
 1. **Etapa 24** (`specs/autonomia-v1-impl/`): `--prompt`, `recall`/`help`, política N=8, gate estendido — **feito** em `agent/`.
 2. **Etapa 40:** tool sandboxed `calc` — feito ([`autonomia-alem-v1.md`](autonomia-alem-v1.md))
-3. Depois: REPL, `read_local`, integração Rede (ADR própria)
+3. **Etapa 49:** bridge host↔nativo (consome serial/log; **não** agente no guest) — [`autonomia-bridge-nativo.md`](autonomia-bridge-nativo.md) / ADR [`0018`](adr/0018-autonomia-bridge-host-nativo.md); `make verify-autonomia-bridge`. ADR 0001: `verify-agent` permanece independente do SO.
+4. Depois: REPL, `read_local`, integração Rede (ADR própria)

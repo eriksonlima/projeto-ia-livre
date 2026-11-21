@@ -487,6 +487,21 @@ make verify-metal-infer
 grep -q 'IA_LIVRE_B_BLOCK_METAL=no_gguf_metal_io' scripts/verify-metal-infer.sh
 ```
 
+### Gate bridge host↔nativo (Etapa 49 — adicional)
+
+Bridge no **host** valida evidência serial/log nativo (`blockio` / `metal_block`). **Não** é agente no guest. **Não** substitui `make verify-agent` (ADR 0001). Contrato: [`docs/autonomia-bridge-nativo.md`](docs/autonomia-bridge-nativo.md) / ADR [`0018`](docs/adr/0018-autonomia-bridge-host-nativo.md).
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+test -f scripts/verify-autonomia-bridge.sh
+test -f docs/autonomia-bridge-nativo.md
+make verify-autonomia-bridge
+grep -q 'IA_LIVRE_BRIDGE_OK' scripts/run-autonomia-bridge.sh
+grep -q 'IA_LIVRE_BRIDGE_NATIVE_SRC' scripts/run-autonomia-bridge.sh
+```
+
+Esperado: `IA_LIVRE_BRIDGE_MODE=host_native` + `BRIDGE_NATIVE_SRC=metal_block|blockio` + `BRIDGE_OK` (metal via `verify-metal-infer`; blockio via fixture/log). Sem `METAL_OK` / `TOKENS_PER_S` inventados. `verify-agent` permanece independente.
+
 ## PATH
 
 Sempre inclua o GitHub CLI e o Cargo locais:
@@ -517,6 +532,8 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `node/` — nó Rede IA Livre v1 (host; ed25519/PeerId; independente do SO)
 - `agent/` — autonomia v1+E40 (host; `--prompt`, allowlist note/recall/help/`calc`, política N=8; consome runtime; independente do SO)
 - `docs/autonomia-alem-v1.md` — contrato tool sandboxed `calc` (Etapa 40)
+- `docs/autonomia-bridge-nativo.md` — bridge host↔nativo (Etapa 49; `BRIDGE_*`; ≠ verify-agent SO)
+- `scripts/run-autonomia-bridge.sh` / `scripts/verify-autonomia-bridge.sh` — bridge + gate Etapa 49
 - `models/` — pesos GGUF locais (gitignored); obter com `./scripts/fetch-model.sh`
 - `runtime-native/` — runtime freestanding Linha B (Etapa 29; layout GGUF; forward futuro; ≠ host `runtime/`)
 - `Cargo.toml` — workspace Cargo (membros `kernel`, `runtime`, `runtime-contract`, `runtime-native`, `node`, `agent`)
