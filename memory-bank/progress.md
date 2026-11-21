@@ -12,3 +12,10 @@
 ## Roadmap
 
 - Sem em_andamento; topo Abertas B62
+
+## Etapa 70 — Autonomia consumindo nativo (feita)
+
+- Contrato `docs/autonomia-nativa.md`; runner bridge→note/recall→`NATIVE_CONSUME_*`
+- Gate `make verify-autonomia-nativa` (blockio fixture); ADR 0001 intacta
+- Próximo: B66 ABI
+

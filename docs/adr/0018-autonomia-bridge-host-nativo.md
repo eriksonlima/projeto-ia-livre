@@ -22,3 +22,4 @@ Etapa 49: autonomia mínima “no caminho nativo”. Agente UEFI no guest é inv
 
 - Contrato: [`docs/autonomia-bridge-nativo.md`](../autonomia-bridge-nativo.md).
 - Gate: `make verify-autonomia-bridge`.
+- Etapa 70: consumo além da validação — [`docs/autonomia-nativa.md`](../autonomia-nativa.md) (`NATIVE_CONSUME_*`; ADR 0001 intacta).

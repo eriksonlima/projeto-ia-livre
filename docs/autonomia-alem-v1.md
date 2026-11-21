@@ -42,7 +42,11 @@ Preserva E7/v1: `TOOL_OK`, `MEMORY_OK`, `AGENT_OK`, `MEMORY_POLICY_OK`, `TOOLS_U
 
 ## Ponte Etapa 49 (bridge nativo)
 
-Consumo de evidência do runtime nativo (serial BlockIO / path metal) fica em bridge **host**, não neste agente: [`autonomia-bridge-nativo.md`](autonomia-bridge-nativo.md). `make verify-agent` **não** depende do SO (ADR 0001).
+Validação de evidência do runtime nativo (serial BlockIO / path metal) fica em bridge **host**, não neste agente: [`autonomia-bridge-nativo.md`](autonomia-bridge-nativo.md). `make verify-agent` **não** depende do SO (ADR 0001).
+
+## Ponte Etapa 70 (consumo nativo)
+
+Além de validar: o host **usa** `BRIDGE_NATIVE_SRC` via allowlist (`note`/`recall`) e emite `NATIVE_CONSUME_*` — [`autonomia-nativa.md`](autonomia-nativa.md). Ainda **sem** agente no guest; gate aditivo `verify-autonomia-nativa`.
 
 ## Futuro
 

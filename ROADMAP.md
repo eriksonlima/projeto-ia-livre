@@ -530,8 +530,9 @@ Pronto quando: placement/execução multi-device real com evidência; sem fingir
 
 ## Etapa 70 — Autonomia consumindo runtime/evidência nativa
 
-Status: em_andamento  
+Status: feita  
 Issue: [#70](https://github.com/eriksonlima/projeto-ia-livre/issues/70)  
 Spec: specs/autonomia-nativa/  
-Pronto quando: one-shot que consome fonte nativa **ou** contrato “bridge = máximo até X”; ADR 0001 preservada (`verify-agent` independente do SO).
+Pronto quando: one-shot que consome fonte nativa **ou** contrato “bridge = máximo até X”; ADR 0001 preservada (`verify-agent` independente do SO).  
+**Desfecho:** A — `host_bridge` + note/recall de `BRIDGE_NATIVE_SRC` + `make verify-autonomia-nativa`; fixture blockio; `verify-agent`/`verify-autonomia-bridge` intactos; sem agente no guest.
 

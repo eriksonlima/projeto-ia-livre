@@ -40,3 +40,7 @@ make verify-autonomia-bridge
 - Sem inventar `TOKENS_PER_S` / `METAL_OK`.
 - Bridge ≠ prova comparable `COMPROVA`.
 - ≠ bridge Rede E52 (`NET_BRIDGE_*` — [`rede-bridge-nativo.md`](rede-bridge-nativo.md)).
+
+## Ponte Etapa 70 (consumo além da validação)
+
+Validar (`BRIDGE_OK`) **≠** consumir. Consumo no host (note/recall + `NATIVE_CONSUME_*`): [`autonomia-nativa.md`](autonomia-nativa.md). Gate: `make verify-autonomia-nativa` (aditivo; `verify-agent` intacto).

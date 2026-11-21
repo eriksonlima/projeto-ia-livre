@@ -621,6 +621,21 @@ grep -q 'IA_LIVRE_BRIDGE_NATIVE_SRC' scripts/run-autonomia-bridge.sh
 
 Esperado: `IA_LIVRE_BRIDGE_MODE=host_native` + `BRIDGE_NATIVE_SRC=metal_block|blockio` + `BRIDGE_OK` (metal_block força `METAL_INFER_MODE=legacy` → `no_gguf_metal_io`; blockio via fixture/log). Sem `METAL_OK` / `TOKENS_PER_S` inventados. `verify-agent` permanece independente.
 
+### Gate autonomia consumindo nativo (Etapa 70 — adicional)
+
+Além da bridge E49: host **usa** `BRIDGE_NATIVE_SRC` via `note`/`recall` e emite `NATIVE_CONSUME_*`. **Não** é agente no guest. **Não** substitui `verify-agent` (ADR 0001). Contrato: [`docs/autonomia-nativa.md`](docs/autonomia-nativa.md).
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+test -f scripts/verify-autonomia-nativa.sh
+test -f docs/autonomia-nativa.md
+make verify-autonomia-nativa
+grep -q 'IA_LIVRE_NATIVE_CONSUME_OK' scripts/run-autonomia-nativa.sh
+grep -q 'host_bridge' scripts/run-autonomia-nativa.sh
+```
+
+Esperado: `NATIVE_CONSUME_MODE=host_bridge` + `SRC=blockio` (fixture) + `NATIVE_CONSUME_OK` + prova `TOOL=note`/`recall` (além de `BRIDGE_OK`). Sem `METAL_OK` / `COMPROVA` inventados. `verify-agent` / `verify-autonomia-bridge` permanecem independentes.
+
 ### Gate bridge Rede UEFI↔host (Etapa 52 — adicional)
 
 Bridge **Rede** (≠ autonomia E49): evidência pós-Exit + âncora `ia-livre-node` (`TASK_OK`). **Não** é TCP no guest. **Não** substitui `make verify-node` (ADR 0001). Contrato: [`docs/rede-bridge-nativo.md`](docs/rede-bridge-nativo.md) / ADR [`0019`](docs/adr/0019-rede-bridge-uefi-host.md).
@@ -682,6 +697,8 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `docs/autonomia-alem-v1.md` — contrato tool sandboxed `calc` (Etapa 40)
 - `docs/autonomia-bridge-nativo.md` — bridge host↔nativo (Etapa 49; `BRIDGE_*`; ≠ verify-agent SO)
 - `scripts/run-autonomia-bridge.sh` / `scripts/verify-autonomia-bridge.sh` — bridge + gate Etapa 49
+- `docs/autonomia-nativa.md` — consumo host da evidência bridge (Etapa 70; `NATIVE_CONSUME_*`)
+- `scripts/run-autonomia-nativa.sh` / `scripts/verify-autonomia-nativa.sh` — consumo + gate Etapa 70
 - `models/` — pesos GGUF locais (gitignored); obter com `./scripts/fetch-model.sh`
 - `runtime-native/` — runtime freestanding Linha B (Etapa 29; layout GGUF; forward futuro; ≠ host `runtime/`)
 - `Cargo.toml` — workspace Cargo (membros `kernel`, `runtime`, `runtime-contract`, `runtime-native`, `node`, `agent`)

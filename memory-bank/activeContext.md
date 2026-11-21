@@ -2,14 +2,14 @@
 
 ## Foco atual
 
-- Etapas 1–69 **feitas**; **Etapa 70** `em_andamento` (B65)
-- Autonomia consumindo evidência/runtime nativo (além da bridge E49)
-- ADR 0001: `verify-agent` permanece independente do SO
+- Etapas 1–70 **feitas**
+- E70: autonomia consome bridge (`NATIVE_CONSUME_*`; note/recall); gate `verify-autonomia-nativa`
+- Topo Abertas: **B66** (ABI mínima kernel↔runtime-native)
 
 ## Próximo passo
 
-- Spec + tasks E70; one-shot nativo **ou** contrato “bridge = máximo”
+- “continuar” → B66
 
 ## Notas
 
-- Lease: Etapa 70 / #70
+- Lease a liberar após commit E70
