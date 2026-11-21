@@ -392,3 +392,10 @@ Spec: specs/no-rede-so-nativo/
 Pronto quando: stack TCP mínima no kernel/runtime-native **ou** bridge documentada UEFI↔host com marcadores; participação na Rede a partir do caminho B; ADR 0001 (host continua válido).  
 **Desfecho:** ADR 0019 (bridge B); `NET_BRIDGE_MODE=host_uefi` + `serial_exit` + `NET_BRIDGE_OK` (âncora `TASK_OK`); `make verify-rede-bridge`; TCP nativo adiado; `verify-node` independente.
 
+## Etapa 53 — REPL sandboxed no agente (host)
+
+Status: em_andamento  
+Issue: [#53](https://github.com/eriksonlima/projeto-ia-livre/issues/53)  
+Spec: specs/repl-sandboxed-agente/  
+Pronto quando: `--repl` com allowlist; modo scripted para `verify-agent`; sem shell/HTTP.
+

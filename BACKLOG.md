@@ -16,13 +16,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 
 
-### B47 — REPL sandboxed no agente (host)
-- Issue: [#53](https://github.com/eriksonlima/projeto-ia-livre/issues/53)
-
-- Origem: E40 adioud REPL
-- Pronto quando: `--repl` com allowlist; modo scripted para `verify-agent`; sem shell/HTTP
-- Deps: E40
-
 ### B48 — Tool `read_local` allowlisted
 - Issue: [#54](https://github.com/eriksonlima/projeto-ia-livre/issues/54)
 
@@ -59,6 +52,16 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: B39 + B40 + B42 (mínimo sugerido)
 
 ## Promovidas / arquivadas
+
+### B47 — REPL sandboxed no agente (host)
+- Issue: [#53](https://github.com/eriksonlima/projeto-ia-livre/issues/53)
+
+- Origem: E40 adioud REPL
+- Pronto quando: `--repl` com allowlist; modo scripted para `verify-agent`; sem shell/HTTP
+- Deps: E40
+
+- Promovido para Etapa 53 do roadmap (promoção autônoma após E52).
+- Etapa: [Etapa 53 — REPL sandboxed](ROADMAP.md)
 
 ### B46 — Nó Rede no SO nativo (pós-ExitBoot ou bridge)
 - Issue: [#52](https://github.com/eriksonlima/projeto-ia-livre/issues/52)
