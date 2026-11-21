@@ -10,12 +10,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Produto (ADR 0027):** **Linux IA-nativo** (TTY, shell, qualquer GGUF, tuning/kernel Linux). Linha B UEFI **arquivada**. Ordem = prioridade (topo primeiro). Fila até o **produto final** (métricas em `docs/product-context.md`).
 
-### B79 — First-boot TTY
-- Issue: [#85](https://github.com/eriksonlima/projeto-ia-livre/issues/85)
-- Origem: plano backlog produto final / ADR 0027
-- Pronto quando: MOTD/PATH/hints; fetch GGUF documentado (não embutir ~638 MiB no artefato default)
-- Deps: B77
-
 ### B80 — ISO híbrida / live USB bootável
 - Issue: [#86](https://github.com/eriksonlima/projeto-ia-livre/issues/86)
 - Origem: plano backlog produto final / ADR 0027
@@ -89,6 +83,13 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: B78, B81, B84, B85, B90
 
 ## Promovidas / arquivadas
+
+### B79 — First-boot TTY
+- Issue: [#85](https://github.com/eriksonlima/projeto-ia-livre/issues/85)
+- Origem: plano backlog produto final / ADR 0027
+- Pronto quando: MOTD/PATH/hints; fetch GGUF documentado; sem GGUF default
+- Promovido para Etapa 84.
+- Etapa: [Etapa 84 — First-boot TTY](ROADMAP.md)
 
 ### B78 — Gate smoke QEMU da imagem IA Livre
 - Issue: [#84](https://github.com/eriksonlima/projeto-ia-livre/issues/84)

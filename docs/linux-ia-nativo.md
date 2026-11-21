@@ -62,6 +62,14 @@ make verify-distro-debian-qemu
 Skip honesto: `need_mmdebstrap` / `need_net` / `need_qemu` / `boot_fail` / `no_console` (exit 0).  
 Sucesso: `IA_LIVRE_DISTRO_DEBIAN_QEMU_OK` + conf guest ou prompt Debian.
 
+## First-boot TTY (Etapa 84)
+
+- MOTD: `/etc/motd`
+- PATH: `/etc/profile.d/ia-livre.sh`
+- Guia: `/etc/ia-livre/FIRST_BOOT.md` (fetch de **qualquer** GGUF; artefato default **sem** pesos)
+- Build Debian sem GGUF: default; lab com pesos: `IA_LIVRE_DEBIAN_INCLUDE_GGUF=1`
+- Gate: `make verify-distro-first-boot`
+
 ## USB Linux
 
 Ver [`docs/guia-ia-livre-linux-usb.md`](guia-ia-livre-linux-usb.md) (imagem/rootfs — distinto do ESP UEFI).

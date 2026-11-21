@@ -2,14 +2,14 @@
 
 ## Foco atual
 
-- Etapas 1–83 **feitas**
-- E82 Debian QEMU; E83 smoke exige Debian (`DISTRO_QEMU_OK`)
-- Abertas: B79–B91 (topo B79 first-boot TTY)
+- Etapas 1–84 **feitas**
+- Onda A (imagem): E82 Debian QEMU, E83 smoke Debian, E84 first-boot
+- Abertas: B80–B91 (topo **B80** ISO híbrida / live USB)
 
 ## Próximo passo
 
-- Promover **B79** first-boot TTY
+- Promover **B80** ISO/live USB bootável
 
 ## Notas
 
-- Alpine netboot não conta mais como QEMU OK no smoke
+- `make verify-distro-first-boot` · GGUF default stripped (`INCLUDE_GGUF=1` para lab)

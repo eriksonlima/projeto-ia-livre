@@ -158,6 +158,17 @@ if [[ ! -x "$ROOTFS/opt/ia-livre/bin/ia-livre" ]]; then
 fi
 test -L "$ROOTFS/usr/local/bin/ia-livre" || test -x "$ROOTFS/usr/local/bin/ia-livre"
 
+# First-boot (E84): artefato default **sem** GGUF (~638 MiB)
+if [[ "${IA_LIVRE_DEBIAN_INCLUDE_GGUF:-0}" != "1" ]]; then
+  rm -f "$ROOTFS"/var/lib/ia-livre/models/*.gguf 2>/dev/null || true
+  echo "IA_LIVRE_DISTRO_DEBIAN_GGUF=stripped"
+else
+  echo "IA_LIVRE_DISTRO_DEBIAN_GGUF=included"
+fi
+test -f "$ROOTFS/etc/ia-livre/FIRST_BOOT.md"
+test -f "$ROOTFS/etc/profile.d/ia-livre.sh"
+test -f "$ROOTFS/etc/motd"
+
 echo "IA_LIVRE_DISTRO_DEBIAN_KERNEL=$K"
 echo "IA_LIVRE_DISTRO_DEBIAN_INITRD=$I"
 echo "IA_LIVRE_DISTRO_DEBIAN_ROOTFS=$ROOTFS"

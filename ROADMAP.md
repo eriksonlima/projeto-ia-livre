@@ -642,3 +642,11 @@ Pronto quando: smoke exige boot Debian E82 (`DISTRO_QEMU_OK`) ou skip `need_*`; 
 Project: https://github.com/users/eriksonlima/projects/1  
 **Desfecho:** `run-distro-smoke` chama Debian QEMU; `DISTRO_QEMU_OK` + `SRC=debian`; Alpine removido como prova.
 
+## Etapa 84 — First-boot TTY
+
+Status: feita  
+Issue: [#85](https://github.com/eriksonlima/projeto-ia-livre/issues/85)  
+Spec: specs/linux-first-boot-tty/  
+Pronto quando: MOTD/PATH/hints; fetch GGUF documentado; artefato default sem ~638 MiB.  
+**Desfecho:** `/etc/motd` + `profile.d` + `FIRST_BOOT.md`; strip GGUF no build Debian; `make verify-distro-first-boot`.
+
