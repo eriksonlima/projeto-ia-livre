@@ -2,12 +2,12 @@
 
 ## Estado atual
 
-- **holder:** _(livre)_
-- **etapa:** —
-- **issue:** —
-- **paths:** —
-- **since:** —
-- **expires:** —
+- **holder:** cursor-agent-a326036c
+- **etapa:** 64
+- **issue:** #73
+- **paths:** ROADMAP.md, BACKLOG.md, specs/, docs/, scripts/, Makefile, AGENTS.md, memory-bank/
+- **since:** 2026-11-21T16:20:00Z
+- **expires:** 2026-11-21T20:20:00Z
 
 ## Protocolo
 
