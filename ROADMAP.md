@@ -260,5 +260,5 @@ Pronto quando: evidência em PC real com ≥ `BOOT_OK` (ideal `EXIT_BOOT_OK`) vi
 
 Status: em_andamento  
 Issue: [#35](https://github.com/eriksonlima/projeto-ia-livre/issues/35)  
-Spec: (a definir — `especificador`)  
+Spec: specs/gguf-baremetal-midia/  
 Pronto quando: modelo/path documentado na mídia/metal com loader verificável; deps E35.
