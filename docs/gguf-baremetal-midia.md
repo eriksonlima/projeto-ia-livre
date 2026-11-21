@@ -49,7 +49,9 @@ Protocolo: **`EFI_SIMPLE_FILE_SYSTEM_PROTOCOL`** (antes de `ExitBootServices`).
 
 Em QEMU o caminho canônico de prova completa continua sendo o disco raw BlockIO (`build/gguf-canon.gguf`) das Etapas 26/27 — **não** confundir com a ESP bare-metal.
 
-**Etapa 48 / ADR [`0017`](adr/0017-path-metal-sfs-vs-blockio.md):** path metal = SimpleFileSystem/ESP (`GGUF_PATH=esp_sfs`). Sem GGUF completo carregável (FAT16) → `B_BLOCK_METAL=no_gguf_metal_io`. Gate: `make verify-metal-infer` (ESP-only; ≠ `METAL_OK`; ≠ BlockIO).
+**Etapa 48 / ADR [`0017`](adr/0017-path-metal-sfs-vs-blockio.md):** path metal = SimpleFileSystem/ESP (`GGUF_PATH=esp_sfs`). Sem GGUF completo carregável (FAT16 / `fat:rw:`) → `B_BLOCK_METAL=no_gguf_metal_io`. Gate: `make verify-metal-infer` (ESP-only; ≠ `METAL_OK`; ≠ BlockIO).
+
+**Etapa 63:** além de `no_gguf_metal_io` — FAT32 `.img` + `FULL_GGUF` + loader SFS full (`esp_sfs_full`) **ou** bloqueio medido (ADR nova). Contrato e marcadores: [`gguf-path-metal-io.md`](gguf-path-metal-io.md). QEMU `fat:rw:<dir>` **não** basta para A (limite FAT16).
 
 ## Glue loader (contrato)
 

@@ -18,6 +18,11 @@ Etapa 48 pede inferência mínima no **path metal** (ESP/`model.gguf` via Simple
    Gate prova o bloqueio; **proibido** `TOKENS_PER_S` / `METAL_OK` neste caminho.
 4. Geração mínima no path SFS permanece desejável se I/O full for viável (PC com FAT32 ou QEMU FAT32 futuro).
 
+## Ponte Etapa 63
+
+O “futuro FAT32” desta ADR é o objeto da Etapa 63 — contrato: [`../gguf-path-metal-io.md`](../gguf-path-metal-io.md).  
+E48/`no_gguf_metal_io` permanece o **baseline** histórico; I/O full SFS (`esp_sfs_full`) ou bloqueio medido (ADR nova) **não** reescreve a honestidade E48 nem transforma BlockIO em metal.
+
 ## Rejeitado
 
 - Tratar serial BlockIO como prova metal.
@@ -26,4 +31,5 @@ Etapa 48 pede inferência mínima no **path metal** (ESP/`model.gguf` via Simple
 ## Consequências
 
 - Gate aditivo `verify-metal-infer` (ESP-only) ≠ `verify` / `verify-harness`.
-- E46 `METAL_OK` permanece independente.
+- E46/`METAL_OK` permanece independente (E62 SKIP neste host).
+- Etapa 63: ver [`../gguf-path-metal-io.md`](../gguf-path-metal-io.md).

@@ -2,17 +2,16 @@
 
 ## Foco atual
 
-- Etapas 1–62 **feitas**
-- Pilar 1: `BLOQUEIO_FINAL` (ADR 0022)
-- Pilar 2: artefato ok; **`METAL_OK`** bloqueado neste host (`STATUS-SKIP`)
-- Pilar 3: verde
-- Topo Abertas: **B57** (I/O GGUF metal) — deps B56 preferível; ou B67 sync docs
+- Etapa **63** `em_andamento` (B57 / #63) — I/O GGUF path metal
+- Spec: `specs/io-gguf-path-metal/`
+- Task 1 **feita** (contrato `docs/gguf-path-metal-io.md`)
+- Próxima: Task 2 — FAT32 `.img` + loader `esp_sfs_full` **ou** ADR 0023
 
 ## Próximo passo
 
-- Operador: log PC → `METAL_OK`; ou promover B67/B57 com caminho honesto
-- Pedido “continuar” → promover topo Abertas
+- Implementar ramo A (preferido): SFS full via FAT32 img; runner ESP-only sem `fat:rw:`
 
 ## Notas
 
-- Lease livre
+- Lease: cursor-agent-a326036c · E63
+- ≠ METAL_OK; ≠ BlockIO-as-metal

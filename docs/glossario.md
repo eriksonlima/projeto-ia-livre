@@ -34,3 +34,6 @@ Princípios: [`manifesto.md`](manifesto.md).
 | **ADR 0020** | Passo intermediário inviável no guest pós-otimização E59 (teto 2L×1 permanece) | [`adr/0020-runtime-native-passo-intermediario-inviavel.md`](adr/0020-runtime-native-passo-intermediario-inviavel.md) |
 | **ADR 0021** | Espécie canônica 22L×32 inviável no gate atual (E60) | [`adr/0021-especie-canonica-linha-b-inviavel.md`](adr/0021-especie-canonica-linha-b-inviavel.md) |
 | **ADR 0022 / BLOQUEIO_FINAL** | Bloqueio **terminal** do pilar 1 (hipótese A/B) no protótipo/gate atuais; critérios de reabertura | [`adr/0022-bloqueio-final-hipotese-ab.md`](adr/0022-bloqueio-final-hipotese-ab.md) |
+| **`esp_sfs` / path metal** | GGUF via SimpleFileSystem/ESP — **≠** BlockIO | ADR [`0017`](adr/0017-path-metal-sfs-vs-blockio.md) |
+| **`esp_sfs_full`** | Loader SFS full (E63); ≠ `blockio_full` / ≠ só `esp_header` | [`gguf-path-metal-io.md`](gguf-path-metal-io.md) |
+| **`B_BLOCK_METAL`** | Bloqueio honesto no path metal (ex. `no_gguf_metal_io` E48) | [`gguf-path-metal-io.md`](gguf-path-metal-io.md) / E48 |
