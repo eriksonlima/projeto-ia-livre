@@ -544,3 +544,10 @@ Spec: specs/abi-runtime-native/
 Pronto quando: contrato versionado documentado + consumidor nativo; sem puxar inferência pro kernel (ADR 0001/0003).  
 **Desfecho:** A — ABI freestanding v1 (`ABI_VERSION=1`/`ABI_OK`); `runtime-native/src/abi.rs` + glue guest; `make verify-abi-runtime-native`; `make verify` exige ABI; ≠ syscall; motor fora do kernel.
 
+## Etapa 72 — Sincronizar architecture/product pós-E58
+
+Status: em_andamento  
+Issue: [#72](https://github.com/eriksonlima/projeto-ia-livre/issues/72)  
+Spec: specs/sync-architecture-product/  
+Pronto quando: architecture + product-context + glossário refletem E42–E71 e decisões abertas reais (sem listar REPL/GPU harness como se ainda abertos se já feitos).
+

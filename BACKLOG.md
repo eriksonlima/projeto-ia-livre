@@ -10,15 +10,8 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Meta do protótipo (objetivo do projeto):** um ecossistema verificável em que (1) a **hipótese A vs B** possa ser comprovada ou refutada com geração real na Linha B (`TOKENS_PER_S`), (2) o **SO IA Livre** boote de USB/ESP em hardware real com caminho de IA nativo mínimo honesto, (3) a **Rede** e a **autonomia** continuem utilizáveis **sem** exigir o SO. Ordem abaixo = prioridade sugerida (topo primeiro).
 >
-> **Análise pós-E71 (2026-11-21):** E71 ABI v1. Topo: **B67** (docs sync); B55 adiada.
+> **Análise pós-promoção B67 (2026-11-21):** B67→E72. Topo Abertas: só **B55** (adiada).
 
-
-
-### B67 — Sincronizar architecture/product pós-E58
-- Issue: [#72](https://github.com/eriksonlima/projeto-ia-livre/issues/72)
-- Origem: `architecture.md` ainda lista REPL/GPU harness como abertos; mapa pós-E41 defasado
-- Pronto quando: architecture + product-context + glossário refletem E42–E58 e decisões abertas reais
-- Deps: E58
 
 
 ### B55 — Re-corrida harness A/B quieta pós-espécie canônica
@@ -28,6 +21,15 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Nota: não promover enquanto BLOQUEIO_FINAL / canônico inviável sem reabertura
 
 ## Promovidas / arquivadas
+
+### B67 — Sincronizar architecture/product pós-E58
+- Issue: [#72](https://github.com/eriksonlima/projeto-ia-livre/issues/72)
+- Origem: `architecture.md` ainda lista REPL/GPU harness como abertos; mapa pós-E41 defasado
+- Pronto quando: architecture + product-context + glossário refletem E42–E58 e decisões abertas reais
+- Deps: E58
+- Promovido para Etapa 72.
+- Etapa: [Etapa 72 — Sync architecture/product](ROADMAP.md)
+
 
 ### B66 — ABI mínima estável kernel↔runtime-native
 - Issue: [#71](https://github.com/eriksonlima/projeto-ia-livre/issues/71)

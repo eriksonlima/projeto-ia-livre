@@ -2,14 +2,13 @@
 
 ## Foco atual
 
-- Etapas 1–71 **feitas**
-- E71: ABI mínima freestanding v1 (`ABI_VERSION`/`ABI_OK`)
-- Topo Abertas: **B67** (sync architecture/product)
+- Etapas 1–71 **feitas**; **Etapa 72** `em_andamento` (B67)
+- Sync architecture / product-context / glossário pós-E58…E71
 
 ## Próximo passo
 
-- “continuar” → B67
+- Spec + sync docs
 
 ## Notas
 
-- Lease a liberar após commit E71
+- Lease: Etapa 72 / #72
