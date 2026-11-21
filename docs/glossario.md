@@ -29,3 +29,4 @@ Princípios: [`manifesto.md`](manifesto.md).
 | **`calc`** | Tool sandboxed do agente (E40) | [`autonomia-alem-v1.md`](autonomia-alem-v1.md) |
 | **GOP / OBS** | Observabilidade mínima pré-exit (E37) | [`observabilidade-minima-so.md`](observabilidade-minima-so.md) |
 | **PeerId** | Fingerprint ed25519 (âncora de confiança do nó) | [`rede-ia-livre-v1.md`](rede-ia-livre-v1.md) |
+| **Protótipo objetivo atingido** | Checklist dos 3 pilares (hipótese A/B; USB/metal; Rede+autonomia host); celebrar só com evidência | [`prototipo-objetivo-atingido.md`](prototipo-objetivo-atingido.md) |

@@ -2,14 +2,22 @@
 
 ## Foco atual
 
-- Etapas 1–57 **feitas**
-- E57: guia USB + release `SHA256SUMS`; gate `verify-boot-guide-release`
-- Topo Abertas: **B52** (checklist protótipo objetivo)
+- Etapas 1–58 **feitas**
+- E58: checklist canônico dos 3 pilares (`docs/prototipo-objetivo-atingido.md`) + gate `verify-prototipo-objetivo`
+- Backlog **Abertas vazio** — nenhuma `em_andamento`
+
+## Estado dos pilares (E58)
+
+1. Hipótese A/B: **INCONCLUSIVO** (geração B subset ≠ espécie canônica)
+2. USB/metal: artefato+guia ok; **sem** `METAL_OK` até log de PC real
+3. Rede+autonomia host: **verde** (gates node/agent/bridges)
 
 ## Próximo passo
 
-- Promover B52 → Etapa 58 ou continuar
+- Pedido explícito ou novo item em `BACKLOG.md` — **não** inventar etapa
+- Residual técnico: espécie canônica B para COMPROVA/REFUTA; `METAL_OK` com evidência PC
 
 ## Notas
 
-- Lease: liberar após push E57
+- Lease liberado após push E58
+- Um agente escritor; claim antes de editar `em_andamento`

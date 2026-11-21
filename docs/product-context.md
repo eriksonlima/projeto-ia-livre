@@ -31,6 +31,10 @@ Detalhe técnico: [`docs/architecture.md`](architecture.md). Em resumo, o que ca
 | **Ambiente de autonomia** | Agentes, memória e ferramentas para aprender e experimentar no próprio ambiente |
 | **Rede IA Livre** | Colaborar e compartilhar recursos/conhecimento **sem** precisar trocar de SO |
 
+## Meta do protótipo (checklist)
+
+Critério verificável dos três pilares (hipótese A/B; USB/metal; Rede+autonomia sem exigir SO): [`prototipo-objetivo-atingido.md`](prototipo-objetivo-atingido.md). Celebrar só com evidência.
+
 ## Não objetivos
 
 - Desktop genérico ou compatibilidade com apps de escritório

@@ -25,7 +25,7 @@ Veja `AGENTS.md` → **Como verificar**.
 - Manifesto Fundador: `docs/manifesto.md`
 - Roadmap: `ROADMAP.md` · Backlog: `BACKLOG.md`
 - Specs: `specs/`
-- Produto: `docs/product-context.md`
+- Produto: `docs/product-context.md` · meta do protótipo: [`docs/prototipo-objetivo-atingido.md`](docs/prototipo-objetivo-atingido.md) / `make verify-prototipo-objetivo`
 - Arquitetura: `docs/architecture.md` · Glossário: `docs/glossario.md`
 - Harness A vs B: `docs/harness-linha-a-b.md` · comparável: `docs/harness-a-b-comparavel.md` · perfil GPU: `make verify-harness-gpu` (veja `AGENTS.md` → gates)
 - Boot/imagem hardware real (ESP/USB): [`docs/guia-primeiro-boot-usb.md`](docs/guia-primeiro-boot-usb.md) · `docs/boot-hardware-real.md` — `make verify-baremetal` / `verify-write-usb` / `verify-boot-guide-release`; path metal SFS: `make verify-metal-infer` (`B_BLOCK_METAL`; ≠ METAL_OK)

@@ -1,5 +1,5 @@
 # Projeto IA Livre — bootstrap do kernel (UEFI + QEMU)
-.PHONY: build esp baremetal-esp run verify verify-runtime verify-runtime-gpu verify-runtime-contract verify-gpu-manager verify-gpu-shard-host verify-gpu-native-real verify-node verify-agent verify-harness verify-harness-comparable verify-harness-a-otimizada verify-harness-gpu verify-baremetal verify-write-usb verify-boot-guide-release verify-metal-infer verify-autonomia-bridge verify-rede-bridge verify-docs-consistency clean help
+.PHONY: build esp baremetal-esp run verify verify-runtime verify-runtime-gpu verify-runtime-contract verify-gpu-manager verify-gpu-shard-host verify-gpu-native-real verify-node verify-agent verify-harness verify-harness-comparable verify-harness-a-otimizada verify-harness-gpu verify-baremetal verify-write-usb verify-boot-guide-release verify-prototipo-objetivo verify-metal-infer verify-autonomia-bridge verify-rede-bridge verify-docs-consistency clean help
 
 export PATH := $(HOME)/.cargo/bin:$(PATH)
 # Evita CARGO_TARGET_DIR herdado (ex.: cache de sandbox) fora do repo
@@ -141,6 +141,9 @@ verify-write-usb:
 
 verify-boot-guide-release:
 	./scripts/verify-boot-guide-release.sh
+
+verify-prototipo-objetivo:
+	./scripts/verify-prototipo-objetivo.sh
 
 verify-metal-infer:
 	./scripts/verify-metal-infer.sh

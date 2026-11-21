@@ -434,8 +434,9 @@ Pronto quando: guia passo a passo (Secure Boot, serial, o que esperar) + tag/rel
 
 ## Etapa 58 — Definição verificável de “protótipo objetivo atingido”
 
-Status: em_andamento  
+Status: feita  
 Issue: [#58](https://github.com/eriksonlima/projeto-ia-livre/issues/58)  
 Spec: specs/prototipo-objetivo-atingido/  
-Pronto quando: checklist em `docs/` (hipótese A/B decidível **ou** bloqueio honesto final; USB metal com boot+IA mínima; Rede+autonomia host verdes) + espelho no ROADMAP/Memory Bank; celebrar só com evidência.
+Pronto quando: checklist em `docs/` (hipótese A/B decidível **ou** bloqueio honesto final; USB metal com boot+IA mínima; Rede+autonomia host verdes) + espelho no ROADMAP/Memory Bank; celebrar só com evidência.  
+**Desfecho:** [`docs/prototipo-objetivo-atingido.md`](docs/prototipo-objetivo-atingido.md) — 3 pilares; pilar 1 `INCONCLUSIVO` (espécie subset); pilar 2 sem `METAL_OK` até log PC; pilar 3 verde (Rede+autonomia host). Gate `make verify-prototipo-objetivo` → `IA_LIVRE_PROTOTIPO_OBJETIVO_OK` (sem fingir `COMPROVA`). Celebrar só com evidência.
 

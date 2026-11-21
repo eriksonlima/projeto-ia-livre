@@ -523,6 +523,19 @@ grep -q 'IA_LIVRE_RELEASE_ARTIFACT_OK' scripts/prepare-baremetal-release.sh
 
 Esperado: `BOOT_GUIDE_OK` + `RELEASE_ARTIFACT_OK` + `sha256sum -c` ok. Prepare: `./scripts/prepare-baremetal-release.sh` → `build/release/`.
 
+### Gate checklist protótipo objetivo (Etapa 58 — adicional)
+
+Define critérios dos 3 pilares; **não** exige `COMPROVA` nem USB. Contrato: [`docs/prototipo-objetivo-atingido.md`](docs/prototipo-objetivo-atingido.md).
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+test -f docs/prototipo-objetivo-atingido.md
+make verify-prototipo-objetivo
+grep -q 'IA_LIVRE_PROTOTIPO_OBJETIVO_OK' scripts/verify-prototipo-objetivo.sh
+```
+
+Esperado: `IA_LIVRE_PROTOTIPO_OBJETIVO_OK`. Celebrar meta global só com evidência do checklist.
+
 ### Gate inferência path metal / ESP-only (Etapa 48 — adicional)
 
 QEMU **sem** BlockIO: prova `GGUF_PATH=esp_sfs` + `B_BLOCK_METAL=no_gguf_metal_io` (ADR [`0017`](docs/adr/0017-path-metal-sfs-vs-blockio.md)). **≠** `METAL_OK`; **≠** geração BlockIO.
