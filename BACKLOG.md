@@ -8,13 +8,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-
-### B26 — Re-corrida harness A vs B com geração real em B
-
-- Issue: [#32](https://github.com/eriksonlima/projeto-ia-livre/issues/32)
-- Origem: instrumento E22/E28; depende de B36 (geração)
-- Pronto quando: `verify-harness-comparable` quieto com `COMPROVA`/`REFUTA` **ou** `INCONCLUSIVO` só com motivo ≠ ausência de tokens B
-
 ### B27 — Baseline Linha A otimizada (CPU) no gate comparável
 
 - Issue: [#33](https://github.com/eriksonlima/projeto-ia-livre/issues/33)
@@ -73,6 +66,11 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Pronto quando: `architecture.md` / README-AGENTS refletem estado atual sem ambiguidade
 
 ## Promovidas / arquivadas
+
+### B26 — Re-corrida harness A vs B com geração real em B
+
+- Promovido para Etapa 33 do roadmap (promoção autônoma após Etapa 32).
+- Issue: [#32](https://github.com/eriksonlima/projeto-ia-livre/issues/32)
 
 ### B36 — Geração canônica Prefill+Decode+sampling na Linha B (TOKENS_PER_S)
 

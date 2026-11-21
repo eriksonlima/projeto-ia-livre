@@ -3,8 +3,12 @@
 ## Estado atual
 
 - **holder:** cursor-agent-main
-- **etapa:** 32
-- **issue:** #42
-- **paths:** ROADMAP.md, BACKLOG.md, specs/geracao-canonica-linha-b/, docs/, runtime-native/, kernel/, scripts/, memory-bank/, AGENTS.md
-- **since:** 2026-11-21T07:01:55Z
-- **expires:** 2026-11-21T11:01:55Z
+- **etapa:** 33
+- **issue:** #32
+- **paths:** ROADMAP.md, BACKLOG.md, specs/, docs/, runtime-native/, kernel/, scripts/, memory-bank/, AGENTS.md
+- **since:** 2026-11-21T07:45:00Z
+- **expires:** 2026-11-21T11:45:00Z
+
+## Protocolo
+
+Ver `.cursor/rules/agentes-em-paralelo.mdc`. Só um escritor na `em_andamento`.

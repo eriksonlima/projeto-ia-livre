@@ -129,7 +129,7 @@ Escrito na Task 1 / ADR 0013. Exemplos honestos:
 
 ### Relação com o gate atual
 
-- Hoje: harness B exige `blockio_full`, `layout_ok`, mapa/dequant/op, `B_BLOCK=no_gguf_generate`, **sem** `TOKENS_PER_S`; comparable → `INCONCLUSIVO`.
+- Desfecho E32: harness B exige `blockio_full`, `layout_ok`, tokenize/embed/camada, `B_BLOCK=no_gguf_decode`, **sem** `TOKENS_PER_S`; comparable → `INCONCLUSIVO`.
 - Com geração: gate **passa** a exigir `RUNTIME_NATIVE_OK` + `LOAD_KIND=gguf` + `LOAD_S` / `TOKENS_PER_S` medidos + `N_PREDICT=32`; comparable pode emitir `COMPROVA`/`REFUTA`/`INCONCLUSIVO` **só** com regras honestas.
 - Com bloqueio novo: gate exige intermediários (tokenize + embedding + camada) + `B_BLOCK=<novo>` (≠ `no_gguf_generate`); comparable `INCONCLUSIVO`; **continua** rejeitando tokens inventados.
 - Timeouts: Prefill/Decode TinyLlama em QEMU provavelmente exige `VERIFY_*_TIMEOUT` maior — documentar.
@@ -175,7 +175,7 @@ Escrito na Task 1 / ADR 0013. Exemplos honestos:
 
 - [ ] ADR 0013 + docs: decisão B; rejeições A-única/C; critério inviável explícito
 - [ ] Tokenização mínima + embedding lookup verificáveis em `runtime-native`
-- [ ] **Ou** geração canônica com `RUNTIME_NATIVE_OK` + `LOAD_KIND=gguf` + `LOAD_S`/`TOKENS_PER_S` medidos + `N_PREDICT=32` **ou** bloqueio honesto **novo** com intermediários (≥ tokenize/embed + camada parcial) além de `no_gguf_generate`
+- [x] **Ou** geração canônica com `RUNTIME_NATIVE_OK` + `LOAD_KIND=gguf` + `LOAD_S`/`TOKENS_PER_S` medidos + `N_PREDICT=32` **ou** bloqueio honesto **novo** com intermediários (≥ tokenize/embed + camada parcial) além de `no_gguf_generate` → desfecho: `no_gguf_decode`
 - [ ] Harness B + comparable atualizados sem inventar números
 - [ ] ADR 0001 / 0010 / 0012 respeitados (geração na crate; fatia vertical)
 - [ ] Hipótese só muda de `INCONCLUSIVO` com evidência real em espécie

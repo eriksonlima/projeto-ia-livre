@@ -31,7 +31,10 @@ have_ready() {
     && grep -q 'IA_LIVRE_RUNTIME_NATIVE_TENSOR_MAP_OK' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_RUNTIME_NATIVE_Q4K_DEQUANT_OK' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_RUNTIME_NATIVE_FORWARD_OP_OK' "$LOG" 2>/dev/null \
-    && grep -q 'IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_generate' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_RUNTIME_NATIVE_TOKENIZE_OK' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_RUNTIME_NATIVE_EMBED_OK' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_RUNTIME_NATIVE_LAYER_PARTIAL_OK' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_decode' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_TYPED_WEIGHTS_OK' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_TYPED_KVCACHE_OK' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_PHASE=prefill' "$LOG" 2>/dev/null \
@@ -131,16 +134,25 @@ fi
 if grep -q 'IA_LIVRE_RUNTIME_NATIVE_FORWARD_OP_OK' "$LOG"; then
   echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_FORWARD_OP=OK"
 fi
-if grep -q 'IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_generate' "$LOG"; then
-  echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_FORWARD_FAIL=no_generate"
+if grep -q 'IA_LIVRE_RUNTIME_NATIVE_TOKENIZE_OK' "$LOG"; then
+  echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_TOKENIZE=OK"
+fi
+if grep -q 'IA_LIVRE_RUNTIME_NATIVE_EMBED_OK' "$LOG"; then
+  echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_EMBED=OK"
+fi
+if grep -q 'IA_LIVRE_RUNTIME_NATIVE_LAYER_PARTIAL_OK' "$LOG"; then
+  echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_LAYER_PARTIAL=OK"
+fi
+if grep -q 'IA_LIVRE_RUNTIME_NATIVE_FORWARD_FAIL=no_decode' "$LOG"; then
+  echo "IA_LIVRE_HARNESS_RUNTIME_NATIVE_FORWARD_FAIL=no_decode"
 fi
 
 echo "IA_LIVRE_HARNESS_OK"
-B_BLOCK_REASON="${IA_LIVRE_HARNESS_B_BLOCK:-no_gguf_generate}"
+B_BLOCK_REASON="${IA_LIVRE_HARNESS_B_BLOCK:-no_gguf_decode}"
 echo "IA_LIVRE_HARNESS_B_BLOCK=${B_BLOCK_REASON}"
 echo "IA_LIVRE_HARNESS_GGUF_STATUS=${STATUS}"
 if [[ "${IA_LIVRE_HARNESS_B_MODE:-}" == "block-status" ]]; then
   echo "IA_LIVRE_HARNESS_LOAD_KIND_GGUF=${STATUS}"
 fi
-echo "nota: hipótese A vs B NÃO comprovada — loader=${LOADER} status=${STATUS}; sem TOKENS_PER_S (${B_BLOCK_REASON})."
+echo "nota: hipótese A vs B NÃO comprovada — loader=${LOADER} status=${STATUS}; tokenize/embed/camada ok; sem TOKENS_PER_S (${B_BLOCK_REASON})."
 exit 0

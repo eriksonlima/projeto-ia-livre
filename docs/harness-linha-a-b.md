@@ -92,14 +92,14 @@ Deps 19/20 (MEM_SCHED + contrato) estão no caminho B; carga TinyLlama Q4_K_M em
 | `blocked` | Bloqueio honesto (`B_BLOCK=…`, ex. `awaiting_b13_b14`) — **sem** inventar `TOKENS_PER_S`/`LOAD_S` |
 | `gguf` | Carga canônica real no QEMU/IA Livre (TinyLlama Q4_K_M, prompt, `n-predict=32`) com métricas **medidas** |
 
-**Deps:** Etapas 19/20 **feitas**; Etapa 26 — loader ESP (`GGUF_NATIVE_LOADER=esp_header`). Harness B emite `CONTRACT_READY=1` + alvos `GGUF_TARGET_*` + `B_BLOCK=no_gguf_infer` (path ok; sem geração). Proxy permanece até `LOAD_KIND=gguf` com tokens.  
-Quando A e B tiverem `LOAD_KIND=gguf` com métricas em espécie, a **prova/refutação** fica para a Etapa 22 / B16 — esta etapa **não** declara vitória.
+**Deps:** Etapas 19–32 **feitas** no path B. Estado atual do gate: `GGUF_NATIVE_LOADER=blockio_full` + tokenize/embed/camada parcial + `B_BLOCK=no_gguf_decode` (ADR [`0013`](adr/0013-geracao-canonica-fatiada-linha-b.md)). Proxy permanece até `LOAD_KIND=gguf` com tokens medidos.  
+Quando A e B tiverem `LOAD_KIND=gguf` com métricas em espécie, a **prova/refutação** usa o instrumento comparável (Etapa 22) — **não** declarar vitória sem `TOKENS_PER_S` em B.
 
 ### Métricas em espécie em B
 
-1. ~~B13 + B14 mergeados/verificáveis~~ — Etapas 19/20 **feitas** (`CONTRACT_READY=1`).  
-2. ~~Integração harness ↔ contrato (Task 3)~~ — alvos canônicos + bloqueio honesto.  
-3. **Carga GGUF real (geração)** — ainda **ausente**; Etapa 26 desbloqueou o **path** (cabeçalho ESP). `TOKENS_PER_S` em B = etapa futura.  
+1. ~~B13 + B14~~ — Etapas 19/20 **feitas** (`CONTRACT_READY=1`).  
+2. ~~Loader + mapa/dequant/op + tokenize/embed/camada~~ — Etapas 26–32.  
+3. **Geração canônica (Prefill/Decode/sampling)** — ainda **ausente** (`no_gguf_decode`). `TOKENS_PER_S` em B = etapa futura (ex. B26).  
 Desenho: [`desenho-memoria-scheduler-nativo.md`](desenho-memoria-scheduler-nativo.md) (ADR 0003) — **desenho ≠ prova**.
 ## Como rodar
 

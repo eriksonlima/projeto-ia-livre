@@ -105,7 +105,10 @@ for marker in \
   'IA_LIVRE_HARNESS_RUNTIME_NATIVE_TENSOR_MAP=OK' \
   'IA_LIVRE_HARNESS_RUNTIME_NATIVE_Q4K_DEQUANT=OK' \
   'IA_LIVRE_HARNESS_RUNTIME_NATIVE_FORWARD_OP=OK' \
-  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_FORWARD_FAIL=no_generate'; do
+  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_TOKENIZE=OK' \
+  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_EMBED=OK' \
+  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_LAYER_PARTIAL=OK' \
+  'IA_LIVRE_HARNESS_RUNTIME_NATIVE_FORWARD_FAIL=no_decode'; do
   if ! grep -q "$marker" "$LOG_B"; then
     echo "GATE_FAIL: marcador ausente na Linha B: $marker"
     fail=1
@@ -116,7 +119,7 @@ if ! grep -q 'IA_LIVRE_HARNESS_GGUF_NATIVE_LOADER=blockio_full' "$LOG_B"; then
   fail=1
 fi
 
-# Fraudes / legado / Etapa 21 (sem inventar GGUF)
+# Fraudes / legado (sem inventar GGUF)
 if grep -q 'IA_LIVRE_HARNESS_B_SKIP' "$LOG_B"; then
   echo "GATE_FAIL: B não deve emitir HARNESS_B_SKIP no sucesso"
   fail=1
@@ -138,17 +141,17 @@ if grep -qE 'IA_LIVRE_HARNESS_LOAD_KIND=gguf' "$LOG_B"; then
   echo "GATE_FAIL: B emitiu LOAD_KIND=gguf sem caminho GGUF real implementado"
   fail=1
 fi
-# Bloqueio residual: mapa+dequant+op ok; geração ainda não (Etapa 31)
+# Bloqueio residual E32: tokenize+embed+camada ok; decode ainda não
 if ! grep -q 'IA_LIVRE_HARNESS_B_BLOCK=' "$LOG_B"; then
   echo "GATE_FAIL: B deve declarar B_BLOCK= (estado honesto)"
   fail=1
 fi
-if grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=(no_gguf_path|awaiting_b13_b14|no_gguf_infer|no_gguf_infer_engine|no_gguf_forward)$' "$LOG_B"; then
-  echo "GATE_FAIL: B_BLOCK legado — Etapa 31 exige no_gguf_generate"
+if grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=(no_gguf_path|awaiting_b13_b14|no_gguf_infer|no_gguf_infer_engine|no_gguf_forward|no_gguf_generate)$' "$LOG_B"; then
+  echo "GATE_FAIL: B_BLOCK legado — Etapa 32 exige no_gguf_decode"
   fail=1
 fi
-if ! grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=no_gguf_generate' "$LOG_B"; then
-  echo "GATE_FAIL: B_BLOCK deve ser no_gguf_generate (mapa/dequant/op ok; sem geração)"
+if ! grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=no_gguf_decode' "$LOG_B"; then
+  echo "GATE_FAIL: B_BLOCK deve ser no_gguf_decode (tokenize/embed/camada ok; sem decode)"
   fail=1
 fi
 
@@ -157,5 +160,5 @@ if (( fail )); then
   exit 1
 fi
 
-echo "GATE_OK: harness — A (GGUF) ok + B (proxy + mapa/dequant/op + no_gguf_generate) ok — hipótese NÃO comprovada"
+echo "GATE_OK: harness — A (GGUF) ok + B (proxy + tokenize/embed/camada + no_gguf_decode) ok — hipótese NÃO comprovada"
 exit 0

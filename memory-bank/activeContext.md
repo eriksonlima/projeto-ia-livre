@@ -2,17 +2,17 @@
 
 ## Foco atual
 
-- Etapa **32** `em_andamento` (#42)
-- Tasks 1–3 **feitas**; Task 4 (harness) em curso
+- Etapa **33** `em_andamento` (#32) — re-corrida harness com geração real em B
+- Lease: `cursor-agent-main`
 
 ## Mudanças recentes
 
-- Task 3: camada parcial attn_output + `FORWARD_FAIL=no_decode`; `make verify` ok
+- E32 feita: `no_gguf_decode` + intermediários; B26 → E33
 
 ## Próximo passo
 
-- Task 4: harness B/comparable → `B_BLOCK=no_gguf_decode` + intermediários; fechar etapa
+- Especificar Etapa 33 (`especificador`) e fatiar
 
 ## Notas
 
-- README: avaliar na Task 4
+- README E32: avaliado, sem mudança

@@ -4,7 +4,7 @@ Protocolo de **medição serial** para o instrumento comparável (`make verify-h
 
 Ponte: [`harness-a-b-comparavel.md`](harness-a-b-comparavel.md) · Linha B: [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md) · CPU serial: [`runtime-inferencia-cpu-metricas.md`](runtime-inferencia-cpu-metricas.md).
 
-> **Não prova a hipótese.** Enquanto B não emitir `TOKENS_PER_S` medidos (`no_gguf_generate` E31 ou `B_BLOCK` residual E32 após tokenize/embed/camada — ADR [`0013`](adr/0013-geracao-canonica-fatiada-linha-b.md)), o veredito válido é **`INCONCLUSIVO`**. Proibido inventar métricas em B.
+> **Não prova a hipótese.** Enquanto `B_BLOCK=no_gguf_decode` (E32; tokenize/embed/camada ok, sem Prefill/Decode — ADR [`0013`](adr/0013-geracao-canonica-fatiada-linha-b.md)), o veredito válido é **`INCONCLUSIVO`**. Proibido inventar métricas em B.
 
 ## Por quê
 
@@ -47,24 +47,24 @@ Timeout: `VERIFY_HARNESS_COMPARABLE_TIMEOUT` (default = `VERIFY_HARNESS_TIMEOUT`
 | Host / loadavg | `0.12 0.34 0.50` |
 | Timeout | `300` |
 | `VERDICT` | `INCONCLUSIVO` |
-| `VERDICT_REASON` | `…E27_no_gguf_infer_engine` |
+| `VERDICT_REASON` | `…E32_no_gguf_decode` |
 | Métricas A | `HARNESS_LOAD_S=` / `HARNESS_TOKENS_PER_S=` |
-| B | `LOADER=blockio_full`, `B_BLOCK=no_gguf_infer_engine` — **sem** `TOKENS_PER_S` |
+| B | `LOADER=blockio_full`, `B_BLOCK=no_gguf_decode` — **sem** `TOKENS_PER_S` |
 
 ## O que NÃO fazer
 
 - Rodar gates/QEMU/runtime em paralelo “para ir mais rápido”
 - Inventar `TOKENS_PER_S` em B (proxy + stub ≠ geração)
-- Declarar `COMPROVA` / `REFUTA` sob `no_gguf_infer_engine`
+- Declarar `COMPROVA` / `REFUTA` sob `no_gguf_decode`
 - Tratar métricas E5/E8 (CPU/GPU host) como veredito A vs B
 - Converter `PROXY_MS` / microbench em tokens
 
-## Expectativa atual (E31 feita; E32 em andamento)
+## Expectativa atual (pós-E32)
 
 | Lado | Estado |
 |------|--------|
 | A | GGUF host real → load + tokens |
-| B | mapa + dequant Q4_K + op; caminho E32 = tokenize/embed/camada → tokens **ou** `B_BLOCK` novo; até lá `LOAD_KIND=proxy` |
+| B | tokenize + embed + camada parcial; `LOAD_KIND=proxy`; `B_BLOCK=no_gguf_decode` |
 | Veredito | **`INCONCLUSIVO`** (obrigatório até tokens reais em B) |
 
 Quando existir motor GGUF real em B com `TOKENS_PER_S` medidos, este protocolo continua válido; só então `COMPROVA`/`REFUTA` podem entrar (checklist em `harness-a-b-comparavel.md`).
@@ -82,9 +82,9 @@ Quando existir motor GGUF real em B com `TOKENS_PER_S` medidos, este protocolo c
 | loadavg (início) | `1.76 1.67 1.70` (`IA_LIVRE_HARNESS_QUIET_LOADAVG`) |
 | Timeout | `300` s |
 | `IA_LIVRE_HARNESS_VERDICT` | `INCONCLUSIVO` |
-| `IA_LIVRE_HARNESS_VERDICT_REASON` | `B_proxy_sem_TOKENS_PER_S_E27_no_gguf_infer_engine` |
+| `IA_LIVRE_HARNESS_VERDICT_REASON` | `B_proxy_sem_TOKENS_PER_S_E27_no_gguf_infer_engine` (histórico E28; pós-E32: `…E32_no_gguf_decode`) |
 | Métricas A | `HARNESS_LOAD_S=1.029` · `HARNESS_TOKENS_PER_S=15.409` |
-| B | `blockio_full` / `tensors_stub_ok` / `B_BLOCK=no_gguf_infer_engine` — **sem** `TOKENS_PER_S` |
+| B | `blockio_full` / stub E27 / `B_BLOCK=no_gguf_infer_engine` (histórico; atual = `no_gguf_decode`) — **sem** `TOKENS_PER_S` |
 | Contenção | QEMU órfãos mortos antes; preflight = aviso (default não-strict) |
 | Force override | não |
 | Gate | `make verify-harness-comparable` → `GATE_OK` |

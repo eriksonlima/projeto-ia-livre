@@ -226,7 +226,15 @@ Pronto quando: geração canônica na Linha B (QEMU) com `LOAD_KIND=gguf` + `TOK
 
 ## Etapa 32 — Geração canônica Prefill+Decode+sampling na Linha B (TOKENS_PER_S)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#42](https://github.com/eriksonlima/projeto-ia-livre/issues/42)  
 Spec: specs/geracao-canonica-linha-b/  
-Pronto quando: geração canônica no guest com `LOAD_KIND=gguf` + `TOKENS_PER_S`/`LOAD_S` medidos (TinyLlama Q4_K_M, prompt/`n-predict=32`, CPU) + `RUNTIME_NATIVE_OK`; harness atualizado; **ou** bloqueio honesto novo com avanço além de `no_gguf_generate`; ADR 0001; depende Etapa 31.
+Pronto quando: geração canônica no guest com `LOAD_KIND=gguf` + `TOKENS_PER_S`/`LOAD_S` medidos (TinyLlama Q4_K_M, prompt/`n-predict=32`, CPU) + `RUNTIME_NATIVE_OK`; harness atualizado; **ou** bloqueio honesto novo com avanço além de `no_gguf_generate`; ADR 0001; depende Etapa 31.  
+**Desfecho:** tokenize + embed `token_embd` + camada parcial `attn_output`; `B_BLOCK=no_gguf_decode`; hipótese `INCONCLUSIVO`.
+
+## Etapa 33 — Re-corrida harness A vs B com geração real em B
+
+Status: em_andamento  
+Issue: [#32](https://github.com/eriksonlima/projeto-ia-livre/issues/32)  
+Spec: (a definir — `especificador`)  
+Pronto quando: `verify-harness-comparable` quieto com `COMPROVA`/`REFUTA` **ou** `INCONCLUSIVO` só com motivo ≠ ausência de tokens B; depende de geração real em B (além de `no_gguf_decode`) **ou** bloqueio honesto documentado se tokens ainda inviáveis sem fraude.
