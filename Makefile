@@ -1,5 +1,5 @@
 # Projeto IA Livre — bootstrap do kernel (UEFI + QEMU)
-.PHONY: build esp baremetal-esp run verify verify-runtime verify-runtime-gpu verify-runtime-contract verify-gpu-manager verify-gpu-shard-host verify-gpu-multi verify-gpu-native-real verify-gpu-guest-passthrough verify-node verify-node-relay verify-agent verify-harness verify-harness-comparable verify-harness-a-otimizada verify-harness-gpu verify-harness-sym-cpu verify-baremetal verify-write-usb verify-boot-guide-release verify-prototipo-objetivo verify-runtime-native-perf verify-metal-infer verify-autonomia-bridge verify-autonomia-nativa verify-abi-runtime-native verify-rede-bridge verify-rede-guest verify-docs-consistency verify-baremetal-report-tokens verify-collect-baremetal-report clean help
+.PHONY: build esp baremetal-esp run verify verify-runtime verify-runtime-gpu verify-runtime-contract verify-gpu-manager verify-gpu-shard-host verify-gpu-multi verify-gpu-native-real verify-gpu-guest-passthrough verify-node verify-node-relay verify-agent verify-harness verify-harness-comparable verify-harness-a-otimizada verify-harness-gpu verify-harness-sym-cpu verify-baremetal verify-write-usb verify-boot-guide-release verify-prototipo-objetivo verify-runtime-native-perf verify-metal-infer verify-autonomia-bridge verify-autonomia-nativa verify-abi-runtime-native verify-rede-bridge verify-rede-guest verify-docs-consistency verify-baremetal-report-tokens verify-collect-baremetal-report verify-distro-scaffold stage-distro clean help
 
 export PATH := $(HOME)/.cargo/bin:$(PATH)
 # Evita CARGO_TARGET_DIR herdado (ex.: cache de sandbox) fora do repo
@@ -156,6 +156,12 @@ verify-baremetal-report-tokens:
 
 verify-collect-baremetal-report:
 	./scripts/verify-collect-baremetal-report.sh
+
+stage-distro:
+	./scripts/stage-distro-overlay.sh
+
+verify-distro-scaffold:
+	./scripts/verify-distro-scaffold.sh
 
 verify-write-usb:
 	./scripts/verify-write-usb.sh

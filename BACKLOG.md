@@ -8,11 +8,42 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-> **Produto (pós-checklist E58 / ADR 0026):** evoluir **Linha B** (SO bare-metal / report / runtime nativo). Hipótese A/B **arquivada** — sem promover B55. Ordem = prioridade (topo primeiro).
+> **Produto (ADR 0027):** **Linux IA-nativo** (TTY, shell, qualquer GGUF, tuning/kernel Linux). Linha B UEFI **arquivada**. Ordem = prioridade (topo primeiro).
 
 
+
+### B73 — Layout config/modelos (qualquer GGUF)
+- Issue: [#79](https://github.com/eriksonlima/projeto-ia-livre/issues/79)
+- Origem: plano Linux IA-nativo
+- Pronto quando: `/etc/ia-livre` + models path; troca de GGUF documentada
+- Deps: B72
+
+### B74 — Perfil nativo default (tuning A_otimizada)
+- Issue: [#80](https://github.com/eriksonlima/projeto-ia-livre/issues/80)
+- Origem: plano Linux IA-nativo
+- Pronto quando: sysctl/isolcpus (ou equiv.) default documentado
+- Deps: B72
+
+### B75 — Gate verify-distro-smoke (QEMU)
+- Issue: [#81](https://github.com/eriksonlima/projeto-ia-livre/issues/81)
+- Origem: plano Linux IA-nativo
+- Pronto quando: smoke QEMU da imagem/rootfs; ≠ metal UEFI
+- Deps: B72
+
+### B76 — USB Linux de uso (writer + guia)
+- Issue: [#82](https://github.com/eriksonlima/projeto-ia-livre/issues/82)
+- Origem: plano Linux IA-nativo
+- Pronto quando: gravador/guia imagem Linux (≠ ESP freestanding)
+- Deps: B72/B75 preferível
 
 ## Promovidas / arquivadas
+
+### B72 — Fundação Linux IA-nativo (ADR 0027 + scaffold distro)
+- Issue: [#78](https://github.com/eriksonlima/projeto-ia-livre/issues/78)
+- Origem: plano abandonar Linha B; SO utilizável shell Linux
+- Pronto quando: ADR 0027 + docs; scaffold `distro/`; gate estrutura; B arquivada como produto
+- Promovido para Etapa 77.
+- Etapa: [Etapa 77 — Fundação Linux IA-nativo](ROADMAP.md)
 
 ### B71 — Script collect-baremetal-report.sh
 - Issue: [#77](https://github.com/eriksonlima/projeto-ia-livre/issues/77)

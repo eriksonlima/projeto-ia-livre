@@ -6,9 +6,9 @@ Grandes modelos de IA concentram-se em infraestrutura proprietária e centraliza
 
 ## Usuários
 
-- Desenvolvedores e pesquisadores que querem contribuir com kernel, runtime ou protocolo
+- Desenvolvedores e pesquisadores que querem contribuir com kernel Linux afinado, runtime ou protocolo
 - Pessoas com hardware ocioso que desejam participar da Rede IA Livre sem trocar de SO
-- Comunidade interessada em IA local, soberania tecnológica e colaboração P2P
+- Operadores que querem um SO TTY com shell, configs livres e qualquer GGUF local
 
 ## Princípios
 
@@ -22,52 +22,45 @@ Fonte canônica: [`docs/manifesto.md`](manifesto.md).
 
 ## Camadas do ponto de vista do produto
 
-Detalhe técnico: [`docs/architecture.md`](architecture.md). Em resumo, o que cada camada entrega a quem usa ou contribui:
+Detalhe técnico: [`docs/architecture.md`](architecture.md).
 
 | Camada | Valor para o usuário / contribuidor |
 |--------|-------------------------------------|
-| **IA Livre (kernel)** | Base controlável e auditável; hardware e isolamento pensados para IA, sem desktop genérico |
-| **Runtime nativo de IA** | Executar e servir modelos com eficiência; evolui sem reescrever o núcleo |
-| **Ambiente de autonomia** | Agentes, memória e ferramentas para aprender e experimentar no próprio ambiente |
-| **Rede IA Livre** | Colaborar e compartilhar recursos/conhecimento **sem** precisar trocar de SO |
+| **IA Livre (Linux IA-nativo)** | SO TTY-first customizado para LLM (shell, configs, tuning/kernel Linux); sem desktop genérico |
+| **Runtime de IA** | Executar GGUF com eficiência (`ia-livre-runtime` / llama.cpp); evolui sem reescrever o kernel |
+| **Ambiente de autonomia** | Agentes, memória e ferramentas no próprio SO (ou host convencional) |
+| **Rede IA Livre** | Colaborar P2P **sem** precisar do SO IA Livre |
 
 ## Meta do protótipo (checklist)
 
-Critério verificável dos três pilares: [`prototipo-objetivo-atingido.md`](prototipo-objetivo-atingido.md).  
-**Estado (2026-11-21): checklist cumprido** (pilar 1 = `BLOQUEIO_FINAL`, pilar 2 = `METAL_OK`, pilar 3 = host ok).  
-Evolução de produto: **Linha B** (SO / bare-metal / runtime nativo) — ADR [`0026`](adr/0026-produto-sem-comprovacao-ab.md). Sem buscar `COMPROVA` no roadmap.
+Critério histórico dos três pilares: [`prototipo-objetivo-atingido.md`](prototipo-objetivo-atingido.md) — **cumprido**.  
+**Produto atual (ADR [`0027`](adr/0027-produto-linux-ia-nativo.md)):** SO = **Linux IA-nativo**; Linha B UEFI **arquivada**. Sem `COMPROVA` (ADR [`0026`](adr/0026-produto-sem-comprovacao-ab.md)).
 
 ## Não objetivos
 
 - Desktop genérico ou compatibilidade com apps de escritório
-- Substituir Linux em todos os cenários
+- Substituir Linux em todos os cenários (somos um Linux especializado)
 - Cobrar tokens no acesso comunitário básico
 - Exigir o SO para entrar na rede P2P
-- Declarar vitória da hipótese de pesquisa (`COMPROVA`) ou reabrir A/B no roadmap sem pedido explícito
+- Novas etapas de produto na Linha B (UEFI freestanding)
+- Declarar vitória `COMPROVA` da hipótese A/B
 
-## Hipótese de pesquisa (arquivada como meta de produto)
+## Hipótese de pesquisa (arquivada)
 
-Histórico de lab (não meta de produto — ADR 0026 / 0022):
-
-> O IA Livre, com mecanismos nativos de gerenciamento para inferência, aproveita melhor o hardware do que um Linux otimizado rodando carga equivalente.
-
-Instrumentos A/B permanecem no repo como lab (`INCONCLUSIVO` / `BLOQUEIO_FINAL`). **Não** geram etapas novas de produto.
+Lab histórico (ADR 0026 / 0022). Instrumentos A/B no repo ≠ meta de produto. Linha B UEFI ≠ caminho de uso.
 
 ## Métricas de sucesso (produto)
 
-- SO IA Livre bootável (QEMU + metal com report ESP) e caminho de IA nativo honesto
-- Comunidade capaz de contribuir e participar sem barreira de troca de SO
-- Rede + autonomia utilizáveis no host; Linha B evolui com evidência (`baremetal-report`, gates)
+- Imagem Linux IA Livre bootável (QEMU + USB) com TTY/shell
+- Runtime/agent/node no SO; qualquer GGUF via config
+- Tuning/kernel Linux progressivamente mais “nativo” para inferência
+- Rede utilizável no SO e em nós convencionais (ADR 0001)
 
 ## Estado atual (produto)
 
-- Checklist 3 pilares **ok**; hipótese A/B **arquivada** (ADR 0026); B55 arquivada
-- Kernel UEFI + gates QEMU; obs GOP; GPU nativo sintético; ABI mínima v1 (`ABI_OK`)
-- Runtime host (CPU/GPU) + Linha B subset (`TOKENS_PER_S` medidos; espécie ≠ canônica — lab)
-- Agente: allowlist `note`/`recall`/`help`/`calc` + REPL + `read_local` + consumo evidência nativa
-- Rede: v1 + bootstrap + mDNS + TASK + KNOW + relay intro; TCP guest inviável (bridge E52)
-- Path metal: SFS full (E63); **`METAL_OK`** via report ESP (E73)
-- Bare-metal: artefato ESP + guia/release USB; canal padrão = report (ADR 0025)
-- GPU host: shard + `host_multi` (skip se &lt;2 devices); guest passthrough skip sem VFIO
+- Direção: **Linux IA-nativo** (ADR 0027); Linha B **arquivada**
+- Stack host já utilizável: runtime CPU/GPU, agente REPL, nó P2P v1
+- Próximo: imagem live/instalável + layout `/etc/ia-livre` + smoke
+- Artefatos UEFI/bare-metal = lab histórico (gates podem permanecer)
 
 Glossário: [`glossario.md`](glossario.md). Detalhe técnico: [`architecture.md`](architecture.md). Operacional: `AGENTS.md`.

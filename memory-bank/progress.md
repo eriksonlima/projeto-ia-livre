@@ -2,15 +2,15 @@
 
 ## O que funciona
 
-- Etapas 1–76 feitas; Abertas vazia
-- Checklist 3 pilares ok; METAL_OK; E74 REPORT_POST_OK; E75 tokens no report; E76 collect script
-- Produto sem meta COMPROVA (ADR 0026)
+- Etapas 1–77; produto = Linux IA-nativo (ADR 0027)
+- Stack host + overlay distro (`ia-livre infer` no scaffold)
+- Linha B UEFI = lab arquivado (código/gates podem permanecer)
 
 ## Bloqueios
 
-- Lab A/B (arquivado); VFIO; TCP guest
-- BlockIO rewrite pós-exit best-effort (QEMU fat:rw)
+- Imagem live ISO / USB Linux ainda não (B75/B76)
+- Kernel Linux custom patches = depois
 
 ## Roadmap
 
-- Sem em_andamento / pendente; Abertas vazia
+- Sem em_andamento; Abertas B73–B76

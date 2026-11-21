@@ -584,3 +584,11 @@ Spec: specs/collect-baremetal-report/
 Pronto quando: script acha mount IALIVRE, copia report; opcional verify SKIP=0; documentado.  
 **Desfecho:** `scripts/collect-baremetal-report.sh` + `make verify-collect-baremetal-report` (smoke fixture).
 
+## Etapa 77 — Fundação Linux IA-nativo (ADR 0027 + scaffold distro)
+
+Status: feita  
+Issue: [#78](https://github.com/eriksonlima/projeto-ia-livre/issues/78)  
+Spec: specs/linux-ia-nativo-fundacao/  
+Pronto quando: ADR 0027 + docs; scaffold `distro/`; `make verify-distro-scaffold`; Linha B arquivada como produto.  
+**Desfecho:** ADR 0027; overlay `distro/` + wrapper `ia-livre` + stage; `make verify-distro-scaffold` (`DISTRO_SCAFFOLD_OK` + infer); Linha B arquivada; Abertas B73–B76.
+

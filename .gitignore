@@ -42,3 +42,8 @@ temp/
 models/
 *.gguf
 *.gguf.partial
+
+# Distro overlay staged binaries (scaffold)
+distro/overlay/opt/ia-livre/bin/ia-livre-runtime
+distro/overlay/opt/ia-livre/bin/ia-livre-agent
+distro/overlay/opt/ia-livre/bin/ia-livre-node

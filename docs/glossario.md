@@ -7,10 +7,10 @@ Princípios: [`manifesto.md`](manifesto.md).
 | Termo | Significado curto | Fonte |
 |-------|-------------------|--------|
 | **Projeto IA Livre** | Ecossistema (SO + runtime + autonomia + rede) | [`manifesto.md`](manifesto.md) |
-| **IA Livre** | SO / kernel UEFI do projeto | ADR [`0001`](adr/0001-separacao-camadas-e-p2p.md) |
+| **IA Livre** | SO **Linux IA-nativo** (produto; ADR 0027); lab UEFI arquivado | ADR [`0027`](adr/0027-produto-linux-ia-nativo.md) |
 | **Rede IA Livre** | Protocolo P2P; **não** exige o SO | [`rede-ia-livre-v1.md`](rede-ia-livre-v1.md) |
-| **Linha A** | Host Linux + runtime GGUF (referência) | [`harness-linha-a-b.md`](harness-linha-a-b.md) |
-| **Linha B** | Caminho nativo QEMU pós-ExitBoot (proxy + contrato + loader) | [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md) |
+| **Linha A** | Linux + runtime GGUF — base do produto atual | [`harness-linha-a-b.md`](harness-linha-a-b.md) / ADR 0027 |
+| **Linha B** | UEFI freestanding (lab **arquivado**; ≠ produto) | [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md) / ADR 0027 |
 | **Proxy Linha B** | Microbench pós-exit (`NATIVE_BENCH_*`); **≠** geração GGUF | [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md) |
 | **`runtime/` (host)** | Inferência llama.cpp no Linux (`std`) | ADR 0002 / `AGENTS.md` |
 | **`runtime-native/`** | Runtime freestanding Linha B (layout/forward parcial) | Etapa 29+ / crate `runtime-native/` |

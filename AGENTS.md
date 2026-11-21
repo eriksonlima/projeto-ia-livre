@@ -5,10 +5,25 @@ Brief do repositório para agentes. Em conflito com outros arquivos de ferrament
 ## Projeto
 
 - Nome: `Projeto IA Livre`
-- Resumo: Ecossistema open source brasileiro com SO próprio (IA Livre) especializado em IA nativa e rede P2P (Rede IA Livre) para colaboração computacional e de conhecimento. Participar da rede não exige o SO.
-- Stack: Kernel mínimo em Rust (`uefi-rs`, target `x86_64-unknown-uefi`) + QEMU/OVMF; runtime de inferência no host (`runtime/` + llama.cpp; CPU default, GPU opcional via CUDA/Vulkan); protótipo do nó Rede IA Livre no host (`node/`, TCP/UDP — **sem** exigir o SO IA Livre); protótipo do ambiente de autonomia no host (`agent/`, consome o runtime — **sem** exigir o SO IA Livre).
+- Resumo: Ecossistema open source brasileiro. **Produto:** SO **Linux IA-nativo** (TTY, LLM-first; ADR 0027) + Rede P2P (participar **não** exige o SO). Linha B UEFI = lab arquivado.
+- Stack: runtime host (`runtime/` + llama.cpp); agente (`agent/`); nó (`node/`); scaffold distro (`distro/`). Lab: kernel UEFI + `runtime-native` (arquivado como produto).
 
 ## Como rodar
+
+### Distro Linux IA-nativo (produto — scaffold)
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+export LIBCLANG_PATH="${LIBCLANG_PATH:-/usr/lib/llvm-18/lib}"
+# se bindgen falhar: export BINDGEN_EXTRA_CLANG_ARGS="-I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/include"
+./scripts/fetch-model.sh
+make stage-distro
+./distro/overlay/opt/ia-livre/bin/ia-livre conf
+./distro/overlay/opt/ia-livre/bin/ia-livre infer
+```
+
+Contrato: [`docs/linux-ia-nativo.md`](docs/linux-ia-nativo.md) · ADR [`0027`](docs/adr/0027-produto-linux-ia-nativo.md).  
+Gate: `make verify-distro-scaffold`.
 
 ### Pré-requisitos (host)
 
@@ -734,7 +749,10 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `scripts/make-baremetal-esp.sh` / `scripts/verify-baremetal.sh` — artefato + gate Etapa 30 / metal E73
 - `docs/baremetal-report.md` — canal padrão evidências/métricas bare-metal na ESP (Etapas 73–74)
 - `docs/adr/0025-baremetal-report-esp.md` — ADR do canal ESP
-- `docs/adr/0026-produto-sem-comprovacao-ab.md` — produto sem COMPROVA / Linha B
+- `docs/adr/0026-produto-sem-comprovacao-ab.md` — produto sem COMPROVA
+- `docs/adr/0027-produto-linux-ia-nativo.md` — produto Linux IA-nativo; Linha B arquivada
+- `docs/linux-ia-nativo.md` / `distro/` — scaffold SO Linux (Etapa 77)
+- `scripts/stage-distro-overlay.sh` / `scripts/verify-distro-scaffold.sh` — stage + gate scaffold
 - `scripts/write-usb-esp.sh` / `scripts/verify-write-usb.sh` — gravar pendrive com confirmação (Etapa 47)
 - `docs/guia-primeiro-boot-usb.md` — onboarding USB (Etapa 57)
 - `scripts/prepare-baremetal-release.sh` / `scripts/verify-boot-guide-release.sh` — release + gate Etapa 57

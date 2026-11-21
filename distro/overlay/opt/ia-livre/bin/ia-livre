@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+# Wrapper TTY do SO IA Livre (scaffold). Lê /etc/ia-livre/ia-livre.conf ou overlay.
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
+# Se instalado em /opt/ia-livre/bin, ROOT vira / — conf em /etc
+if [[ -f /etc/ia-livre/ia-livre.conf ]]; then
+  CONF=/etc/ia-livre/ia-livre.conf
+  BIN_DIR=/opt/ia-livre/bin
+  # shellcheck disable=SC1090
+  set -a
+  # shellcheck source=/dev/null
+  source "$CONF"
+  set +a
+else
+  CONF="$ROOT/etc/ia-livre/ia-livre.conf"
+  BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+  # shellcheck disable=SC1090
+  set -a
+  # shellcheck source=/dev/null
+  source "$CONF"
+  set +a
+  # Em overlay do repo, reescreve paths relativos ao overlay
+  if [[ "${IA_LIVRE_MODEL}" == /var/lib/* ]]; then
+    IA_LIVRE_MODEL="$ROOT${IA_LIVRE_MODEL}"
+  fi
+  if [[ "${IA_LIVRE_AGENT_MEMORY}" == /var/lib/* ]]; then
+    IA_LIVRE_AGENT_MEMORY="$ROOT${IA_LIVRE_AGENT_MEMORY}"
+  fi
+fi
+
+MODEL="${IA_LIVRE_MODEL:?}"
+N_PREDICT="${IA_LIVRE_N_PREDICT:-32}"
+N_GPU="${IA_LIVRE_N_GPU_LAYERS:-0}"
+MEM="${IA_LIVRE_AGENT_MEMORY:-/var/lib/ia-livre/agent-memory/memory.jsonl}"
+
+usage() {
+  cat <<EOF
+Uso: ia-livre <comando> [args]
+
+  infer [args…]     ia-livre-runtime --model \$IA_LIVRE_MODEL …
+  agent [args…]     ia-livre-agent --model … --memory …
+  node [args…]      ia-livre-node …
+  conf              mostra config efetiva
+  help
+
+Config: $CONF
+EOF
+}
+
+cmd="${1:-help}"
+shift || true
+
+case "$cmd" in
+  infer)
+    exec "$BIN_DIR/ia-livre-runtime" \
+      --model "$MODEL" \
+      --n-predict "$N_PREDICT" \
+      --n-gpu-layers "$N_GPU" \
+      "$@"
+    ;;
+  agent)
+    mkdir -p "$(dirname "$MEM")"
+    exec "$BIN_DIR/ia-livre-agent" \
+      --model "$MODEL" \
+      --memory "$MEM" \
+      --n-predict "$N_PREDICT" \
+      "$@"
+    ;;
+  node)
+    exec "$BIN_DIR/ia-livre-node" "$@"
+    ;;
+  conf)
+    echo "CONF=$CONF"
+    echo "MODEL=$MODEL"
+    echo "N_PREDICT=$N_PREDICT"
+    echo "N_GPU_LAYERS=$N_GPU"
+    echo "MEMORY=$MEM"
+    echo "BIN_DIR=$BIN_DIR"
+    ;;
+  help|-h|--help)
+    usage
+    ;;
+  *)
+    echo "comando desconhecido: $cmd" >&2
+    usage >&2
+    exit 1
+    ;;
+esac

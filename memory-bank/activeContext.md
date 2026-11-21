@@ -2,14 +2,15 @@
 
 ## Foco atual
 
-- Etapas 1–76 **feitas**
-- Checklist 3 pilares **ok**; ADR 0026 (sem COMPROVA); Linha B: report pré+pós-exit + tokens + collect
-- **Abertas:** vazia
+- Etapas 1–77 **feitas**
+- **Produto:** Linux IA-nativo (ADR 0027); Linha B UEFI **arquivada**
+- Scaffold `distro/` + `make verify-distro-scaffold` ok
+- Abertas: B73 (config/modelos), B74 (tuning), B75 (smoke QEMU), B76 (USB Linux)
 
 ## Próximo passo
 
-- Pedido explícito de etapa / novo item de backlog (nada a promover)
+- Promover **B73** (topo) no próximo “continuar”
 
 ## Notas
 
-- Lease livre após push
+- Lease: liberar após push E77
