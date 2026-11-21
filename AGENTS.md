@@ -141,11 +141,12 @@ Descoberta UDP: ambos anunciam `HELLO` na porta `--udp-port` (default `7410`); a
 
 Gate automatizado: `make verify-node` (não exige QEMU, GGUF nem runtime).
 
-### Ambiente de autonomia (host — Etapa 7)
+### Ambiente de autonomia (host — Etapas 7 / 22)
 
-Protótipo da **camada 3** no host Linux (`std`). **Não** precisa do kernel UEFI / QEMU. Consome o runtime CPU existente (`ia-livre-runtime`) e o GGUF canônico. Este protótipo de autonomia **não exige** o SO IA Livre (ADR 0001).
+Camada 3 no host Linux (`std`). **Não** precisa do kernel UEFI / QEMU. Consome o runtime CPU existente (`ia-livre-runtime`) e o GGUF canônico. Autonomia **não exige** o SO IA Livre (ADR 0001).
 
-Contrato mínimo: [`docs/ambiente-autonomia-prototipo.md`](docs/ambiente-autonomia-prototipo.md).
+- Protótipo E7: [`docs/ambiente-autonomia-prototipo.md`](docs/ambiente-autonomia-prototipo.md)
+- Autonomia v1 (Etapa 22): [`docs/desenho-autonomia-v1.md`](docs/desenho-autonomia-v1.md) / ADR [`0005`](docs/adr/0005-autonomia-v1-utilizavel.md) — `--prompt`, allowlist `note`/`recall`/`help`, política N=8
 
 Pré-requisitos: Rust no host + deps/modelo do runtime (ver seção Runtime acima). **Sem** QEMU/OVMF para o agente.
 
@@ -159,15 +160,21 @@ export LIBCLANG_PATH="${LIBCLANG_PATH:-/usr/lib/llvm-18/lib}"
 # Build do runtime (consumido via subprocesso) + agente
 cargo build -p ia-livre-runtime -p ia-livre-agent
 
-# Cenário de prova: chama runtime → ferramenta note → IA_LIVRE_TOOL_OK
+# Cenário de prova (sem --prompt): runtime → note+recall+help → marcadores E7/v1
 cargo run -p ia-livre-agent -- \
   --model models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf \
   --memory build/agent-memory/memory.jsonl
+
+# One-shot com prompt do usuário (v1)
+cargo run -p ia-livre-agent -- \
+  --model models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf \
+  --memory build/agent-memory/memory.jsonl \
+  --prompt "Resuma as notas recentes"
 ```
 
-Flags: `--model` (default GGUF canônico), `--memory` (default `build/agent-memory/memory.jsonl`), `--n-predict` (default `16`), `--runtime-bin` (opcional; senão usa `target/debug/ia-livre-runtime`).
+Flags: `--model` (default GGUF canônico), `--memory` (default `build/agent-memory/memory.jsonl`), `--n-predict` (default `16`), `--runtime-bin` (opcional), `--prompt` (one-shot v1; omitido = prova E7/v1).
 
-Saída esperada: `IA_LIVRE_RUNTIME_USED=1`, `IA_LIVRE_TOOL_OK`, `IA_LIVRE_MEMORY_OK`, `IA_LIVRE_AGENT_OK`.
+Saída esperada: `IA_LIVRE_RUNTIME_USED=1`, `IA_LIVRE_MEMORY_POLICY_OK`, `IA_LIVRE_TOOLS_USED=` ≥2, `IA_LIVRE_TOOL_OK`, `IA_LIVRE_MEMORY_OK`, `IA_LIVRE_AGENT_OK`.
 
 Gate automatizado: `make verify-agent` (não exige QEMU/UEFI nem o nó P2P; requer GGUF).
 
@@ -273,23 +280,26 @@ grep -q 'IA_LIVRE_MSG_OK' node/src/main.rs
 
 `make verify-node` sobe dois processos (`--peer` no segundo), espera `IA_LIVRE_PEER_OK` e `IA_LIVRE_MSG_OK`, e falha no timeout (padrão 45s; `VERIFY_NODE_TIMEOUT`). Gates do kernel (`make verify`) e do runtime (`make verify-runtime`) permanecem.
 
-### Gate do ambiente de autonomia (Etapa 7 — adicional)
+### Gate do ambiente de autonomia (Etapas 7 / 22 — adicional)
 
-Requer o GGUF local (`./scripts/fetch-model.sh` na primeira vez). **Não** usa QEMU/UEFI nem o nó P2P. O protótipo de autonomia **não exige** o SO IA Livre.
+Requer o GGUF local (`./scripts/fetch-model.sh` na primeira vez). **Não** usa QEMU/UEFI nem o nó P2P. Autonomia **não exige** o SO IA Livre.
 
 ```bash
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 export LIBCLANG_PATH="${LIBCLANG_PATH:-/usr/lib/llvm-18/lib}"
 test -d agent && test -f agent/Cargo.toml && test -f agent/src/main.rs
 test -f scripts/verify-agent.sh && test -f docs/ambiente-autonomia-prototipo.md
+test -f docs/desenho-autonomia-v1.md
 ./scripts/fetch-model.sh
 make verify-agent
 grep -q 'IA_LIVRE_TOOL_OK' agent/src/main.rs
 grep -q 'IA_LIVRE_MEMORY_OK' agent/src/main.rs
 grep -q 'IA_LIVRE_AGENT_OK' agent/src/main.rs
+grep -q 'IA_LIVRE_MEMORY_POLICY_OK' agent/src/main.rs
+grep -q 'IA_LIVRE_TOOLS_USED' agent/src/main.rs
 ```
 
-`make verify-agent` falha se o modelo estiver ausente ou se faltarem `IA_LIVRE_TOOL_OK` / `IA_LIVRE_MEMORY_OK` / `IA_LIVRE_AGENT_OK` (timeout padrão 300s; `VERIFY_AGENT_TIMEOUT`). Gates do kernel, runtime e nó permanecem.
+`make verify-agent` falha se o modelo estiver ausente ou se faltarem marcadores E7 (`TOOL_OK` / `MEMORY_OK` / `AGENT_OK`) **ou** v1 (`MEMORY_POLICY_OK` + `TOOLS_USED`≥2 + `TOOL=note` e `TOOL=recall|help`) (timeout padrão 300s; `VERIFY_AGENT_TIMEOUT`). Gates do kernel, runtime e nó permanecem.
 
 ### Gate do harness Linha A vs Linha B (Etapas 9 / 12 — adicional)
 
@@ -338,8 +348,8 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `docs/rede-ia-livre-prototipo.md` — framing/descoberta/mensagem do protótipo P2P (Etapa 6)
 - `docs/desenho-protocolo-rede-ia-livre.md` — desenho Rede IA Livre v1 (ADR 0004; não implementado)
 - `docs/adr/0004-stack-protocolo-rede-ia-livre.md` — ADR da stack candidata P2P
-- `docs/ambiente-autonomia-prototipo.md` — loop/memória/ferramenta do protótipo de autonomia (Etapa 7)
-- `docs/desenho-autonomia-v1.md` — escopo autonomia v1 (ADR 0005; não implementado)
+- `docs/ambiente-autonomia-prototipo.md` — loop/memória/ferramenta do protótipo de autonomia (Etapa 7); ponte para v1
+- `docs/desenho-autonomia-v1.md` — escopo autonomia v1 (ADR 0005; **implementado** na Etapa 22 em `agent/`)
 - `docs/adr/0005-autonomia-v1-utilizavel.md` — ADR do escopo v1
 - `Makefile` — `build` / `esp` / `run` / `verify` / `verify-runtime` / `verify-runtime-gpu` / `verify-node` / `verify-agent` / `verify-harness` / `clean`
 - `scripts/run-qemu.sh` — atalho para `make run`
@@ -349,7 +359,7 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `docs/runtime-inferencia-gpu-metricas.md` — métricas do protótipo GPU no host
 - `docs/adr/0002-aceleracao-gpu-host-llama-cpp.md` — CUDA canônico / Vulkan alternativa
 - `scripts/verify-node.sh` — gate do nó Rede IA Livre (`IA_LIVRE_PEER_OK` + `IA_LIVRE_MSG_OK`)
-- `scripts/verify-agent.sh` — gate do ambiente de autonomia (`IA_LIVRE_TOOL_OK` + `IA_LIVRE_MEMORY_OK` + `IA_LIVRE_AGENT_OK`)
+- `scripts/verify-agent.sh` — gate autonomia E7+v1 (`TOOL_OK` / `MEMORY_OK` / `AGENT_OK` + `MEMORY_POLICY_OK` + ≥2 tools)
 - `scripts/fetch-model.sh` — download do GGUF canônico da Etapa 5
 - `docs/runtime-inferencia-cpu-metricas.md` — métricas do protótipo no host
 - `docs/harness-linha-a-b.md` — metodologia do harness Linha A vs Linha B

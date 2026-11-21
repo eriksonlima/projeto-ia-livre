@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# Gate Etapa 7: ambiente de autonomia — TOOL_OK + MEMORY_OK + AGENT_OK.
+# Gate Etapa 7 + Etapa 22 (autonomia v1):
+#   E7: TOOL_OK + MEMORY_OK + AGENT_OK + nota canônica
+#   v1: MEMORY_POLICY_OK + ≥2 ferramentas (TOOLS_USED≥2 / TOOL=note + TOOL=recall|help)
 # Não exige QEMU/UEFI nem o nó P2P. Requer GGUF canônico (como verify-runtime).
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -42,7 +44,7 @@ mkdir -p "$MEMORY_DIR"
 LOG="$(mktemp)"
 trap 'rm -f "$LOG" "$LOG.err"' EXIT
 
-echo "Running agent proof scenario (timeout ${TIMEOUT_SEC}s)…"
+echo "Running agent proof scenario v1 (timeout ${TIMEOUT_SEC}s)…"
 set +e
 timeout "${TIMEOUT_SEC}s" "$AGENT_BIN" \
   --model "$MODEL" \
@@ -70,12 +72,34 @@ trap 'rm -f "$LOG" "$LOG.err" "$COMBINED"' EXIT
 cat "$LOG" "$LOG.err" >"$COMBINED"
 
 fail=0
+# Regressão E7
 for marker in IA_LIVRE_TOOL_OK IA_LIVRE_MEMORY_OK IA_LIVRE_AGENT_OK; do
   if ! grep -q "$marker" "$COMBINED"; then
     echo "GATE_FAIL: marcador ausente: $marker"
     fail=1
   fi
 done
+
+# Extensão v1 (Etapa 22)
+if ! grep -q 'IA_LIVRE_MEMORY_POLICY_OK' "$COMBINED"; then
+  echo "GATE_FAIL: marcador ausente: IA_LIVRE_MEMORY_POLICY_OK"
+  fail=1
+fi
+
+if ! grep -qE 'IA_LIVRE_TOOLS_USED=[2-9]|IA_LIVRE_TOOLS_USED=[1-9][0-9]+' "$COMBINED"; then
+  echo "GATE_FAIL: evidência ≥2 ferramentas ausente (IA_LIVRE_TOOLS_USED≥2)"
+  fail=1
+fi
+
+if ! grep -q 'IA_LIVRE_TOOL=note' "$COMBINED"; then
+  echo "GATE_FAIL: marcador ausente: IA_LIVRE_TOOL=note"
+  fail=1
+fi
+
+if ! grep -qE 'IA_LIVRE_TOOL=(recall|help)' "$COMBINED"; then
+  echo "GATE_FAIL: segunda ferramenta ausente (IA_LIVRE_TOOL=recall|help)"
+  fail=1
+fi
 
 if [[ ! -f "$MEMORY_FILE" ]] || ! grep -q 'prova-autonomia-ia-livre' "$MEMORY_FILE"; then
   echo "GATE_FAIL: memória de prova ausente ou sem nota canônica"
@@ -88,5 +112,5 @@ if (( fail )); then
   exit 1
 fi
 
-echo "GATE_OK: autonomia — $(grep -E 'IA_LIVRE_(TOOL_OK|MEMORY_OK|AGENT_OK|RUNTIME_USED=)' "$COMBINED" | tr '\n' ' ')"
+echo "GATE_OK: autonomia v1 — $(grep -E 'IA_LIVRE_(TOOL_OK|MEMORY_OK|AGENT_OK|MEMORY_POLICY_OK|TOOLS_USED=|RUNTIME_USED=)' "$COMBINED" | tr '\n' ' ')"
 exit 0
