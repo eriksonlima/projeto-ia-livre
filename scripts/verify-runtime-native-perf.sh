@@ -15,6 +15,9 @@ grep -q 'dot_block_q4_k\|fused' docs/runtime-native-perf-especie.md
 # Desfecho B (E59): ADR 0020 inviável pós-otimização.
 test -f docs/adr/0020-runtime-native-passo-intermediario-inviavel.md
 grep -q 'inviável' docs/adr/0020-runtime-native-passo-intermediario-inviavel.md
+# E60: espécie canônica inviável (encadeada a 0020)
+test -f docs/adr/0021-especie-canonica-linha-b-inviavel.md
+grep -q '22L' docs/adr/0021-especie-canonica-linha-b-inviavel.md
 grep -q 'IA_LIVRE_NATIVE_PERF_HOST' runtime-native/src/lib.rs
 grep -q 'dot_block_q4_k' runtime-native/src/lib.rs
 

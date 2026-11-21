@@ -548,7 +548,8 @@ make verify-runtime-native-perf
 grep -q 'IA_LIVRE_NATIVE_PERF_OK' scripts/verify-runtime-native-perf.sh
 ```
 
-Esperado: `IA_LIVRE_NATIVE_PERF_OK` + `OUTCOME=adr_0020_inviable_guest_step` (ou progresso guest se A). Hipótese permanece aberta até B54.
+Esperado: `IA_LIVRE_NATIVE_PERF_OK` + `OUTCOME=adr_0020_inviable_guest_step` (ou progresso guest se A).  
+E60: ADR [`0021`](docs/adr/0021-especie-canonica-linha-b-inviavel.md) — espécie canônica inviável no gate atual; hipótese aberta até B58 (bloqueio final) ou novo caminho de perf.
 
 ### Gate inferência path metal / ESP-only (Etapa 48 — adicional)
 

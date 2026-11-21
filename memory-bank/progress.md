@@ -2,16 +2,16 @@
 
 ## Funciona
 
-- Etapas 1–59
-- E59: otimização runtime-native (~7–10% host) + ADR 0020 inviável passo N≥8 no guest 600 s
-- Checklist E58; geração B subset; Rede/autonomia host
+- Etapas 1–60
+- Otimização runtime-native + ADRs 0020/0021 (teto guest 2L×1; canônico inviável no gate)
+- Checklist E58; Rede/autonomia host verdes
 
 ## Residual
 
-- B54 espécie canônica (bloqueada na prática até SIMD/GPU guest ou teto novo)
-- Alternativa: B58 bloqueio **terminal** da hipótese (após B54 inviável explícito)
-- Pilar 2: `METAL_OK` PC + I/O GGUF metal (B56/B57)
+- B58: bloqueio **final** do pilar 1 (ou reabrir com caminho novo de perf)
+- B56/B57: `METAL_OK` + I/O GGUF metal
+- B55 adiada; accel/GPU guest/Rede avançada depois
 
 ## Roadmap
 
-- Sem `em_andamento` após E59; próxima candidata = B54
+- Sem `em_andamento` após E60; topo = B58

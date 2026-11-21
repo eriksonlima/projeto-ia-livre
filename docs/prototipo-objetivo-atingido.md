@@ -24,7 +24,7 @@ Objetivo do protótipo = **os três** pilares no estado “atingido” (ou bloqu
 | Critério decidível | `make verify-harness-comparable` emite `IA_LIVRE_HARNESS_VERDICT=COMPROVA` **ou** `REFUTA` com espécie canônica (22L + `n_predict=32` em B) — ver [`harness-a-b-comparavel.md`](harness-a-b-comparavel.md) |
 | Bloqueio honesto final | Doc/ADR declara terminalmente inviável a espécie canônica **e** o instrumento permanece honesto (`INCONCLUSIVO` ou reason terminal) — sem fingir `COMPROVA` |
 | Evidência | `IA_LIVRE_HARNESS_VERDICT=` / `VERDICT_REASON=` |
-| **Estado atual** | **`INCONCLUSIVO`** — geração B **subset** (E44); perfil GPU E56 também `INCONCLUSIVO` (assimetria accel). Hipótese **não** comprovada nem refutada |
+| **Estado atual** | **`INCONCLUSIVO`** — geração B **subset** (E44); E60/ADR [`0021`](adr/0021-especie-canonica-linha-b-inviavel.md) declara 22L×32 inviável no gate atual; perfil GPU E56 também `INCONCLUSIVO`. Hipótese **não** comprovada nem refutada (bloqueio **final** = B58) |
 | Não conta | Celebrar subset / `A_gpu` / proxy como `COMPROVA` |
 
 ---

@@ -109,6 +109,10 @@ Host faz 8L×1 em ~2 s (~3,1× vs 2L). **Host ≠ guest.** Extrapolando o `make 
 **B — inviável no guest:** ADR [`0020`](adr/0020-runtime-native-passo-intermediario-inviavel.md).  
 Gate: `make verify-runtime-native-perf` → `IA_LIVRE_NATIVE_PERF_OK`.
 
+## Desfecho E60 (espécie canônica)
+
+**Inviável:** ADR [`0021`](adr/0021-especie-canonica-linha-b-inviavel.md) — 22L×32 no gate atual; comparable permanece teto/`INCONCLUSIVO`. Ponte B58 (bloqueio final da hipótese).
+
 ## Verificação
 
 ```bash

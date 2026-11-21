@@ -2,15 +2,16 @@
 
 ## Foco atual
 
-- Etapa 59 **feita** — fused matvec + ADR 0020 (passo guest inviável)
-- Gate: `make verify-runtime-native-perf` → `IA_LIVRE_NATIVE_PERF_OK`
-- Topo Abertas: **B54** (espécie canônica 22L×32) — depende de ganho ≫10× ou novo caminho
+- Etapas 1–60 **feitas**
+- E59: fused matvec + ADR 0020 (passo N≥8 inviável no guest)
+- E60: ADR 0021 (espécie canônica inviável no gate atual)
+- Topo Abertas: **B58** (bloqueio final hipótese A/B)
 
 ## Próximo passo
 
-- Promover B54 ou item seguinte se B54 bloqueada por deps; “continuar” → promover topo
+- Promover B58 (pilar 1) ou B56 (metal) conforme “continuar”
 
 ## Notas
 
-- README E59: considerado, não atualizado (gate em AGENTS)
-- Lease: liberar após push E59
+- B55 adiada (deps canônico)
+- Lease: liberar após push E60

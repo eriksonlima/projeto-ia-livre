@@ -450,8 +450,9 @@ Pronto quando: medição documentada (passo intermediário N≥8 / n_predict≥8
 
 ## Etapa 60 — Espécie canônica Linha B (22L × n_predict=32)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#60](https://github.com/eriksonlima/projeto-ia-livre/issues/60)  
 Spec: specs/especie-canonica-linha-b/  
-Pronto quando: `make verify-harness-comparable` com B `PREFILL_LAYERS=22` + `N_PREDICT=32` + veredito ∈ {COMPROVA,REFUTA,INCONCLUSIVO} **sem** reason de teto/subset; **ou** ADR nova (0021) declara espécie canônica inviável no gate atual (pós-E59/0020) com ponte a B58; sem fingir `COMPROVA`.
+Pronto quando: `make verify-harness-comparable` com B `PREFILL_LAYERS=22` + `N_PREDICT=32` + veredito ∈ {COMPROVA,REFUTA,INCONCLUSIVO} **sem** reason de teto/subset; **ou** ADR nova (0021) declara espécie canônica inviável no gate atual (pós-E59/0020) com ponte a B58; sem fingir `COMPROVA`.  
+**Desfecho:** ADR [`0021`](docs/adr/0021-especie-canonica-linha-b-inviavel.md) — canônico inviável no gate (pós 0020); comparable permanece teto/`INCONCLUSIVO`; ponte B58; sem `COMPROVA` fingido. README considerado (só docs/AGENTS).
 

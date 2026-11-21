@@ -32,3 +32,4 @@ Princípios: [`manifesto.md`](manifesto.md).
 | **Protótipo objetivo atingido** | Checklist dos 3 pilares (hipótese A/B; USB/metal; Rede+autonomia host); celebrar só com evidência | [`prototipo-objetivo-atingido.md`](prototipo-objetivo-atingido.md) |
 | **Passo intermediário (espécie B)** | N≥8 layers e/ou `n_predict`≥8 — progresso E59 antes da espécie canônica 22L×32 | [`runtime-native-perf-especie.md`](runtime-native-perf-especie.md) |
 | **ADR 0020** | Passo intermediário inviável no guest pós-otimização E59 (teto 2L×1 permanece) | [`adr/0020-runtime-native-passo-intermediario-inviavel.md`](adr/0020-runtime-native-passo-intermediario-inviavel.md) |
+| **ADR 0021** | Espécie canônica 22L×32 inviável no gate atual (E60); hipótese aberta até B58 | [`adr/0021-especie-canonica-linha-b-inviavel.md`](adr/0021-especie-canonica-linha-b-inviavel.md) |

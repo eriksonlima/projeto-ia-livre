@@ -10,14 +10,13 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Meta do protótipo (objetivo do projeto):** um ecossistema verificável em que (1) a **hipótese A vs B** possa ser comprovada ou refutada com geração real na Linha B (`TOKENS_PER_S`), (2) o **SO IA Livre** boote de USB/ESP em hardware real com caminho de IA nativo mínimo honesto, (3) a **Rede** e a **autonomia** continuem utilizáveis **sem** exigir o SO. Ordem abaixo = prioridade sugerida (topo primeiro).
 >
-> **Análise pós-E58 (2026-11-21):** etapas 1–58 feitas; pilar 3 verde; pilares 1–2 abertos (`INCONCLUSIVO` + sem `METAL_OK`). Ordem: desbloquear espécie canônica B → metal → accel/Rede.
+> **Análise pós-E60 (2026-11-21):** E59/0020 + E60/0021 — espécie canônica inviável no gate atual. Ordem: **B58** (bloqueio final pilar 1) → metal (B56/B57) → resto. **B55** adiada (deps espécie canônica).
 
-
-### B55 — Re-corrida harness A/B quieta pós-espécie canônica
-- Issue: [#61](https://github.com/eriksonlima/projeto-ia-livre/issues/61)
-- Origem: instrumento E22/E28 existe; falta corrida decisiva
-- Pronto quando: `VERDICT` + `REASON` limpos; quieto; comprovada/refutada **ou** `INCONCLUSIVO` numérico (não teto de espécie)
-- Deps: B54
+### B58 — Bloqueio final documentado da hipótese A/B
+- Issue: [#64](https://github.com/eriksonlima/projeto-ia-livre/issues/64)
+- Origem: alternativa E58 se espécie canônica continuar inviável após B53; reforçado por ADR 0020/0021
+- Pronto quando: ADR/doc declara espécie **terminalmente** inviável (ou caminho reaberto); instrumento honesto; sem fingir `COMPROVA`; espelho checklist E58 pilar 1
+- Deps: E59/E60; ADR 0020/0021; E58
 
 ### B56 — Evidência METAL_OK em PC real
 - Issue: [#62](https://github.com/eriksonlima/projeto-ia-livre/issues/62)
@@ -31,11 +30,12 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Pronto quando: geração mínima ou loader full no PC/ESP + marcadores; sem `TOKENS` fingidos; ≠ BlockIO como metal
 - Deps: E36; E48; B56 preferível
 
-### B58 — Bloqueio final documentado da hipótese A/B
-- Issue: [#64](https://github.com/eriksonlima/projeto-ia-livre/issues/64)
-- Origem: alternativa E58 se espécie canônica continuar inviável após B53
-- Pronto quando: ADR/doc declara espécie **terminalmente** inviável; instrumento honesto; sem fingir `COMPROVA`
-- Deps: B53; E58; ADR 0016
+### B55 — Re-corrida harness A/B quieta pós-espécie canônica
+- Issue: [#61](https://github.com/eriksonlima/projeto-ia-livre/issues/61)
+- Origem: instrumento E22/E28 existe; falta corrida decisiva
+- Pronto quando: `VERDICT` + `REASON` limpos; quieto; comprovada/refutada **ou** `INCONCLUSIVO` numérico (não teto de espécie)
+- Deps: B54 — **adiada** enquanto ADR 0021 (canônico inviável) vigorar sem caminho novo
+- Nota: prioridade abaixo de B58/metal até haver espécie canônica ou B58 fechar pilar 1
 
 ### B59 — Accel GPU simétrica A/B no harness
 - Issue: [#73](https://github.com/eriksonlima/projeto-ia-livre/issues/73)
