@@ -8,9 +8,97 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-> **Produto (ADR 0027):** **Linux IA-nativo** (TTY, shell, qualquer GGUF, tuning/kernel Linux). Linha B UEFI **arquivada**. Ordem = prioridade (topo primeiro).
+> **Produto (ADR 0027):** **Linux IA-nativo** (TTY, shell, qualquer GGUF, tuning/kernel Linux). Linha B UEFI **arquivada**. Ordem = prioridade (topo primeiro). Fila até o **produto final** (métricas em `docs/product-context.md`).
 
-*(vazio — B73–B76 promovidas e fechadas nas Etapas 78–81)*
+### B77 — Rootfs Debian mínimo bootável em QEMU
+- Issue: [#83](https://github.com/eriksonlima/projeto-ia-livre/issues/83)
+- Origem: plano backlog produto final / ADR 0027
+- Pronto quando: boot QEMU até prompt/`ia-livre conf`; gate documentado; ≠ Alpine netboot skip
+- Deps: E81 / scaffold distro
+
+### B78 — Gate smoke QEMU da imagem IA Livre
+- Issue: [#84](https://github.com/eriksonlima/projeto-ia-livre/issues/84)
+- Origem: plano backlog produto final / ADR 0027
+- Pronto quando: `verify-distro-smoke` (ou sucessor) exige boot da imagem B77 (`DISTRO_QEMU_OK` + comando no guest)
+- Deps: B77
+
+### B79 — First-boot TTY
+- Issue: [#85](https://github.com/eriksonlima/projeto-ia-livre/issues/85)
+- Origem: plano backlog produto final / ADR 0027
+- Pronto quando: MOTD/PATH/hints; fetch GGUF documentado (não embutir ~638 MiB no artefato default)
+- Deps: B77
+
+### B80 — ISO híbrida / live USB bootável
+- Issue: [#86](https://github.com/eriksonlima/projeto-ia-livre/issues/86)
+- Origem: plano backlog produto final / ADR 0027
+- Pronto quando: artefato bootável (live ou instalável mínimo); distinto do tarball E81
+- Deps: B77
+
+### B81 — Writer USB grava imagem bootável
+- Issue: [#87](https://github.com/eriksonlima/projeto-ia-livre/issues/87)
+- Origem: plano backlog produto final / ADR 0027
+- Pronto quando: `write-linux-usb.sh` grava ISO/live com `--confirm`/`--yes`; gate artefato sem device; ≠ ESP UEFI
+- Deps: B80
+
+### B82 — Release packaging produto
+- Issue: [#88](https://github.com/eriksonlima/projeto-ia-livre/issues/88)
+- Origem: plano backlog produto final / ADR 0027
+- Pronto quando: `SHA256SUMS` + artefato sem GGUF default + guia release Linux
+- Deps: B80
+
+### B83 — Unidades systemd opcionais
+- Issue: [#89](https://github.com/eriksonlima/projeto-ia-livre/issues/89)
+- Origem: plano backlog produto final / ADR 0027
+- Pronto quando: units runtime/agent/node no overlay + docs enable/disable (default não força)
+- Deps: B77
+
+### B84 — Smoke Rede no SO
+- Issue: [#90](https://github.com/eriksonlima/projeto-ia-livre/issues/90)
+- Origem: plano backlog produto final / ADR 0027
+- Pronto quando: `ia-livre node` na imagem/QEMU com net; gate/smoke; ≠ guest UEFI
+- Deps: B78
+
+### B85 — Smoke autonomia no SO
+- Issue: [#91](https://github.com/eriksonlima/projeto-ia-livre/issues/91)
+- Origem: plano backlog produto final / ADR 0027
+- Pronto quando: agent one-shot/REPL na imagem; gate/smoke
+- Deps: B78
+
+### B86 — GPU opcional na imagem
+- Issue: [#92](https://github.com/eriksonlima/projeto-ia-livre/issues/92)
+- Origem: plano backlog produto final / ADR 0027
+- Pronto quando: docs + pacotes/features; skip honesto sem GPU
+- Deps: B77
+
+### B87 — Tuning avançado na imagem
+- Issue: [#93](https://github.com/eriksonlima/projeto-ia-livre/issues/93)
+- Origem: plano backlog produto final / ADR 0027
+- Pronto quando: isolcpus/cgroups/hugepages com evidência no guest (evolui E79)
+- Deps: B77
+
+### B88 — ADR + defconfig/patches kernel Linux IA-nativo
+- Issue: [#94](https://github.com/eriksonlima/projeto-ia-livre/issues/94)
+- Origem: plano backlog produto final / ADR 0027
+- Pronto quando: ADR aceita + defconfig/patches mínimos documentados (após imagem bootável)
+- Deps: B78
+
+### B89 — Gate boot com kernel custom
+- Issue: [#95](https://github.com/eriksonlima/projeto-ia-livre/issues/95)
+- Origem: plano backlog produto final / ADR 0027
+- Pronto quando: gate com boot custom **ou** inviável honesto documentado
+- Deps: B88
+
+### B90 — Guia usuário final
+- Issue: [#96](https://github.com/eriksonlima/projeto-ia-livre/issues/96)
+- Origem: plano backlog produto final / ADR 0027
+- Pronto quando: guia QEMU + USB + primeira sessão; product-context alinhado
+- Deps: B78, B81
+
+### B91 — Checklist + gate verify-produto-linux
+- Issue: [#97](https://github.com/eriksonlima/projeto-ia-livre/issues/97)
+- Origem: plano backlog produto final / ADR 0027
+- Pronto quando: checklist das 4 métricas + `make verify-produto-linux` (completo: B78+B81+B84+B85 mínimos)
+- Deps: B78, B81, B84, B85, B90
 
 ## Promovidas / arquivadas
 

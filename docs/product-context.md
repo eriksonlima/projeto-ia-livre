@@ -59,8 +59,8 @@ Lab histórico (ADR 0026 / 0022). Instrumentos A/B no repo ≠ meta de produto. 
 ## Estado atual (produto)
 
 - Direção: **Linux IA-nativo** (ADR 0027); Linha B **arquivada**
-- Stack host já utilizável: runtime CPU/GPU, agente REPL, nó P2P v1
-- Próximo: imagem live/instalável + layout `/etc/ia-livre` + smoke
+- Stack host + scaffold distro (E77–81): config/GGUF, tune, smoke userspace, USB tarball
+- **Próximo (Abertas):** B77 rootfs Debian bootável em QEMU → … → B91 checklist `verify-produto-linux` (ver [`BACKLOG.md`](../BACKLOG.md))
 - Artefatos UEFI/bare-metal = lab histórico (gates podem permanecer)
 
 Glossário: [`glossario.md`](glossario.md). Detalhe técnico: [`architecture.md`](architecture.md). Operacional: `AGENTS.md`.
