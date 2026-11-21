@@ -38,6 +38,7 @@ build:
 esp: build
 	mkdir -p "$(ESP_DIR)/EFI/BOOT"
 	cp "$(KERNEL_EFI)" "$(ESP_BOOT)"
+	./scripts/esp-stage-gguf-prefix.sh
 
 run: esp
 	@command -v "$(QEMU)" >/dev/null || { echo "Instale QEMU: sudo apt install qemu-system-x86"; exit 1; }

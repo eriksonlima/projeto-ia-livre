@@ -2,22 +2,23 @@
 
 ## Foco atual
 
-- **Etapas 1–25** `feita` — roadmap atual esgotado
+- Etapa 26 **feita** — loader GGUF ESP (`esp_header`); `B_BLOCK=no_gguf_infer`
+- Métricas CPU serial atualizadas (~13,4 tok/s mediana)
+- Backlog Abertas: B21 (inferência B), B22 (re-corrida quieta)
 - Lease: livre
-- Backlog Abertas: vazio
 
 ## Mudanças recentes
 
-- E23: Rede v1 (`verify-node` IDENT/PING)
-- E24: Autonomia v1 (`verify-agent` MEMORY_POLICY + TOOLS_USED≥2)
-- E25: GPU manager stub host (`verify-gpu-manager` GATE_OK / skip honesto)
+- Remediação métricas CPU sem contenção
+- B20–B22 capturados; B20 → Etapa 26 feita
+- ADR 0008; prefixo `IA_LIVRE/gguf.hdr` no ESP; gates atualizados
 
 ## Próximo passo
 
-- Aguardar novo item no backlog ou pedido explícito de etapa
-- Hipótese A vs B permanece **não** comprovada (INCONCLUSIVO / sem GGUF em B)
+- Promover B21 → Etapa 27 (inferência mínima / TOKENS_PER_S em B) ao continuar
+- Hipótese A vs B ainda **INCONCLUSIVO**
 
 ## Notas
 
-- README considerado nas integrações; operacional em AGENTS.md
-- Skills atualizadas: `verificar-node-peer`, `verificar-agent-autonomia`; skill `verificar-gpu-manager` veio da branch
+- README considerado; operacional em AGENTS.md
+- Medições T/s: um gate por vez; host 4 threads

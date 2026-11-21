@@ -99,12 +99,18 @@ for marker in \
   'IA_LIVRE_HARNESS_CONTRACT_READY=1' \
   'IA_LIVRE_HARNESS_GGUF_TARGET_MODEL=' \
   'IA_LIVRE_HARNESS_GGUF_TARGET_N_PREDICT=32' \
-  'IA_LIVRE_HARNESS_GGUF_NATIVE_LOADER=absent'; do
+  'IA_LIVRE_HARNESS_GGUF_NATIVE_LOADER=esp_header' \
+  'IA_LIVRE_HARNESS_GGUF_STATUS=header_ok'; do
   if ! grep -q "$marker" "$LOG_B"; then
     echo "GATE_FAIL: marcador ausente na Linha B: $marker"
     fail=1
   fi
 done
+# Loader não pode permanecer absent após Etapa 26
+if grep -q 'IA_LIVRE_HARNESS_GGUF_NATIVE_LOADER=absent' "$LOG_B"; then
+  echo "GATE_FAIL: GGUF_NATIVE_LOADER=absent — Etapa 26 exige loader ESP (≠ absent)"
+  fail=1
+fi
 
 # Fraudes / legado / Etapa 21 (sem inventar GGUF)
 if grep -q 'IA_LIVRE_HARNESS_B_SKIP' "$LOG_B"; then
@@ -128,17 +134,17 @@ if grep -qE 'IA_LIVRE_HARNESS_LOAD_KIND=gguf' "$LOG_B"; then
   echo "GATE_FAIL: B emitiu LOAD_KIND=gguf sem caminho GGUF real implementado"
   fail=1
 fi
-# Bloqueio GGUF honesto (informativo; não substitui proxy)
+# Bloqueio residual honesto: path existe; inferência ainda não (Etapa 26)
 if ! grep -q 'IA_LIVRE_HARNESS_B_BLOCK=' "$LOG_B"; then
-  echo "GATE_FAIL: B deve declarar B_BLOCK= (estado honesto do caminho GGUF / Etapa 21)"
+  echo "GATE_FAIL: B deve declarar B_BLOCK= (estado honesto; ex. no_gguf_infer)"
   fail=1
 fi
-if ! grep -q 'IA_LIVRE_HARNESS_GGUF_STATUS=blocked' "$LOG_B"; then
-  echo "GATE_FAIL: B deve declarar GGUF_STATUS=blocked enquanto não houver carga canônica"
+if grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=(no_gguf_path|awaiting_b13_b14)' "$LOG_B"; then
+  echo "GATE_FAIL: B_BLOCK=no_gguf_path legado — path ESP desbloqueado na Etapa 26; use no_gguf_infer"
   fail=1
 fi
-if ! grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=(no_gguf_path|awaiting_b13_b14)' "$LOG_B"; then
-  echo "GATE_FAIL: B_BLOCK deve ser motivo estável (no_gguf_path ou legado awaiting_b13_b14)"
+if ! grep -qE 'IA_LIVRE_HARNESS_B_BLOCK=no_gguf_infer' "$LOG_B"; then
+  echo "GATE_FAIL: B_BLOCK deve ser no_gguf_infer (sem geração; loader presente)"
   fail=1
 fi
 
@@ -147,5 +153,5 @@ if (( fail )); then
   exit 1
 fi
 
-echo "GATE_OK: harness — A (GGUF) ok + B (proxy + CONTRACT_READY + GGUF bloqueado) ok — hipótese NÃO comprovada"
+echo "GATE_OK: harness — A (GGUF) ok + B (proxy + CONTRACT_READY + loader esp_header) ok — hipótese NÃO comprovada"
 exit 0

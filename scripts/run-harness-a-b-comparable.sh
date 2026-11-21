@@ -80,9 +80,9 @@ if (( b_is_proxy )) && grep -qE 'IA_LIVRE_HARNESS_TOKENS_PER_S=' "$LOG_B"; then
 fi
 
 if (( b_is_proxy )); then
-  # E21: B permanece proxy + bloqueio no_gguf_path — sem métricas em espécie → INCONCLUSIVO
+  # B ainda proxy: loader ESP (E26) ≠ geração — sem TOKENS_PER_S em B → INCONCLUSIVO
   echo "IA_LIVRE_HARNESS_VERDICT=INCONCLUSIVO"
-  echo "IA_LIVRE_HARNESS_VERDICT_REASON=B_proxy_carga_nao_comparavel_E21_no_gguf_path"
+  echo "IA_LIVRE_HARNESS_VERDICT_REASON=B_proxy_sem_TOKENS_PER_S_E26_no_gguf_infer"
   exit 0
 fi
 

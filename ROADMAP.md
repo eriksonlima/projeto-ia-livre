@@ -179,7 +179,7 @@ Pronto quando: primeiro protótipo mínimo alinhado ao desenho ADR 0006 (enum/af
 
 ## Etapa 26 — Loader GGUF nativo mínimo na Linha B (desbloquear no_gguf_path)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#26](https://github.com/eriksonlima/projeto-ia-livre/issues/26)  
 Spec: specs/loader-gguf-nativo-linha-b/  
 Pronto quando: caminho verificável para o GGUF canônico (ou bytes/cabeçalho do modelo) chegar ao ambiente Linha B (QEMU/IA Livre pós-ExitBoot) com I/O mínimo documentado e evidência de progresso do loader (`GGUF_NATIVE_LOADER` ≠ `absent` ou marcadores intermediários honestos); gate harness atualizado sem inventar `TOKENS_PER_S` se ainda não houver geração; hipótese **não** comprovada; sem inferência completa obrigatória nesta etapa; sem GPU manager.

@@ -12,6 +12,9 @@ MARKERS=(
   "IA_LIVRE_EXIT_MAP_OK"
   "IA_LIVRE_EXIT_MEM_OK"
   "IA_LIVRE_EXIT_BOOT_OK"
+  "IA_LIVRE_GGUF_MAGIC_OK"
+  "IA_LIVRE_GGUF_HEADER_OK"
+  "IA_LIVRE_GGUF_NATIVE_LOADER=esp_header"
   "IA_LIVRE_TYPED_WEIGHTS_OK"
   "IA_LIVRE_TYPED_KVCACHE_OK"
   "IA_LIVRE_PHASE=prefill"
@@ -23,6 +26,7 @@ NUMERIC=(
   "IA_LIVRE_MEM_CONVENTIONAL_PAGES="
   "IA_LIVRE_ALLOC_BYTES="
   "IA_LIVRE_EXIT_MAP_PAGES="
+  "IA_LIVRE_GGUF_BYTES="
   "IA_LIVRE_TYPED_WEIGHTS_BYTES="
   "IA_LIVRE_TYPED_KVCACHE_BYTES="
   "IA_LIVRE_QUANTUM="
@@ -53,7 +57,7 @@ while (( SECONDS < deadline )); do
     kill -KILL "$QEMU_PID" 2>/dev/null || true
     wait "$QEMU_PID" 2>/dev/null || true
     QEMU_PID=
-    echo "GATE_OK: kernel — BOOT_OK … EXIT_BOOT_OK + MEM_SCHED_OK + NATIVE_BENCH_OK"
+    echo "GATE_OK: kernel — BOOT_OK … EXIT_BOOT_OK + GGUF esp_header + MEM_SCHED_OK + NATIVE_BENCH_OK"
     exit 0
   fi
   if ! kill -0 "$QEMU_PID" 2>/dev/null; then

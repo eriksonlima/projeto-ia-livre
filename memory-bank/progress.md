@@ -2,18 +2,17 @@
 
 ## O que funciona
 
-- Etapas 1–25 feitas
-- E21: `CONTRACT_READY` + `B_BLOCK=no_gguf_path`
-- E22: `VERDICT=INCONCLUSIVO`
-- E23: Rede v1 — `verify-node` PEER/MSG/IDENT/PING
-- E24: Autonomia v1 — `verify-agent` MEMORY_POLICY + TOOLS_USED≥2
-- E25: GPU manager stub — `verify-gpu-manager` (`host_stub` / skip)
+- Etapas 1–26 feitas
+- E26: `GGUF_NATIVE_LOADER=esp_header`, `GGUF_STATUS=header_ok`, `B_BLOCK=no_gguf_infer`
+- Gates: `verify` + `verify-harness` + `verify-harness-comparable` (INCONCLUSIVO)
+- Baseline CPU serial: mediana ~13,4 tok/s (`docs/runtime-inferencia-cpu-metricas.md`)
 
 ## Bloqueios
 
-- GGUF real em B ausente → prova A vs B inconclusiva
-- Backlog Abertas vazio — sem próxima etapa a promover
+- Sem geração/`TOKENS_PER_S` em B → hipótese INCONCLUSIVO (B21)
+- Backlog: B21, B22
 
 ## Por etapa
 
-- 1–25: feitas
+- 1–26: feitas
+- Próxima candidata: B21 (#27)

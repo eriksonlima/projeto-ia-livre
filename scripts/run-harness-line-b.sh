@@ -21,6 +21,9 @@ QEMU_PID=$!
 
 have_ready() {
   grep -q 'IA_LIVRE_EXIT_BOOT_OK' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_GGUF_MAGIC_OK' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_GGUF_HEADER_OK' "$LOG" 2>/dev/null \
+    && grep -q 'IA_LIVRE_GGUF_NATIVE_LOADER=esp_header' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_TYPED_WEIGHTS_OK' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_TYPED_KVCACHE_OK' "$LOG" 2>/dev/null \
     && grep -q 'IA_LIVRE_PHASE=prefill' "$LOG" 2>/dev/null \
@@ -47,7 +50,7 @@ wait "$QEMU_PID" 2>/dev/null || true
 QEMU_PID=
 
 if ! have_ready; then
-  echo "HARNESS_FAIL: Linha B — serial sem EXIT_BOOT_OK + MEM_SCHED_* + NATIVE_BENCH_*" >&2
+  echo "HARNESS_FAIL: Linha B — serial sem EXIT_BOOT_OK + GGUF loader esp_header + MEM_SCHED_* + NATIVE_BENCH_*" >&2
   echo "---- serial (últimas 40 linhas) ----" >&2
   tail -n 40 "$LOG" >&2 || true
   exit 1
@@ -98,16 +101,18 @@ if [[ -f "$GGUF_HOST_PATH" ]]; then
 else
   echo "IA_LIVRE_HARNESS_GGUF_HOST_FILE=absent"
 fi
-# Sem loader UEFI / sem mapa do GGUF no ESP → path nativo ainda não carrega o arquivo.
-echo "IA_LIVRE_HARNESS_GGUF_NATIVE_LOADER=absent"
+# Etapa 26: loader ESP leu cabeçalho/prefixo (≠ absent). Ainda sem geração.
+LOADER="$(grep -oE 'IA_LIVRE_GGUF_NATIVE_LOADER=[a-z0-9_]+' "$LOG" | head -1 | cut -d= -f2)"
+LOADER="${LOADER:-esp_header}"
+echo "IA_LIVRE_HARNESS_GGUF_NATIVE_LOADER=${LOADER}"
 
 echo "IA_LIVRE_HARNESS_OK"
-# Estado honesto do caminho GGUF (não substitui LOAD_KIND=proxy; não inventa tokens)
-B_BLOCK_REASON="${IA_LIVRE_HARNESS_B_BLOCK:-no_gguf_path}"
+# Path de arquivo desbloqueado; inferência ainda ausente — não inventa TOKENS_PER_S.
+B_BLOCK_REASON="${IA_LIVRE_HARNESS_B_BLOCK:-no_gguf_infer}"
 echo "IA_LIVRE_HARNESS_B_BLOCK=${B_BLOCK_REASON}"
-echo "IA_LIVRE_HARNESS_GGUF_STATUS=blocked"
+echo "IA_LIVRE_HARNESS_GGUF_STATUS=header_ok"
 if [[ "${IA_LIVRE_HARNESS_B_MODE:-}" == "block-status" ]]; then
-  echo "IA_LIVRE_HARNESS_LOAD_KIND_GGUF=blocked"
+  echo "IA_LIVRE_HARNESS_LOAD_KIND_GGUF=header_ok"
 fi
-echo "nota: hipótese A vs B NÃO comprovada — contrato pronto (CONTRACT_READY=1); GGUF canônico em B bloqueado (${B_BLOCK_REASON})."
+echo "nota: hipótese A vs B NÃO comprovada — loader ESP=${LOADER}; sem TOKENS_PER_S em B (${B_BLOCK_REASON})."
 exit 0

@@ -114,8 +114,37 @@ Com Etapas 19/20 verificáveis no serial QEMU, `scripts/run-harness-line-b.sh`:
 
 `HARNESS_MODEL=` permanece `proxy-post-exit-v1`. Rodar `ia-livre-runtime` no host continua sendo **Linha A**.
 
-### Estado atual (após merge E19/E20 + Tasks 3–4)
+### Estado atual (após Etapa 26 — loader ESP)
 
-- ~~`awaiting_b13_b14`~~ — Etapas 19 e 20 **feitas**; `CONTRACT_READY=1` no harness B.
-- Bloqueio final honesto: **`no_gguf_path`** — sem loader GGUF / FS maduro / motor de inferência no kernel UEFI pós-ExitBoot; proxy E12 = instrumento mínimo do gate.
-- Hipótese A vs B **não** comprovada. GPU manager **fora**. Métricas em espécie em B ficam para quando existir loader real (fora do mínimo desta etapa).
+- ~~`awaiting_b13_b14`~~ — Etapas 19 e 20 **feitas**; `CONTRACT_READY=1`.
+- ~~`no_gguf_path`~~ — **desbloqueado no papel e no guest** pela Etapa 26: prefixo GGUF no ESP (`IA_LIVRE/gguf.hdr`), lido em Boot Services (ADR [`0008`](adr/0008-loader-gguf-esp-pre-exitboot.md)).
+- **Loader:** `GGUF_NATIVE_LOADER=esp_header` (≠ `absent`); `GGUF_STATUS=header_ok`.
+- **Bloqueio residual:** `B_BLOCK=no_gguf_infer` — path de bytes/cabeçalho existe; **ainda sem** motor de geração / `TOKENS_PER_S` em B.
+- Proxy E12 permanece (`LOAD_KIND=proxy`). Hipótese A vs B **não** comprovada.
+
+### Loader GGUF nativo mínimo (Etapa 26)
+
+| Peça | Valor |
+|------|--------|
+| Mecanismo | ESP FAT (`make esp` → `scripts/esp-stage-gguf-prefix.sh`) |
+| Artefato | `build/esp/IA_LIVRE/gguf.hdr` — primeiros **4096** bytes do GGUF canônico (não os ~638 MiB) |
+| Quando ler | **Antes** de `ExitBootServices` (SimpleFileSystem) |
+| Destino | Buffer LOADER_DATA + seed dos primeiros bytes em `Weights` (E19) |
+| RAM QEMU | Mantém `-m 256M` (cabeçalho/prefixo; não o modelo inteiro) |
+
+#### Marcadores kernel (serial)
+
+| Marcador | Significado |
+|----------|-------------|
+| `IA_LIVRE_GGUF_LOADER_BEGIN` | Início do I/O ESP |
+| `IA_LIVRE_GGUF_MAGIC_OK` | Magic `GGUF` reconhecido |
+| `IA_LIVRE_GGUF_BYTES=<n>` | Bytes lidos do prefixo |
+| `IA_LIVRE_GGUF_HEADER_OK` | Cabeçalho/prefixo ok |
+| `IA_LIVRE_GGUF_NATIVE_LOADER=esp_header` | Estado do loader (≠ `absent`) |
+
+#### Harness B (reemissão)
+
+- `IA_LIVRE_HARNESS_GGUF_NATIVE_LOADER=esp_header`
+- `IA_LIVRE_HARNESS_GGUF_STATUS=header_ok`
+- `IA_LIVRE_HARNESS_B_BLOCK=no_gguf_infer` (inferência ainda ausente; **não** `no_gguf_path`)
+- **Proibido:** `TOKENS_PER_S` / `LOAD_S` / `LOAD_KIND=gguf` fingido.

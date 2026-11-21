@@ -4,9 +4,11 @@
 use core::fmt::Write;
 use core::ptr::NonNull;
 use uefi::boot::{self, AllocateType, MemoryType, PAGE_SIZE};
+use uefi::cstr16;
 use uefi::mem::memory_map::MemoryMap;
 use uefi::prelude::*;
 use uefi::proto::console::serial::Serial;
+use uefi::proto::media::file::{File, FileAttribute, FileMode};
 
 const BOOT_OK: &str = "IA_LIVRE_BOOT_OK\n";
 const EXIT_BOOT_BEGIN: &str = "IA_LIVRE_EXIT_BOOT_BEGIN\n";
@@ -24,6 +26,10 @@ const TYPED_KVCACHE_BYTES: usize = 256;
 /// Política de quantum mínima (Prefill > Decode); unidades arbitrárias.
 const QUANTUM_PREFILL: u64 = 8;
 const QUANTUM_DECODE: u64 = 2;
+
+/// Etapa 26 — prefixo GGUF no ESP (não o modelo completo; ver ADR 0008).
+const GGUF_PREFIX_MAX: usize = 4096;
+const GGUF_MAGIC: [u8; 4] = *b"GGUF";
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum MemClass {
@@ -172,14 +178,91 @@ fn prove_typed_region(ptr: NonNull<u8>, size: usize, salt: u8) -> bool {
     true
 }
 
+/// Etapa 26: lê prefixo GGUF do ESP sob Boot Services (SimpleFileSystem).
+/// Retorna (ptr, bytes) se magic+leitura ok; emite marcadores via `sink`.
+fn try_load_gguf_prefix(sink: &mut LineSink<'_>) -> Option<(NonNull<u8>, usize)> {
+    sink.emit("IA_LIVRE_GGUF_LOADER_BEGIN\n");
+
+    let mut sfs = match boot::get_image_file_system(boot::image_handle()) {
+        Ok(fs) => fs,
+        Err(_) => {
+            sink.emit("IA_LIVRE_GGUF_LOADER_FAIL=no_fs\n");
+            return None;
+        }
+    };
+    let mut root = match sfs.open_volume() {
+        Ok(d) => d,
+        Err(_) => {
+            sink.emit("IA_LIVRE_GGUF_LOADER_FAIL=open_volume\n");
+            return None;
+        }
+    };
+    let handle = match root.open(
+        cstr16!("\\IA_LIVRE\\gguf.hdr"),
+        FileMode::Read,
+        FileAttribute::empty(),
+    ) {
+        Ok(h) => h,
+        Err(_) => {
+            sink.emit("IA_LIVRE_GGUF_LOADER_FAIL=open_file\n");
+            return None;
+        }
+    };
+    let mut file = match handle.into_regular_file() {
+        Some(f) => f,
+        None => {
+            sink.emit("IA_LIVRE_GGUF_LOADER_FAIL=not_file\n");
+            return None;
+        }
+    };
+
+    let pages = (GGUF_PREFIX_MAX + PAGE_SIZE - 1) / PAGE_SIZE;
+    let base = match boot::allocate_pages(AllocateType::AnyPages, MemoryType::LOADER_DATA, pages) {
+        Ok(p) => p,
+        Err(_) => {
+            sink.emit("IA_LIVRE_GGUF_LOADER_FAIL=alloc\n");
+            return None;
+        }
+    };
+    let buf = unsafe { core::slice::from_raw_parts_mut(base.as_ptr(), GGUF_PREFIX_MAX) };
+    let n = match file.read(buf) {
+        Ok(n) => n,
+        Err(_) => {
+            sink.emit("IA_LIVRE_GGUF_LOADER_FAIL=read\n");
+            return None;
+        }
+    };
+    if n < 4 || buf[..4] != GGUF_MAGIC {
+        sink.emit("IA_LIVRE_GGUF_LOADER_FAIL=magic\n");
+        return None;
+    }
+
+    sink.emit("IA_LIVRE_GGUF_MAGIC_OK\n");
+    emit_kv_uefi(sink, "IA_LIVRE_GGUF_BYTES=", n as u64);
+    sink.emit("IA_LIVRE_GGUF_HEADER_OK\n");
+    sink.emit("IA_LIVRE_GGUF_NATIVE_LOADER=esp_header\n");
+    Some((base, n))
+}
+
 /// Demo Etapa 19: allocator tipado + Prefill/Decode + quantum. Emite MEM_SCHED_OK só se ok.
-unsafe fn run_mem_sched_demo(base: NonNull<u8>, capacity: usize) -> bool {
+/// Se `gguf` presente, copia min(Weights, bytes) do prefixo para a região Weights (seed).
+unsafe fn run_mem_sched_demo(
+    base: NonNull<u8>,
+    capacity: usize,
+    gguf: Option<(NonNull<u8>, usize)>,
+) -> bool {
     let mut bump = Bump::new(base, capacity);
 
     let Some((_c, w_ptr, w_sz)) = typed_alloc(&mut bump, MemClass::Weights, TYPED_WEIGHTS_BYTES) else {
         return false;
     };
-    if !prove_typed_region(w_ptr, w_sz, 0x11) {
+    if let Some((g_ptr, g_n)) = gguf {
+        let src = core::slice::from_raw_parts(g_ptr.as_ptr(), g_n);
+        let dst = core::slice::from_raw_parts_mut(w_ptr.as_ptr(), w_sz);
+        let n = core::cmp::min(dst.len(), src.len());
+        dst[..n].copy_from_slice(&src[..n]);
+        uart_write("IA_LIVRE_GGUF_WEIGHTS_SEEDED\n");
+    } else if !prove_typed_region(w_ptr, w_sz, 0x11) {
         return false;
     }
     uart_emit_kv("IA_LIVRE_TYPED_WEIGHTS_BYTES=", w_sz as u64);
@@ -351,6 +434,9 @@ fn main() -> Status {
         return Status::SUCCESS;
     };
 
+    // Etapa 26 — loader GGUF mínimo (ESP) sob Boot Services; sem TOKENS_PER_S.
+    let gguf_prefix = try_load_gguf_prefix(&mut sink);
+
     sink.emit(EXIT_BOOT_BEGIN);
 
     // Soltar Serial UEFI antes do exit (protocolos invalidam).
@@ -371,8 +457,16 @@ fn main() -> Status {
             uart_write("IA_LIVRE_EXIT_MEM_OK\n");
             uart_write("IA_LIVRE_EXIT_BOOT_OK\n");
 
-            // Etapa 19 — memória tipada + Prefill/Decode (≠ NATIVE_BENCH / ≠ GGUF).
-            let _ = run_mem_sched_demo(proof_base, proof_cap);
+            // Reemite evidência do loader na UART COM1 (harness pós-exit).
+            if let Some((_p, n)) = gguf_prefix {
+                uart_write("IA_LIVRE_GGUF_MAGIC_OK\n");
+                uart_emit_kv("IA_LIVRE_GGUF_BYTES=", n as u64);
+                uart_write("IA_LIVRE_GGUF_HEADER_OK\n");
+                uart_write("IA_LIVRE_GGUF_NATIVE_LOADER=esp_header\n");
+            }
+
+            // Etapa 19 — memória tipada + Prefill/Decode (≠ NATIVE_BENCH / ≠ geração GGUF).
+            let _ = run_mem_sched_demo(proof_base, proof_cap, gguf_prefix);
 
             // Etapa 12 — proxy Linha B (não é inferência / TinyLlama).
             uart_write("IA_LIVRE_NATIVE_BENCH_BEGIN\n");
