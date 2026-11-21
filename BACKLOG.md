@@ -36,13 +36,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Notas: ed25519/PeerId, HELLO assinado, IDENT, MSG/ACK, PING/PONG; sem libp2p/NAT/DHT; independente do SO.
 - Pronto quando (candidato): contratos do desenho em `node/` + gate `verify-node` (ou extensão).
 
-### B18 — Autonomia v1 utilizável (impl. em agent/)
-
-- Issue: [#24](https://github.com/eriksonlima/projeto-ia-livre/issues/24)
-- Origem: Etapa 15 / ADR 0005; `agent/` ainda é protótipo E7
-- Notas: `--prompt`, allowlist `note`/`recall`/`help`, política N=8; host only.
-- Pronto quando (candidato): prova v1 com ≥2 ferramentas + marcadores de política; `verify-agent` preservado/estendido.
-
 ### B19 — GPU manager / multi-GPU (protótipo mínimo)
 
 - Issue: [#25](https://github.com/eriksonlima/projeto-ia-livre/issues/25)
@@ -51,6 +44,12 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Pronto quando (candidato): caminho verificável; skip/gate honesto; sem prova A vs B via multi-GPU.
 
 ## Promovidas / arquivadas
+
+### B18 — Autonomia v1 utilizável (impl. em agent/)
+
+- Promovido para Etapa 22 do roadmap (`pendente`; Etapa 19 permanece `em_andamento`; trabalho em paralelo na branch `etapa-b18-autonomia-v1`).
+- Issue: [#24](https://github.com/eriksonlima/projeto-ia-livre/issues/24)
+- Etapa: [Etapa 22 — Autonomia v1 utilizável (impl. em agent/)](ROADMAP.md)
 
 ### B13 — Memória model-aware + scheduler por fases (impl. mínima)
 
