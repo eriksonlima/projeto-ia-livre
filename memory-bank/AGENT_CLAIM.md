@@ -6,8 +6,8 @@
 - **etapa:** 36
 - **issue:** #35
 - **paths:** ROADMAP.md, BACKLOG.md, specs/, docs/, scripts/, memory-bank/, AGENTS.md
-- **since:** 2026-11-21T07:50:00Z
-- **expires:** 2026-11-21T11:50:00Z
+- **since:** 2026-11-21T07:45:24Z
+- **expires:** 2026-11-21T11:45:24Z
 
 ## Protocolo
 
