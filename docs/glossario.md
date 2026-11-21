@@ -30,3 +30,4 @@ Princípios: [`manifesto.md`](manifesto.md).
 | **GOP / OBS** | Observabilidade mínima pré-exit (E37) | [`observabilidade-minima-so.md`](observabilidade-minima-so.md) |
 | **PeerId** | Fingerprint ed25519 (âncora de confiança do nó) | [`rede-ia-livre-v1.md`](rede-ia-livre-v1.md) |
 | **Protótipo objetivo atingido** | Checklist dos 3 pilares (hipótese A/B; USB/metal; Rede+autonomia host); celebrar só com evidência | [`prototipo-objetivo-atingido.md`](prototipo-objetivo-atingido.md) |
+| **Passo intermediário (espécie B)** | N≥8 layers e/ou `n_predict`≥8 — progresso E59 antes da espécie canônica 22L×32 | [`runtime-native-perf-especie.md`](runtime-native-perf-especie.md) |

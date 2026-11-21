@@ -39,3 +39,8 @@ Prefill 22L×16 permanece inviável no QEMU (ADR 0014; host ~250 s). Expandir pa
 - Comparable limpo aceita `E45_perf_ceiling_below_canonical` como INCONCLUSIVO honesto.
 - Ampliar espécie além do teto = etapa/backlog futuro (otimização SIMD/GPU guest).
 - Hipótese A vs B **não** comprovada nem refutada nesta etapa.
+
+## Ponte — Etapa 59 (otimizar teto)
+
+Contrato de medição + alvos intermediários (N≥8 / `n_predict`≥8) ou ADR **0020** inviável pós-otimização: [`../runtime-native-perf-especie.md`](../runtime-native-perf-especie.md).  
+Esta ADR **não** é reescrita: E59 mede/otimiza; B54 é quem pode tornar a espécie canônica no comparable.

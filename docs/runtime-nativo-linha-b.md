@@ -123,6 +123,7 @@ Com Etapas 19/20 verificáveis no serial QEMU, `scripts/run-harness-line-b.sh`:
 - **Espécie:** ainda **subset** (≠ 22L × 32) → comparable **INCONCLUSIVO** (`E44_subset_generate_not_canonical_species_*`); **sem** `B_BLOCK` no sucesso Decode.
 - Microbench E12 permanece como `PROXY=*`; `LOAD_KIND` de geração = `gguf`.
 - **E49:** bridge host valida esta evidência (`BRIDGE_NATIVE_SRC=blockio`) ou o bloqueio metal (`metal_block` / E48) — [`autonomia-bridge-nativo.md`](autonomia-bridge-nativo.md); **≠** autonomia no guest.
+- **E59:** medição/otimização do teto — passo intermediário N≥8 / `n_predict`≥8 **ou** ADR 0020 inviável — [`runtime-native-perf-especie.md`](runtime-native-perf-especie.md). **≠** B54 / `COMPROVA`.
 
 ### Loader GGUF nativo mínimo (Etapa 26)
 
