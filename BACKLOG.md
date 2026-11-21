@@ -8,12 +8,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-### B32 — Rede IA Livre além de v1 (descoberta WAN mínima)
-
-- Issue: [#38](https://github.com/eriksonlima/projeto-ia-livre/issues/38)
-- Origem: v1 sem mDNS/DHT/NAT/relay
-- Pronto quando: descoberta além de `--peer`/HELLO LAN + gate; sem exigir SO
-
 ### B33 — Autonomia além de v1 (REPL ou tool sandboxed)
 
 - Issue: [#39](https://github.com/eriksonlima/projeto-ia-livre/issues/39)
@@ -33,6 +27,11 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Pronto quando: `architecture.md` / README-AGENTS refletem estado atual sem ambiguidade
 
 ## Promovidas / arquivadas
+
+### B32 — Rede IA Livre além de v1 (descoberta WAN mínima)
+
+- Promovido para Etapa 39 do roadmap (promoção autônoma após Etapa 38).
+- Issue: [#38](https://github.com/eriksonlima/projeto-ia-livre/issues/38)
 
 ### B31 — GPU manager nativo (mecanismos kernel ↔ runtime)
 

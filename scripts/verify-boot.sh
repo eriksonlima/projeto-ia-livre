@@ -35,6 +35,16 @@ MARKERS=(
   "IA_LIVRE_PHASE=prefill"
   "IA_LIVRE_PHASE=decode"
   "IA_LIVRE_MEM_SCHED_OK"
+  "IA_LIVRE_GPU_MGR=native"
+  "IA_LIVRE_GPU_DEV0_KIND=synthetic"
+  "IA_LIVRE_GPU_AFFIN_CLASS=weights"
+  "IA_LIVRE_GPU_AFFIN_CLASS=kvcache"
+  "IA_LIVRE_GPU_PLACE_PHASE=prefill"
+  "IA_LIVRE_GPU_PLACE_PHASE=decode"
+  "IA_LIVRE_GPU_PLACE_HINT=device0|weights"
+  "IA_LIVRE_GPU_PLACE_HINT=device0|kvcache"
+  "IA_LIVRE_GPU_SHARD_DOC=pipeline_layer"
+  "IA_LIVRE_GPU_MGR_OK"
   "IA_LIVRE_NATIVE_BENCH_OK"
 )
 NUMERIC=(
@@ -47,6 +57,8 @@ NUMERIC=(
   "IA_LIVRE_QUANTUM="
   "IA_LIVRE_NATIVE_BENCH_OPS="
   "IA_LIVRE_NATIVE_BENCH_MS="
+  "IA_LIVRE_GPU_DEVICES="
+  "IA_LIVRE_GPU_AFFIN_DEV="
 )
 
 # Etapa 27: carga GGUF ~638 MiB via FAT pode demorar.
@@ -91,7 +103,7 @@ while (( SECONDS < deadline )); do
     kill -KILL "$QEMU_PID" 2>/dev/null || true
     wait "$QEMU_PID" 2>/dev/null || true
     QEMU_PID=
-    echo "GATE_OK: kernel — BOOT_OK … OBS_OK … EXIT_BOOT_OK + GGUF blockio_full + LAYOUT_OK + MEM_SCHED_OK + NATIVE_BENCH_OK"
+    echo "GATE_OK: kernel — BOOT_OK … OBS_OK … EXIT_BOOT_OK + GGUF blockio_full + LAYOUT_OK + MEM_SCHED_OK + GPU_MGR_OK + NATIVE_BENCH_OK"
     exit 0
   fi
   if ! kill -0 "$QEMU_PID" 2>/dev/null; then

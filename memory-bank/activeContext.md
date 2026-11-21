@@ -2,19 +2,19 @@
 
 ## Foco atual
 
-- Etapa **38** `em_andamento` (#37) — GPU manager nativo (kernel ↔ runtime)
-- E37 **feita**: GOP/input mínimo + `OBS_OK` no gate
+- Etapa **39** `em_andamento` (#38) — Rede IA Livre além de v1 (descoberta WAN)
+- E38 **feita**: GPU manager nativo (`GPU_MGR=native`)
 
 ## Mudanças recentes
 
-- E37: `kernel/src/obs.rs` — GOP fill + bitmap; fallback SimpleTextInput; `verify-boot` exige `OBS_OK`
-- E36: GGUF completo opt-in na ESP
+- E38: `kernel/src/gpu_mgr.rs` — enum sintética + afinidade + placement pós-`MEM_SCHED_OK`
+- E37: GOP/input + `OBS_OK`
 
 ## Próximo passo
 
-- Especificar Etapa 38 (B31)
+- Especificar Etapa 39 (B32)
 
 ## Notas
 
-- README E37: considerado — AGENTS/docs cobrem; capa sem mudança obrigatória
-- Lease: claimar E38 antes de editar produto
+- README E38: considerado — AGENTS/docs cobrem; capa sem mudança obrigatória
+- Stub host E25 permanece `verify-gpu-manager` (`host_stub`)

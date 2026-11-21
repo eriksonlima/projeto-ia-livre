@@ -274,7 +274,15 @@ Pronto quando: caminho mínimo (GOP text ou input) + marcador de prova; sem desk
 
 ## Etapa 38 — GPU manager nativo (mecanismos kernel ↔ runtime)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#37](https://github.com/eriksonlima/projeto-ia-livre/issues/37)  
+Spec: specs/gpu-manager-nativo/  
+Pronto quando: enum/afinidade/placement mínimo pós-ExitBoot verificável; sem fingir multi-GPU completo.  
+**Desfecho:** `GPU_MGR=native` + enum sintética + afinidade/placement pós-`MEM_SCHED_OK`; stub E25 intacto.
+
+## Etapa 39 — Rede IA Livre além de v1 (descoberta WAN mínima)
+
+Status: em_andamento  
+Issue: [#38](https://github.com/eriksonlima/projeto-ia-livre/issues/38)  
 Spec: (a definir — `especificador`)  
-Pronto quando: enum/afinidade/placement mínimo pós-ExitBoot verificável; sem fingir multi-GPU completo.
+Pronto quando: descoberta além de `--peer`/HELLO LAN + gate; sem exigir SO.

@@ -12,10 +12,10 @@ Host single-GPU (Etapa 8): ADR [`0002`](adr/0002-aceleracao-gpu-host-llama-cpp.m
 | Aspecto | Este stub (host) | Caminho nativo (futuro) |
 |---------|------------------|-------------------------|
 | Onde | Linux `std` — `scripts/gpu-manager-stub.sh` | Kernel IA Livre (mecanismos) pós-ExitBoot |
-| Identidade | `IA_LIVRE_GPU_MGR=host_stub` | Futuro: mecanismos kernel ≠ este marcador |
-| Enum | Contagem via `nvidia-smi -L` (ou 0) | Enum de aceleradores no SO |
-| Placement | Hint fixo documentado (`device0\|weights`) | Afinidade Weights/KvCache + fase |
-| Shard | **Só documentado** (`pipeline_layer`) | Pipeline/layer sharding real |
+| Identidade | `IA_LIVRE_GPU_MGR=host_stub` | **`IA_LIVRE_GPU_MGR=native`** (Etapa 38 — [`gpu-manager-nativo.md`](gpu-manager-nativo.md)); **≠** este stub |
+| Enum | Contagem via `nvidia-smi -L` (ou 0) | Enum sintética/nativa no SO (E38) |
+| Placement | Hint fixo documentado (`device0\|weights`) | Afinidade Weights/KvCache + fase (E38) |
+| Shard | **Só documentado** (`pipeline_layer`) | Documentado em E38; execução multi-GPU = futuro |
 | Inferência | Continua no runtime (ADR 0002); stub **não** offload | Runtime continua dono dos kernels |
 
 **Confusão a evitar:** offload `--n-gpu-layers` / `IA_LIVRE_ACCEL` (Etapa 8) **≠** este stub **≠** manager nativo Linha B.
@@ -40,13 +40,14 @@ Estratégia preferida do ADR 0006: **pipeline / layer sharding**.
 Este protótipo **não** particiona camadas entre GPUs; só declara `IA_LIVRE_GPU_SHARD_DOC=pipeline_layer`.  
 Fora: tensor parallel, expert parallel, clusters/RDMA.
 
-## O que não está implementado
+## O que não está implementado (neste stub)
 
-- Mecanismos no `kernel/` (enum nativo, afinidade pós-ExitBoot)
-- Multi-GPU real / shard em código
+- Multi-GPU real / shard **executado** (≥2 GPUs)
 - Mudança da semântica Etapa 8 (`verify-runtime-gpu` / `IA_LIVRE_GPU_SKIP`)
 - Integração no harness A vs B
 - ABI/syscalls; driver in-kernel
+
+Mecanismos nativos mínimos (enum/afinidade/placement) = **Etapa 38** — [`gpu-manager-nativo.md`](gpu-manager-nativo.md); **não** substituem este stub.
 
 ## Como rodar / verificar
 

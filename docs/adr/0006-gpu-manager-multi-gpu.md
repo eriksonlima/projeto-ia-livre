@@ -67,4 +67,4 @@ Esta ADR **não** implementa manager nem multi-GPU em `kernel/` ou `runtime/`. D
 | 0003 | Memória/fase model-aware — complementar |
 | 12 | Proxy Linha B — **não** implementa GPU manager |
 | 25 / B19 | Stub **host** verificável (enum/placement/shard doc) — [`gpu-manager-prototipo-host.md`](../gpu-manager-prototipo-host.md); **≠** manager nativo |
-| Futuro nativo | Enum + afinidade + placement no kernel; depois pipeline multi-GPU |
+| 38 / B31 | Enum + afinidade + placement **nativo** mínimo — [`gpu-manager-nativo.md`](../gpu-manager-nativo.md); depois pipeline multi-GPU |

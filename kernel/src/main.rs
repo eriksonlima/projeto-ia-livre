@@ -1,6 +1,7 @@
 #![no_main]
 #![no_std]
 
+mod gpu_mgr;
 mod obs;
 
 use core::fmt::Write;
@@ -449,7 +450,7 @@ unsafe fn uart_put(b: u8) {
     outb(COM1, b);
 }
 
-unsafe fn uart_write(s: &str) {
+pub(crate) unsafe fn uart_write(s: &str) {
     for b in s.bytes() {
         if b == b'\n' {
             uart_put(b'\r');
@@ -458,7 +459,7 @@ unsafe fn uart_write(s: &str) {
     }
 }
 
-unsafe fn uart_emit_kv(key: &str, value: u64) {
+pub(crate) unsafe fn uart_emit_kv(key: &str, value: u64) {
     let mut num = [0u8; 20];
     let digits = format_u64(value, &mut num);
     uart_write(key);
@@ -605,6 +606,9 @@ fn main() -> Status {
 
             // Etapa 19 — memória tipada + Prefill/Decode (≠ NATIVE_BENCH / ≠ geração GGUF).
             let _ = run_mem_sched_demo(proof_base, proof_cap, gguf_prefix);
+
+            // Etapa 38 — GPU manager nativo (enum/afinidade/placement); ≠ host_stub.
+            gpu_mgr::run_gpu_mgr_native();
 
             // Etapa 29/31/32 — runtime-native: layout + mapa/dequant/op + tokenize/embed/camada.
             uart_write("IA_LIVRE_NATIVE_INFER_BEGIN\n");

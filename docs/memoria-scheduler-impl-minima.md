@@ -97,7 +97,7 @@ make verify    # VERIFY_TIMEOUT default 45s
 - Prova ou refutação da hipótese Linha A vs B
 - ABI estável / syscalls finais
 - Multi-tenant; resize/free sofisticados; MMU completa; preempt real
-- GPU manager / multi-GPU (ADR 0006)
+- Multi-GPU executado / shard real (ADR 0006) — placement **nativo mínimo** = Etapa 38 ([`gpu-manager-nativo.md`](gpu-manager-nativo.md)), complementar a `MEM_SCHED_OK`
 - Runtime host falando o contrato (Etapa 20 / B14 — fora desta etapa)
 - Confundir este contrato com o proxy `NATIVE_BENCH_*`
 
