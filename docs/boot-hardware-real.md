@@ -1,8 +1,9 @@
-# Boot / imagem em hardware real (Etapas 30 / 35)
+# Boot / imagem em hardware real (Etapas 30 / 35 / 57)
 
 ADR: [`0011-boot-imagem-esp-baremetal.md`](adr/0011-boot-imagem-esp-baremetal.md).  
 Spec E35: [`../specs/boot-uefi-hardware-real/`](../specs/boot-uefi-hardware-real/).  
-Evidências: [`evidence/boot-metal/`](evidence/boot-metal/).
+Evidências: [`evidence/boot-metal/`](evidence/boot-metal/).  
+**Guia onboarding (Etapa 57):** [`guia-primeiro-boot-usb.md`](guia-primeiro-boot-usb.md) · prepare release: `./scripts/prepare-baremetal-release.sh` · gate: `make verify-boot-guide-release`.
 
 > **QEMU ≠ bare-metal.** Este documento não prova a hipótese A vs B e **não** emite `TOKENS_PER_S`.
 

@@ -2,13 +2,13 @@
 
 ## Funciona
 
-- Etapas 1–56
-- Harness A_gpu (vulkan neste host) + B subset INCONCLUSIVO; GPU real host; autonomia/Rede bridges
+- Etapas 1–57
+- Guia primeiro boot USB + artefato release; harness A_gpu; GPU real host; Rede/autonomia bridges
 
 ## Residual
 
-- Guia USB + release (B51); checklist meta (B52); espécie canônica B para COMPROVA/REFUTA
+- Checklist meta protótipo (B52); espécie canônica B para COMPROVA/REFUTA; METAL_OK com log PC
 
 ## Roadmap
 
-- Sem `em_andamento` após E56; próxima: B51
+- Sem `em_andamento` após E57; próxima: B52

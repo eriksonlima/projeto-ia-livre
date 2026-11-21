@@ -2,14 +2,14 @@
 
 ## Foco atual
 
-- Etapas 1–56 **feitas**
-- E56: perfil harness `A_gpu` + B → `INCONCLUSIVO`; gate `verify-harness-gpu`
-- Topo Abertas: **B51** (guia primeiro boot USB + release)
+- Etapas 1–57 **feitas**
+- E57: guia USB + release `SHA256SUMS`; gate `verify-boot-guide-release`
+- Topo Abertas: **B52** (checklist protótipo objetivo)
 
 ## Próximo passo
 
-- Promover B51 → Etapa 57 ou continuar
+- Promover B52 → Etapa 58 ou continuar
 
 ## Notas
 
-- Lease: liberar após push E56
+- Lease: liberar após push E57

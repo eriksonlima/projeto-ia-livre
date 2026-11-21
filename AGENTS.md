@@ -508,6 +508,21 @@ grep -q 'IA_LIVRE_WRITE_USB_OK' scripts/verify-write-usb.sh
 
 Gravação real (operador): `make baremetal-esp` → `./scripts/write-usb-esp.sh --list` → `--device /dev/sdX --confirm /dev/sdX --yes`. Contrato: [`docs/boot-hardware-real.md`](docs/boot-hardware-real.md).
 
+### Gate guia USB + release de artefato (Etapa 57 — adicional)
+
+Guia onboarding + `SHA256SUMS` do pacote ESP/tar. **Não** exige USB/PC. **Não** emite `METAL_OK`. Hipótese A vs B permanece INCONCLUSIVO. Contrato: [`docs/guia-primeiro-boot-usb.md`](docs/guia-primeiro-boot-usb.md).
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+test -f docs/guia-primeiro-boot-usb.md
+test -f scripts/prepare-baremetal-release.sh
+make verify-boot-guide-release
+grep -q 'IA_LIVRE_BOOT_GUIDE_OK' scripts/verify-boot-guide-release.sh
+grep -q 'IA_LIVRE_RELEASE_ARTIFACT_OK' scripts/prepare-baremetal-release.sh
+```
+
+Esperado: `BOOT_GUIDE_OK` + `RELEASE_ARTIFACT_OK` + `sha256sum -c` ok. Prepare: `./scripts/prepare-baremetal-release.sh` → `build/release/`.
+
 ### Gate inferência path metal / ESP-only (Etapa 48 — adicional)
 
 QEMU **sem** BlockIO: prova `GGUF_PATH=esp_sfs` + `B_BLOCK_METAL=no_gguf_metal_io` (ADR [`0017`](docs/adr/0017-path-metal-sfs-vs-blockio.md)). **≠** `METAL_OK`; **≠** geração BlockIO.
@@ -593,6 +608,8 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `Makefile` — `build` / `esp` / `baremetal-esp` / `run` / `verify` / `verify-baremetal` / `verify-write-usb` / …
 - `scripts/make-baremetal-esp.sh` / `scripts/verify-baremetal.sh` — artefato + gate Etapa 30
 - `scripts/write-usb-esp.sh` / `scripts/verify-write-usb.sh` — gravar pendrive com confirmação (Etapa 47)
+- `docs/guia-primeiro-boot-usb.md` — onboarding USB (Etapa 57)
+- `scripts/prepare-baremetal-release.sh` / `scripts/verify-boot-guide-release.sh` — release + gate Etapa 57
 - `scripts/run-qemu.sh` — atalho para `make run`
 - `scripts/verify-boot.sh` — gate serial do kernel (`BOOT_OK` + mem/alloc + `EXIT_BOOT_OK` + `MEM_SCHED_OK` + `NATIVE_BENCH_OK`)
 - `scripts/verify-runtime.sh` — gate do runtime CPU (`IA_LIVRE_INFER_OK` + métricas)

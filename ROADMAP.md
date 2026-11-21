@@ -426,8 +426,9 @@ Pronto quando: corrida A/B com perfil GPU documentado e métricas honestas; skip
 
 ## Etapa 57 — Guia “primeiro boot USB” + release de artefato
 
-Status: em_andamento  
+Status: feita  
 Issue: [#57](https://github.com/eriksonlima/projeto-ia-livre/issues/57)  
 Spec: specs/guia-primeiro-boot-usb-release/  
-Pronto quando: guia passo a passo (Secure Boot, serial, o que esperar) + tag/release com ESP/tar/checksums; sem declarar hipótese comprovada.
+Pronto quando: guia passo a passo (Secure Boot, serial, o que esperar) + tag/release com ESP/tar/checksums; sem declarar hipótese comprovada.  
+**Desfecho:** `docs/guia-primeiro-boot-usb.md` + `prepare-baremetal-release.sh` + `SHA256SUMS`; `make verify-boot-guide-release`; hipótese INCONCLUSIVO explícita.
 
