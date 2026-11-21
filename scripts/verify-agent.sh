@@ -115,6 +115,16 @@ if ! grep -qE 'IA_LIVRE_CALC_RESULT=7(\.0)?' "$COMBINED"; then
   fail=1
 fi
 
+# Extensão Etapa 54 — read_local
+if ! grep -q 'IA_LIVRE_TOOL=read_local' "$COMBINED"; then
+  echo "GATE_FAIL: marcador ausente: IA_LIVRE_TOOL=read_local"
+  fail=1
+fi
+if ! grep -q 'IA_LIVRE_READ_LOCAL_OK' "$COMBINED"; then
+  echo "GATE_FAIL: marcador ausente: IA_LIVRE_READ_LOCAL_OK"
+  fail=1
+fi
+
 if [[ ! -f "$MEMORY_FILE" ]] || ! grep -q 'prova-autonomia-ia-livre' "$MEMORY_FILE"; then
   echo "GATE_FAIL: memória de prova ausente ou sem nota canônica"
   fail=1
@@ -160,6 +170,11 @@ if ! grep -q 'IA_LIVRE_TOOL=calc' "$REPL_LOG"; then
   cat "$REPL_LOG" || true
   exit 1
 fi
+if ! grep -q 'IA_LIVRE_READ_LOCAL_OK' "$REPL_LOG"; then
+  echo "GATE_FAIL: REPL sem READ_LOCAL_OK"
+  cat "$REPL_LOG" || true
+  exit 1
+fi
 
-echo "GATE_OK: autonomia v1+calc+REPL — prova + REPL_OK"
+echo "GATE_OK: autonomia v1+calc+REPL+read_local — prova + REPL_OK"
 exit 0

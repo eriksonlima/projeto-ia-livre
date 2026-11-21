@@ -2,13 +2,13 @@
 
 ## Funciona
 
-- Etapas 1–53
-- REPL sandboxed; bridge Rede/autonomia; TASK/mDNS; metal-infer SFS; Linha B TOKENS subset
+- Etapas 1–54
+- read_local/REPL; bridges Rede/autonomia; TASK/mDNS; metal-infer; Linha B TOKENS subset
 
 ## Residual
 
-- `read_local` (B48); TCP nativo guest; GGUF full SFS; METAL_OK com log PC; B52 checklist meta
+- GPU real nativo (B49); GGUF full SFS; METAL_OK com log PC; B52 checklist meta
 
 ## Roadmap
 
-- Sem `em_andamento` após E53; próxima: B48
+- Sem `em_andamento` após E54; próxima: B49

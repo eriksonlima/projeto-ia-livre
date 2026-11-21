@@ -6,6 +6,7 @@
 //! Ver docs/desenho-autonomia-v1.md e docs/autonomia-alem-v1.md.
 
 mod calc;
+mod read_local;
 mod repl;
 
 use std::env;
@@ -269,11 +270,20 @@ allowlist:
   note   — args: text; append kind=note ao JSONL
   recall — args: n opcional; lista entradas recentes do JSONL
   help   — lista ferramentas e contratos curtos
-  calc   — args: expr; aritmética pura sandboxed (0-9 . + - * / ( ))
-proibido: shell, HTTP, write fora do path de memória
+  calc       — args: expr; aritmética pura sandboxed (0-9 . + - * / ( ))
+  read_local — args: path; leitura só sob agent/fixtures|build/agent-memory
+proibido: shell, HTTP, write arbitrário
 ";
     append_memory_line(memory, "tool", "help")?;
     Ok(HELP)
+}
+
+/// Ferramenta `read_local`: lê arquivo allowlisted; registra kind `tool`.
+pub(crate) fn tool_read_local(memory: &Path, path: &Path) -> Result<String, String> {
+    let text = read_local::read_local(path)?;
+    let summary = format!("read_local: {}", path.display());
+    append_memory_line(memory, "tool", &summary)?;
+    Ok(text)
 }
 
 /// Ferramenta `calc`: avalia expressão aritmética sandboxed; registra kind `tool`.
@@ -420,6 +430,23 @@ fn run(config: &Config) -> Result<(), String> {
         return Err("calc sandbox falhou: aceitou ';'".into());
     }
     println!("IA_LIVRE_TOOL_SANDBOX_OK");
+
+    // Etapa 54 — read_local allowlisted
+    let rl = tool_read_local(&config.memory, Path::new(read_local::PROOF_PATH))?;
+    if !rl.trim().contains(read_local::PROOF_TEXT) {
+        return Err(format!(
+            "read_local prova: conteúdo sem `{}`",
+            read_local::PROOF_TEXT
+        ));
+    }
+    tools_used += 1;
+    println!("IA_LIVRE_TOOL=read_local");
+    println!("read_local: {}", rl.trim());
+    // Rejeição honesta fora da allowlist
+    if tool_read_local(&config.memory, Path::new("/etc/passwd")).is_ok() {
+        return Err("read_local sandbox falhou: aceitou /etc/passwd".into());
+    }
+    println!("IA_LIVRE_READ_LOCAL_OK");
 
     println!("IA_LIVRE_TOOLS_USED={tools_used}");
     if tools_used < 2 {

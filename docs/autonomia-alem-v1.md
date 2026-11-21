@@ -49,7 +49,7 @@ Consumo de evidência do runtime nativo (serial BlockIO / path metal) fica em br
 | Item | Nota |
 |------|------|
 | REPL | **Etapa 53** — [`autonomia-repl.md`](autonomia-repl.md) (`--repl` / `--repl-script`) |
-| `read_local` | FS allowlisted — etapa futura |
+| `read_local` | **Etapa 54** — [`autonomia-read-local.md`](autonomia-read-local.md) |
 | Tools via SLM | Parsing espontâneo — não critério deste gate |
 
 ## Como rodar

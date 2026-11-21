@@ -4,7 +4,9 @@ use std::fs::File;
 use std::io::{BufRead, BufReader, Write};
 use std::path::Path;
 
-use crate::{tool_calc, tool_help, tool_note, tool_recall};
+use std::path::Path as StdPath;
+
+use crate::{tool_calc, tool_help, tool_note, tool_read_local, tool_recall};
 
 pub fn run_repl_scripted(memory: &Path, script: &Path) -> Result<(), String> {
     println!("IA_LIVRE_REPL_MODE=scripted");
@@ -113,8 +115,19 @@ fn dispatch_line(memory: &Path, raw: &str) -> Result<LineResult, String> {
             println!("calc: {expr} = {v}");
             Ok(LineResult::Continue { used_tool: true })
         }
+        "read_local" => {
+            let path = parts.collect::<Vec<_>>().join(" ");
+            if path.is_empty() {
+                return Err("read_local: exige path".into());
+            }
+            let text = tool_read_local(memory, StdPath::new(&path))?;
+            println!("IA_LIVRE_TOOL=read_local");
+            println!("read_local: {}", text.trim());
+            println!("IA_LIVRE_READ_LOCAL_OK");
+            Ok(LineResult::Continue { used_tool: true })
+        }
         other => Err(format!(
-            "REPL: comando fora da allowlist: {other} (permitidos: note recall help calc quit)"
+            "REPL: comando fora da allowlist: {other} (permitidos: note recall help calc read_local quit)"
         )),
     }
 }

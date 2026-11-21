@@ -1,3 +1,4 @@
 help
 calc 1+2*3
+read_local agent/fixtures/read-local-smoke.txt
 quit
