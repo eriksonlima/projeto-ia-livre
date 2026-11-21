@@ -386,9 +386,9 @@ Com VFIO bound: `GPU_REAL_SRC=pci_passthrough` + `GPU_REAL_OK`.
 Sem VFIO / CI: `NEED_GPU=need_vfio|need_gpu` exit **0** — **sem** `REAL_OK`. Force: `VERIFY_GPU_GUEST_SKIP=1`.  
 `verify-gpu-native-real` (E55) permanece independente.
 
-### Gate do nó Rede IA Livre (Etapas 6 / 23 / 39 / 50 — adicional)
+### Gate do nó Rede IA Livre (Etapas 6 / 23 / 39 / 50 / 67 — adicional)
 
-Só Rust no host. **Não** usa QEMU, GGUF nem o runtime de inferência. Participar da Rede **não exige** o SO IA Livre. Gate: regressão `--peer` + estágio `--bootstrap` (`DISC_OK`) + mDNS opt-in (Etapa 50).
+Só Rust no host. **Não** usa QEMU, GGUF nem o runtime de inferência. Participar da Rede **não exige** o SO IA Livre. Gate: regressão `--peer` + estágio `--bootstrap` (`DISC_OK`) + mDNS opt-in (Etapa 50) + relay intro opt-in (Etapa 67).
 
 ```bash
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
@@ -409,7 +409,9 @@ grep -q '_ia-livre._tcp' node/src/mdns.rs
 ```
 
 `make verify-node` roda estágio peer **e** bootstrap (B sem `--peer`); exige v1 + `TASK_OK` + `IA_LIVRE_DISC_OK` no bootstrap. Timeout por estágio: `VERIFY_NODE_TIMEOUT` (default 45s).  
-mDNS: `VERIFY_NODE_MDNS_SKIP=1` (default) → `IA_LIVRE_DISC_MDNS_SKIP=…`. Prova: `VERIFY_NODE_MDNS_SKIP=0 make verify-node` (exige `DISC_MODE=mdns` + `DISC_OK`); se multicast falhar sem `VERIFY_NODE_MDNS_FORCE=1`, skip honesto. Gates do kernel/runtime permanecem.
+mDNS: `VERIFY_NODE_MDNS_SKIP=1` (default) → `IA_LIVRE_DISC_MDNS_SKIP=…`. Prova: `VERIFY_NODE_MDNS_SKIP=0 make verify-node` (exige `DISC_MODE=mdns` + `DISC_OK`); se multicast falhar sem `VERIFY_NODE_MDNS_FORCE=1`, skip honesto.
+
+**Relay intro (Etapa 67):** `make verify-node-relay` — R `--relay-listen`, A `--relay-reg`, B `--relay` → `DISC_MODE=relay` + `DISC_OK` + `RELAY_OK`. DHT adiado. Loopback ≠ WAN pública. Contrato: [`docs/rede-descoberta-wan.md`](docs/rede-descoberta-wan.md).
 
 ### Gate do ambiente de autonomia (Etapas 7 / 24 / 40 — adicional)
 

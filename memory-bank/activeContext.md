@@ -2,14 +2,13 @@
 
 ## Foco atual
 
-- Etapas 1–66 **feitas**
-- E66: ADR 0024 — TCP guest inviável; `NET_GUEST_BLOCK` + bridge
-- Topo Abertas: **B62** (descoberta WAN)
+- Etapas 1–67 **feitas**
+- E67: relay intro (`DISC_MODE=relay` / `RELAY_OK`)
+- Topo Abertas: **B63** (KNOW) ou B67 docs; B55 adiada
 
 ## Próximo passo
 
-- “continuar” → promover B62
-- B55 permanece adiada
+- “continuar” → B63
 
 ## Notas
 

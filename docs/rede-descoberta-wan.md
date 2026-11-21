@@ -14,13 +14,15 @@ ADR: [`0004`](adr/0004-stack-protocolo-rede-ia-livre.md) (addendum: bootstrap = 
 | `peer` | `--peer host:port` | `IA_LIVRE_DISC_MODE=peer` |
 | `bootstrap` | `--bootstrap` / `--bootstrap-file` | `IA_LIVRE_DISC_MODE=bootstrap` + `IA_LIVRE_DISC_OK` |
 | `mdns` | `--disc-mdns` (opt-in) | `IA_LIVRE_DISC_MODE=mdns` + `IA_LIVRE_DISC_OK` |
+| `relay` | `--relay` + intro (Etapa 67) | `IA_LIVRE_DISC_MODE=relay` + `DISC_OK` + `RELAY_OK` |
 
 ### Precedência de dial
 
-1. Se `--peer` estiver presente → dial **somente** peer (`DISC_MODE=peer`); bootstrap e resolução mDNS **não** disparam dial.
+1. Se `--peer` estiver presente → dial **somente** peer (`DISC_MODE=peer`); bootstrap/relay/mDNS **não** disparam dial.
 2. Senão, se houver endpoints bootstrap → dial sequencial (`DISC_MODE=bootstrap`).
-3. Senão, se `--disc-mdns` → browse/resolve `_ia-livre._tcp` e dial (`DISC_MODE=mdns`).
-4. Senão → só LAN (HELLO) + accept TCP.
+3. Senão, se `--relay` → ASK intro + dial hint (`DISC_MODE=relay`).
+4. Senão, se `--disc-mdns` → browse/resolve `_ia-livre._tcp` e dial (`DISC_MODE=mdns`).
+5. Senão → só LAN (HELLO) + accept TCP.
 
 Se `--disc-mdns` **coexiste** com bootstrap: bootstrap **vence o dial**; mDNS **ainda anuncia** o serviço local (útil para outros peers descobrirem este nó).
 
@@ -32,6 +34,9 @@ Bootstrap e mDNS fornecem **endereço**, não identidade: autenticação continu
 --bootstrap <host:port>     # repetível; também aceita lista separada por vírgula
 --bootstrap-file <path>     # uma linha = host:port; # comentários; linhas vazias ignoradas
 --disc-mdns                 # anuncia + resolve _ia-livre._tcp (Etapa 50)
+--relay-listen              # processo só intro relay (Etapa 67)
+--relay-reg <host:port>     # registra 127.0.0.1:<tcp-port> no relay
+--relay <host:port>         # ASK hint + dial (DISC_MODE=relay)
 ```
 
 Arquivo exemplo (gitignored via `build/`): `build/node-bootstrap.txt`.
@@ -56,8 +61,9 @@ Comportamento com `--disc-mdns`:
 ## Marcadores
 
 ```
-IA_LIVRE_DISC_MODE=bootstrap|peer|mdns
-IA_LIVRE_DISC_OK            # dial bootstrap ou mdns concluiu sessão autenticável
+IA_LIVRE_DISC_MODE=bootstrap|peer|mdns|relay
+IA_LIVRE_DISC_OK            # dial bootstrap/mdns/relay concluiu sessão autenticável
+IA_LIVRE_RELAY_OK           # dial via RELAY_HINT (Etapa 67)
 IA_LIVRE_DISC_MDNS_SKIP=…   # só no gate: estágio mDNS pulado (motivo)
 ```
 
@@ -79,15 +85,24 @@ Timeout: `VERIFY_NODE_TIMEOUT` (default 45s por estágio).
 | `VERIFY_NODE_MDNS_SKIP=0` | — | Exige prova mDNS (`DISC_MODE=mdns` + `DISC_OK`) |
 | `VERIFY_NODE_MDNS_FORCE=1` | off | Com skip=0: se multicast falhar de forma detectável, **falha** o gate (não skip) |
 
+## Relay intro (Etapa 67)
+
+| Peça | Nota |
+|------|------|
+| Modelo | Introdução de endereço (`RELAY_REG` / `RELAY_ASK` / `RELAY_HINT v1`) — **não** forward de sessão |
+| Gate | `make verify-node-relay` |
+| DHT | **Adiado** (stub); Pronto quando fechado pelo relay |
+| NAT real | STUN/TURN / hole-punch — **fora**; loopback ≠ internet pública |
+
 ## Futuro (só desenho)
 
 | Peça | Nota |
 |------|------|
-| Relay | Hint futuro `RELAY_HINT v1 <host:port>` — **sem** código nesta etapa |
-| DHT | Fora; ADR 0004 / libp2p rejeitados para o mínimo |
+| DHT | Kademlia / tabela — fora do mínimo; ADR 0004 |
 | NAT | STUN/TURN / hole-punch — fora |
+| Session relay | Forward de bytes (≠ intro) — fora |
 
-Loopback **simula** WAN com endpoints estáticos (bootstrap) e LAN local (mDNS); não prova internet pública.
+Loopback **simula** WAN com endpoints estáticos (bootstrap/relay) e LAN local (mDNS); não prova internet pública.
 
 ## Como rodar
 
@@ -109,4 +124,10 @@ cargo run -p ia-livre-node -- --tcp-port 7401 --node-id bob --disc-mdns
 make verify-node
 # Prova mDNS (multicast ok):
 # VERIFY_NODE_MDNS_SKIP=0 make verify-node
+
+# Relay intro (Etapa 67):
+# Terminal R: cargo run -p ia-livre-node -- --relay-listen --tcp-port 7399
+# Terminal A: … --tcp-port 7400 --relay-reg 127.0.0.1:7399
+# Terminal B: … --tcp-port 7401 --relay 127.0.0.1:7399
+make verify-node-relay
 ```

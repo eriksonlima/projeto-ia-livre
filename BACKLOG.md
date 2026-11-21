@@ -10,15 +10,9 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Meta do protótipo (objetivo do projeto):** um ecossistema verificável em que (1) a **hipótese A vs B** possa ser comprovada ou refutada com geração real na Linha B (`TOKENS_PER_S`), (2) o **SO IA Livre** boote de USB/ESP em hardware real com caminho de IA nativo mínimo honesto, (3) a **Rede** e a **autonomia** continuem utilizáveis **sem** exigir o SO. Ordem abaixo = prioridade sugerida (topo primeiro).
 >
-> **Análise pós-E66 (2026-11-21):** E66 ADR 0024 TCP guest inviável. Topo: **B62** (WAN) ou B67 docs; B55 adiada.
+> **Análise pós-E67 (2026-11-21):** E67 relay intro. Topo: **B63** (KNOW) ou B67 docs; B55 adiada.
 
 
-
-### B62 — Descoberta WAN (NAT/DHT/relay)
-- Issue: [#67](https://github.com/eriksonlima/projeto-ia-livre/issues/67)
-- Origem: ADR 0004 — bootstrap/mDNS não cobrem WAN
-- Pronto quando: DHT **ou** relay verificável + gate/skip; sem libp2p monólito sem ADR
-- Deps: E39/E50
 
 ### B63 — Mensagem KNOW na Rede
 - Issue: [#68](https://github.com/eriksonlima/projeto-ia-livre/issues/68)
@@ -58,6 +52,14 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Nota: não promover enquanto BLOQUEIO_FINAL / canônico inviável sem reabertura
 
 ## Promovidas / arquivadas
+
+### B62 — Descoberta WAN (NAT/DHT/relay)
+- Issue: [#67](https://github.com/eriksonlima/projeto-ia-livre/issues/67)
+- Origem: ADR 0004 — bootstrap/mDNS não cobrem WAN
+- Pronto quando: DHT **ou** relay verificável + gate/skip; sem libp2p monólito sem ADR
+- Deps: E39/E50
+- Promovido para Etapa 67; desfecho relay intro + `verify-node-relay`.
+- Etapa: [Etapa 67 — Descoberta WAN](ROADMAP.md)
 
 ### B61 — Stack TCP Rede nativa no guest
 - Issue: [#66](https://github.com/eriksonlima/projeto-ia-livre/issues/66)

@@ -504,3 +504,11 @@ Spec: specs/tcp-rede-guest/
 Pronto quando: sessão Rede no caminho B + marcadores; `verify-node` host intacto (ADR 0001).  
 **Desfecho:** ADR [`0024`](docs/adr/0024-tcp-rede-guest-inviavel.md) — TCP guest inviável (UART-only); `NET_GUEST_BLOCK=no_tcp_post_exit` + bridge E52; `make verify-rede-guest`; sem `NET_NATIVE_OK` fingido.  
 
+## Etapa 67 — Descoberta WAN (NAT/DHT/relay)
+
+Status: feita  
+Issue: [#67](https://github.com/eriksonlima/projeto-ia-livre/issues/67)  
+Spec: specs/descoberta-wan-dht-relay/  
+Pronto quando: DHT **ou** relay verificável + gate/skip; sem libp2p monólito sem ADR.  
+**Desfecho:** relay intro TCP (`RELAY_HINT`) + `DISC_MODE=relay` / `RELAY_OK`; `make verify-node-relay`; DHT adiado; loopback ≠ WAN pública; `verify-node` intacto.  
+

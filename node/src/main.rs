@@ -6,6 +6,7 @@ mod discovery;
 mod identity;
 mod mdns;
 mod proto;
+mod relay;
 mod session;
 
 use std::env;
@@ -29,10 +30,12 @@ use session::run_session;
 const USAGE: &str = "\
 Uso: ia-livre-node [--node-id <apelido>] [--tcp-port <porta>] [--udp-port <porta>]
                    [--peer <host:port>] [--bootstrap <host:port>]…
-                   [--bootstrap-file <path>] [--disc-mdns] [--key-file <path>]
+                   [--bootstrap-file <path>] [--disc-mdns]
+                   [--relay-listen] [--relay <host:port>] [--relay-reg <host:port>]
+                   [--key-file <path>]
 
-Nó Rede IA Livre v1 + descoberta (bootstrap / mDNS).
---peer > bootstrap > mdns para dial. Ver docs/rede-descoberta-wan.md.
+Nó Rede IA Livre v1 + descoberta (bootstrap / mDNS / relay intro).
+--peer > bootstrap > relay > mdns para dial. Ver docs/rede-descoberta-wan.md.
 ";
 
 struct Config {
@@ -42,6 +45,9 @@ struct Config {
     peer: Option<String>,
     bootstrap: Vec<String>,
     disc_mdns: bool,
+    relay_listen: bool,
+    relay: Option<String>,
+    relay_reg: Option<String>,
     key_file: PathBuf,
 }
 
@@ -54,6 +60,9 @@ fn parse_args() -> Result<Config, i32> {
     let mut bootstrap_cli: Vec<String> = Vec::new();
     let mut bootstrap_file: Option<PathBuf> = None;
     let mut disc_mdns = false;
+    let mut relay_listen = false;
+    let mut relay: Option<String> = None;
+    let mut relay_reg: Option<String> = None;
     let mut key_file: Option<PathBuf> = None;
 
     let mut i = 0;
@@ -126,6 +135,25 @@ fn parse_args() -> Result<Config, i32> {
             "--disc-mdns" => {
                 disc_mdns = true;
             }
+            "--relay-listen" => {
+                relay_listen = true;
+            }
+            "--relay" => {
+                i += 1;
+                let Some(v) = args.get(i) else {
+                    eprintln!("erro: --relay exige host:port");
+                    return Err(2);
+                };
+                relay = Some(v.clone());
+            }
+            "--relay-reg" => {
+                i += 1;
+                let Some(v) = args.get(i) else {
+                    eprintln!("erro: --relay-reg exige host:port");
+                    return Err(2);
+                };
+                relay_reg = Some(v.clone());
+            }
             "--key-file" => {
                 i += 1;
                 let Some(v) = args.get(i) else {
@@ -159,6 +187,9 @@ fn parse_args() -> Result<Config, i32> {
         peer,
         bootstrap,
         disc_mdns,
+        relay_listen,
+        relay,
+        relay_reg,
         key_file,
     })
 }
@@ -350,7 +381,46 @@ async fn dial_bootstrap(
     eprintln!("erro: bootstrap esgotado sem sessão");
 }
 
+async fn dial_relay(
+    relay: String,
+    sk: SigningKey,
+    peer_id: String,
+    pubkey: String,
+    peer_ok: Arc<AtomicBool>,
+    dialing: Arc<AtomicBool>,
+) {
+    tokio::time::sleep(Duration::from_millis(400)).await;
+    println!("IA_LIVRE_DISC_MODE=relay");
+    let hint = match relay::ask_relay_hint(&relay).await {
+        Ok(Some(h)) => h,
+        Ok(None) => {
+            eprintln!("erro: relay sem peers registrados");
+            return;
+        }
+        Err(e) => {
+            eprintln!("erro: {e}");
+            return;
+        }
+    };
+    println!("IA_LIVRE_RELAY_HINT={hint}");
+    let addr: SocketAddr = match hint.parse() {
+        Ok(a) => a,
+        Err(_) => {
+            eprintln!("erro: RELAY_HINT inválido: {hint}");
+            return;
+        }
+    };
+    if try_dial_addr(addr, sk, peer_id, pubkey, peer_ok, dialing).await {
+        println!("IA_LIVRE_DISC_OK");
+        println!("IA_LIVRE_RELAY_OK");
+    }
+}
+
 async fn run(cfg: Config) -> Result<(), String> {
+    if cfg.relay_listen {
+        return relay::run_relay_listen(cfg.tcp_port).await;
+    }
+
     let sk = load_or_generate_key(&cfg.key_file)?;
     let peer_id = peer_id_from_signing(&sk);
     let pubkey = pubkey_hex(&sk);
@@ -405,8 +475,16 @@ async fn run(cfg: Config) -> Result<(), String> {
         dialing.clone(),
     ));
 
-    // mDNS: anuncia sempre com --disc-mdns; dial só se não houver peer/bootstrap.
-    let mdns_should_dial = cfg.disc_mdns && cfg.peer.is_none() && cfg.bootstrap.is_empty();
+    if let Some(reg) = &cfg.relay_reg {
+        let advertised = format!("127.0.0.1:{}", cfg.tcp_port);
+        relay::register_with_relay(reg, &advertised).await?;
+    }
+
+    // mDNS: anuncia sempre com --disc-mdns; dial só se não houver peer/bootstrap/relay.
+    let mdns_should_dial = cfg.disc_mdns
+        && cfg.peer.is_none()
+        && cfg.bootstrap.is_empty()
+        && cfg.relay.is_none();
     if cfg.disc_mdns {
         tokio::spawn(mdns::run_mdns(
             cfg.alias.clone(),
@@ -420,7 +498,7 @@ async fn run(cfg: Config) -> Result<(), String> {
         ));
     }
 
-    // Precedência dial: --peer > bootstrap > mdns > LAN-only.
+    // Precedência dial: --peer > bootstrap > relay > mdns > LAN-only.
     if let Some(peer) = cfg.peer {
         println!("peer={peer}");
         tokio::spawn(dial_peer(
@@ -435,6 +513,16 @@ async fn run(cfg: Config) -> Result<(), String> {
         println!("bootstrap={}", cfg.bootstrap.join(","));
         tokio::spawn(dial_bootstrap(
             cfg.bootstrap,
+            sk,
+            peer_id,
+            pubkey,
+            peer_ok.clone(),
+            dialing,
+        ));
+    } else if let Some(r) = cfg.relay {
+        println!("relay={r}");
+        tokio::spawn(dial_relay(
+            r,
             sk,
             peer_id,
             pubkey,
