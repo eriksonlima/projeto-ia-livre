@@ -38,7 +38,7 @@ Objetivo do protótipo = **os três** pilares no estado “atingido” (ou bloqu
 | Writer | `make verify-write-usb` → `WRITE_USB_OK` (gravação ≠ metal) |
 | Path IA mínimo | BlockIO (QEMU) e/ou path metal SFS com bloqueio honesto (`verify-metal-infer` / `B_BLOCK_METAL`) — sem `TOKENS` fingidos |
 | Metal real | `METAL_OK` com **report ESP** (padrão E73) ou serial legado em `docs/evidence/boot-metal/` sem QEMU/OVMF — [`baremetal-report.md`](baremetal-report.md) |
-| **Estado atual** | Artefato + guia + writer + path metal **honestos** verdes no CI; canal ESP disponível; **`METAL_OK`** **pendente** até o operador versionar um report de PC real (CI `SKIP=1`) |
+| **Estado atual** | Artefato + guia + writer + path metal verdes; canal ESP (E73); **`METAL_OK`** com report real [`2026-11-21-eriksonlima-Nitro-AN515-51.txt`](evidence/boot-metal/2026-11-21-eriksonlima-Nitro-AN515-51.txt) (`esp_sfs_full` + GOP 1920x1080) |
 | Não conta | Tratar QEMU como metal; inventar `METAL_OK`; vídeo/foto como gate |
 
 ---
@@ -71,7 +71,7 @@ Objetivo do protótipo = **os três** pilares no estado “atingido” (ou bloqu
 | Pilar | Falta |
 |-------|--------|
 | 1 | — (bloqueio **final** ADR 0022; reabertura só com critérios da ADR) |
-| 2 | Versionar `baremetal-report.txt` de PC real → `METAL_OK` (canal ESP; sem UART) — artefato/guia já ok |
+| 2 | — (`METAL_OK` via report ESP E73; evidência versionada) |
 | 3 | — (critério host satisfeito) |
 
 ---

@@ -30,7 +30,7 @@ Comparar Linha A (Linux + runtime) vs Linha B (IA Livre + runtime nativo), mesma
 - Bootstrap: x86-64 + UEFI + QEMU; CPU antes de GPU.
 - **Kernel:** boot → ExitBoot → MEM_SCHED (E19) → obs GOP (E37) → GPU nativo sintético (E38) — `make verify`.
 - **Linha B:** BlockIO + Prefill/Decode subset + `TOKENS_PER_S` medidos (E44); espécie ≠ canônica → comparable **INCONCLUSIVO** até reabertura.
-- **Path metal:** SFS/ESP (`esp_sfs_full` E63); legado `B_BLOCK_METAL` (E48); evidência padrão = report ESP (E73 / ADR 0025); `METAL_OK` pendente de report versionado de PC.
+- **Path metal:** SFS/ESP (`esp_sfs_full` E63); legado `B_BLOCK_METAL` (E48); evidência padrão = report ESP (E73 / ADR 0025); **`METAL_OK`** com report de PC real (2026-11-21).
 - **Harness:** A/B + A_otimizada + `sym_cpu` (E64); simetria GPU A/B inviável até VFIO (ADR [`0023`](adr/0023-simetria-gpu-harness-inviavel.md)).
 - **GPU:** host E8; stub E25; nativo E38; shard E41; `host_multi` E69 (skip se &lt;2 GPUs); guest passthrough E65 (skip `need_vfio`).
 - **Rede:** v1 + bootstrap E39 + mDNS E50 + TASK E51 + bridge UEFI E52 + relay intro E67 + KNOW E68; TCP guest inviável (ADR [`0024`](adr/0024-tcp-rede-guest-inviavel.md)).

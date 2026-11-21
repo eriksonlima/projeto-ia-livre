@@ -1,8 +1,8 @@
 # IA_LIVRE_BAREMETAL_STATUS
 # DATE_UTC=2026-11-21
-# PATH=B
-# REASON=no_operator_esp_report_versioned_yet
+# PATH=A
+# REASON=metal_ok_via_esp_report
 # ISSUE=74
-# NOTE=Etapa 73: canal ESP disponível (baremetal-report.txt). CI default SKIP=1 até o operador versionar um report de PC real em docs/evidence/boot-metal/. UART não é obrigatório. Não fabricar evidência a partir de QEMU/vídeo.
-# PRIOR=E62/#62 E46/#46
-IA_LIVRE_BAREMETAL_SKIP=1
+# EVIDENCE=2026-11-21-eriksonlima-Nitro-AN515-51.txt
+# NOTE=Etapa 73: report ESP de PC real (Nitro-AN515-51). METAL_OK via SKIP=0. UART não usado. Prior: E62 skip.
+IA_LIVRE_BAREMETAL_METAL_OK=1
