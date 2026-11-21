@@ -1,5 +1,5 @@
 # Projeto IA Livre — bootstrap do kernel (UEFI + QEMU)
-.PHONY: build esp run verify verify-runtime verify-runtime-gpu verify-runtime-contract verify-gpu-manager verify-node verify-agent verify-harness verify-harness-comparable clean help
+.PHONY: build esp baremetal-esp run verify verify-runtime verify-runtime-gpu verify-runtime-contract verify-gpu-manager verify-node verify-agent verify-harness verify-harness-comparable verify-baremetal clean help
 
 export PATH := $(HOME)/.cargo/bin:$(PATH)
 # Evita CARGO_TARGET_DIR herdado (ex.: cache de sandbox) fora do repo
@@ -33,7 +33,7 @@ MODEL_GGUF ?= models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf
 GGUF_QEMU_IMG ?= build/gguf-canon.gguf
 
 help:
-	@echo "Alvos: build | esp | run | verify | verify-runtime | verify-runtime-gpu | verify-runtime-contract | verify-gpu-manager | verify-node | verify-agent | verify-harness | verify-harness-comparable | clean"
+	@echo "Alvos: build | esp | baremetal-esp | run | verify | verify-baremetal | verify-runtime | … | clean"
 	@echo "Pré-requisitos: ver AGENTS.md → Como rodar"
 
 build:
@@ -113,6 +113,12 @@ verify-harness:
 
 verify-harness-comparable:
 	./scripts/verify-harness-comparable.sh
+
+baremetal-esp: build
+	./scripts/make-baremetal-esp.sh
+
+verify-baremetal:
+	./scripts/verify-baremetal.sh
 
 clean:
 	cargo clean

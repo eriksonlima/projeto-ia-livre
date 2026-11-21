@@ -207,3 +207,11 @@ Issue: [#29](https://github.com/eriksonlima/projeto-ia-livre/issues/29)
 Spec: specs/motor-inferencia-linha-b/  
 Pronto quando: geração mínima na Linha B (QEMU/IA Livre) com a carga canônica emitindo `TOKENS_PER_S` / `LOAD_S` **medidos** comparáveis em espécie aos de A; harness B + comparable atualizados sem inventar números; ADR 0001 respeitado (runtime nativo fora do kernel); ou bloqueio honesto novo documentado; depende do loader E26/E27.  
 **Desfecho:** crate `runtime-native` + layout GGUF verificável; `B_BLOCK=no_gguf_forward` (sem forward/TOKENS); hipótese INCONCLUSIVO.
+
+## Etapa 30 — Boot/imagem IA Livre em hardware real (USB/ESP)
+
+Status: feita  
+Issue: [#30](https://github.com/eriksonlima/projeto-ia-livre/issues/30)  
+Spec: specs/boot-hardware-real/  
+Pronto quando: caminho documentado e verificável para boot do kernel em hardware UEFI real (imagem USB/ESP ou equivalente) **ou** bloqueio honesto documentado; separado da hipótese A vs B / sem fingir `TOKENS_PER_S`; não exige motor de inferência em B.  
+**Desfecho:** artefato ESP+tar + `verify-baremetal` (`IMAGE_OK`); hardware = checklist + `BAREMETAL_SKIP`; QEMU ≠ metal.

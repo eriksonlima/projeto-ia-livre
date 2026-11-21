@@ -28,6 +28,7 @@ Veja `AGENTS.md` → **Como verificar**.
 - Produto: `docs/product-context.md`
 - Arquitetura: `docs/architecture.md`
 - Harness A vs B (metodologia): `docs/harness-linha-a-b.md` — comparável: `docs/harness-a-b-comparavel.md` — corrida quieta: `docs/harness-corrida-quieta.md` (veja `AGENTS.md` → gates)
+- Boot/imagem hardware real (ESP/USB): `docs/boot-hardware-real.md` — gate `make verify-baremetal` (artefato; ≠ QEMU)
 - ADRs: `docs/adr/`
 - Contrato nativo (consumidor / Etapa 20): `docs/runtime-contrato-nativo.md` — veja também `AGENTS.md` → gate `verify-runtime-contract`
 - Contexto ativo (Memory Bank): `memory-bank/activeContext.md`

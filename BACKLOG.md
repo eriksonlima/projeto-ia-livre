@@ -8,14 +8,15 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-### B24 — Boot/imagem IA Livre em hardware real (USB/ESP)
-
-- Issue: [#30](https://github.com/eriksonlima/projeto-ia-livre/issues/30)
-- Origem: plano «Estado do projeto» — Trilha 2 (SO no PC); **abaixo** do motor B
-- Notas: separado da hipótese A vs B; não substitui `TOKENS_PER_S` em B
-- Pronto quando (candidato): boot documentado/verificável em hardware UEFI real (ou bloqueio honesto)
+_(vazio — próxima etapa vem de pedido explícito ou novo item)_
 
 ## Promovidas / arquivadas
+
+### B24 — Boot/imagem IA Livre em hardware real (USB/ESP)
+
+- Promovido para Etapa 30 do roadmap (promoção autônoma — “vamos seguir”).
+- Issue: [#30](https://github.com/eriksonlima/projeto-ia-livre/issues/30)
+- Etapa: [Etapa 30 — Boot/imagem IA Livre em hardware real](ROADMAP.md)
 
 ### B23 — Motor de inferência GGUF mínimo na Linha B
 

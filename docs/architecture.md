@@ -42,6 +42,7 @@ As camadas formam um ecossistema, não quatro produtos desconectados. A ordem de
 - Kernel pequeno; inteligência pesada (modelos, agentes) **fora** do kernel — ver ADR 0001.
 - Protocolo P2P **independente** do kernel/SO — desenvolvível em paralelo no host — ver ADR 0001.
 - Bootstrap inicial: **x86-64 + UEFI + QEMU**; **CPU antes de GPU**.
+- **Etapa 30:** imagem ESP/USB empacotável + gate de artefato (`verify-baremetal`) — ADR [`0011`](adr/0011-boot-imagem-esp-baremetal.md) / [`boot-hardware-real.md`](boot-hardware-real.md); **QEMU ≠ bare-metal**; hardware real = checklist manual + skip honesto.
 - Aceleração multi-GPU / GPU manager **nativo**: alvo **posterior** à base CPU e ao protótipo host (ADR 0002); desenho Etapa 16 (ADR 0006); **stub host** verificável (Etapa 25) — [`gpu-manager-prototipo-host.md`](gpu-manager-prototipo-host.md) — **≠** manager nativo.
 - Nenhuma decisão só por curiosidade técnica (manifesto).
 - **Etapa 10:** primeiro mecanismo de memória no kernel UEFI — mapa + `AllocatePages`/bump sob Boot Services (sem inferência). Contrato: [`kernel-alem-do-boot.md`](kernel-alem-do-boot.md).

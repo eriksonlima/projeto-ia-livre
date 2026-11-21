@@ -413,6 +413,19 @@ grep -q 'VERDICT_REASON' scripts/run-harness-a-b-comparable.sh
 
 `make verify-harness-comparable` exige `VERDICT=` ∈ {COMPROVA, REFUTA, INCONCLUSIVO} + `VERDICT_REASON=`; falha se `COMPROVA`/`REFUTA` com B proxy ou se o runner exit ≠ 0 (fraude/timeout). Timeout: `VERIFY_HARNESS_COMPARABLE_TIMEOUT` (default 300s). `make verify-harness` (v1) permanece.
 
+### Gate da imagem ESP/USB (Etapa 30 — adicional)
+
+Valida o **artefato** bare-metal (`build/baremetal-esp/` + tar). **Não** é boot em PC físico e **não** substitui `make verify` (QEMU). Contrato: [`docs/boot-hardware-real.md`](docs/boot-hardware-real.md) / ADR [`0011`](docs/adr/0011-boot-imagem-esp-baremetal.md).
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+make baremetal-esp
+make verify-baremetal
+grep -q 'IA_LIVRE_BAREMETAL_IMAGE_OK' scripts/verify-baremetal.sh
+```
+
+Esperado: `IA_LIVRE_BAREMETAL_IMAGE_OK` + `EFI_SHA256=` / `EFI_BYTES=`. Default `IA_LIVRE_BAREMETAL_SKIP=1` (hardware não exercitado). Imagem FAT `.img` só se `mtools` estiver instalado.
+
 ## PATH
 
 Sempre inclua o GitHub CLI e o Cargo locais:
@@ -448,7 +461,9 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `docs/ambiente-autonomia-prototipo.md` — loop/memória/ferramenta do protótipo de autonomia (Etapa 7); ponte para v1
 - `docs/desenho-autonomia-v1.md` — escopo autonomia v1 (ADR 0005; **implementado** na Etapa 24 em `agent/`)
 - `docs/adr/0005-autonomia-v1-utilizavel.md` — ADR do escopo v1
-- `Makefile` — `build` / `esp` / `run` / `verify` / `verify-runtime` / `verify-runtime-gpu` / `verify-runtime-contract` / `verify-gpu-manager` / `verify-node` / `verify-agent` / `verify-harness` / `verify-harness-comparable` / `clean`
+- `docs/boot-hardware-real.md` — ESP/USB + gate de artefato (Etapa 30; QEMU ≠ metal)
+- `Makefile` — `build` / `esp` / `baremetal-esp` / `run` / `verify` / `verify-baremetal` / `verify-runtime` / … / `clean`
+- `scripts/make-baremetal-esp.sh` / `scripts/verify-baremetal.sh` — artefato + gate Etapa 30
 - `scripts/run-qemu.sh` — atalho para `make run`
 - `scripts/verify-boot.sh` — gate serial do kernel (`BOOT_OK` + mem/alloc + `EXIT_BOOT_OK` + `MEM_SCHED_OK` + `NATIVE_BENCH_OK`)
 - `scripts/verify-runtime.sh` — gate do runtime CPU (`IA_LIVRE_INFER_OK` + métricas)
