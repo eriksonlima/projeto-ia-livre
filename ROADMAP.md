@@ -311,3 +311,10 @@ Issue: [#41](https://github.com/eriksonlima/projeto-ia-livre/issues/41)
 Spec: specs/sync-architecture-glossario/  
 Pronto quando: `architecture.md` / README-AGENTS refletem estado atual sem ambiguidade.  
 **Desfecho:** glossário + architecture/product/README alinhados a E30–E41; backlog Abertas vazio.
+
+## Etapa 43 — Prefill completo 22L + KV cache viável na Linha B
+
+Status: em_andamento  
+Issue: [#43](https://github.com/eriksonlima/projeto-ia-livre/issues/43)  
+Spec: (a definir — `especificador`)  
+Pronto quando: prefill das 22 camadas TinyLlama (ou subset documentado equivalente) + KV alocado/viável no QEMU Linha B, com marcadores serial; **sem** fingir `TOKENS_PER_S` ainda.

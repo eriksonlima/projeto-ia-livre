@@ -10,13 +10,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Meta do protótipo (objetivo do projeto):** um ecossistema verificável em que (1) a **hipótese A vs B** possa ser comprovada ou refutada com geração real na Linha B (`TOKENS_PER_S`), (2) o **SO IA Livre** boote de USB/ESP em hardware real com caminho de IA nativo mínimo honesto, (3) a **Rede** e a **autonomia** continuem utilizáveis **sem** exigir o SO. Ordem abaixo = prioridade sugerida (topo primeiro).
 
-### B37 — Prefill completo 22L + KV cache viável na Linha B
-- Issue: [#43](https://github.com/eriksonlima/projeto-ia-livre/issues/43)
-
-- Origem: pedido de backlog para meta do protótipo; desbloqueia `B_BLOCK=no_gguf_full_prefill`
-- Pronto quando: prefill das 22 camadas TinyLlama (ou subset documentado equivalente) + KV alocado/viável no QEMU Linha B, com marcadores serial; **sem** fingir `TOKENS_PER_S` ainda
-- Deps: E33 (attn/FFN/prefill layer0)
-
 ### B38 — Decode + sampling + `TOKENS_PER_S` canônico na Linha B
 - Issue: [#44](https://github.com/eriksonlima/projeto-ia-livre/issues/44)
 
@@ -123,6 +116,11 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: B39 + B40 + B42 (mínimo sugerido)
 
 ## Promovidas / arquivadas
+
+### B37 — Prefill completo 22L + KV cache viável na Linha B
+
+- Promovido para Etapa 43 do roadmap (promoção autônoma — ordem sensata hipótese A/B).
+- Issue: [#43](https://github.com/eriksonlima/projeto-ia-livre/issues/43)
 
 ### B35 — Sincronizar architecture/product + glossário pós-E30
 
