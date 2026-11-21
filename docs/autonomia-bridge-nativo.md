@@ -39,3 +39,4 @@ make verify-autonomia-bridge
 - Sem shell irrestrito / HTTP.
 - Sem inventar `TOKENS_PER_S` / `METAL_OK`.
 - Bridge ≠ prova comparable `COMPROVA`.
+- ≠ bridge Rede E52 (`NET_BRIDGE_*` — [`rede-bridge-nativo.md`](rede-bridge-nativo.md)).

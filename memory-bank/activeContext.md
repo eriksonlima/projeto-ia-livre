@@ -2,14 +2,14 @@
 
 ## Foco atual
 
-- Etapas 1–51 **feitas**
-- E51: `TASK`/`TASK_ACK` + `TASK_OK` no gate do nó
-- Topo Abertas: **B46** (nó Rede no SO nativo)
+- Etapas 1–52 **feitas**
+- E52: bridge Rede UEFI↔host (`NET_BRIDGE_*`; ADR 0019)
+- Topo Abertas: **B47** (REPL sandboxed)
 
 ## Próximo passo
 
-- Promover B46 → Etapa 52 ou continuar
+- Promover B47 → Etapa 53 ou continuar
 
 ## Notas
 
-- Lease: liberar após push E51
+- Lease: liberar após push E52

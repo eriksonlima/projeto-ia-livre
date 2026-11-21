@@ -105,4 +105,5 @@ Timeout: `VERIFY_NODE_TIMEOUT` (default 45s **por estágio**).
 
 DHT, relay executável, NAT traversal, marketplace, tipo `KNOW`, integração runtime/kernel, libp2p/Iroh, QUIC obrigatório.  
 mDNS = serviço `_ia-livre._tcp` (Etapa 50; opt-in / skip CI); **não** substitui IDENT.  
-`TASK` = pedido/ACK mínimo (Etapa 51); **não** é fila persistente nem matching multi-peer.
+`TASK` = pedido/ACK mínimo (Etapa 51); **não** é fila persistente nem matching multi-peer.  
+Bridge Rede caminho B (Etapa 52): [`rede-bridge-nativo.md`](rede-bridge-nativo.md) — host + evidência UEFI; **≠** TCP no guest; `verify-node` independente.

@@ -510,6 +510,20 @@ grep -q 'IA_LIVRE_BRIDGE_NATIVE_SRC' scripts/run-autonomia-bridge.sh
 
 Esperado: `IA_LIVRE_BRIDGE_MODE=host_native` + `BRIDGE_NATIVE_SRC=metal_block|blockio` + `BRIDGE_OK` (metal via `verify-metal-infer`; blockio via fixture/log). Sem `METAL_OK` / `TOKENS_PER_S` inventados. `verify-agent` permanece independente.
 
+### Gate bridge Rede UEFI↔host (Etapa 52 — adicional)
+
+Bridge **Rede** (≠ autonomia E49): evidência pós-Exit + âncora `ia-livre-node` (`TASK_OK`). **Não** é TCP no guest. **Não** substitui `make verify-node` (ADR 0001). Contrato: [`docs/rede-bridge-nativo.md`](docs/rede-bridge-nativo.md) / ADR [`0019`](docs/adr/0019-rede-bridge-uefi-host.md).
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+test -f scripts/verify-rede-bridge.sh
+test -f docs/rede-bridge-nativo.md
+make verify-rede-bridge
+grep -q 'IA_LIVRE_NET_BRIDGE_OK' scripts/run-rede-bridge.sh
+```
+
+Esperado: `NET_BRIDGE_MODE=host_uefi` + `NATIVE_SRC=serial_exit` + `NET_BRIDGE_OK`. Sem `NET_NATIVE_OK` fingido. `verify-node` permanece independente do SO.
+
 ## PATH
 
 Sempre inclua o GitHub CLI e o Cargo locais:

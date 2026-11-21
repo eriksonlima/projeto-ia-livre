@@ -1,0 +1,6 @@
+# IA_LIVRE_NET_BRIDGE_FIXTURE_V1
+# SRC=serial_exit
+# NOTE=Marcadores mínimos pós-ExitBoot (caminho B); fixture de gate — ≠ TCP nativo
+IA_LIVRE_BOOT_OK
+IA_LIVRE_EXIT_BOOT_OK
+IA_LIVRE_MEM_SCHED_OK
