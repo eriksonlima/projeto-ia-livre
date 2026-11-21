@@ -17,12 +17,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 
 
-### B49 — GPU real no caminho nativo (além de `synthetic`)
-- Issue: [#55](https://github.com/eriksonlima/projeto-ia-livre/issues/55)
-
-- Origem: E38 enum sintética no QEMU
-- Pronto quando: detecção/placement com GPU real (PCI/pass-through ou host path documentado) **ou** skip `need_gpu` honesto; ≠ stub E25; sem fingir multi-GPU
-- Deps: E38
 
 ### B50 — Perfil harness GPU espelhado A/B (quando B gerar)
 - Issue: [#56](https://github.com/eriksonlima/projeto-ia-livre/issues/56)
@@ -46,6 +40,16 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: B39 + B40 + B42 (mínimo sugerido)
 
 ## Promovidas / arquivadas
+
+### B49 — GPU real no caminho nativo (além de `synthetic`)
+- Issue: [#55](https://github.com/eriksonlima/projeto-ia-livre/issues/55)
+
+- Origem: E38 enum sintética no QEMU
+- Pronto quando: detecção/placement com GPU real (PCI/pass-through ou host path documentado) **ou** skip `need_gpu` honesto; ≠ stub E25; sem fingir multi-GPU
+- Deps: E38
+
+- Promovido para Etapa 55 do roadmap (promoção autônoma após E54).
+- Etapa: [Etapa 55 — GPU real nativo](ROADMAP.md)
 
 ### B48 — Tool `read_local` allowlisted
 - Issue: [#54](https://github.com/eriksonlima/projeto-ia-livre/issues/54)

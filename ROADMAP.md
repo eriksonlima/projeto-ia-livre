@@ -408,3 +408,10 @@ Spec: specs/read-local-allowlisted/
 Pronto quando: leitura só sob allowlist de paths; rejeição honesta fora; gate; sem write arbitrário.  
 **Desfecho:** `read_local` roots `agent/fixtures`+`build/agent-memory`; `READ_LOCAL_OK`; rejeição honesta; prova+REPL no `verify-agent`.
 
+## Etapa 55 — GPU real no caminho nativo (além de `synthetic`)
+
+Status: em_andamento  
+Issue: [#55](https://github.com/eriksonlima/projeto-ia-livre/issues/55)  
+Spec: specs/gpu-real-nativo/  
+Pronto quando: detecção/placement com GPU real (PCI/pass-through ou host path documentado) **ou** skip `need_gpu` honesto; ≠ stub E25; sem fingir multi-GPU.
+
