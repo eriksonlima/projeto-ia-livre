@@ -250,7 +250,15 @@ Pronto quando: perfil `A_otimizada` documentado + corrida verificável lado a la
 
 ## Etapa 35 — Boot UEFI em hardware real (evidência serial)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#34](https://github.com/eriksonlima/projeto-ia-livre/issues/34)  
 Spec: specs/boot-uefi-hardware-real/  
-Pronto quando: evidência em PC real com ≥ `BOOT_OK` (ideal `EXIT_BOOT_OK`) via serial; sem fingir CI de metal.
+Pronto quando: evidência em PC real com ≥ `BOOT_OK` (ideal `EXIT_BOOT_OK`) via serial; sem fingir CI de metal.  
+**Desfecho:** contrato + gate `METAL_OK`/`SKIP`; sem log de PC nesta máquina → skip honesto na issue.
+
+## Etapa 36 — GGUF canônico completo em mídia bare-metal (+ path I/O)
+
+Status: em_andamento  
+Issue: [#35](https://github.com/eriksonlima/projeto-ia-livre/issues/35)  
+Spec: (a definir — `especificador`)  
+Pronto quando: modelo/path documentado na mídia/metal com loader verificável; deps E35.
