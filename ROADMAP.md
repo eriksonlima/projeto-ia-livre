@@ -300,5 +300,5 @@ Pronto quando: REPL ou ≥1 tool nova sandboxed + gate; sem shell/HTTP irrestrit
 
 Status: em_andamento  
 Issue: [#40](https://github.com/eriksonlima/projeto-ia-livre/issues/40)  
-Spec: (a definir — `especificador`)  
+Spec: specs/shard-multi-gpu-host/  
 Pronto quando: placement/shard mínimo real no host com evidência ou skip honesto; ≠ manager nativo.
