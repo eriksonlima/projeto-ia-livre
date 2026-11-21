@@ -512,3 +512,11 @@ Spec: specs/descoberta-wan-dht-relay/
 Pronto quando: DHT **ou** relay verificável + gate/skip; sem libp2p monólito sem ADR.  
 **Desfecho:** relay intro TCP (`RELAY_HINT`) + `DISC_MODE=relay` / `RELAY_OK`; `make verify-node-relay`; DHT adiado; loopback ≠ WAN pública; `verify-node` intacto.  
 
+## Etapa 68 — Mensagem KNOW na Rede
+
+Status: feita  
+Issue: [#68](https://github.com/eriksonlima/projeto-ia-livre/issues/68)  
+Spec: specs/mensagem-know-rede/  
+Pronto quando: `KNOW`(+ACK) + gate dois nós; sem marketplace; sem exigir SO.  
+**Desfecho:** `KNOW k1 prova-know-v1` / `KNOW_ACK` → `IA_LIVRE_KNOW_OK`; `make verify-node` exige KNOW; sem marketplace/store.  
+

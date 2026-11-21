@@ -10,15 +10,9 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Meta do protótipo (objetivo do projeto):** um ecossistema verificável em que (1) a **hipótese A vs B** possa ser comprovada ou refutada com geração real na Linha B (`TOKENS_PER_S`), (2) o **SO IA Livre** boote de USB/ESP em hardware real com caminho de IA nativo mínimo honesto, (3) a **Rede** e a **autonomia** continuem utilizáveis **sem** exigir o SO. Ordem abaixo = prioridade sugerida (topo primeiro).
 >
-> **Análise pós-E67 (2026-11-21):** E67 relay intro. Topo: **B63** (KNOW) ou B67 docs; B55 adiada.
+> **Análise pós-E68 (2026-11-21):** E68 KNOW. Topo: **B64** (multi-GPU) ou B67 docs; B55 adiada.
 
 
-
-### B63 — Mensagem KNOW na Rede
-- Issue: [#68](https://github.com/eriksonlima/projeto-ia-livre/issues/68)
-- Origem: manifesto — conhecimento; E51 só `TASK`
-- Pronto quando: `KNOW`(+ACK) + gate dois nós; sem marketplace; sem exigir SO
-- Deps: E51
 
 ### B64 — Multi-GPU completo além do shard host
 - Issue: [#69](https://github.com/eriksonlima/projeto-ia-livre/issues/69)
@@ -52,6 +46,14 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Nota: não promover enquanto BLOQUEIO_FINAL / canônico inviável sem reabertura
 
 ## Promovidas / arquivadas
+
+### B63 — Mensagem KNOW na Rede
+- Issue: [#68](https://github.com/eriksonlima/projeto-ia-livre/issues/68)
+- Origem: manifesto — conhecimento; E51 só `TASK`
+- Pronto quando: `KNOW`(+ACK) + gate dois nós; sem marketplace; sem exigir SO
+- Deps: E51
+- Promovido para Etapa 68; desfecho `KNOW_OK` no verify-node.
+- Etapa: [Etapa 68 — KNOW](ROADMAP.md)
 
 ### B62 — Descoberta WAN (NAT/DHT/relay)
 - Issue: [#67](https://github.com/eriksonlima/projeto-ia-livre/issues/67)

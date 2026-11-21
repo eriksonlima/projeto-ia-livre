@@ -402,13 +402,14 @@ grep -q 'IA_LIVRE_MSG_OK' node/src/session.rs
 grep -q 'IA_LIVRE_IDENT_OK' node/src/session.rs
 grep -q 'IA_LIVRE_PING_OK' node/src/session.rs
 grep -q 'IA_LIVRE_TASK_OK' node/src/session.rs
+grep -q 'IA_LIVRE_KNOW_OK' node/src/session.rs
 grep -q 'IA_LIVRE_DISC_OK' node/src/main.rs
 grep -q 'IA_LIVRE_DISC_MODE=bootstrap' scripts/verify-node.sh
 grep -q '_ia-livre._tcp' node/src/mdns.rs
 ! grep -qi 'libp2p' node/Cargo.toml
 ```
 
-`make verify-node` roda estágio peer **e** bootstrap (B sem `--peer`); exige v1 + `TASK_OK` + `IA_LIVRE_DISC_OK` no bootstrap. Timeout por estágio: `VERIFY_NODE_TIMEOUT` (default 45s).  
+`make verify-node` roda estágio peer **e** bootstrap (B sem `--peer`); exige v1 + `TASK_OK` + `KNOW_OK` + `IA_LIVRE_DISC_OK` no bootstrap. Timeout por estágio: `VERIFY_NODE_TIMEOUT` (default 45s).
 mDNS: `VERIFY_NODE_MDNS_SKIP=1` (default) → `IA_LIVRE_DISC_MDNS_SKIP=…`. Prova: `VERIFY_NODE_MDNS_SKIP=0 make verify-node` (exige `DISC_MODE=mdns` + `DISC_OK`); se multicast falhar sem `VERIFY_NODE_MDNS_FORCE=1`, skip honesto.
 
 **Relay intro (Etapa 67):** `make verify-node-relay` — R `--relay-listen`, A `--relay-reg`, B `--relay` → `DISC_MODE=relay` + `DISC_OK` + `RELAY_OK`. DHT adiado. Loopback ≠ WAN pública. Contrato: [`docs/rede-descoberta-wan.md`](docs/rede-descoberta-wan.md).

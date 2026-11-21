@@ -2,13 +2,13 @@
 
 ## Foco atual
 
-- Etapas 1–67 **feitas**
-- E67: relay intro (`DISC_MODE=relay` / `RELAY_OK`)
-- Topo Abertas: **B63** (KNOW) ou B67 docs; B55 adiada
+- Etapas 1–68 **feitas**
+- E68: `KNOW`/`KNOW_ACK` → `IA_LIVRE_KNOW_OK`
+- Topo Abertas: **B64** (multi-GPU) ou B67 docs; B55 adiada
 
 ## Próximo passo
 
-- “continuar” → B63
+- “continuar” → B64 ou B67
 
 ## Notas
 

@@ -1,4 +1,4 @@
-//! Sessão TCP v1: IDENT ↔ IDENT → MSG/ACK → PING/PONG → TASK/TASK_ACK.
+//! Sessão TCP v1: IDENT ↔ IDENT → MSG/ACK → PING/PONG → TASK/TASK_ACK → KNOW/KNOW_ACK.
 
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
@@ -8,8 +8,9 @@ use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 use tokio::net::TcpStream;
 
 use crate::proto::{
-    format_ack, format_ident, format_msg, format_ping, format_pong, format_task, format_task_ack,
-    parse_ident_v1, parse_task, parse_task_ack, random_nonce_hex, PROOF_TASK_ID, PROOF_TASK_TEXT,
+    format_ack, format_ident, format_know, format_know_ack, format_msg, format_ping, format_pong,
+    format_task, format_task_ack, parse_ident_v1, parse_know, parse_know_ack, parse_task,
+    parse_task_ack, random_nonce_hex, PROOF_KNOW_ID, PROOF_KNOW_TEXT, PROOF_TASK_ID, PROOF_TASK_TEXT,
     PROOF_TEXT,
 };
 
@@ -33,7 +34,7 @@ fn emit_once(flag: &mut bool, marker: &str) {
     }
 }
 
-/// Handshake IDENT + prova MSG/ACK + PING/PONG + TASK/TASK_ACK.
+/// Handshake IDENT + prova MSG/ACK + PING/PONG + TASK/TASK_ACK + KNOW/KNOW_ACK.
 pub async fn run_session(
     stream: TcpStream,
     sk: SigningKey,
@@ -100,9 +101,11 @@ pub async fn run_session(
     let mut msg_ok = false;
     let mut ping_ok = false;
     let mut task_ok = false;
+    let mut know_ok = false;
     let ping_nonce = random_nonce_hex();
     let mut ping_sent = false;
     let mut task_sent = false;
+    let mut know_sent = false;
 
     loop {
         line.clear();
@@ -149,6 +152,19 @@ pub async fn run_session(
                     if tid == PROOF_TASK_ID {
                         emit_once(&mut task_ok, "IA_LIVRE_TASK_OK");
                     }
+                } else if let Some((kid, text)) = parse_know(trimmed) {
+                    if kid == PROOF_KNOW_ID && text == PROOF_KNOW_TEXT {
+                        let ack = format_know_ack(kid);
+                        if write_half.write_all(ack.as_bytes()).await.is_err() {
+                            break;
+                        }
+                        let _ = write_half.flush().await;
+                        emit_once(&mut know_ok, "IA_LIVRE_KNOW_OK");
+                    }
+                } else if let Some(kid) = parse_know_ack(trimmed) {
+                    if kid == PROOF_KNOW_ID {
+                        emit_once(&mut know_ok, "IA_LIVRE_KNOW_OK");
+                    }
                 } else if trimmed.starts_with("IDENT ") {
                     continue;
                 }
@@ -171,7 +187,16 @@ pub async fn run_session(
                     task_sent = true;
                 }
 
-                if msg_ok && ping_ok && task_ok {
+                if msg_ok && ping_ok && task_ok && !know_sent {
+                    let know = format_know(PROOF_KNOW_ID, PROOF_KNOW_TEXT);
+                    if write_half.write_all(know.as_bytes()).await.is_err() {
+                        break;
+                    }
+                    let _ = write_half.flush().await;
+                    know_sent = true;
+                }
+
+                if msg_ok && ping_ok && task_ok && know_ok {
                     tokio::time::sleep(std::time::Duration::from_millis(200)).await;
                     break;
                 }

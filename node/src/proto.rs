@@ -8,6 +8,8 @@ pub const PROTO_V: &str = "v1";
 pub const PROOF_TEXT: &str = "ola-rede-ia-livre";
 pub const PROOF_TASK_ID: &str = "t1";
 pub const PROOF_TASK_TEXT: &str = "prova-task-v1";
+pub const PROOF_KNOW_ID: &str = "k1";
+pub const PROOF_KNOW_TEXT: &str = "prova-know-v1";
 
 /// Mensagem canônica HELLO (o que a assinatura cobre).
 pub fn hello_canonical(peer_id: &str, tcp_port: u16, pubkey_hex: &str) -> String {
@@ -152,6 +154,35 @@ pub fn parse_task(line: &str) -> Option<(&str, &str)> {
 
 pub fn parse_task_ack(line: &str) -> Option<&str> {
     let rest = line.strip_prefix("TASK_ACK ")?;
+    let id = rest.trim();
+    if id.is_empty() || id.contains(char::is_whitespace) {
+        return None;
+    }
+    Some(id)
+}
+
+pub fn format_know(know_id: &str, text: &str) -> String {
+    format!("KNOW {know_id} {text}\n")
+}
+
+pub fn format_know_ack(know_id: &str) -> String {
+    format!("KNOW_ACK {know_id}\n")
+}
+
+/// Parse `KNOW <id> <texto>` — id sem espaços; texto sem `\n`.
+pub fn parse_know(line: &str) -> Option<(&str, &str)> {
+    let rest = line.strip_prefix("KNOW ")?;
+    let (id, text) = rest.split_once(char::is_whitespace)?;
+    let id = id.trim();
+    let text = text.trim();
+    if id.is_empty() || text.is_empty() {
+        return None;
+    }
+    Some((id, text))
+}
+
+pub fn parse_know_ack(line: &str) -> Option<&str> {
+    let rest = line.strip_prefix("KNOW_ACK ")?;
     let id = rest.trim();
     if id.is_empty() || id.contains(char::is_whitespace) {
         return None;
