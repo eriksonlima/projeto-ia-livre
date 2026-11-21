@@ -12,12 +12,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 >
 > **Análise pós-E58 (2026-11-21):** etapas 1–58 feitas; pilar 3 verde; pilares 1–2 abertos (`INCONCLUSIVO` + sem `METAL_OK`). Ordem: desbloquear espécie canônica B → metal → accel/Rede.
 
-### B53 — Otimizar runtime-native (SIMD/teto) para espécie canônica
-- Issue: [#59](https://github.com/eriksonlima/projeto-ia-livre/issues/59)
-- Origem: ADR 0016 — 22L×32 inviável no gate sem ganho de ordem de magnitude
-- Pronto quando: medição documentada (passo N≥8 / n_predict≥8 ou 22L×32 no timeout) **ou** ADR nova pós-otimização com inviável evidenciado
-- Deps: `runtime-native`; E44/E45
-
 ### B54 — Espécie canônica Linha B (22L × n_predict=32)
 - Issue: [#60](https://github.com/eriksonlima/projeto-ia-livre/issues/60)
 - Origem: pilar 1 E58 — `COMPROVA`/`REFUTA` só com espécie = A
@@ -103,6 +97,14 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: E58
 
 ## Promovidas / arquivadas
+
+### B53 — Otimizar runtime-native (SIMD/teto) para espécie canônica
+- Issue: [#59](https://github.com/eriksonlima/projeto-ia-livre/issues/59)
+- Origem: ADR 0016 — 22L×32 inviável no gate sem ganho de ordem de magnitude
+- Pronto quando: medição documentada (passo N≥8 / n_predict≥8 ou 22L×32 no timeout) **ou** ADR nova pós-otimização com inviável evidenciado
+- Deps: `runtime-native`; E44/E45
+- Promovido para Etapa 59 do roadmap (promoção autônoma — “continuar”).
+- Etapa: [Etapa 59 — otimizar runtime-native](ROADMAP.md)
 
 ### B52 — Definição verificável de “protótipo objetivo atingido”
 - Issue: [#58](https://github.com/eriksonlima/projeto-ia-livre/issues/58)

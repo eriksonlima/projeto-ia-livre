@@ -440,3 +440,10 @@ Spec: specs/prototipo-objetivo-atingido/
 Pronto quando: checklist em `docs/` (hipótese A/B decidível **ou** bloqueio honesto final; USB metal com boot+IA mínima; Rede+autonomia host verdes) + espelho no ROADMAP/Memory Bank; celebrar só com evidência.  
 **Desfecho:** [`docs/prototipo-objetivo-atingido.md`](docs/prototipo-objetivo-atingido.md) — 3 pilares; pilar 1 `INCONCLUSIVO` (espécie subset); pilar 2 sem `METAL_OK` até log PC; pilar 3 verde (Rede+autonomia host). Gate `make verify-prototipo-objetivo` → `IA_LIVRE_PROTOTIPO_OBJETIVO_OK` (sem fingir `COMPROVA`). Celebrar só com evidência.
 
+## Etapa 59 — Otimizar runtime-native (SIMD/teto) para espécie canônica
+
+Status: em_andamento  
+Issue: [#59](https://github.com/eriksonlima/projeto-ia-livre/issues/59)  
+Spec: specs/otimizar-runtime-native-especie/  
+Pronto quando: medição documentada (passo intermediário N≥8 / n_predict≥8 **ou** 22L×32 no timeout do gate) **ou** ADR nova pós-otimização declara inviável com evidência; sem fingir `COMPROVA`; hipótese permanece aberta até B54.
+
