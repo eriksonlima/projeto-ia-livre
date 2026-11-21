@@ -70,6 +70,19 @@ Sucesso: `IA_LIVRE_DISTRO_DEBIAN_QEMU_OK` + conf guest ou prompt Debian.
 - Build Debian sem GGUF: default; lab com pesos: `IA_LIVRE_DEBIAN_INCLUDE_GGUF=1`
 - Gate: `make verify-distro-first-boot`
 
+## ISO híbrida / live (Etapa 85)
+
+Artefato **bootável** (≠ tarball E81; ≠ ESP UEFI):
+
+```bash
+./scripts/build-distro-debian-iso.sh   # → build/distro-debian/ia-livre-linux.iso
+./scripts/run-distro-iso-qemu.sh       # QEMU -cdrom
+make verify-distro-iso
+```
+
+Requer `mksquashfs`, `grub-mkrescue`, `xorriso`, `mformat` (mtools) (+ Docker para `live-boot` se preciso).  
+QEMU prova com **UEFI/OVMF** (`-cdrom`); SeaBIOS costuma falhar El Torito nesta ISO. Skip `need_*` / `boot_fail` honesto.
+
 ## USB Linux
 
-Ver [`docs/guia-ia-livre-linux-usb.md`](guia-ia-livre-linux-usb.md) (imagem/rootfs — distinto do ESP UEFI).
+Ver [`docs/guia-ia-livre-linux-usb.md`](guia-ia-livre-linux-usb.md) (tarball E81 + ISO E85 — distinto do ESP UEFI).

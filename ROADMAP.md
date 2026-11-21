@@ -650,3 +650,12 @@ Spec: specs/linux-first-boot-tty/
 Pronto quando: MOTD/PATH/hints; fetch GGUF documentado; artefato default sem ~638 MiB.  
 **Desfecho:** `/etc/motd` + `profile.d` + `FIRST_BOOT.md`; strip GGUF no build Debian; `make verify-distro-first-boot`.
 
+## Etapa 85 — ISO híbrida / live USB bootável
+
+Status: feita  
+Issue: [#86](https://github.com/eriksonlima/projeto-ia-livre/issues/86)  
+Spec: specs/linux-iso-hibrida/  
+Pronto quando: artefato bootável (live/híbrido); gate; ≠ tarball E81.  
+Project: https://github.com/users/eriksonlima/projects/1  
+**Desfecho:** `ia-livre-linux.iso` (squashfs+grub-mkrescue); QEMU UEFI `-cdrom` → `DISTRO_ISO_QEMU_OK`; `make verify-distro-iso`.
+

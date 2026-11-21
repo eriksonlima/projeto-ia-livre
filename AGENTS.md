@@ -24,7 +24,7 @@ make stage-distro
 ```
 
 Contrato: [`docs/linux-ia-nativo.md`](docs/linux-ia-nativo.md) · USB: [`docs/guia-ia-livre-linux-usb.md`](docs/guia-ia-livre-linux-usb.md) · ADR [`0027`](docs/adr/0027-produto-linux-ia-nativo.md).  
-Gates: `make verify-distro-scaffold` · `verify-distro-config-models` · `verify-distro-native-tune` · `verify-distro-smoke` · `verify-linux-usb-artifact` · `verify-distro-debian-qemu` (Debian QEMU; ≠ Alpine).
+Gates: `make verify-distro-scaffold` · `verify-distro-config-models` · `verify-distro-native-tune` · `verify-distro-smoke` · `verify-linux-usb-artifact` · `verify-distro-debian-qemu` · `verify-distro-first-boot` · `verify-distro-iso` (ISO live UEFI).
 
 ### Pré-requisitos (host)
 
@@ -757,6 +757,7 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 - `scripts/stage-distro-overlay.sh` / `scripts/verify-distro-scaffold.sh` — stage + gate scaffold
 - `scripts/verify-distro-config-models.sh` / `verify-distro-native-tune.sh` / `verify-distro-smoke.sh` / `verify-linux-usb-artifact.sh` — gates produto
 - `scripts/build-distro-debian-rootfs.sh` / `run-distro-debian-qemu.sh` / `verify-distro-debian-qemu.sh` — Debian QEMU (Etapa 82; ≠ Alpine)
+- `scripts/build-distro-debian-iso.sh` / `run-distro-iso-qemu.sh` / `verify-distro-iso.sh` — ISO híbrida live (Etapa 85; UEFI/OVMF)
 - `scripts/write-usb-esp.sh` / `scripts/verify-write-usb.sh` — gravar pendrive com confirmação (Etapa 47)
 - `docs/guia-primeiro-boot-usb.md` — onboarding USB (Etapa 57)
 - `scripts/prepare-baremetal-release.sh` / `scripts/verify-boot-guide-release.sh` — release + gate Etapa 57

@@ -5,8 +5,9 @@
 ## Estado atual (honesto)
 
 1. Scaffold + rootfs overlay empacotável: `make stage-distro` / `./scripts/pack-distro-rootfs.sh` → `build/ia-livre-distro-rootfs.tar.gz`
-2. Smoke: `make verify-distro-smoke` (userspace + QEMU Alpine best-effort)
-3. **Imagem live/instalável Debian completa** ainda evolui — o writer abaixo prepara um pendrive com o **tarball + README** para extrair numa instalação Debian mínima, ou documenta o fluxo até haver ISO.
+2. Smoke: `make verify-distro-smoke` (userspace + QEMU **Debian**)
+3. **ISO híbrida live:** `./scripts/build-distro-debian-iso.sh` → `build/distro-debian/ia-livre-linux.iso` (gate `make verify-distro-iso`)
+4. Writer ainda pode gravar o **tarball** (E81); gravação da ISO no pendrive = B81/E86.
 
 ## Preparar artefato
 

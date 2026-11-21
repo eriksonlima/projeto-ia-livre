@@ -10,12 +10,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Produto (ADR 0027):** **Linux IA-nativo** (TTY, shell, qualquer GGUF, tuning/kernel Linux). Linha B UEFI **arquivada**. Ordem = prioridade (topo primeiro). Fila até o **produto final** (métricas em `docs/product-context.md`).
 
-### B80 — ISO híbrida / live USB bootável
-- Issue: [#86](https://github.com/eriksonlima/projeto-ia-livre/issues/86)
-- Origem: plano backlog produto final / ADR 0027
-- Pronto quando: artefato bootável (live ou instalável mínimo); distinto do tarball E81
-- Deps: B77
-
 ### B81 — Writer USB grava imagem bootável
 - Issue: [#87](https://github.com/eriksonlima/projeto-ia-livre/issues/87)
 - Origem: plano backlog produto final / ADR 0027
@@ -83,6 +77,13 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: B78, B81, B84, B85, B90
 
 ## Promovidas / arquivadas
+
+### B80 — ISO híbrida / live USB bootável
+- Issue: [#86](https://github.com/eriksonlima/projeto-ia-livre/issues/86)
+- Origem: plano backlog produto final / ADR 0027
+- Pronto quando: artefato bootável (live/híbrido); distinto do tarball E81
+- Promovido para Etapa 85.
+- Etapa: [Etapa 85 — ISO híbrida](ROADMAP.md)
 
 ### B79 — First-boot TTY
 - Issue: [#85](https://github.com/eriksonlima/projeto-ia-livre/issues/85)

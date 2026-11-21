@@ -2,14 +2,14 @@
 
 ## Foco atual
 
-- Etapas 1–84 **feitas**
-- Onda A (imagem): E82 Debian QEMU, E83 smoke Debian, E84 first-boot
-- Abertas: B80–B91 (topo **B80** ISO híbrida / live USB)
+- Etapas 1–85 **feitas**
+- E85: ISO híbrida `ia-livre-linux.iso` + QEMU UEFI OK
+- Abertas: B81–B91 (topo B81 writer USB grava ISO)
 
 ## Próximo passo
 
-- Promover **B80** ISO/live USB bootável
+- Promover **B81** writer USB para ISO bootável
 
 ## Notas
 
-- `make verify-distro-first-boot` · GGUF default stripped (`INCLUDE_GGUF=1` para lab)
+- ISO ~916 MiB; precisa mtools (`mformat`); prova QEMU = OVMF `-cdrom`
