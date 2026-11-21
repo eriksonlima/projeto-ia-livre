@@ -114,13 +114,14 @@ Com Etapas 19/20 verificáveis no serial QEMU, `scripts/run-harness-line-b.sh`:
 
 `HARNESS_MODEL=` permanece `proxy-post-exit-v1`. Rodar `ia-livre-runtime` no host continua sendo **Linha A**.
 
-### Estado atual (após Etapa 31 — mapa + dequant Q4_K + op)
+### Estado atual (após Etapa 31 — mapa + dequant Q4_K + op; Etapa 32 em andamento)
 
 - Loader E26/E27: GGUF completo via BlockIO (`blockio_full`).
-- **Motor:** `runtime-native/` — ADR [`0010`](adr/0010-runtime-nativo-freestanding-linha-b.md) / [`0012`](adr/0012-forward-gguf-fatiado-linha-b.md).
-- **Avanço:** `TENSOR_MAP_OK` + `Q4K_DEQUANT_OK` + `FORWARD_OP_OK` (bloco Q4_K + dot parcial).
-- **Bloqueio residual:** `B_BLOCK=no_gguf_generate` — sem Prefill/Decode/sampling canônico → **sem** `TOKENS_PER_S`.
-- Proxy E12 permanece (`LOAD_KIND=proxy`). Hipótese **não** comprovada.
+- **Motor:** `runtime-native/` — ADR [`0010`](adr/0010-runtime-nativo-freestanding-linha-b.md) / [`0012`](adr/0012-forward-gguf-fatiado-linha-b.md) / [`0013`](adr/0013-geracao-canonica-fatiada-linha-b.md).
+- **Avanço E31:** `TENSOR_MAP_OK` + `Q4K_DEQUANT_OK` + `FORWARD_OP_OK` (bloco Q4_K + dot parcial).
+- **Etapa 32 (contrato):** geração canônica fatiada — tokenize → embed `token_embd` → camada parcial → Prefill/Decode/sampling **ou** `B_BLOCK` novo (≠ `no_gguf_generate`) após intermediários. Marcadores: `TOKENIZE_OK` / `EMBED_OK` / `LAYER_PARTIAL_OK`.
+- **Bloqueio residual (até Tasks 2–4):** `B_BLOCK=no_gguf_generate` — sem tokens → **sem** `TOKENS_PER_S`.
+- Proxy E12 permanece (`LOAD_KIND=proxy`) até geração medida. Hipótese **não** comprovada.
 
 ### Loader GGUF nativo mínimo (Etapa 26)
 

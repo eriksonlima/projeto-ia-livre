@@ -181,7 +181,7 @@ Gate automatizado: `make verify-agent` (não exige QEMU/UEFI nem o nó P2P; requ
 Metodologia: [`docs/harness-linha-a-b.md`](docs/harness-linha-a-b.md); caminho B mínimo: [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md); contrato: [`docs/runtime-contrato-nativo.md`](docs/runtime-contrato-nativo.md).  
 **Não** confundir com métricas dos protótipos CPU/GPU. Linha A = host + GGUF; Linha B = proxy pós-ExitBoot no QEMU **+** evidência `MEM_SCHED` (E19) reemitida como `HARNESS_CONTRACT_*` (**não** TinyLlama).  
 **Etapa 21:** deps 19/20 ok (`CONTRACT_READY=1`); bloqueio histórico `no_gguf_path`.  
-**Etapa 26–31:** loader BlockIO + `runtime-native` (`layout_ok`, mapa, dequant Q4_K, op parcial; `B_BLOCK=no_gguf_generate`) — **ainda sem** geração/`TOKENS_PER_S` em B. Spec: `specs/forward-gguf-linha-b/`. Hipótese **não** comprovada.
+**Etapa 26–31:** loader BlockIO + `runtime-native` (`layout_ok`, mapa, dequant Q4_K, op parcial; `B_BLOCK=no_gguf_generate`). **Etapa 32 (em andamento):** geração canônica fatiada (ADR [`0013`](docs/adr/0013-geracao-canonica-fatiada-linha-b.md); spec `specs/geracao-canonica-linha-b/`) — tokenize/embed/camada → tokens **ou** `B_BLOCK` novo. Hipótese **não** comprovada.
 
 Pré-requisitos: runtime CPU (GGUF) para A; QEMU/OVMF para B. Sem GPU no harness v1.
 

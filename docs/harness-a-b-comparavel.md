@@ -99,6 +99,6 @@ Detalhes: `AGENTS.md` → Como rodar / Como verificar (Etapa 22).
 
 ## Estado atual (host de referência)
 
-Com B = proxy + mapa/dequant/op (Etapa 31, `no_gguf_generate`): o instrumento **deve** emitir `INCONCLUSIVO` (reason `…E31_no_gguf_generate`). Hipótese **não** comprovada nem refutada.
+Com B = proxy + mapa/dequant/op (Etapa 31, `no_gguf_generate`) **ou** pós-E32 ainda sem tokens (`B_BLOCK` residual novo ≠ geração): o instrumento **deve** emitir `INCONCLUSIVO`. Hipótese **não** comprovada nem refutada. ADR [`0013`](adr/0013-geracao-canonica-fatiada-linha-b.md).
 
 Para medição sem contenção de benchmarks: seguir [`harness-corrida-quieta.md`](harness-corrida-quieta.md).

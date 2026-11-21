@@ -2,19 +2,20 @@
 
 ## Foco atual
 
-- Etapas **1–31 feitas**
-- Backlog Abertas: **B36** (geração canônica) → B26–B35
-- Lease: livre
-- Hipótese: **INCONCLUSIVO** (`no_gguf_generate`)
+- Etapa **32** `em_andamento` (#42) — geração canônica Linha B
+- Spec: `specs/geracao-canonica-linha-b/`
+- Lease: `cursor-agent-main` (E32)
+- Task 1 **feita** (ADR 0013); Tasks 2–4 abertas
 
 ## Mudanças recentes
 
-- E31: mapa + dequant Q4_K + op; ainda sem geração de tokens
+- ADR 0013 + pontes docs/AGENTS (marcadores TOKENIZE/EMBED/LAYER_PARTIAL)
 
 ## Próximo passo
 
-- “continuar” → promove **B36** (Prefill+Decode+sampling / TOKENS_PER_S)
+- Task 2: tokenize + embedding `token_embd` em `runtime-native/`
 
 ## Notas
 
-- Para sair de INCONCLUSIVO de fato: Prefill+Decode+sampling canônico em `runtime-native`
+- README: Task 1 só docs — sem mudança na capa
+- Preferência: tokens reais; fallback = B_BLOCK novo após intermediários
