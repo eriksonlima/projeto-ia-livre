@@ -1,6 +1,8 @@
-# Boot / imagem em hardware real (Etapa 30)
+# Boot / imagem em hardware real (Etapas 30 / 35)
 
-ADR: [`0011-boot-imagem-esp-baremetal.md`](adr/0011-boot-imagem-esp-baremetal.md).
+ADR: [`0011-boot-imagem-esp-baremetal.md`](adr/0011-boot-imagem-esp-baremetal.md).  
+Spec E35: [`../specs/boot-uefi-hardware-real/`](../specs/boot-uefi-hardware-real/).  
+Evidências: [`evidence/boot-metal/`](evidence/boot-metal/).
 
 > **QEMU ≠ bare-metal.** Este documento não prova a hipótese A vs B e **não** emite `TOKENS_PER_S`.
 
@@ -48,6 +50,40 @@ O gate valida estrutura + EFI (MZ) + tar + checksum. **Não** sobe QEMU e **não
 
 Sem serial: só confirmação visual de que o firmware carregou o EFI — **não** conta como gate CI.
 
+## Captura serial (Etapa 35)
+
+| Item | Valor |
+|------|--------|
+| UART | COM1 (kernel pós-ExitBoot também reemite na COM1) |
+| Params | **115200 8N1**, sem fluxo de hardware |
+| Host | `picocom -b 115200 /dev/ttyUSB0` ou `minicom` / `screen` |
+| Arquivo | redirecionar saída para log texto |
+
+### Formato de evidência
+
+Arquivo em `docs/evidence/boot-metal/<data>-host.txt` (ou path apontado por `IA_LIVRE_BAREMETAL_EVIDENCE`):
+
+```text
+# IA_LIVRE_BAREMETAL_EVIDENCE_V1
+# HOST=<nome-do-pc>
+# DATE_UTC=<ISO8601>
+# EFI_SHA256=<sha256 de BOOTX64.EFI gravado>
+# MEDIA=<usb|esp-interna|outro>
+# NOTE=<opcional>
+IA_LIVRE_BOOT_OK
+…trecho serial…
+```
+
+**Proibido** no log de metal: strings de QEMU/OVMF fingindo hardware (`SeaBIOS`, `-bios OVMF`, `qemu-system`).
+
+### Tabela de ambientes
+
+| Ambiente | Prova | Gate |
+|----------|-------|------|
+| QEMU | Serial + marcadores | `make verify` |
+| Artefato ESP/tar | Estrutura + MZ + checksum | `make verify-baremetal` (IMAGE_OK) |
+| PC real | Log serial ≥ `BOOT_OK` | `IA_LIVRE_BAREMETAL_SKIP=0` + `IA_LIVRE_BAREMETAL_EVIDENCE=…` → `METAL_OK` |
+
 ### Limites honestos
 
 - Path BlockIO/`gguf-canon` do QEMU **não** se aplica automaticamente ao PC; GGUF completo em metal é etapa futura.
@@ -59,5 +95,5 @@ Sem serial: só confirmação visual de que o firmware carregou o EFI — **não
 | Gate | O que prova |
 |------|-------------|
 | `make verify` | Kernel em **QEMU** |
-| `make verify-baremetal` | **Artefato** ESP/tar |
+| `make verify-baremetal` | **Artefato** ESP/tar (+ metal se evidência) |
 | `make verify-harness-comparable` | Hipótese A vs B (ainda INCONCLUSIVO) |

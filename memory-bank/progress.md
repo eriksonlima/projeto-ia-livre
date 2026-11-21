@@ -2,16 +2,17 @@
 
 ## O que funciona
 
-- Etapas 1–34
+- Etapas 1–35
 - E33: attn+FFN layer0; `no_gguf_full_prefill`
-- E34: `A_otimizada` script + gate
+- E34: A_otimizada
+- E35: verify-baremetal com METAL_OK ou SKIP
 
 ## Bloqueios
 
-- Sem TOKENS_PER_S em B (22L/KV)
-- E35 bare-metal exige hardware real (pode `BAREMETAL_SKIP` honesto)
+- Sem TOKENS_PER_S em B
+- Sem log serial de PC real anexado (E35 fechou com SKIP honesto)
 
 ## Por etapa
 
-- 1–34: feitas
-- 35: em_andamento (#34) — B28 promovido
+- 1–35: feitas
+- 36: em_andamento (#35)

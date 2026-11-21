@@ -430,6 +430,8 @@ grep -q 'IA_LIVRE_BAREMETAL_IMAGE_OK' scripts/verify-baremetal.sh
 
 Esperado: `IA_LIVRE_BAREMETAL_IMAGE_OK` + `EFI_SHA256=` / `EFI_BYTES=`. Default `IA_LIVRE_BAREMETAL_SKIP=1` (hardware não exercitado). Imagem FAT `.img` só se `mtools` estiver instalado.
 
+**Metal (Etapa 35):** com log real em PC, `IA_LIVRE_BAREMETAL_SKIP=0 IA_LIVRE_BAREMETAL_EVIDENCE=docs/evidence/boot-metal/….txt make verify-baremetal` → `IA_LIVRE_BAREMETAL_METAL_OK` (≥ `BOOT_OK`, sem QEMU/OVMF no log). Formato: [`docs/boot-hardware-real.md`](docs/boot-hardware-real.md) / [`docs/evidence/boot-metal/`](docs/evidence/boot-metal/).
+
 ## PATH
 
 Sempre inclua o GitHub CLI e o Cargo locais:

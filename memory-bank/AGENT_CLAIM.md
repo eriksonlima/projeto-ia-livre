@@ -3,12 +3,12 @@
 ## Estado atual
 
 - **holder:** cursor-agent-main
-- **etapa:** 35
-- **issue:** #34
+- **etapa:** 36
+- **issue:** #35
 - **paths:** ROADMAP.md, BACKLOG.md, specs/, docs/, scripts/, memory-bank/, AGENTS.md
-- **since:** 2026-11-21T07:40:00Z
-- **expires:** 2026-11-21T11:40:00Z
+- **since:** 2026-11-21T07:50:00Z
+- **expires:** 2026-11-21T11:50:00Z
 
 ## Protocolo
 
-Ver `.cursor/rules/agentes-em-paralelo.mdc`. Só um escritor na `em_andamento`.
+Ver `.cursor/rules/agentes-em-paralelo.mdc`.

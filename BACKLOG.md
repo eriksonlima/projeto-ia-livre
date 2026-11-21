@@ -8,13 +8,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-### B29 — GGUF canônico completo em mídia bare-metal (+ path I/O)
-
-- Issue: [#35](https://github.com/eriksonlima/projeto-ia-livre/issues/35)
-- Origem: ESP de gate só `gguf.hdr` 4 KiB; BlockIO QEMU ≠ PC
-- Pronto quando: modelo/path documentado na mídia/metal com loader verificável
-- Deps: B28 (ou checklist metal)
-
 ### B30 — Observabilidade mínima no SO (além de UART-only)
 
 - Issue: [#36](https://github.com/eriksonlima/projeto-ia-livre/issues/36)
@@ -53,6 +46,11 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Pronto quando: `architecture.md` / README-AGENTS refletem estado atual sem ambiguidade
 
 ## Promovidas / arquivadas
+
+### B29 — GGUF canônico completo em mídia bare-metal (+ path I/O)
+
+- Promovido para Etapa 36 do roadmap (promoção autônoma após Etapa 35).
+- Issue: [#35](https://github.com/eriksonlima/projeto-ia-livre/issues/35)
 
 ### B28 — Boot UEFI em hardware real (evidência serial)
 

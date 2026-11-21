@@ -2,17 +2,17 @@
 
 ## Foco atual
 
-- Etapa **35** `em_andamento` (#34) — boot UEFI em hardware real
-- E34 **feita**: perfil `A_otimizada` + `verify-harness-a-otimizada`
+- Etapa **36** `em_andamento` (#35) — GGUF completo em mídia bare-metal
+- E35 **feita**: gate metal/SKIP; sem captura PC nesta máquina
 
 ## Mudanças recentes
 
-- E32–E34: geração fatiada até `no_gguf_full_prefill`; baseline A otimizada
+- E32–E35: tokens path até `no_gguf_full_prefill`; A_otimizada; boot metal contrato
 
 ## Próximo passo
 
-- Especificar Etapa 35 (bare-metal serial) — tipicamente precisa de PC físico
+- Especificar Etapa 36; ou anexar log serial real de PC para `METAL_OK` sem skip
 
 ## Notas
 
-- README E34: avaliado — menção leve via AGENTS; capa sem B_BLOCK
+- README: E35 docs internos — capa sem mudança obrigatória
