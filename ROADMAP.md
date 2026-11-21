@@ -158,7 +158,7 @@ Pronto quando: corrida lado a lado documentada (mesmo modelo/quantização/carga
 
 ## Etapa 23 — Protocolo Rede IA Livre v1 (impl. em node/)
 
-Status: pendente  
+Status: em_andamento  
 Issue: [#23](https://github.com/eriksonlima/projeto-ia-livre/issues/23)  
 Spec: specs/protocolo-rede-v1/  
 Pronto quando: contratos do desenho Rede v1 em `node/` + gate `verify-node` (ou extensão); sem marketplace; independente do SO.
