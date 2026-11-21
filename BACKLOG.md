@@ -12,11 +12,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 >
 > **Análise pós-E58 (2026-11-21):** etapas 1–58 feitas; pilar 3 verde; pilares 1–2 abertos (`INCONCLUSIVO` + sem `METAL_OK`). Ordem: desbloquear espécie canônica B → metal → accel/Rede.
 
-### B54 — Espécie canônica Linha B (22L × n_predict=32)
-- Issue: [#60](https://github.com/eriksonlima/projeto-ia-livre/issues/60)
-- Origem: pilar 1 E58 — `COMPROVA`/`REFUTA` só com espécie = A
-- Pronto quando: `verify-harness-comparable` com B 22L×32 + veredito ∈ {COMPROVA,REFUTA,INCONCLUSIVO} **sem** reason de teto/subset
-- Deps: B53 preferível; ADR 0014–0016
 
 ### B55 — Re-corrida harness A/B quieta pós-espécie canônica
 - Issue: [#61](https://github.com/eriksonlima/projeto-ia-livre/issues/61)
@@ -97,6 +92,14 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: E58
 
 ## Promovidas / arquivadas
+
+### B54 — Espécie canônica Linha B (22L × n_predict=32)
+- Issue: [#60](https://github.com/eriksonlima/projeto-ia-livre/issues/60)
+- Origem: pilar 1 E58 — `COMPROVA`/`REFUTA` só com espécie = A
+- Pronto quando: `verify-harness-comparable` com B 22L×32 + veredito ∈ {COMPROVA,REFUTA,INCONCLUSIVO} **sem** reason de teto/subset
+- Deps: B53 preferível; ADR 0014–0016
+- Promovido para Etapa 60 do roadmap (promoção autônoma após E59).
+- Etapa: [Etapa 60 — espécie canônica Linha B](ROADMAP.md)
 
 ### B53 — Otimizar runtime-native (SIMD/teto) para espécie canônica
 - Issue: [#59](https://github.com/eriksonlima/projeto-ia-livre/issues/59)

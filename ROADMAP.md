@@ -448,3 +448,10 @@ Spec: specs/otimizar-runtime-native-especie/
 Pronto quando: medição documentada (passo intermediário N≥8 / n_predict≥8 **ou** 22L×32 no timeout do gate) **ou** ADR nova pós-otimização declara inviável com evidência; sem fingir `COMPROVA`; hipótese permanece aberta até B54.  
 **Desfecho:** fused matvec Q4 + dispatch Q4/Q6 (~7–10% host); host N=8 ok (~2 s); guest passo intermediário **inviável** no gate 600 s → ADR [`0020`](docs/adr/0020-runtime-native-passo-intermediario-inviavel.md); `make verify-runtime-native-perf`; hipótese aberta (B54).
 
+## Etapa 60 — Espécie canônica Linha B (22L × n_predict=32)
+
+Status: em_andamento  
+Issue: [#60](https://github.com/eriksonlima/projeto-ia-livre/issues/60)  
+Spec: specs/especie-canonica-linha-b/  
+Pronto quando: `make verify-harness-comparable` com B `PREFILL_LAYERS=22` + `N_PREDICT=32` + veredito ∈ {COMPROVA,REFUTA,INCONCLUSIVO} **sem** reason de teto/subset; **ou** ADR nova (0021) declara espécie canônica inviável no gate atual (pós-E59/0020) com ponte a B58; sem fingir `COMPROVA`.
+
