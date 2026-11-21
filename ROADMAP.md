@@ -191,3 +191,11 @@ Issue: [#27](https://github.com/eriksonlima/projeto-ia-livre/issues/27)
 Spec: specs/inferencia-minima-linha-b/  
 Pronto quando: geração mínima na Linha B com a carga canônica (ou caminho intermediário documentado) emitindo `TOKENS_PER_S` / `LOAD_S` **medidos** comparáveis em espécie aos de A, **ou** bloqueio honesto novo documentado; gates harness atualizados sem inventar números; hipótese só deixa `INCONCLUSIVO` com evidência real; depende da Etapa 26 (loader).  
 **Desfecho:** fatia A mínima — GGUF completo via BlockIO + stub tensores; `B_BLOCK=no_gguf_infer_engine` (sem motor/`TOKENS_PER_S`).
+
+## Etapa 28 — Re-corrida harness A vs B quieta (COMPROVA/REFUTA ou INCONCLUSIVO limpo)
+
+Status: feita  
+Issue: [#28](https://github.com/eriksonlima/projeto-ia-livre/issues/28)  
+Spec: specs/recorrida-harness-quieta/  
+Pronto quando: procedimento de medição serial/quieto documentado; corrida A+B verificável sob esse protocolo; `VERDICT` honesto (`COMPROVA`/`REFUTA`/`INCONCLUSIVO`) sem contenção de benchmarks concorrentes; sem inventar `TOKENS_PER_S` em B enquanto `no_gguf_infer_engine`.  
+**Desfecho:** protocolo + preflight + evidência quieta; `VERDICT=INCONCLUSIVO` (sem motor B).

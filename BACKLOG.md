@@ -8,14 +8,15 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 ## Abertas
 
-### B22 — Re-corrida harness A vs B quieta (COMPROVA/REFUTA ou INCONCLUSIVO limpo)
-
-- Issue: [#28](https://github.com/eriksonlima/projeto-ia-livre/issues/28)
-- Origem: auditoria pós-paralelo (T/s sob contenção); métricas CPU serial em `docs/runtime-inferencia-cpu-metricas.md`
-- Notas: protocolo de medição serial + re-corrida quando B tiver GGUF; depende de B21 para COMPROVA/REFUTA
-- Pronto quando (candidato): procedimento quieto documentado; corrida verificável; veredito honesto
+_(vazio — próxima etapa vem de pedido explícito ou novo item)_
 
 ## Promovidas / arquivadas
+
+### B22 — Re-corrida harness A vs B quieta (COMPROVA/REFUTA ou INCONCLUSIVO limpo)
+
+- Promovido para Etapa 28 do roadmap (promoção autônoma após Etapa 27).
+- Issue: [#28](https://github.com/eriksonlima/projeto-ia-livre/issues/28)
+- Etapa: [Etapa 28 — Re-corrida harness A vs B quieta](ROADMAP.md)
 
 ### B21 — Inferência mínima / TOKENS_PER_S na Linha B (após loader)
 

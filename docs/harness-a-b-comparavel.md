@@ -15,6 +15,7 @@ Ponte: [`product-context.md`](product-context.md), [`architecture.md`](architect
 | [`runtime-nativo-linha-b.md`](runtime-nativo-linha-b.md) | Contrato B mínimo (proxy pós-ExitBoot) |
 | [`harness-perfis-a-otimizada-gpu.md`](harness-perfis-a-otimizada-gpu.md) | Perfis A otimizada / GPU — **limites**, não substituto de GGUF A/B |
 | **Este arquivo** + `make verify-harness-comparable` | Veredito `COMPROVA` / `REFUTA` / `INCONCLUSIVO` |
+| [`harness-corrida-quieta.md`](harness-corrida-quieta.md) | Protocolo serial (Etapa 28): um gate por vez; evidência limpa |
 
 ## Pré-condição de comparabilidade (checklist)
 
@@ -98,4 +99,6 @@ Detalhes: `AGENTS.md` → Como rodar / Como verificar (Etapa 22).
 
 ## Estado atual (host de referência)
 
-Com B = proxy pós-ExitBoot (Etapa 12): o instrumento **deve** emitir `INCONCLUSIVO` com reason apontando carga não comparável. Hipótese **não** comprovada nem refutada.
+Com B = proxy + BlockIO stub (Etapa 27, `no_gguf_infer_engine`): o instrumento **deve** emitir `INCONCLUSIVO` (reason `…E27_no_gguf_infer_engine`). Hipótese **não** comprovada nem refutada.
+
+Para medição sem contenção de benchmarks: seguir [`harness-corrida-quieta.md`](harness-corrida-quieta.md).

@@ -16,6 +16,41 @@ LOG_A="$(mktemp)"
 LOG_B="$(mktemp)"
 trap 'rm -f "$LOG_A" "$LOG_A.err" "$LOG_B" "$LOG_B.err"' EXIT
 
+# Preflight quieto (Etapa 28) — docs/harness-corrida-quieta.md
+# Detecta só QEMU real + scripts/make verify em execução (evita falso positivo de shells sandbox).
+# Default: aviso. Strict (exit 1): IA_LIVRE_HARNESS_QUIET_STRICT=1. Override: IA_LIVRE_HARNESS_QUIET_FORCE=1.
+quiet_hits=""
+while read -r line; do
+  [[ -z "$line" ]] && continue
+  quiet_hits+="${line}"$'\n'
+done < <(pgrep -af '^qemu-system-x86_64 |/qemu-system-x86_64 ' 2>/dev/null || true)
+while read -r line; do
+  [[ -z "$line" ]] && continue
+  # cmdline real: make/bash ./scripts/… — não wrappers cursorsandbox com histórico no argv
+  if [[ "$line" == *cursorsandbox* ]]; then
+    continue
+  fi
+  if [[ "$line" =~ (scripts/(verify-|run-harness-)|make[[:space:]]+verify) ]]; then
+    quiet_hits+="${line}"$'\n'
+  fi
+done < <(pgrep -af 'qemu-system-x86_64|scripts/verify-|scripts/run-harness-|make verify' 2>/dev/null \
+  | grep -vE "($$|$PPID|run-harness-a-b-comparable|verify-harness-comparable)" || true)
+
+if [[ -n "$quiet_hits" ]]; then
+  echo "IA_LIVRE_HARNESS_QUIET_WARN=concorrencia_detectada" >&2
+  printf '%s' "$quiet_hits" >&2
+  if [[ "${IA_LIVRE_HARNESS_QUIET_STRICT:-0}" == "1" && "${IA_LIVRE_HARNESS_QUIET_FORCE:-0}" != "1" ]]; then
+    echo "IA_LIVRE_HARNESS_QUIET_HINT=aguarde, mate QEMU órfão, ou IA_LIVRE_HARNESS_QUIET_FORCE=1" >&2
+    echo "IA_LIVRE_HARNESS_VERDICT=INCONCLUSIVO"
+    echo "IA_LIVRE_HARNESS_VERDICT_REASON=host_nao_quieto_concorrencia"
+    exit 1
+  fi
+  if [[ "${IA_LIVRE_HARNESS_QUIET_FORCE:-0}" == "1" ]]; then
+    echo "IA_LIVRE_HARNESS_QUIET_FORCE=1" >&2
+  fi
+fi
+echo "IA_LIVRE_HARNESS_QUIET_LOADAVG=$(cut -d' ' -f1-3 /proc/loadavg 2>/dev/null || echo n/a)"
+
 echo "=== Harness comparável — Linha A (timeout ${TIMEOUT_SEC}s) ==="
 set +e
 timeout "${TIMEOUT_SEC}s" ./scripts/run-harness-line-a.sh >"$LOG_A" 2>"$LOG_A.err"

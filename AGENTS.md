@@ -42,8 +42,8 @@ make verify   # gate automatizado do kernel (marcadores: ver docs/kernel-alem-do
 
 Equivalente interativo: `./scripts/run-qemu.sh`.
 
-Na serial: Etapa 10 (`BOOT_OK` … `ALLOC_OK`) + loader Etapa 26 (`GGUF_LOADER_*` / `GGUF_MAGIC_OK` / `GGUF_NATIVE_LOADER=esp_header`) + `IA_LIVRE_EXIT_BOOT_BEGIN`; após ExitBootServices (UART COM1): `EXIT_*` + reemissão GGUF + demo Etapa 19 (`TYPED_*` / `PHASE=` / `MEM_SCHED_OK`) + proxy Linha B (`NATIVE_BENCH_*`).  
-Contratos: kernel-alem-do-boot, kernel-pos-boot-services, memoria-scheduler-impl-minima, runtime-nativo-linha-b (loader ESP). **Sem** geração/`TOKENS_PER_S` no kernel.
+Na serial: Etapa 10 (`BOOT_OK` … `ALLOC_OK`) + loader Etapas 26/27 (`GGUF_LOADER_*` / `GGUF_MAGIC_OK` / `GGUF_NATIVE_LOADER=blockio_full` / `GGUF_TENSORS_STUB_OK`) + `IA_LIVRE_EXIT_BOOT_BEGIN`; após ExitBootServices (UART COM1): `EXIT_*` + reemissão GGUF + demo Etapa 19 (`TYPED_*` / `PHASE=` / `MEM_SCHED_OK`) + proxy Linha B (`NATIVE_BENCH_*`).  
+Contratos: kernel-alem-do-boot, kernel-pos-boot-services, memoria-scheduler-impl-minima, runtime-nativo-linha-b (BlockIO full + stub). **Sem** geração/`TOKENS_PER_S` no kernel (`B_BLOCK=no_gguf_infer_engine`).
 
 ### Runtime de inferência (host — Etapas 5 / 8)
 
@@ -181,7 +181,7 @@ Gate automatizado: `make verify-agent` (não exige QEMU/UEFI nem o nó P2P; requ
 Metodologia: [`docs/harness-linha-a-b.md`](docs/harness-linha-a-b.md); caminho B mínimo: [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md); contrato: [`docs/runtime-contrato-nativo.md`](docs/runtime-contrato-nativo.md).  
 **Não** confundir com métricas dos protótipos CPU/GPU. Linha A = host + GGUF; Linha B = proxy pós-ExitBoot no QEMU **+** evidência `MEM_SCHED` (E19) reemitida como `HARNESS_CONTRACT_*` (**não** TinyLlama).  
 **Etapa 21:** deps 19/20 ok (`CONTRACT_READY=1`); bloqueio histórico `no_gguf_path`.  
-**Etapa 26:** loader ESP mínimo (`GGUF_NATIVE_LOADER=esp_header`, `GGUF_STATUS=header_ok`, `B_BLOCK=no_gguf_infer`) — cabeçalho no guest; **ainda sem** `TOKENS_PER_S` em B. Spec: `specs/loader-gguf-nativo-linha-b/`. Hipótese **não** comprovada.
+**Etapa 26/27:** loader ESP → BlockIO full (`GGUF_NATIVE_LOADER=blockio_full`, `GGUF_STATUS=tensors_stub_ok`, `B_BLOCK=no_gguf_infer_engine`) — GGUF completo + stub; **ainda sem** `TOKENS_PER_S` em B. Specs: `specs/loader-gguf-nativo-linha-b/`, `specs/inferencia-minima-linha-b/`. Hipótese **não** comprovada.
 
 Pré-requisitos: runtime CPU (GGUF) para A; QEMU/OVMF para B. Sem GPU no harness v1.
 
@@ -199,8 +199,8 @@ cargo build -p ia-livre-runtime
 ./scripts/run-harness-line-b.sh
 ```
 
-Linha B: proxy E12 **preservado** (`LOAD_KIND=proxy`) + contrato E19 (`HARNESS_CONTRACT_*`, `CONTRACT_READY=1`) + loader ESP (`GGUF_NATIVE_LOADER=esp_header`, `GGUF_STATUS=header_ok`, `B_BLOCK=no_gguf_infer`).  
-**Proibido** `TOKENS_PER_S` / `LOAD_KIND=gguf` / `MODEL=` TinyLlama sem carga real. Opcional: `IA_LIVRE_HARNESS_B_MODE=block-status` → `LOAD_KIND_GGUF=blocked`. Ver [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md). Hipótese **não** comprovada.
+Linha B: proxy E12 **preservado** (`LOAD_KIND=proxy`) + contrato E19 (`HARNESS_CONTRACT_*`, `CONTRACT_READY=1`) + loader BlockIO (`GGUF_NATIVE_LOADER=blockio_full`, `GGUF_STATUS=tensors_stub_ok`, `B_BLOCK=no_gguf_infer_engine`).  
+**Proibido** `TOKENS_PER_S` / `LOAD_KIND=gguf` / `MODEL=` TinyLlama sem motor real. Opcional: `IA_LIVRE_HARNESS_B_MODE=block-status` → `LOAD_KIND_GGUF=blocked`. Ver [`docs/runtime-nativo-linha-b.md`](docs/runtime-nativo-linha-b.md). Hipótese **não** comprovada.
 
 Gate automatizado: `make verify-harness` (A = GGUF; B = proxy + contrato + bloqueio GGUF; requer GGUF para A).
 
@@ -217,10 +217,11 @@ make verify-runtime-contract
 # Evidência nativa: ./scripts/run-harness-line-b.sh (HARNESS_CONTRACT_*)
 ```
 
-### Harness A vs B comparável (Etapa 22)
+### Harness A vs B comparável (Etapas 22 / 28)
 
 Metodologia + veredito: [`docs/harness-a-b-comparavel.md`](docs/harness-a-b-comparavel.md).  
-Corrida agregada A+B com `IA_LIVRE_HARNESS_VERDICT=` ∈ {`COMPROVA`,`REFUTA`,`INCONCLUSIVO`}. Com B proxy → **`INCONCLUSIVO`** (obrigatório). **Não** inventa métricas lado a lado sem GGUF real em B.
+Protocolo serial (sem contenção): [`docs/harness-corrida-quieta.md`](docs/harness-corrida-quieta.md) — um gate por vez; preflight aviso; `IA_LIVRE_HARNESS_QUIET_STRICT=1` / `QUIET_FORCE=1`.  
+Corrida agregada A+B com `IA_LIVRE_HARNESS_VERDICT=` ∈ {`COMPROVA`,`REFUTA`,`INCONCLUSIVO`}. Com B proxy / `no_gguf_infer_engine` → **`INCONCLUSIVO`** (obrigatório). **Não** inventa métricas lado a lado sem geração real em B.
 
 ```bash
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
@@ -261,7 +262,7 @@ grep -q 'IA_LIVRE_TYPED_WEIGHTS_OK' kernel/src/main.rs
 grep -q 'IA_LIVRE_NATIVE_BENCH_OK' kernel/src/main.rs
 ```
 
-`make verify` falha se faltarem BOOT/MEM/ALLOC/EXIT_* / `GGUF_MAGIC_OK` + `GGUF_NATIVE_LOADER=esp_header` (Etapa 26) / `MEM_SCHED_OK` (Etapa 19) / `NATIVE_BENCH_OK` (proxy Linha B). Timeout padrão 45s; `VERIFY_TIMEOUT`.
+`make verify` falha se faltarem BOOT/MEM/ALLOC/EXIT_* / `GGUF_MAGIC_OK` + `GGUF_NATIVE_LOADER=blockio_full` (Etapa 27) / `MEM_SCHED_OK` (Etapa 19) / `NATIVE_BENCH_OK` (proxy Linha B). Timeout padrão 45s; `VERIFY_TIMEOUT`.
 
 ### Gate do runtime (Etapa 5 — adicional)
 
@@ -377,7 +378,7 @@ grep -q 'post_exit_microbench' scripts/run-harness-line-b.sh
 grep -q 'HARNESS_CONTRACT_BACKEND=native_qemu' scripts/run-harness-line-b.sh
 ```
 
-`make verify-harness` exige A (`LINE=A`, `OK`, load/tokens) **e** B (`LINE=B`, `OK`, `PROXY=*`, `HARNESS_CONTRACT_MEM_SCHED=OK`, `CONTRACT_READY=1`, `GGUF_TARGET_*`, `GGUF_NATIVE_LOADER=esp_header`, `GGUF_STATUS=header_ok`, `B_BLOCK=no_gguf_infer`, sem `TOKENS_PER_S` / sem `LOAD_S` / sem `B_SKIP` / sem `LOAD_KIND=gguf` fingido). Timeout padrão 300s; `VERIFY_HARNESS_TIMEOUT`. Gates existentes permanecem.
+`make verify-harness` exige A (`LINE=A`, `OK`, load/tokens) **e** B (`LINE=B`, `OK`, `PROXY=*`, `HARNESS_CONTRACT_MEM_SCHED=OK`, `CONTRACT_READY=1`, `GGUF_TARGET_*`, `GGUF_NATIVE_LOADER=blockio_full`, `GGUF_STATUS=tensors_stub_ok`, `B_BLOCK=no_gguf_infer_engine`, sem `TOKENS_PER_S` / sem `LOAD_S` / sem `B_SKIP` / sem `LOAD_KIND=gguf` fingido). Timeout padrão 300s; `VERIFY_HARNESS_TIMEOUT`. Gates existentes permanecem.
 
 ### Gate do contrato nativo host (Etapa 20 — adicional)
 

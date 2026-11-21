@@ -2,22 +2,22 @@
 
 ## Foco atual
 
-- Etapas **1–27 feitas**
-- E27: `blockio_full` + `tensors_stub_ok` + `B_BLOCK=no_gguf_infer_engine`
-- Backlog Abertas: **B22** (re-corrida quieta)
+- Etapas **1–28 feitas**
+- Backlog **Abertas vazio**
 - Lease: livre
+- Hipótese A vs B: ainda **INCONCLUSIVO** (`no_gguf_infer_engine`)
 
 ## Mudanças recentes
 
-- Métricas CPU serial (~13,4 tok/s mediana)
-- E26 loader ESP header; E27 GGUF completo via BlockIO (FAT16 cap documentada)
-- Hipótese ainda INCONCLUSIVO (sem TOKENS_PER_S em B)
+- E27: BlockIO full + stub tensores
+- E28: protocolo corrida quieta + evidência + preflight
+- Métricas A quietas: ~15.4 tok/s nesta corrida E28
 
 ## Próximo passo
 
-- Promover B22 ou etapa de **motor de inferência** em B (novo item) para sair de `no_gguf_infer_engine`
+- Pedido explícito ou novo item em `BACKLOG.md` — tipicamente **motor de inferência em B** para sair de `no_gguf_infer_engine`
+- Não inventar etapa
 
 ## Notas
 
-- Medições T/s: um gate por vez
-- `build/gguf-canon.gguf` gitignored via `build/`
+- Um gate por vez (`docs/harness-corrida-quieta.md`)
