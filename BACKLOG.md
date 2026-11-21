@@ -20,7 +20,7 @@ _(nenhuma — B15–B19 já promovidas às Etapas 21–25)_
 
 ### B16 — Harness A vs B comparável (prova ou refutação da hipótese)
 
-- Promovido para Etapa 22 do roadmap (`em_andamento`; branch `etapa-b16-harness-comparavel`).
+- Promovido para Etapa 22 do roadmap — **feita** (VERDICT=INCONCLUSIVO; B=proxy/no_gguf_path).
 - Issue: [#22](https://github.com/eriksonlima/projeto-ia-livre/issues/22)
 - Etapa: [Etapa 22 — Harness A vs B comparável (prova ou refutação da hipótese)](ROADMAP.md)
 

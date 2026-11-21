@@ -151,7 +151,7 @@ Pronto quando: caminho mínimo da carga canônica do harness (TinyLlama Q4_K_M) 
 
 ## Etapa 22 — Harness A vs B comparável (prova ou refutação da hipótese)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#22](https://github.com/eriksonlima/projeto-ia-livre/issues/22)  
 Spec: specs/harness-a-b-comparavel/  
 Pronto quando: corrida lado a lado documentada (mesmo modelo/quantização/carga) com resultado comprova, refuta ou inconclusivo; sem vitória sem evidência. Depende da Etapa 21.

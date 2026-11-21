@@ -2,16 +2,15 @@
 
 ## O que funciona
 
-- Etapas 1–21 feitas
-- E21: bloqueio honesto GGUF em B (`no_gguf_path`) + `CONTRACT_READY`
-- E22 (em andamento): instrumento comparável (Tasks 1–3 na branch) — validar pós-merge
+- Etapas 1–22 feitas
+- E21: `CONTRACT_READY` + `B_BLOCK=no_gguf_path`
+- E22: `make verify-harness-comparable` → `VERDICT=INCONCLUSIVO`
 
 ## Bloqueios
 
-- Hipótese A vs B: B ainda sem GGUF real → veredito esperado INCONCLUSIVO
+- GGUF real em B ausente → prova A vs B permanece inconclusiva até loader nativo
 
 ## Por etapa
 
-- 1–21: feitas
-- 22: em_andamento (validação pós-merge E21)
-- 23–25: pendente (branches paralelas)
+- 1–22: feitas
+- 23–25: pendente (branches `etapa-b17` / `b18` / `b19`)
