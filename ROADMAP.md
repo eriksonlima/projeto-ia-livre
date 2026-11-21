@@ -338,8 +338,9 @@ Pronto quando: `make verify-harness-comparable` com B gerando; veredito ∈ {COM
 
 ## Etapa 46 — Evidência de boot metal real (serial ≥ BOOT_OK em PC)
 
-Status: em_andamento  
+Status: feita  
 Issue: [#46](https://github.com/eriksonlima/projeto-ia-livre/issues/46)  
-Spec: (a gerar)  
-Pronto quando: log serial de PC real em `docs/evidence/boot-metal/` + `IA_LIVRE_BAREMETAL_METAL_OK` no gate; Secure Boot/checklist documentados.
+Spec: specs/evidencia-boot-metal-real/  
+Pronto quando: log serial de PC real em `docs/evidence/boot-metal/` + `IA_LIVRE_BAREMETAL_METAL_OK` no gate; Secure Boot/checklist documentados.  
+**Desfecho:** caminho B — sem PC/log neste host; `SKIP=1` + `STATUS-SKIP.txt`; checklist A/B documentado; `METAL_OK` pendente de evidência real.
 

@@ -1,8 +1,8 @@
 # Evidências — boot UEFI em hardware real
 
-Pasta para logs seriados capturados em **PC físico** (Etapa 35).
+Pasta para logs seriados capturados em **PC físico** (Etapas 35 / 46).
 
-## Como adicionar
+## Como adicionar (caminho A)
 
 1. Gerar ESP: `make baremetal-esp`
 2. Anotar `sha256sum build/baremetal-esp/EFI/BOOT/BOOTX64.EFI`
@@ -14,6 +14,8 @@ Pasta para logs seriados capturados em **PC físico** (Etapa 35).
 
 Ver `TEMPLATE.txt` nesta pasta. **Não** copie saída de QEMU como evidência de metal.
 
-## Estado
+## Estado (Etapa 46 — caminho B)
 
-Sem log de PC anexado ainda → gate usa `IA_LIVRE_BAREMETAL_SKIP=1` (honesto).
+- **2026-11-21:** sem log de PC anexado neste host de desenvolvimento → `IA_LIVRE_BAREMETAL_SKIP=1` (honesto).
+- Issue [#46](https://github.com/eriksonlima/projeto-ia-livre/issues/46): bloqueio por ausência de hardware/serial; reabrir caminho A quando houver log real.
+- Arquivo sentinela: `STATUS-SKIP.txt`

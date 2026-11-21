@@ -2,15 +2,14 @@
 
 ## Funciona
 
-- Etapas 1–45
-- Linha B: geração real (`TOKENS_PER_S`) subset 2L×1 + release UEFI
-- Comparable limpo: `E45_perf_ceiling_below_canonical_*`
+- Etapas 1–46
+- Linha B gera TOKENS_PER_S (subset); comparable E45 teto
+- Baremetal IMAGE_OK; METAL_OK pendente de PC
 
 ## Residual
 
-- 22L × n_predict=32 (teto perf / otimização futura)
-- Boot metal: B40
+- 22L×32 canônico; METAL_OK com log real; B41+
 
 ## Roadmap
 
-- Sem `em_andamento` após fechar E45; próxima promoção: B40
+- Sem em_andamento; próxima: B41

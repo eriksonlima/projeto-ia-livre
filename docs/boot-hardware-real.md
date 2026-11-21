@@ -48,7 +48,7 @@ Contrato completo: [`gguf-baremetal-midia.md`](gguf-baremetal-midia.md).
 3. Opção B — se existir `.img` (com mtools): `dd if=build/ia-livre-esp.img of=/dev/sdX bs=4M status=progress` (**confirme o dispositivo**).
 4. No firmware: boot USB/ESP; **Secure Boot off** ou modo setup (EFI não assinado).
 
-## Checklist hardware real
+## Checklist hardware real (Etapa 46)
 
 | Passo | Ok? |
 |-------|-----|
@@ -57,8 +57,18 @@ Contrato completo: [`gguf-baremetal-midia.md`](gguf-baremetal-midia.md).
 | Serial USB-UART no COM1 (ou adaptador) a 115200 8N1 | |
 | Na serial: pelo menos `IA_LIVRE_BOOT_OK` (sucesso mínimo) | |
 | Ideal: `EXIT_BOOT_OK` se o fluxo completo rodar | |
+| Log **não** contém strings QEMU/OVMF/`SeaBIOS` | |
 
 Sem serial: só confirmação visual de que o firmware carregou o EFI — **não** conta como gate CI.
+
+### Caminhos Etapa 46 (ADR/spec)
+
+| Caminho | Quando | Resultado |
+|---------|--------|-----------|
+| **A — evidência** | Operador anexa log em `docs/evidence/boot-metal/` | `SKIP=0` + `METAL_OK` |
+| **B — bloqueio honesto** | Sem PC/log nesta máquina | `SKIP=1`; issue registra bloqueio; **proibido** fabricar log |
+
+Agente **não** inventa evidência serial.
 
 ## Captura serial (Etapa 35)
 
