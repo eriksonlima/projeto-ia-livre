@@ -480,3 +480,10 @@ Spec: specs/io-gguf-path-metal/
 Pronto quando: no path metal (SFS/ESP — QEMU FAT32 ou PC), loader full **ou** geração mínima com marcadores; **ou** bloqueio/ADR honesto se I/O full continuar inviável; sem `TOKENS` fingidos; ≠ tratar BlockIO como metal; ≠ `METAL_OK` fabricado.  
 **Desfecho:** ramo **A** — FAT32 `.img` + `run-qemu-esp-fat32.sh` + loader `esp_sfs_full` (GGUF ~638 MiB via SFS); `make verify-metal-infer` (auto/full); `make verify` BlockIO intacto; ≠ `METAL_OK`; bridge E49 força legacy para `metal_block`.  
 
+## Etapa 64 — Accel GPU simétrica A/B no harness
+
+Status: em_andamento  
+Issue: [#73](https://github.com/eriksonlima/projeto-ia-livre/issues/73)  
+Spec: specs/harness-accel-simetrico-ab/  
+Pronto quando: corrida A/B com o **mesmo** perfil de aceleração (ambos GPU ou ambos CPU documentado); skip sem GPU; **proibido** `ACCEL` fingido em B; veredito honesto (tipicamente `INCONCLUSIVO` até espécie/GPU guest); ≠ `COMPROVA` fabricado.  
+
