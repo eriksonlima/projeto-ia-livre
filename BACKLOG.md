@@ -10,12 +10,6 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 
 > **Meta do protótipo (objetivo do projeto):** um ecossistema verificável em que (1) a **hipótese A vs B** possa ser comprovada ou refutada com geração real na Linha B (`TOKENS_PER_S`), (2) o **SO IA Livre** boote de USB/ESP em hardware real com caminho de IA nativo mínimo honesto, (3) a **Rede** e a **autonomia** continuem utilizáveis **sem** exigir o SO. Ordem abaixo = prioridade sugerida (topo primeiro).
 
-### B38 — Decode + sampling + `TOKENS_PER_S` canônico na Linha B
-- Issue: [#44](https://github.com/eriksonlima/projeto-ia-livre/issues/44)
-
-- Origem: hipótese de pesquisa / ADR 0013
-- Pronto quando: geração canônica em B emite `TOKENS_PER_S` (e marcadores Decode/sampling) honestos; `B_BLOCK` removido ou substituído; gate harness B atualizado
-- Deps: B37
 
 ### B39 — Re-corrida harness A vs B com geração real (veredito limpo)
 - Issue: [#45](https://github.com/eriksonlima/projeto-ia-livre/issues/45)
@@ -116,6 +110,16 @@ Promoção para `ROADMAP.md` é **autônoma** (topo das Abertas quando o roadmap
 - Deps: B39 + B40 + B42 (mínimo sugerido)
 
 ## Promovidas / arquivadas
+
+### B38 — Decode + sampling + `TOKENS_PER_S` canônico na Linha B
+- Issue: [#44](https://github.com/eriksonlima/projeto-ia-livre/issues/44)
+
+- Origem: hipótese de pesquisa / ADR 0013
+- Pronto quando: geração canônica em B emite `TOKENS_PER_S` (e marcadores Decode/sampling) honestos; `B_BLOCK` removido ou substituído; gate harness B atualizado
+- Deps: B37
+
+- Promovido para Etapa 44 do roadmap (promoção autônoma após E43).
+- Etapa: [Etapa 44 — Decode + sampling + TOKENS_PER_S canônico na Linha B](ROADMAP.md)
 
 ### B37 — Prefill completo 22L + KV cache viável na Linha B
 

@@ -319,3 +319,11 @@ Issue: [#43](https://github.com/eriksonlima/projeto-ia-livre/issues/43)
 Spec: specs/prefill-22l-kv-linha-b/  
 Pronto quando: prefill das 22 camadas TinyLlama (ou subset documentado equivalente) + KV alocado/viável no QEMU Linha B, com marcadores serial; **sem** fingir `TOKENS_PER_S` ainda.  
 **Desfecho:** subset ADR 0014 — `PREFILL_LAYERS=2`×`KV_N_POS=2` + `KV_CACHE_OK`/`PREFILL_PARTIAL_OK`; host 2L×16; `B_BLOCK=no_gguf_prefill_22l`; comparable `E43_no_gguf_prefill_22l_subset_kv_ok`; sem `TOKENS_PER_S`.
+
+## Etapa 44 — Decode + sampling + TOKENS_PER_S canônico na Linha B
+
+Status: em_andamento  
+Issue: [#44](https://github.com/eriksonlima/projeto-ia-livre/issues/44)  
+Spec: (a gerar)  
+Pronto quando: geração canônica em B emite `TOKENS_PER_S` (e marcadores Decode/sampling) honestos; `B_BLOCK` removido ou substituído; gate harness B atualizado.
+
