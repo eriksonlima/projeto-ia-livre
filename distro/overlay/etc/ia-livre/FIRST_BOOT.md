@@ -7,8 +7,10 @@
 | Usuário | `ialivre` |
 | Senha | `ialivre` |
 
-Autologin no TTY1 costuma entrar sozinho. Se pedir login, use a tabela acima.  
+Autologin no TTY1 (e na serial) costuma entrar sozinho. Se pedir login, use a tabela acima.  
 `sudo` sem senha para este usuário (lab TTY-first). Root também usa a senha `ialivre`.
+
+Se `ialivre`/`ialivre` for rejeitado, a ISO provavelmente foi gerada sem `/etc/shadow` (bug do `mksquashfs` sem root) — regenere com Docker/root e regrave o pendrive.
 
 ## Modelos
 

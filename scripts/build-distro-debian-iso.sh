@@ -77,13 +77,27 @@ fi
 
 SQ="$ISO_DIR/live/filesystem.squashfs"
 need_squash=1
+
+# Cache inválido se /etc/shadow veio vazio (mksquashfs sem root não lê shadow 0640).
+squash_shadow_ok() {
+  local sq="$1" line sz
+  command -v unsquashfs >/dev/null 2>&1 || return 1
+  line="$(unsquashfs -ll "$sq" 2>/dev/null | grep -E '/etc/shadow$' | head -1 || true)"
+  [[ -n "$line" ]] || return 1
+  # unsquashfs -ll: perms owner/group size date time path
+  sz="$(awk '{print $3}' <<<"$line")"
+  [[ "$sz" =~ ^[0-9]+$ ]] && [[ "$sz" -gt 0 ]]
+}
+
 if [[ "${IA_LIVRE_ISO_RESQUASH:-0}" != "1" \
   && -f "$OUT/iso-tree-cache/filesystem.squashfs" \
   && "${IA_LIVRE_DEBIAN_INCLUDE_GGUF:-0}" != "1" ]]; then
-  # Cache só é válido se não contiver .gguf (unsquashfs -ll se existir)
   if command -v unsquashfs >/dev/null 2>&1 \
     && unsquashfs -ll "$OUT/iso-tree-cache/filesystem.squashfs" 2>/dev/null | grep -qi '\.gguf'; then
     echo "iso: cache squashfs tinha GGUF — regenerando…"
+    need_squash=1
+  elif ! squash_shadow_ok "$OUT/iso-tree-cache/filesystem.squashfs"; then
+    echo "iso: cache squashfs com /etc/shadow vazio/ilegível — regenerando (precisa root/docker)…"
     need_squash=1
   else
     echo "iso: reusando squashfs em cache…"
@@ -95,11 +109,37 @@ fi
 if [[ "$need_squash" -eq 1 ]]; then
   echo "iso: mksquashfs (pode demorar)…"
   mkdir -p "$ISO_DIR/live"
-  mksquashfs "$ROOTFS" "$SQ" \
-    -comp xz -no-progress -e boot/vmlinuz-* -e boot/initrd.img-* 2>/dev/null \
-    || mksquashfs "$ROOTFS" "$SQ" -comp xz -no-progress
+  rm -f "$SQ"
+  # Sem root, mksquashfs não lê etc/shadow (0640) → arquivo vazio na ISO → login falha.
+  if [[ "$(id -u)" -eq 0 ]]; then
+    mksquashfs "$ROOTFS" "$SQ" \
+      -comp xz -no-progress -e boot/vmlinuz-\* -e boot/initrd.img-\* 2>/dev/null \
+      || mksquashfs "$ROOTFS" "$SQ" -comp xz -no-progress
+  elif have_docker; then
+    echo "iso: mksquashfs via Docker (root) para preservar /etc/shadow…"
+    docker run --rm --privileged \
+      -v "$ROOTFS:/rootfs:ro" \
+      -v "$ISO_DIR/live:/out" \
+      debian:bookworm bash -c '
+set -euo pipefail
+export DEBIAN_FRONTEND=noninteractive
+apt-get update -qq
+apt-get install -y -qq squashfs-tools >/dev/null
+mksquashfs /rootfs /out/filesystem.squashfs \
+  -comp xz -no-progress -e boot/vmlinuz-* -e boot/initrd.img-*
+'
+  else
+    echo "erro: mksquashfs precisa de root ou Docker para incluir /etc/shadow (login live)" >&2
+    echo "  sudo $0   ou instale/inicie Docker" >&2
+    exit 1
+  fi
+  if ! squash_shadow_ok "$SQ"; then
+    echo "erro: filesystem.squashfs sem /etc/shadow utilizável — abortando ISO" >&2
+    exit 1
+  fi
   mkdir -p "$OUT/iso-tree-cache"
   cp -f "$SQ" "$OUT/iso-tree-cache/filesystem.squashfs"
+  echo "IA_LIVRE_DISTRO_ISO_SHADOW_OK"
 fi
 if [[ "${IA_LIVRE_DEBIAN_INCLUDE_GGUF:-0}" != "1" ]] && command -v unsquashfs >/dev/null 2>&1; then
   if unsquashfs -ll "$SQ" 2>/dev/null | grep -qi '\.gguf'; then
@@ -107,6 +147,13 @@ if [[ "${IA_LIVRE_DEBIAN_INCLUDE_GGUF:-0}" != "1" ]] && command -v unsquashfs >/
     exit 1
   fi
   echo "IA_LIVRE_DISTRO_ISO_GGUF=stripped"
+fi
+# Sempre emitir se shadow ok (cache hit também)
+if squash_shadow_ok "$SQ"; then
+  echo "IA_LIVRE_DISTRO_ISO_SHADOW_OK"
+else
+  echo "erro: ISO squashfs /etc/shadow inválido" >&2
+  exit 1
 fi
 
 cat >"$ISO_DIR/boot/grub/grub.cfg" <<'EOF'

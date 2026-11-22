@@ -23,8 +23,17 @@ fi
 
 echo "$out" | grep -q 'IA_LIVRE_DISTRO_ISO_OK'
 echo "$out" | grep -q 'IA_LIVRE_DISTRO_ISO_QEMU_OK'
+# mksquashfs sem root gerava /etc/shadow vazio → login impossível
+echo "$out" | grep -q 'IA_LIVRE_DISTRO_ISO_SHADOW_OK' \
+  || {
+    SQ=build/distro-debian/iso-tree/live/filesystem.squashfs
+    [[ -f "$SQ" ]] || SQ=build/distro-debian/iso-tree-cache/filesystem.squashfs
+    line="$(unsquashfs -ll "$SQ" 2>/dev/null | grep -E '/etc/shadow$' | head -1 || true)"
+    sz="$(awk '{print $3}' <<<"$line")"
+    [[ "$sz" =~ ^[0-9]+$ && "$sz" -gt 0 ]]
+  }
 test -f build/distro-debian/ia-livre-linux.iso
 grep -q 'verify-distro-iso\|ISO híbrida\|ia-livre-linux.iso' docs/linux-ia-nativo.md
 
-echo "GATE_OK: distro-iso — ISO + QEMU OK (≠ tarball; ≠ ESP UEFI)"
+echo "GATE_OK: distro-iso — ISO + QEMU OK (≠ tarball; ≠ ESP UEFI; shadow OK)"
 exit 0
