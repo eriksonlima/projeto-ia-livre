@@ -8,6 +8,7 @@ if [[ -f /etc/ia-livre/ia-livre.conf ]]; then
   CONF=/etc/ia-livre/ia-livre.conf
   BIN_DIR=/opt/ia-livre/bin
   MODELS_DIR=/var/lib/ia-livre/models
+  CATALOG="${IA_LIVRE_MODELS_CATALOG:-/etc/ia-livre/models-catalog.tsv}"
   # shellcheck disable=SC1090
   set -a
   # shellcheck source=/dev/null
@@ -17,6 +18,7 @@ else
   CONF="$ROOT/etc/ia-livre/ia-livre.conf"
   BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
   MODELS_DIR="$ROOT/var/lib/ia-livre/models"
+  CATALOG="${IA_LIVRE_MODELS_CATALOG:-$ROOT/etc/ia-livre/models-catalog.tsv}"
   # shellcheck disable=SC1090
   set -a
   # shellcheck source=/dev/null
@@ -34,6 +36,21 @@ MODEL="${IA_LIVRE_MODEL:?}"
 N_PREDICT="${IA_LIVRE_N_PREDICT:-32}"
 N_GPU="${IA_LIVRE_N_GPU_LAYERS:-0}"
 MEM="${IA_LIVRE_AGENT_MEMORY:-/var/lib/ia-livre/agent-memory/memory.jsonl}"
+
+catalog_lookup() {
+  # $1 = id ou nome de arquivo → imprime: id|size|file|url|note
+  local key="$1"
+  local line id size file url note
+  [[ -f "$CATALOG" ]] || return 1
+  while IFS=$'\t' read -r id size file url note || [[ -n "${id:-}" ]]; do
+    [[ -z "${id:-}" || "$id" == \#* ]] && continue
+    if [[ "$key" == "$id" || "$key" == "$file" || "$key" == "$(basename "$file")" ]]; then
+      printf '%s\t%s\t%s\t%s\t%s\n' "$id" "$size" "$file" "$url" "${note:-}"
+      return 0
+    fi
+  done <"$CATALOG"
+  return 1
+}
 
 persist_conf_model() {
   local new_path="$1"
@@ -66,14 +83,16 @@ Uso: ia-livre <comando> [args]
   infer [args…]          runtime --model \$IA_LIVRE_MODEL …
   agent [args…]          agent --model … --memory …
   node [args…]           ia-livre-node …
-  model list             lista *.gguf em models/
+  model list             lista *.gguf já baixados em models/
+  model catalog          lista modelos que dá para baixar (catálogo)
   model set <arquivo>    define IA_LIVRE_MODEL (qualquer GGUF) e grava conf
   model show             mostra modelo efetivo
-  model fetch [nome]     baixa GGUF canônico (TinyLlama) ou URL via IA_LIVRE_MODEL_URL
+  model fetch [id]       baixa do catálogo (default: tinyllama) ou arquivo; URL via IA_LIVRE_MODEL_URL
   conf                   mostra config efetiva
   help
 
 Models dir: $MODELS_DIR
+Catálogo: $CATALOG
 Config: $CONF
 EOF
 }
@@ -139,11 +158,47 @@ case "$cmd" in
           exit 1
         fi
         ;;
+      catalog)
+        if [[ ! -f "$CATALOG" ]]; then
+          echo "erro: catálogo ausente: $CATALOG" >&2
+          exit 1
+        fi
+        printf '%-14s %-10s %s\n' "ID" "TAMANHO" "NOTA"
+        printf '%-14s %-10s %s\n' "--------------" "----------" "----"
+        while IFS=$'\t' read -r id size file url note || [[ -n "${id:-}" ]]; do
+          [[ -z "${id:-}" || "$id" == \#* ]] && continue
+          printf '%-14s %-10s %s\n' "$id" "$size" "${note:-$file}"
+        done <"$CATALOG"
+        echo
+        echo "Baixar: ia-livre model fetch <id>   (ex.: ia-livre model fetch tinyllama)"
+        echo "Locais:  ia-livre model list"
+        echo "IA_LIVRE_MODEL_CATALOG_OK"
+        ;;
       fetch)
         mkdir -p "$MODELS_DIR"
-        name="${1:-tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf}"
+        key="${1:-tinyllama}"
+        name=""
+        url=""
+        size_hint=""
+        if [[ -n "${IA_LIVRE_MODEL_URL:-}" ]]; then
+          name="$(basename "${2:-$key}")"
+          [[ "$name" == *.gguf ]] || name="${name}.gguf"
+          url="$IA_LIVRE_MODEL_URL"
+        elif row="$(catalog_lookup "$key")"; then
+          IFS=$'\t' read -r _cid size_hint name url _note <<<"$row"
+        elif [[ "$key" == *.gguf || "$key" == http* ]]; then
+          if [[ "$key" == http* ]]; then
+            url="$key"
+            name="$(basename "${key%%\?*}")"
+          else
+            name="$key"
+            url="https://huggingface.co/TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/${name}"
+          fi
+        else
+          echo "erro: id desconhecido '$key'. Rode: ia-livre model catalog" >&2
+          exit 1
+        fi
         dest="$MODELS_DIR/$name"
-        url="${IA_LIVRE_MODEL_URL:-https://huggingface.co/TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/${name}}"
         if [[ -f "$dest" ]]; then
           echo "já presente: $dest"
           ls -lh "$dest"
@@ -152,7 +207,7 @@ case "$cmd" in
             echo "erro: instale curl (sudo apt install -y curl)" >&2
             exit 1
           fi
-          echo "baixando $name (~638 MiB)…"
+          echo "baixando $name ${size_hint:+($size_hint)}…"
           echo "URL: $url"
           tmp="$dest.partial"
           curl -fL --progress-bar -o "$tmp" "$url"
@@ -165,7 +220,7 @@ case "$cmd" in
         ;;
       *)
         echo "subcomando model desconhecido: $sub" >&2
-        echo "uso: ia-livre model list|set|show|fetch" >&2
+        echo "uso: ia-livre model list|catalog|set|show|fetch" >&2
         exit 1
         ;;
     esac

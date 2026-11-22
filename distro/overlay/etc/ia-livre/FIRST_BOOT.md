@@ -17,7 +17,8 @@ A ISO **default não traz** GGUF (~638 MiB) — economiza espaço no pendrive.
 Com rede no live:
 
 ```bash
-ia-livre model fetch          # TinyLlama Q4_K_M (~638 MiB) → /var/lib/ia-livre/models/
+ia-livre model catalog        # lista IDs baixáveis (tamanho + nota)
+ia-livre model fetch tinyllama   # ou: phi2 | qwen25-05b | smollm2-360 | …
 ia-livre infer
 ```
 
