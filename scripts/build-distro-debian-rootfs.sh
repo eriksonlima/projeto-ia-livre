@@ -27,7 +27,7 @@ OVERLAY_ABS="$(cd distro/overlay && pwd)"
 rm -rf "$ROOTFS"
 mkdir -p "$ROOTFS"
 
-INCLUDES="linux-image-amd64,systemd-sysv,util-linux,udev,dbus,login,iproute2,ca-certificates,initramfs-tools,sudo,passwd,adduser"
+INCLUDES="linux-image-amd64,systemd-sysv,util-linux,udev,dbus,login,iproute2,ca-certificates,initramfs-tools,sudo,passwd,adduser,curl"
 
 # Credenciais live (TTY físico) — root Debian minbase vem bloqueado
 IA_USER="${IA_LIVRE_LIVE_USER:-ialivre}"

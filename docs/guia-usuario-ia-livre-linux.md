@@ -31,8 +31,8 @@ Boot UEFI no PC. **≠** pendrive ESP da Linha B.
 
 **Login:** usuário `ialivre` · senha `ialivre` (autologin no TTY1). `sudo` sem senha.
 
-1. `ia-livre model list` — copie um `.gguf` para `/var/lib/ia-livre/models/`
-2. `ia-livre model set …` / `ia-livre infer`
+1. Modelo: a ISO **não** traz GGUF. Com rede: `ia-livre model fetch` (TinyLlama ~638 MiB) ou `curl` de qualquer `.gguf` + `ia-livre model set …`
+2. `ia-livre infer`
 3. Opcional: `sudo ia-livre-native-tune`
 4. Rede: `ia-livre node …` ou `sudo systemctl enable --now ia-livre-node`
 5. Agente: `ia-livre agent --prompt "…"`

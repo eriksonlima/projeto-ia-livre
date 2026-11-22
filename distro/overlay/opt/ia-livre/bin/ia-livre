@@ -69,6 +69,7 @@ Uso: ia-livre <comando> [args]
   model list             lista *.gguf em models/
   model set <arquivo>    define IA_LIVRE_MODEL (qualquer GGUF) e grava conf
   model show             mostra modelo efetivo
+  model fetch [nome]     baixa GGUF canônico (TinyLlama) ou URL via IA_LIVRE_MODEL_URL
   conf                   mostra config efetiva
   help
 
@@ -138,8 +139,33 @@ case "$cmd" in
           exit 1
         fi
         ;;
+      fetch)
+        mkdir -p "$MODELS_DIR"
+        name="${1:-tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf}"
+        dest="$MODELS_DIR/$name"
+        url="${IA_LIVRE_MODEL_URL:-https://huggingface.co/TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/${name}}"
+        if [[ -f "$dest" ]]; then
+          echo "já presente: $dest"
+          ls -lh "$dest"
+        else
+          if ! command -v curl >/dev/null 2>&1; then
+            echo "erro: instale curl (sudo apt install -y curl)" >&2
+            exit 1
+          fi
+          echo "baixando $name (~638 MiB)…"
+          echo "URL: $url"
+          tmp="$dest.partial"
+          curl -fL --progress-bar -o "$tmp" "$url"
+          mv "$tmp" "$dest"
+          ls -lh "$dest"
+        fi
+        persist_conf_model "$dest"
+        echo "IA_LIVRE_MODEL_FETCH_OK"
+        echo "IA_LIVRE_MODEL_OK"
+        ;;
       *)
         echo "subcomando model desconhecido: $sub" >&2
+        echo "uso: ia-livre model list|set|show|fetch" >&2
         exit 1
         ;;
     esac

@@ -12,8 +12,21 @@ Autologin no TTY1 costuma entrar sozinho. Se pedir login, use a tabela acima.
 
 ## Modelos
 
-1. PATH já inclui `/opt/ia-livre/bin` (via `/etc/profile.d/ia-livre.sh`).
-2. **Não** há GGUF embutido no artefato default. Copie um `.gguf` para `/var/lib/ia-livre/models/`.
-3. Comandos: `ia-livre model list` · `ia-livre model set …` · `ia-livre infer` · `ia-livre-native-tune`
+A ISO **default não traz** GGUF (~638 MiB) — economiza espaço no pendrive.
 
-Lab com pesos na ISO: `IA_LIVRE_DEBIAN_INCLUDE_GGUF=1` no build.
+Com rede no live:
+
+```bash
+ia-livre model fetch          # TinyLlama Q4_K_M (~638 MiB) → /var/lib/ia-livre/models/
+ia-livre infer
+```
+
+Ou manual:
+
+```bash
+sudo apt update && sudo apt install -y curl   # se curl ainda não estiver na imagem
+curl -fL -o /var/lib/ia-livre/models/meu.gguf 'https://…/arquivo.gguf'
+ia-livre model set meu.gguf
+```
+
+Lab com pesos já na ISO: `IA_LIVRE_DEBIAN_INCLUDE_GGUF=1` no build do host.
