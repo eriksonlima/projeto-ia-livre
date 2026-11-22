@@ -29,13 +29,14 @@ Boot UEFI no PC. **≠** pendrive ESP da Linha B.
 
 ## 3. Primeira sessão
 
-**Login:** usuário `ialivre` · senha `ialivre` (autologin no TTY1). `sudo` sem senha.
+**Login:** usuário `ialivre` · senha `ialivre` (autologin no TTY1). Hostname: `ialivre`. `sudo` sem senha. Editores: `nano` / `vi`.
 
-1. Modelo: a ISO **não** traz GGUF. Com rede: `ia-livre model catalog` → `ia-livre model fetch <id>` (ex. `tinyllama`, `smollm2-360`)
-2. `ia-livre infer`
-3. Opcional: `sudo ia-livre-native-tune`
-4. Rede: `ia-livre node …` ou `sudo systemctl enable --now ia-livre-node`
-5. Agente: `ia-livre agent --prompt "…"`
+1. Wi‑Fi (se precisar de internet): `sudo ia-livre wifi up` → `scan` → `connect "SSID"`
+2. Modelo: a ISO **não** traz GGUF. Com rede: `ia-livre model catalog` → `ia-livre model fetch <id>` (ex. `tinyllama`, `smollm2-360`)
+3. `ia-livre infer`
+4. Opcional: `sudo ia-livre-native-tune`
+5. Rede P2P: `ia-livre node …` ou `sudo systemctl enable --now ia-livre-node`
+6. Agente: `ia-livre agent --prompt "…"`
 
 ## 4. Gates de confiança
 

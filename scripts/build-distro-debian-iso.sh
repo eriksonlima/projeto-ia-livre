@@ -164,11 +164,11 @@ terminal_input console
 terminal_output console
 
 menuentry "IA Livre Linux (live)" {
-  linux /live/vmlinuz boot=live components console=ttyS0,115200n8 hostname=ia-livre noeject
+  linux /live/vmlinuz boot=live components console=ttyS0,115200n8 hostname=ialivre noeject
   initrd /live/initrd.img
 }
 menuentry "IA Livre Linux (live, debug)" {
-  linux /live/vmlinuz boot=live components console=ttyS0,115200n8 hostname=ia-livre noeject debug
+  linux /live/vmlinuz boot=live components console=ttyS0,115200n8 hostname=ialivre noeject debug
   initrd /live/initrd.img
 }
 EOF

@@ -27,8 +27,9 @@ OVERLAY_ABS="$(cd distro/overlay && pwd)"
 rm -rf "$ROOTFS"
 mkdir -p "$ROOTFS"
 
-# libgomp1: runtime llama.cpp (libgomp.so.1); sem isso infer falha no live
-INCLUDES="linux-image-amd64,systemd-sysv,util-linux,udev,dbus,login,iproute2,ca-certificates,initramfs-tools,sudo,passwd,adduser,curl,libgomp1"
+# libgomp1: runtime llama.cpp; nano/vim-tiny: editar conf no TTY;
+# iw/wpasupplicant/rfkill/isc-dhcp-client: Wi-Fi mínimo; firmware-* : chips comuns
+INCLUDES="linux-image-amd64,systemd-sysv,util-linux,udev,dbus,login,iproute2,ca-certificates,initramfs-tools,sudo,passwd,adduser,curl,libgomp1,nano,vim-tiny,iw,wpasupplicant,rfkill,isc-dhcp-client,wireless-regdb,firmware-linux-free,firmware-iwlwifi,firmware-realtek,firmware-atheros,firmware-brcm80211,firmware-misc-nonfree"
 
 # Credenciais live (TTY físico) — root Debian minbase vem bloqueado
 IA_USER="${IA_LIVRE_LIVE_USER:-ialivre}"
@@ -55,7 +56,18 @@ if [[ -x "$R/opt/ia-livre/bin/ia-livre" ]]; then
   ln -sfn /opt/ia-livre/bin/ia-livre-runtime "$R/usr/local/bin/ia-livre-runtime" 2>/dev/null || true
   ln -sfn /opt/ia-livre/bin/ia-livre-agent "$R/usr/local/bin/ia-livre-agent" 2>/dev/null || true
   ln -sfn /opt/ia-livre/bin/ia-livre-node "$R/usr/local/bin/ia-livre-node" 2>/dev/null || true
+  ln -sfn /opt/ia-livre/bin/ia-livre-wifi "$R/usr/local/bin/ia-livre-wifi" 2>/dev/null || true
 fi
+
+# Hostname fixo (evita ID de container Docker / live aleatório)
+echo ialivre >"$R/etc/hostname"
+cat >"$R/etc/hosts" <<'HOSTS'
+127.0.0.1	localhost
+127.0.1.1	ialivre
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+HOSTS
 
 touch "$R/etc/initramfs-tools/modules"
 for m in 9p 9pnet 9pnet_virtio virtio virtio_pci virtio_ring; do
@@ -152,9 +164,13 @@ chroot /rootfs update-initramfs -u 2>/dev/null || chroot /rootfs /usr/sbin/updat
 CUST_HOST="$OUT/customize-ia-livre.sh"
 write_customize "$CUST_HOST"
 
+# firmware-* vive em non-free-firmware (Bookworm+)
+MMDEBSTRAP_COMPONENTS="${IA_LIVRE_DEBIAN_COMPONENTS:-main,contrib,non-free-firmware}"
+
 run_mmdebstrap_host() {
-  echo "build: mmdebstrap host → $ROOTFS (suite=$SUITE)"
-  mmdebstrap --variant=minbase --include="$INCLUDES" "$SUITE" "$ROOTFS" || return 1
+  echo "build: mmdebstrap host → $ROOTFS (suite=$SUITE components=$MMDEBSTRAP_COMPONENTS)"
+  mmdebstrap --variant=minbase --components="$MMDEBSTRAP_COMPONENTS" \
+    --include="$INCLUDES" "$SUITE" "$ROOTFS" || return 1
   cp -a "$OVERLAY_ABS"/. "$ROOTFS"/
   # customize sem chroot completo se não root: só files; initramfs via docker se disponível
   bash "$CUST_HOST" "$ROOTFS" || true
@@ -169,6 +185,7 @@ run_mmdebstrap_docker() {
     -v "$CUST_HOST:/customize.sh:ro" \
     -e SUITE="$SUITE" \
     -e INCLUDES="$INCLUDES" \
+    -e COMPONENTS="$MMDEBSTRAP_COMPONENTS" \
     debian:bookworm bash -c '
 set -euo pipefail
 export DEBIAN_FRONTEND=noninteractive
@@ -176,7 +193,8 @@ apt-get update -qq
 apt-get install -y -qq mmdebstrap ca-certificates >/dev/null
 rm -rf /out/rootfs
 mkdir -p /out/rootfs
-mmdebstrap --variant=minbase --include="$INCLUDES" "$SUITE" /out/rootfs
+mmdebstrap --variant=minbase --components="$COMPONENTS" \
+  --include="$INCLUDES" "$SUITE" /out/rootfs
 cp -a /overlay/. /out/rootfs/
 bash /customize.sh /out/rootfs
 ' || return 1
@@ -221,6 +239,11 @@ fi
 test -f "$ROOTFS/etc/ia-livre/FIRST_BOOT.md"
 test -f "$ROOTFS/etc/profile.d/ia-livre.sh"
 test -f "$ROOTFS/etc/motd"
+# Hostname nunca deve ficar como ID de container Docker
+echo ialivre >"$ROOTFS/etc/hostname"
+grep -q 'ialivre' "$ROOTFS/etc/hosts" || echo '127.0.1.1 ialivre' >>"$ROOTFS/etc/hosts"
+grep -qx 'ialivre' "$ROOTFS/etc/hostname"
+echo "IA_LIVRE_DISTRO_HOSTNAME=ialivre"
 
 echo "IA_LIVRE_DISTRO_DEBIAN_KERNEL=$K"
 echo "IA_LIVRE_DISTRO_DEBIAN_INITRD=$I"

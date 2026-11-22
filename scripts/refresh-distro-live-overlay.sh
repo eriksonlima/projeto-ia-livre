@@ -29,18 +29,41 @@ mount --bind /sys /rootfs/sys || true
 mount --bind /dev /rootfs/dev || true
 cp /etc/resolv.conf /rootfs/etc/resolv.conf 2>/dev/null || true
 
-# overlay (scripts + bins + catalog + docs)
+# overlay (scripts + bins + catalog + docs + hostname)
 cp -a /overlay/. /rootfs/
+echo ialivre >/rootfs/etc/hostname
+cat >/rootfs/etc/hosts <<'HOSTS'
+127.0.0.1	localhost
+127.0.1.1	ialivre
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+HOSTS
+
+# Apt: non-free-firmware para Wi-Fi (Bookworm)
+cat >/rootfs/etc/apt/sources.list <<'SRC'
+deb http://deb.debian.org/debian bookworm main contrib non-free-firmware
+deb http://deb.debian.org/debian bookworm-updates main contrib non-free-firmware
+deb http://deb.debian.org/debian-security bookworm-security main contrib non-free-firmware
+SRC
 
 chroot /rootfs apt-get update -qq
-chroot /rootfs apt-get install -y -qq libgomp1 curl ca-certificates >/dev/null
+chroot /rootfs apt-get install -y -qq \
+  libgomp1 curl ca-certificates nano vim-tiny \
+  iw wpasupplicant rfkill isc-dhcp-client wireless-regdb \
+  firmware-linux-free firmware-iwlwifi firmware-realtek \
+  firmware-atheros firmware-brcm80211 firmware-misc-nonfree \
+  >/dev/null || chroot /rootfs apt-get install -y -qq \
+  libgomp1 curl ca-certificates nano vim-tiny iw wpasupplicant rfkill isc-dhcp-client >/dev/null
 
+chmod +x /rootfs/opt/ia-livre/bin/ia-livre-wifi 2>/dev/null || true
 mkdir -p /rootfs/usr/local/bin
 ln -sfn /opt/ia-livre/bin/ia-livre /rootfs/usr/local/bin/ia-livre
 ln -sfn /opt/ia-livre/bin/ia-livre-native-tune /rootfs/usr/local/bin/ia-livre-native-tune
 ln -sfn /opt/ia-livre/bin/ia-livre-runtime /rootfs/usr/local/bin/ia-livre-runtime
 ln -sfn /opt/ia-livre/bin/ia-livre-agent /rootfs/usr/local/bin/ia-livre-agent
 ln -sfn /opt/ia-livre/bin/ia-livre-node /rootfs/usr/local/bin/ia-livre-node
+ln -sfn /opt/ia-livre/bin/ia-livre-wifi /rootfs/usr/local/bin/ia-livre-wifi
 
 # fixture read_local (cwd=home do usuário live)
 mkdir -p /rootfs/home/ialivre/agent/fixtures

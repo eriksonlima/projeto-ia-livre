@@ -88,12 +88,14 @@ Uso: ia-livre <comando> [args]
   model set <arquivo>    define IA_LIVRE_MODEL (qualquer GGUF) e grava conf
   model show             mostra modelo efetivo
   model fetch [id]       baixa do catálogo (default: tinyllama) ou arquivo; URL via IA_LIVRE_MODEL_URL
+  wifi …                 Wi-Fi (status|scan|connect) — ver: ia-livre wifi help
   conf                   mostra config efetiva
   help
 
 Models dir: $MODELS_DIR
 Catálogo: $CATALOG
 Config: $CONF
+Editores: nano / vi
 EOF
 }
 
@@ -119,6 +121,9 @@ case "$cmd" in
     ;;
   node)
     exec "$BIN_DIR/ia-livre-node" "$@"
+    ;;
+  wifi)
+    exec "$BIN_DIR/ia-livre-wifi" "$@"
     ;;
   model)
     sub="${1:-show}"

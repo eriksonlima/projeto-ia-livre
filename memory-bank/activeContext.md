@@ -2,9 +2,8 @@
 
 ## Foco atual
 
-- Etapas 1–96 **feitas**
-- Fila produto Linux (B77–B91) **concluída**; Abertas vazio
-- Aceite: `make verify-produto-linux` → `PRODUTO_LINUX_OK`
+- Etapas 1–96 **feitas**; Abertas vazio
+- Live USB: hostname `ialivre`, nano/vi, Wi‑Fi (`ia-livre wifi`), firmwares comuns
 
 ## Próximo passo
 
@@ -14,3 +13,4 @@
 
 - Guia: docs/guia-usuario-ia-livre-linux.md
 - Kernel custom: ADR 0028 deferred (stock Debian)
+- Rebuild live: `IA_LIVRE_REFRESH_SKIP_STAGE=1 ./scripts/refresh-distro-live-overlay.sh` + `IA_LIVRE_ISO_RESQUASH=1 ./scripts/build-distro-debian-iso.sh`

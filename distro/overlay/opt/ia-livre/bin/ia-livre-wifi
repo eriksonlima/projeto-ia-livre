@@ -1,0 +1,177 @@
+#!/usr/bin/env bash
+# Wi-Fi mínimo no live (TTY) — scan / connect / status.
+# Requer: iw, wpasupplicant, rfkill, dhclient (isc-dhcp-client).
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+Uso: ia-livre wifi <comando>
+
+  status              interfaces + rfkill + IP
+  scan [iface]        lista SSIDs (sobe a iface se estiver down)
+  connect <ssid> [iface]
+                      pede senha; sobe iface, wpa_supplicant + DHCP
+  up [iface]          rfkill unblock + ip link set up
+  help
+
+Sem NetworkManager: edite /etc/wpa_supplicant/ia-livre.conf com nano se preferir.
+Firmware: se a iface não aparece, o chip pode precisar de pacote non-free
+(ex. firmware-iwlwifi) — a imagem tenta incluir os comuns.
+EOF
+}
+
+pick_iface() {
+  local want="${1:-}"
+  if [[ -n "$want" ]]; then
+    echo "$want"
+    return 0
+  fi
+  # Prefer wireless phy interfaces
+  local i
+  for i in /sys/class/net/*; do
+    [[ -d "$i/wireless" || -L "$i/phy80211" ]] || continue
+    basename "$i"
+    return 0
+  done
+  # Fallback: nomes comuns
+  for i in wlan0 wlp1s0 wlp2s0 wlp0s20f3; do
+    [[ -d "/sys/class/net/$i" ]] && { echo "$i"; return 0; }
+  done
+  return 1
+}
+
+need_root() {
+  if [[ "$(id -u)" -ne 0 ]]; then
+    echo "erro: rode com sudo (ex.: sudo ia-livre wifi $*)" >&2
+    exit 1
+  fi
+}
+
+cmd_up() {
+  need_root "$@"
+  local iface
+  iface="$(pick_iface "${1:-}" || true)"
+  command -v rfkill >/dev/null 2>&1 && rfkill unblock wifi || true
+  command -v rfkill >/dev/null 2>&1 && rfkill unblock all || true
+  if [[ -z "${iface:-}" ]]; then
+    echo "erro: nenhuma interface wireless encontrada (driver/firmware?)" >&2
+    echo "Dica: ip link; ls /sys/class/net; dmesg | grep -i firmware" >&2
+    exit 1
+  fi
+  ip link set "$iface" up
+  echo "IA_LIVRE_WIFI_IFACE=$iface"
+  echo "IA_LIVRE_WIFI_UP=1"
+}
+
+cmd_status() {
+  echo "=== hostname ==="
+  hostname 2>/dev/null || true
+  echo "=== rfkill ==="
+  rfkill list 2>/dev/null || echo "(rfkill ausente)"
+  echo "=== links ==="
+  ip -br link 2>/dev/null || ip link
+  echo "=== addr ==="
+  ip -br addr 2>/dev/null || ip addr
+  echo "=== route ==="
+  ip route 2>/dev/null || true
+  if command -v iw >/dev/null 2>&1; then
+    echo "=== iw dev ==="
+    iw dev 2>/dev/null || true
+  fi
+}
+
+cmd_scan() {
+  need_root "$@"
+  local iface
+  iface="$(pick_iface "${1:-}")" || {
+    echo "erro: sem iface wireless" >&2
+    exit 1
+  }
+  ip link set "$iface" up || true
+  sleep 1
+  if command -v iw >/dev/null 2>&1; then
+    iw dev "$iface" scan 2>/dev/null | grep -E 'SSID:|signal:' | paste - - | sed 's/[[:space:]]\+/ /g' | head -40
+  else
+    echo "erro: iw não instalado" >&2
+    exit 1
+  fi
+  echo "IA_LIVRE_WIFI_SCAN_OK"
+}
+
+cmd_connect() {
+  need_root "$@"
+  local ssid="${1:-}"
+  local iface_arg="${2:-}"
+  if [[ -z "$ssid" ]]; then
+    echo "uso: sudo ia-livre wifi connect \"SSID\" [iface]" >&2
+    exit 1
+  fi
+  local iface
+  iface="$(pick_iface "$iface_arg")" || {
+    echo "erro: sem iface wireless" >&2
+    exit 1
+  }
+  command -v rfkill >/dev/null 2>&1 && rfkill unblock wifi || true
+  ip link set "$iface" up
+  local pass
+  if [[ -n "${IA_LIVRE_WIFI_PASS:-}" ]]; then
+    pass="$IA_LIVRE_WIFI_PASS"
+  else
+    echo -n "Senha Wi-Fi para '$ssid': "
+    # -s se terminal; senão stdin
+    if [[ -t 0 ]]; then
+      read -r -s pass
+      echo
+    else
+      read -r pass
+    fi
+  fi
+  mkdir -p /etc/wpa_supplicant
+  local conf=/etc/wpa_supplicant/ia-livre.conf
+  if command -v wpa_passphrase >/dev/null 2>&1; then
+    wpa_passphrase "$ssid" "$pass" >"$conf"
+  else
+    cat >"$conf" <<EOF
+network={
+  ssid="$ssid"
+  psk="$pass"
+}
+EOF
+  fi
+  chmod 600 "$conf"
+  # Mata instância anterior nesta iface
+  if command -v killall >/dev/null 2>&1; then
+    killall wpa_supplicant 2>/dev/null || true
+  else
+    pkill wpa_supplicant 2>/dev/null || true
+  fi
+  sleep 0.5
+  wpa_supplicant -B -i "$iface" -c "$conf" -P /run/wpa_supplicant-ia-livre.pid
+  sleep 2
+  if command -v dhclient >/dev/null 2>&1; then
+    dhclient -v "$iface" 2>/dev/null || dhclient "$iface" || true
+  elif command -v dhcpcd >/dev/null 2>&1; then
+    dhcpcd "$iface" || true
+  else
+    echo "aviso: sem dhclient/dhcpcd — configure IP manualmente" >&2
+  fi
+  ip -br addr show "$iface" || true
+  echo "IA_LIVRE_WIFI_IFACE=$iface"
+  echo "IA_LIVRE_WIFI_SSID=$ssid"
+  echo "IA_LIVRE_WIFI_CONNECT_OK"
+}
+
+cmd="${1:-help}"
+shift || true
+case "$cmd" in
+  status) cmd_status ;;
+  up) cmd_up "$@" ;;
+  scan) cmd_scan "$@" ;;
+  connect) cmd_connect "$@" ;;
+  help|-h|--help) usage ;;
+  *)
+    echo "comando desconhecido: $cmd" >&2
+    usage
+    exit 1
+    ;;
+esac

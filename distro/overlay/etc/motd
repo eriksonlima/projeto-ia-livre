@@ -1,6 +1,8 @@
 
- IA Livre Linux (TTY-first) — ADR 0027
+ IA Livre Linux (TTY-first) — hostname: ialivre
   login: ialivre / ialivre   (autologin no TTY1)
+  wifi:    sudo ia-livre wifi status | up | scan | connect "SSID"
+  editar:  nano  |  vi
   modelos: ia-livre model catalog | fetch <id>
   depois:  ia-livre infer
   First-boot: /etc/ia-livre/FIRST_BOOT.md

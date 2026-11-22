@@ -6,11 +6,27 @@
 |-------|--------|
 | Usuário | `ialivre` |
 | Senha | `ialivre` |
+| Hostname | `ialivre` |
 
 Autologin no TTY1 (e na serial) costuma entrar sozinho. Se pedir login, use a tabela acima.  
 `sudo` sem senha para este usuário (lab TTY-first). Root também usa a senha `ialivre`.
 
-Se `ialivre`/`ialivre` for rejeitado, a ISO provavelmente foi gerada sem `/etc/shadow` (bug do `mksquashfs` sem root) — regenere com Docker/root e regrave o pendrive.
+Editores no TTY: `nano` e `vi` (vim-tiny).
+
+## Rede / Wi‑Fi
+
+`model fetch` e `apt` precisam de internet.
+
+```bash
+sudo ia-livre wifi status          # iface down? rfkill?
+sudo ia-livre wifi up              # rfkill unblock + ip link set up
+sudo ia-livre wifi scan
+sudo ia-livre wifi connect "SSID"  # pede senha; DHCP
+```
+
+Se a interface wireless **não aparece**: driver/firmware do chip (a imagem inclui firmwares comuns Intel/Realtek/Atheros/Broadcom). Veja `dmesg | grep -i firmware`.
+
+Ethernet: `sudo dhclient eth0` (ou o nome em `ip -br link`).
 
 ## Modelos
 
@@ -19,17 +35,16 @@ A ISO **default não traz** GGUF (~638 MiB) — economiza espaço no pendrive.
 Com rede no live:
 
 ```bash
-ia-livre model catalog        # lista IDs baixáveis (tamanho + nota)
+ia-livre model catalog
 ia-livre model fetch tinyllama   # ou: phi2 | qwen25-05b | smollm2-360 | …
 ia-livre infer
 ```
 
-Ou manual:
+Sem rede no live: copie um `.gguf` de outro PC (pendrive/scp) para `/var/lib/ia-livre/models/` e:
 
 ```bash
-sudo apt update && sudo apt install -y curl   # se curl ainda não estiver na imagem
-curl -fL -o /var/lib/ia-livre/models/meu.gguf 'https://…/arquivo.gguf'
 ia-livre model set meu.gguf
+ia-livre infer
 ```
 
 Lab com pesos já na ISO: `IA_LIVRE_DEBIAN_INCLUDE_GGUF=1` no build do host.
