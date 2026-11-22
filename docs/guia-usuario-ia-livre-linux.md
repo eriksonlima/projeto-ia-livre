@@ -16,10 +16,14 @@ No guest: `ia-livre conf` / veja MOTD e `/etc/ia-livre/FIRST_BOOT.md`.
 
 ## 2. USB live
 
+Gere a ISO **sem** sudo; só o `dd` precisa de root (`sudo` limpa o PATH e quebra o `cargo`):
+
 ```bash
-./scripts/prepare-linux-release.sh
-./scripts/write-linux-usb.sh --mode iso --device /dev/sdX --confirm /dev/sdX --yes
+./scripts/build-distro-debian-iso.sh   # ou: ./scripts/prepare-linux-release.sh
+sudo ./scripts/write-linux-usb.sh --mode iso --device /dev/sdX --confirm /dev/sdX --yes
 ```
+
+Se a ISO já existir (`build/distro-debian/ia-livre-linux.iso`), o writer só faz `dd` — não rebuilda.
 
 Boot UEFI no PC. **≠** pendrive ESP da Linha B.
 

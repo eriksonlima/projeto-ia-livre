@@ -22,14 +22,20 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 ## Gravar pendrive (operador)
 
 ```bash
+# 1) Build sem sudo (cargo no PATH do usuário)
+./scripts/build-distro-debian-iso.sh
+
+# 2) Gravar com sudo (só dd; reusa a ISO)
 ./scripts/write-linux-usb.sh --list
-# ISO live (recomendado — destrutivo no device inteiro):
-./scripts/write-linux-usb.sh --mode iso --device /dev/sdX --confirm /dev/sdX --yes
-# Tarball em partição já formatada (legado):
-./scripts/write-linux-usb.sh --mode tar --device /dev/sdX --confirm /dev/sdX --yes
+sudo ./scripts/write-linux-usb.sh --mode iso --device /dev/sdX --confirm /dev/sdX --yes
+
+# Tarball em partição já formatada (legado; prepare precisa cargo):
+./scripts/prepare-linux-usb-artifact.sh
+sudo ./scripts/write-linux-usb.sh --mode tar --device /dev/sdX --confirm /dev/sdX --yes
 ```
 
-`--mode iso` faz `dd` da ISO híbrida (E85). Exige `--confirm`/`--yes` idênticos. **≠** writer ESP UEFI.
+`--mode iso` faz `dd` da ISO híbrida (E85). Exige `--confirm`/`--yes` idênticos. **≠** writer ESP UEFI.  
+Não rode o build inteiro sob `sudo` — o secure_path remove `~/.cargo/bin`.
 ## No PC alvo
 
 1. Instale Debian mínimo TTY (ou use live Debian).

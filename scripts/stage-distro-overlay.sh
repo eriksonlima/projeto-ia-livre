@@ -2,10 +2,24 @@
 # Monta binários da stack no overlay distro/ (scaffold Linux IA-nativo).
 set -euo pipefail
 cd "$(dirname "$0")/.."
-export PATH="${HOME}/.cargo/bin:${HOME}/.local/bin:${PATH}"
+# Sob sudo, PATH/HOME do usuário real
+if [[ -n "${SUDO_USER:-}" ]]; then
+  SUDO_HOME="$(getent passwd "$SUDO_USER" | cut -d: -f6)"
+  export HOME="${SUDO_HOME}"
+  export PATH="${SUDO_HOME}/.cargo/bin:${SUDO_HOME}/.local/bin:/usr/local/bin:/usr/bin:${PATH}"
+else
+  export PATH="${HOME}/.cargo/bin:${HOME}/.local/bin:${PATH}"
+fi
 export LIBCLANG_PATH="${LIBCLANG_PATH:-/usr/lib/llvm-18/lib}"
 if [[ -z "${BINDGEN_EXTRA_CLANG_ARGS:-}" ]]; then
   export BINDGEN_EXTRA_CLANG_ARGS="-I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/include"
+fi
+
+if ! command -v cargo >/dev/null 2>&1; then
+  echo "erro: cargo não encontrado no PATH (sob sudo use ISO já buildada, ou rode stage sem sudo)" >&2
+  echo "  ./scripts/build-distro-debian-iso.sh" >&2
+  echo "  sudo ./scripts/write-linux-usb.sh --mode iso --device /dev/sdX --confirm /dev/sdX --yes" >&2
+  exit 1
 fi
 
 OUT=distro/overlay/opt/ia-livre/bin
