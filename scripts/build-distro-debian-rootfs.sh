@@ -239,9 +239,24 @@ fi
 test -f "$ROOTFS/etc/ia-livre/FIRST_BOOT.md"
 test -f "$ROOTFS/etc/profile.d/ia-livre.sh"
 test -f "$ROOTFS/etc/motd"
-# Hostname nunca deve ficar como ID de container Docker
-echo ialivre >"$ROOTFS/etc/hostname"
-grep -q 'ialivre' "$ROOTFS/etc/hosts" || echo '127.0.1.1 ialivre' >>"$ROOTFS/etc/hosts"
+# Hostname + perms (overlay do host não pode deixar /etc uid 1000)
+chmod +x scripts/lib/fix-distro-rootfs-perms.sh
+if have_docker; then
+  docker run --rm --privileged \
+    -v "$ROOTFS:/rootfs" \
+    -v "$(pwd)/scripts/lib/fix-distro-rootfs-perms.sh:/fix-perms.sh:ro" \
+    debian:bookworm bash -c '
+      bash /fix-perms.sh /rootfs
+      chroot /rootfs usermod -aG sudo ialivre 2>/dev/null || true
+      echo "ialivre:ialivre" | chroot /rootfs chpasswd
+      echo "root:ialivre" | chroot /rootfs chpasswd
+      chroot /rootfs bash -c "hostname ialivre; su - ialivre -c \"sudo -n id\"" | grep -q "uid=0(root)"
+      echo IA_LIVRE_LIVE_SUDO_OK
+    '
+else
+  # best-effort sem docker
+  echo ialivre >"$ROOTFS/etc/hostname"
+fi
 grep -qx 'ialivre' "$ROOTFS/etc/hostname"
 echo "IA_LIVRE_DISTRO_HOSTNAME=ialivre"
 

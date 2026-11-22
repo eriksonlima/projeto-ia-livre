@@ -18,9 +18,12 @@ else
 fi
 
 OVERLAY="$(cd distro/overlay && pwd)"
+FIX_PERMS="$(cd scripts/lib && pwd)/fix-distro-rootfs-perms.sh"
+chmod +x "$FIX_PERMS"
 docker run --rm --privileged \
   -v "$(pwd)/$ROOTFS:/rootfs" \
   -v "$OVERLAY:/overlay:ro" \
+  -v "$FIX_PERMS:/fix-perms.sh:ro" \
   debian:bookworm bash -c '
 set -euo pipefail
 export DEBIAN_FRONTEND=noninteractive
@@ -31,17 +34,15 @@ cp /etc/resolv.conf /rootfs/etc/resolv.conf 2>/dev/null || true
 
 # overlay (scripts + bins + catalog + docs + hostname)
 cp -a /overlay/. /rootfs/
-echo ialivre >/rootfs/etc/hostname
-cat >/rootfs/etc/hosts <<'HOSTS'
+cat >/rootfs/etc/hosts <<'\''HOSTS'\''
 127.0.0.1	localhost
 127.0.1.1	ialivre
 ::1     localhost ip6-localhost ip6-loopback
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 HOSTS
-
 # Apt: non-free-firmware para Wi-Fi (Bookworm)
-cat >/rootfs/etc/apt/sources.list <<'SRC'
+cat >/rootfs/etc/apt/sources.list <<'\''SRC'\''
 deb http://deb.debian.org/debian bookworm main contrib non-free-firmware
 deb http://deb.debian.org/debian bookworm-updates main contrib non-free-firmware
 deb http://deb.debian.org/debian-security bookworm-security main contrib non-free-firmware
@@ -71,18 +72,39 @@ if [[ -f /overlay/home/ialivre/agent/fixtures/read-local-smoke.txt ]]; then
   cp -f /overlay/home/ialivre/agent/fixtures/read-local-smoke.txt \
     /rootfs/home/ialivre/agent/fixtures/
 else
-  echo 'prova-read-local-ia-livre' >/rootfs/home/ialivre/agent/fixtures/read-local-smoke.txt
+  echo prova-read-local-ia-livre >/rootfs/home/ialivre/agent/fixtures/read-local-smoke.txt
 fi
-chown -R 1000:1000 /rootfs/home/ialivre/agent 2>/dev/null || true
 
 # strip GGUF default
 rm -f /rootfs/var/lib/ia-livre/models/*.gguf 2>/dev/null || true
+
+# CRÍTICO por último: overlay/host uid 1000 em /etc → sudo recusa
+bash /fix-perms.sh /rootfs
+chown -R 1000:1000 /rootfs/home/ialivre 2>/dev/null || true
+
+# grupo sudo + senhas
+chroot /rootfs usermod -aG sudo ialivre 2>/dev/null || true
+echo "ialivre:ialivre" | chroot /rootfs chpasswd
+echo "root:ialivre" | chroot /rootfs chpasswd
+
+# prova sudo + su dentro do rootfs (obrigatório)
+chroot /rootfs bash -c "hostname ialivre; su - ialivre -c \"sudo -n id\"" | grep -q "uid=0(root)"
+echo IA_LIVRE_LIVE_SUDO_OK
+# su root com senha ialivre
+chroot /rootfs bash -c "su - ialivre -c \"echo ialivre | su -c id\"" 2>/dev/null | grep -q "uid=0(root)" \
+  || chroot /rootfs bash -c "echo ialivre | su - ialivre -c \"su -c id\"" 2>/dev/null | grep -q "uid=0(root)" \
+  || echo "IA_LIVRE_LIVE_SU_NOTE=skip_pty"
+echo IA_LIVRE_LIVE_SU_CHECKED
 
 test -x /rootfs/opt/ia-livre/bin/ia-livre
 test -f /rootfs/etc/ia-livre/models-catalog.tsv
 test -f /rootfs/usr/lib/x86_64-linux-gnu/libgomp.so.1 \
   || test -f /rootfs/lib/x86_64-linux-gnu/libgomp.so.1
-# glibc check: agent must not need 2.39
+ls -ld /rootfs/etc | grep -q "root root" || {
+  echo "erro: /etc ainda não é root:root" >&2
+  ls -ld /rootfs/etc >&2
+  exit 1
+}
 if command -v objdump >/dev/null; then
   objdump -T /rootfs/opt/ia-livre/bin/ia-livre-agent 2>/dev/null | grep -q GLIBC_2.39 \
     && { echo "erro: ia-livre-agent ainda exige GLIBC_2.39 — rode stage via bookworm"; exit 1; } || true

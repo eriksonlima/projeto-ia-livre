@@ -186,12 +186,26 @@ send("")
 wait_shell(15)
 
 run_step(
+    "hostname",
+    ["hostname", "grep -E 'ialivre' /etc/hostname && echo HOSTNAME_FILE_OK"],
+    [r"^ialivre\s*$|HOSTNAME_FILE_OK", r"HOSTNAME_FILE_OK"],
+)
+
+run_step(
+    "sudo_nopasswd",
+    ["sudo -n id", "sudo -n true && echo SUDO_OK"],
+    [r"uid=0\(root\)", r"SUDO_OK"],
+)
+
+run_step(
     "docs",
     [
         "test -f /etc/ia-livre/FIRST_BOOT.md && echo FIRST_BOOT_PRESENT",
         "test -f /etc/ia-livre/models-catalog.tsv && echo CATALOG_PRESENT",
+        "command -v nano >/dev/null && echo NANO_OK",
+        "command -v ia-livre-wifi >/dev/null && echo WIFI_HELPER_OK",
     ],
-    [r"FIRST_BOOT_PRESENT", r"CATALOG_PRESENT"],
+    [r"FIRST_BOOT_PRESENT", r"CATALOG_PRESENT", r"NANO_OK", r"WIFI_HELPER_OK"],
 )
 
 run_step(
