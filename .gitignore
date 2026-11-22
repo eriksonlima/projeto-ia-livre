@@ -48,3 +48,6 @@ distro/overlay/opt/ia-livre/bin/ia-livre-runtime
 distro/overlay/opt/ia-livre/bin/ia-livre-agent
 distro/overlay/opt/ia-livre/bin/ia-livre-node
 distro/overlay/var/lib/ia-livre/agent-memory/
+
+build/target-bookworm/
+build/cargo-home-bookworm/

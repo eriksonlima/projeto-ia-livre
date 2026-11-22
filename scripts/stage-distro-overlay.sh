@@ -28,11 +28,46 @@ mkdir -p "$OUT" distro/overlay/var/lib/ia-livre/models \
   distro/overlay/etc/ia-livre
 
 echo "stage: building runtime, agent, node…"
+# Debian live = bookworm (glibc 2.36). Build no host Ubuntu novo exige GLIBC_2.39+
+# e quebra no guest — preferir Docker bookworm (IA_LIVRE_STAGE_HOST=1 força host).
+STAGE_HOST="${IA_LIVRE_STAGE_HOST:-0}"
+if [[ "$STAGE_HOST" != "1" ]] && command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
+  echo "stage: cargo --release via Docker rust:bookworm (glibc live)…"
+  docker run --rm \
+    -v "$PWD:/src:rw" \
+    -w /src \
+    -e CARGO_HOME=/src/build/cargo-home-bookworm \
+    -e TARGET_DIR=/src/build/target-bookworm \
+    rust:bookworm bash -c '
+set -euo pipefail
+export PATH="/usr/local/cargo/bin:/usr/local/rustup/bin:${PATH:-/usr/bin}"
+export DEBIAN_FRONTEND=noninteractive
+# Portátil p/ QEMU qemu64 / CPUs velhos (sem AVX2/FMA nativo do builder)
+export CMAKE_ARGS="${CMAKE_ARGS:--DGGML_NATIVE=OFF -DGGML_AVX=ON -DGGML_AVX2=OFF -DGGML_FMA=OFF -DGGML_F16C=OFF}"
+export RUSTFLAGS="${RUSTFLAGS:--C target-cpu=x86-64}"
+apt-get update -qq
+apt-get install -y -qq build-essential cmake libclang-dev pkg-config >/dev/null
+mkdir -p "$CARGO_HOME" "$TARGET_DIR"
+export CARGO_TARGET_DIR="$TARGET_DIR"
+command -v cargo
+# força rebuild do llama-cpp-sys se target já existir com native
+cargo clean -p llama-cpp-sys-2 2>/dev/null || true
 cargo build -p ia-livre-runtime -p ia-livre-agent -p ia-livre-node --release
-
-cp -f target/release/ia-livre-runtime "$OUT/"
-cp -f target/release/ia-livre-agent "$OUT/"
-cp -f target/release/ia-livre-node "$OUT/"
+'
+  REL=build/target-bookworm/release
+  cp -f "$REL/ia-livre-runtime" "$OUT/"
+  cp -f "$REL/ia-livre-agent" "$OUT/"
+  cp -f "$REL/ia-livre-node" "$OUT/"
+  echo "stage: binaries from bookworm target"
+else
+  if [[ "$STAGE_HOST" != "1" ]]; then
+    echo "stage: aviso — Docker indisponível; build no host (pode falhar no Debian live por glibc)" >&2
+  fi
+  cargo build -p ia-livre-runtime -p ia-livre-agent -p ia-livre-node --release
+  cp -f target/release/ia-livre-runtime "$OUT/"
+  cp -f target/release/ia-livre-agent "$OUT/"
+  cp -f target/release/ia-livre-node "$OUT/"
+fi
 chmod +x distro/overlay/opt/ia-livre/bin/ia-livre
 chmod +x distro/overlay/opt/ia-livre/bin/ia-livre-native-tune 2>/dev/null || true
 chmod +x "$OUT"/ia-livre-runtime "$OUT"/ia-livre-agent "$OUT"/ia-livre-node

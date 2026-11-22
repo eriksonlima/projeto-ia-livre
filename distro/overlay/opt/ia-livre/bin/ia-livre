@@ -114,6 +114,7 @@ case "$cmd" in
       --model "$MODEL" \
       --memory "$MEM" \
       --n-predict "$N_PREDICT" \
+      --runtime-bin "$BIN_DIR/ia-livre-runtime" \
       "$@"
     ;;
   node)

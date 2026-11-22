@@ -27,7 +27,8 @@ OVERLAY_ABS="$(cd distro/overlay && pwd)"
 rm -rf "$ROOTFS"
 mkdir -p "$ROOTFS"
 
-INCLUDES="linux-image-amd64,systemd-sysv,util-linux,udev,dbus,login,iproute2,ca-certificates,initramfs-tools,sudo,passwd,adduser,curl"
+# libgomp1: runtime llama.cpp (libgomp.so.1); sem isso infer falha no live
+INCLUDES="linux-image-amd64,systemd-sysv,util-linux,udev,dbus,login,iproute2,ca-certificates,initramfs-tools,sudo,passwd,adduser,curl,libgomp1"
 
 # Credenciais live (TTY físico) — root Debian minbase vem bloqueado
 IA_USER="${IA_LIVRE_LIVE_USER:-ialivre}"
@@ -51,6 +52,9 @@ mkdir -p "$R/usr/local/bin" "$R/etc/systemd/system" \
 if [[ -x "$R/opt/ia-livre/bin/ia-livre" ]]; then
   ln -sfn /opt/ia-livre/bin/ia-livre "$R/usr/local/bin/ia-livre"
   ln -sfn /opt/ia-livre/bin/ia-livre-native-tune "$R/usr/local/bin/ia-livre-native-tune" 2>/dev/null || true
+  ln -sfn /opt/ia-livre/bin/ia-livre-runtime "$R/usr/local/bin/ia-livre-runtime" 2>/dev/null || true
+  ln -sfn /opt/ia-livre/bin/ia-livre-agent "$R/usr/local/bin/ia-livre-agent" 2>/dev/null || true
+  ln -sfn /opt/ia-livre/bin/ia-livre-node "$R/usr/local/bin/ia-livre-node" 2>/dev/null || true
 fi
 
 touch "$R/etc/initramfs-tools/modules"

@@ -302,10 +302,23 @@ fn find_runtime_bin(explicit: Option<&Path>) -> Result<PathBuf, String> {
         return Err(format!("--runtime-bin não encontrado: {}", p.display()));
     }
 
-    let candidates = [
+    let mut candidates = vec![
         PathBuf::from("target/debug/ia-livre-runtime"),
         PathBuf::from("target/release/ia-livre-runtime"),
+        PathBuf::from("/opt/ia-livre/bin/ia-livre-runtime"),
+        PathBuf::from("/usr/local/bin/ia-livre-runtime"),
     ];
+    // Mesmo diretório do agente (instalação distro /opt/ia-livre/bin)
+    if let Ok(exe) = env::current_exe() {
+        if let Some(dir) = exe.parent() {
+            candidates.push(dir.join("ia-livre-runtime"));
+        }
+    }
+    if let Ok(path) = env::var("PATH") {
+        for dir in env::split_paths(&path) {
+            candidates.push(dir.join("ia-livre-runtime"));
+        }
+    }
     for c in &candidates {
         if c.is_file() {
             return Ok(c.clone());
