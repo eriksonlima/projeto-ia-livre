@@ -29,10 +29,12 @@ Boot UEFI no PC. **≠** pendrive ESP da Linha B.
 
 ## 3. Primeira sessão
 
+**Login:** usuário `ialivre` · senha `ialivre` (autologin no TTY1). `sudo` sem senha.
+
 1. `ia-livre model list` — copie um `.gguf` para `/var/lib/ia-livre/models/`
 2. `ia-livre model set …` / `ia-livre infer`
-3. Opcional: `ia-livre-native-tune` (root para aplicar)
-4. Rede: `ia-livre node …` ou `systemctl enable --now ia-livre-node` (opcional)
+3. Opcional: `sudo ia-livre-native-tune`
+4. Rede: `ia-livre node …` ou `sudo systemctl enable --now ia-livre-node`
 5. Agente: `ia-livre agent --prompt "…"`
 
 ## 4. Gates de confiança

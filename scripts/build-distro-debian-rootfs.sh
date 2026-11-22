@@ -27,9 +27,13 @@ OVERLAY_ABS="$(cd distro/overlay && pwd)"
 rm -rf "$ROOTFS"
 mkdir -p "$ROOTFS"
 
-INCLUDES="linux-image-amd64,systemd-sysv,util-linux,udev,dbus,login,iproute2,ca-certificates,initramfs-tools"
+INCLUDES="linux-image-amd64,systemd-sysv,util-linux,udev,dbus,login,iproute2,ca-certificates,initramfs-tools,sudo,passwd,adduser"
 
-# Script de pós-instalação (rodado via chroot no container ou host)
+# Credenciais live (TTY físico) — root Debian minbase vem bloqueado
+IA_USER="${IA_LIVRE_LIVE_USER:-ialivre}"
+IA_PASS="${IA_LIVRE_LIVE_PASS:-ialivre}"
+
+# Script de pós-instalação (arquivos; usuários via chroot depois)
 write_customize() {
   local dest="$1"
   cat >"$dest" <<'CUST'
@@ -40,7 +44,9 @@ mkdir -p "$R/usr/local/bin" "$R/etc/systemd/system" \
   "$R/etc/systemd/system/multi-user.target.wants" \
   "$R/etc/systemd/system/getty.target.wants" \
   "$R/etc/initramfs-tools" \
-  "$R/etc/systemd/system/serial-getty@ttyS0.service.d"
+  "$R/etc/systemd/system/serial-getty@ttyS0.service.d" \
+  "$R/etc/systemd/system/getty@tty1.service.d" \
+  "$R/etc/sudoers.d"
 
 if [[ -x "$R/opt/ia-livre/bin/ia-livre" ]]; then
   ln -sfn /opt/ia-livre/bin/ia-livre "$R/usr/local/bin/ia-livre"
@@ -74,13 +80,69 @@ UNIT
 ln -sfn /etc/systemd/system/ia-livre-boot-smoke.service \
   "$R/etc/systemd/system/multi-user.target.wants/ia-livre-boot-smoke.service"
 
+# Autologin usuário live (tty1 físico + serial) — root minbase costuma estar locked
 cat >"$R/etc/systemd/system/serial-getty@ttyS0.service.d/autologin.conf" <<'EOF'
 [Service]
 ExecStart=
-ExecStart=-/sbin/agetty --autologin root --noclear %I $TERM
+ExecStart=-/sbin/agetty --autologin ialivre --noclear %I $TERM
 EOF
+cat >"$R/etc/systemd/system/getty@tty1.service.d/autologin.conf" <<'EOF'
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin ialivre --noclear %I $TERM
+EOF
+
+# Script chroot para criar usuário (rodado pelo builder)
+cat >"$R/tmp/ia-livre-setup-users.sh" <<'USERS'
+#!/bin/bash
+set -euo pipefail
+U="${IA_LIVRE_LIVE_USER:-ialivre}"
+P="${IA_LIVRE_LIVE_PASS:-ialivre}"
+if ! id "$U" >/dev/null 2>&1; then
+  useradd -m -s /bin/bash -G sudo,audio,video "$U" 2>/dev/null \
+    || useradd -m -s /bin/bash "$U"
+fi
+echo "${U}:${P}" | chpasswd
+# sudo sem senha no lab live (TTY-first)
+mkdir -p /etc/sudoers.d
+echo "${U} ALL=(ALL) NOPASSWD:ALL" >/etc/sudoers.d/ia-livre-live
+chmod 440 /etc/sudoers.d/ia-livre-live
+# Desbloqueia root com a mesma senha (opcional login manual)
+echo "root:${P}" | chpasswd || true
+passwd -u root 2>/dev/null || true
+echo "IA_LIVRE_LIVE_USER_OK user=${U}"
+USERS
+chmod +x "$R/tmp/ia-livre-setup-users.sh"
 CUST
   chmod +x "$dest"
+}
+
+run_setup_users_chroot() {
+  local r="$1"
+  if ! have_docker; then
+    echo "aviso: sem Docker — usuário live pode faltar; use docker para setup-users" >&2
+    return 0
+  fi
+  docker run --rm --privileged \
+    -v "$r:/rootfs" \
+    -e IA_LIVRE_LIVE_USER="$IA_USER" \
+    -e IA_LIVRE_LIVE_PASS="$IA_PASS" \
+    debian:bookworm bash -c '
+set -euo pipefail
+export DEBIAN_FRONTEND=noninteractive
+mount --bind /proc /rootfs/proc || true
+mount --bind /sys /rootfs/sys || true
+mount --bind /dev /rootfs/dev || true
+cp /etc/resolv.conf /rootfs/etc/resolv.conf 2>/dev/null || true
+chroot /rootfs apt-get update -qq >/dev/null 2>&1 || true
+chroot /rootfs apt-get install -y -qq sudo passwd adduser >/dev/null 2>&1 || true
+if [[ -x /rootfs/tmp/ia-livre-setup-users.sh ]]; then
+  chroot /rootfs env IA_LIVRE_LIVE_USER="$IA_LIVRE_LIVE_USER" IA_LIVRE_LIVE_PASS="$IA_LIVRE_LIVE_PASS" \
+    /tmp/ia-livre-setup-users.sh
+fi
+chroot /rootfs update-initramfs -u 2>/dev/null || chroot /rootfs /usr/sbin/update-initramfs -u 2>/dev/null || true
+'
+  echo "IA_LIVRE_LIVE_LOGIN=${IA_USER} / ${IA_PASS}"
 }
 
 CUST_HOST="$OUT/customize-ia-livre.sh"
@@ -92,16 +154,7 @@ run_mmdebstrap_host() {
   cp -a "$OVERLAY_ABS"/. "$ROOTFS"/
   # customize sem chroot completo se não root: só files; initramfs via docker se disponível
   bash "$CUST_HOST" "$ROOTFS" || true
-  if have_docker; then
-    docker run --rm --privileged \
-      -v "$ROOTFS:/rootfs" \
-      debian:bookworm bash -c '
-        mount --bind /proc /rootfs/proc 2>/dev/null || true
-        mount --bind /sys /rootfs/sys 2>/dev/null || true
-        mount --bind /dev /rootfs/dev 2>/dev/null || true
-        chroot /rootfs /bin/bash -c "update-initramfs -u || /usr/sbin/update-initramfs -u || true"
-      ' || true
-  fi
+  run_setup_users_chroot "$ROOTFS" || true
 }
 
 run_mmdebstrap_docker() {
@@ -122,12 +175,8 @@ mkdir -p /out/rootfs
 mmdebstrap --variant=minbase --include="$INCLUDES" "$SUITE" /out/rootfs
 cp -a /overlay/. /out/rootfs/
 bash /customize.sh /out/rootfs
-# rebuild initrd dentro do rootfs
-mount --bind /proc /out/rootfs/proc || true
-mount --bind /sys /out/rootfs/sys || true
-mount --bind /dev /out/rootfs/dev || true
-chroot /out/rootfs update-initramfs -u || chroot /out/rootfs /usr/sbin/update-initramfs -u || true
 ' || return 1
+  run_setup_users_chroot "$ROOTFS" || return 1
 }
 
 if have_mmdebstrap; then
